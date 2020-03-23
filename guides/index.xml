@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>玹霖志</title>
+    <link>/guides/</link>
+    <description>Recent content on 玹霖志</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>zh-CN</language>
+    
+	<atom:link href="/guides/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>IDEA插件-添加右键菜单</title>
+      <link>/guides/idea-01/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>/guides/idea-01/</guid>
+      <description>1.背景 使用IDEA或者其它IDE集成开发工具，无论写Java代码还是其它代码都需要很多右键操作，比如包上右键创建Java类，IDEA提供的</description>
+    </item>
+    
+    <item>
+      <title>IDEA插件-自定义行标记开发</title>
+      <link>/guides/idea-02/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>/guides/idea-02/</guid>
+      <description>1.行标记 1.1 行标记概述 IDEA源码编辑代码区域，可以编辑代码。大家肯定看到行上面有一些图标，其实我们也可以定义自己的行标记结合自己的需要弹窗</description>
+    </item>
+    
+    <item>
+      <title>Spring Boot Admin和Nacos集成</title>
+      <link>/guides/sba-nacos/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>/guides/sba-nacos/</guid>
+      <description>摘要:本文主要讲解如何将Spring Boot Admin与Spring Cloud Alibaba中的spring-cloud-starter-alibaba-</description>
+    </item>
+    
+    <item>
+      <title>Spring Cloud Gateway的权重路由</title>
+      <link>/guides/sc-gw-01/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>/guides/sc-gw-01/</guid>
+      <description>1.权重路由 1.1 权重路由使用场景 在开发或者测试的时候，或者线上发布，线上服务多版本控制的时候，需要对服务提供权重路由，最常见的使用就是，一个服</description>
+    </item>
+    
+  </channel>
+</rss>

@@ -1,0 +1,991 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<title>
+	并发编程总结之多线程基础 · 玹霖志
+</title>
+	<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+<meta name="viewport" content="width=device-width,minimum-scale=1">
+<meta name="description" content="玹霖志,许进沉思录,许进|Spring Cloud,中间件，基础架构，www.xujin.org,xujin.org,-许进沉思录,Venus&#43;,云首科技有限公司,云计算，大数据，物联网，Software_king的博客,云计算Saas，云计算Paas，云计算Iaas Hadoop，大数据，JavaEE，Java，物联网，Hadoop， NoSQL，MongoDB,Spring, Hibernate,Struts2," />
+
+<meta name="generator" content="Hugo 0.55.6" /><link rel="shortcut icon" href=/img/icon.png type="image/png">
+
+<link href="https://unpkg.com/purecss@1.0.0/build/base-min.css" rel="stylesheet">
+
+
+
+<link href="/css/main.css" rel="stylesheet">
+<link href="/css/zoom-image.css" rel="stylesheet">
+
+<script src="/js/iconfont.js"></script>
+<script src="/js/highlight.pack.js"></script>
+<script>hljs.initHighlightingOnLoad();</script>
+
+
+<script>window.SITE_LANGUAGE = "zh"</script>
+<script src="/js/app.js"></script>
+<script src="https://cdn.bootcss.com/typed.js/2.0.11/typed.js"></script>
+
+
+
+<script async src="//cdn.busuanzi.ibruce.info/cdn/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+<script src="//cdn.bootcss.com/jquery/3.2.1/jquery.min.js"></script>
+
+<script>
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    $(window).scroll(function () {
+        
+        if ($(window).scrollTop() >= 200) {
+            $("#scroll_top").removeClass("hidden").addClass("show"); 
+        } else {
+            $("#scroll_top").removeClass("show").addClass("hidden"); 
+        }
+    });
+</script>
+
+
+
+
+
+
+
+<script type="application/javascript">
+var doNotTrack = false;
+if (!doNotTrack) {
+	(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+	(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+	m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+	})(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+	ga('create', 'UA-142131411-1', 'auto');
+	
+	ga('send', 'pageview');
+}
+</script>
+
+</head>
+
+<body>
+	<header class="ss-header">
+	<nav class="navbar" role="navigation" aria-label="main navigation">
+		<div class="navbar-brand">
+			<a class="logo-link" href="/">
+				<img class="logo" src="/img/logo.png">
+			</a>
+			<div class="-show-mobile">
+				<a id="mobile-menu-icon">
+					<svg class="icon" aria-hidden="true">
+						<use xlink:href="#icon-menu"></use>
+					</svg>
+				</a>
+				<nav id="mobile-menu">
+					
+          
+            <a
+              class=""
+              href="/projects/">
+              <span>
+                项目
+              </span>
+              <svg class="icon" aria-hidden="true"><use xlink:href="#icon-ARROW"></use></svg>
+            </a>
+					
+            <a
+              class=""
+              href="/guides/">
+              <span>
+                案例
+              </span>
+              <svg class="icon" aria-hidden="true"><use xlink:href="#icon-ARROW"></use></svg>
+            </a>
+					
+            <a
+              class=""
+              href="/muse/">
+              <span>
+                Muse
+              </span>
+              <svg class="icon" aria-hidden="true"><use xlink:href="#icon-ARROW"></use></svg>
+            </a>
+					
+            <a
+              class=""
+              href="/blog/">
+              <span>
+                博客
+              </span>
+              <svg class="icon" aria-hidden="true"><use xlink:href="#icon-ARROW"></use></svg>
+            </a>
+					
+            <a
+              class=""
+              href="/activities/">
+              <span>
+                活动
+              </span>
+              <svg class="icon" aria-hidden="true"><use xlink:href="#icon-ARROW"></use></svg>
+            </a>
+					
+            <a
+              class=""
+              href="/projects/halo/overview/">
+              <span>
+                Halo
+              </span>
+              <svg class="icon" aria-hidden="true"><use xlink:href="#icon-ARROW"></use></svg>
+            </a>
+					
+            <a
+              class=""
+              href="/about/">
+              <span>
+                关于我
+              </span>
+              <svg class="icon" aria-hidden="true"><use xlink:href="#icon-ARROW"></use></svg>
+            </a>
+					
+					
+				</nav>
+			</div>
+		</div>
+
+		<div class="navbar-menu -hidden-mobile">
+			<div class="navbar-start">
+				
+				
+					<a class="navbar-item "
+						href="/projects/">项目</a>
+				
+					<a class="navbar-item "
+						href="/guides/">案例</a>
+				
+					<a class="navbar-item "
+						href="/muse/">Muse</a>
+				
+					<a class="navbar-item "
+						href="/blog/">博客</a>
+				
+					<a class="navbar-item "
+						href="/activities/">活动</a>
+				
+					<a class="navbar-item "
+						href="/projects/halo/overview/">Halo</a>
+				
+					<a class="navbar-item "
+						href="/about/">关于我</a>
+				
+			</div>
+			<div class="navbar-end">
+				<div class="navbar-item">
+					<div id="js-menu-search" class="navbar-search">
+						<input class="input" placeholder="请输入要搜索的关键词">
+						<svg class="icon" aria-hidden="true">
+							<use xlink:href="#icon-search"></use>
+						</svg>
+					</div>
+				</div>
+				
+			</div>
+		</div>
+	</nav>
+</header>
+
+
+	
+
+	
+
+	
+
+	
+
+	
+
+	
+
+	
+
+
+
+	
+
+<div class="ss-layout-container">
+	<main class="ss-layout-main -card">
+		<div class="ss-meta">
+	<h1 class="title">
+	
+		<span id="postTitle"></span>
+
+	</h1>
+	<div class="meta">
+		
+			2016-07-21 ·
+			
+				许进 ·
+			
+			<span class="tags">
+				
+					<a class="tag" href="/tags/%E5%B9%B6%E5%8F%91%E7%BC%96%E7%A8%8B/" rel="tag">#并发编程</a>
+				
+			</span>
+		
+		<span class="post-word-count">· 字数:3188·阅读时间 7 分钟</span>
+		
+		阅读量<span id="busuanzi_value_page_pv"></span>次
+		
+	</div>
+</div>
+  <script>
+    var typed = new Typed('#postTitle', {
+		strings: [
+        '  ',
+		"并发编程总结之多线程基础",
+      ],
+      cursorChar: "|",
+      typeSpeed: 70,
+	  loop: false,
+	});
+  </script>
+		<article class="typo">
+	<h2 id="线程安全">线程安全</h2>
+
+<h3 id="线程安全概念">线程安全概念</h3>
+
+<ol>
+<li>当多个线程访问访问某一个<code>类(对象或方法)</code>时，这个类或对象或方法<code>始终</code>能表现出<code>正确的行为</code>或我们想要的<code>结果</code>，那么这个类(对象或方法)就是<code>线程安全</code>的。</li>
+
+<li><p>synchronized：可以在<code>任意的对象</code>及<code>方法</code>上加锁，而加锁的这段代码称之为<code>互斥区</code>或者<code>临界区</code>。</p>
+
+<h3 id="代码示例说明1">代码示例说明1</h3>
+
+<p>运行main方法，main方法里有5个线程t1到t5，同一时间启动去访问MyThread类的Run方法。</p></li>
+
+<li><p>不加synchronized关键字修饰run()方法的代码
+```java
+package org.xujin.multithread;</p></li>
+</ol>
+
+<p>public class MyThread extends Thread {</p>
+
+<pre><code>private int count = 5;
+
+public void run() {
+    count--;
+    System.out.println(this.currentThread().getName() + &quot; count = &quot; + count);
+}
+
+public static void main(String[] args) {
+    /**
+     * 分析：当多个线程访问myThread的run方法时，以排队的方式进行处理（这里排对是按照CPU分配的先后顺序而定的）， 一个线程想要执行synchronized修饰的方法里的代码： 1 尝试获得锁 2
+     * 如果拿到锁，执行synchronized代码体内容；拿不到锁，这个线程就会不断的尝试获得这把锁，直到拿到为止， 而且是多个线程同时去竞争这把锁。（也就是会有锁竞争的问题）
+     */
+    MyThread myThread = new MyThread();
+    Thread t1 = new Thread(myThread, &quot;t1&quot;);
+    Thread t2 = new Thread(myThread, &quot;t2&quot;);
+    Thread t3 = new Thread(myThread, &quot;t3&quot;);
+    Thread t4 = new Thread(myThread, &quot;t4&quot;);
+    Thread t5 = new Thread(myThread, &quot;t5&quot;);
+    t1.start();
+    t2.start();
+    t3.start();
+    t4.start();
+    t5.start();
+}
+</code></pre>
+
+<p>}</p>
+
+<pre><code>运行结果如下，没有出现我们想要的结果,打印出来的线程名是无序的 count值也没按正常--，运行多次不能保证count打印的值每次一致，因此出现了线程安全问题。
+</code></pre>
+
+<p>t1 count = 2
+t2 count = 2
+t5 count = 0
+t3 count = 2
+t4 count = 1</p>
+
+<pre><code>### 代码示例说明2
+1. 当我们加上synchronized关键字修饰run()方法后，代码如下。
+```java
+public class MyThread extends Thread {
+
+    private int count = 5;
+
+    public synchronized void run() {
+        count--;
+        System.out.println(this.currentThread().getName() + &quot; count = &quot; + count);
+    }
+
+    public static void main(String[] args) {
+        /**
+         * 分析：当多个线程访问myThread的run方法时，以排队的方式进行处理（这里排对是按照CPU分配的先后顺序而定的）， 一个线程想要执行synchronized修饰的方法里的代码： 1 尝试获得锁 2
+         * 如果拿到锁，执行synchronized代码体内容；拿不到锁，这个线程就会不断的尝试获得这把锁，直到拿到为止， 而且是多个线程同时去竞争这把锁。（也就是会有锁竞争的问题）
+         */
+        MyThread myThread = new MyThread();
+        Thread t1 = new Thread(myThread, &quot;t1&quot;);
+        Thread t2 = new Thread(myThread, &quot;t2&quot;);
+        Thread t3 = new Thread(myThread, &quot;t3&quot;);
+        Thread t4 = new Thread(myThread, &quot;t4&quot;);
+        Thread t5 = new Thread(myThread, &quot;t5&quot;);
+        t1.start();
+        t2.start();
+        t3.start();
+        t4.start();
+        t5.start();
+    }
+}
+</code></pre>
+
+<ol>
+<li><p>加上<code>synchronized</code>运行结果如下，线程名无序，无论你执行多少次程序，count&ndash;的值都是显示我们想要的正确结果。</p>
+
+<pre><code>t1 count = 4
+t3 count = 3
+t4 count = 2
+t5 count = 1
+t2 count = 0
+</code></pre>
+
+<h3 id="小结">小结</h3>
+
+<p>当多个线程访问Mythread的run方法时，以排队的方式进行处理(排队的方式是按照CPU分配的饿先后顺序而定的)，一个线程想要执行synchronized修饰的方法里的代码，首先尝试获得锁，如果拿到锁，执行synchronized中代码体内容;拿不到锁，这个线程就会不断的尝试获得这把锁，直到拿到为止，而且是多个线程同时去竞争这把锁，也就是会有竞争锁的问题。</p></li>
+</ol>
+
+<h2 id="多个线程多个锁">多个线程多个锁</h2>
+
+<p>多个线程多个锁:多个线程，每个线程都可以拿到自己指定的锁，分别获得锁之后，执行synchronized方法体的内容。</p>
+
+<h3 id="代码示例说明1-1">代码示例说明1</h3>
+
+<ol>
+<li>两个线程t1,t2分别依次start，访问两个对象的synchronized修饰的printNum方法，Code如下:
+```java
+/**</li>
+<li>关键字synchronized取得的锁都是对象锁，而不是把一段代码（方法）当做锁，</li>
+<li>所以代码中哪个线程先执行synchronized关键字的方法，哪个线程就持有该方法所属对象的锁（Lock），</li>
+<li></li>
+<li>在静态方法上加synchronized关键字，表示锁定.class类，类一级别的锁（独占.class类）。</li>
+
+<li><p>@author xujin
+*
+*/
+public class MultiThread {</p>
+
+<p>private int num = 0;</p>
+
+<p>public synchronized void printNum(String tag) {
+    try {</p>
+
+<pre><code>    if (tag.equals(&quot;a&quot;)) {
+        num = 100;
+        System.out.println(&quot;tag a, set num over!&quot;);
+        Thread.sleep(1000);
+    } else {
+        num = 200;
+        System.out.println(&quot;tag b, set num over!&quot;);
+    }
+
+    System.out.println(&quot;tag &quot; + tag + &quot;, num = &quot; + num);
+
+} catch (InterruptedException e) {
+    e.printStackTrace();
+}
+</code></pre>
+
+<p>}</p>
+
+<p>// 注意观察run方法输出顺序
+public static void main(String[] args) {</p>
+
+<pre><code>// 两个不同的对象
+final MultiThread m1 = new MultiThread();
+final MultiThread m2 = new MultiThread();
+
+Thread t1 = new Thread(new Runnable() {
+    @Override
+    public void run() {
+        m1.printNum(&quot;a&quot;);
+    }
+});
+
+Thread t2 = new Thread(new Runnable() {
+    @Override
+    public void run() {
+        m2.printNum(&quot;b&quot;);
+    }
+});
+
+t1.start();
+t2.start();
+</code></pre>
+
+<p>}
+}</p>
+
+<pre><code>2. 执行结果如下:
+</code></pre>
+
+<p>tag a, set num over!
+tag b, set num over!
+tag b, num = 200
+tag a, num = 100</p>
+
+<pre><code>&gt;关键字synchronized取得的锁都是对象锁，而不是把一段代码（方法）当做锁，
+&gt; 所以代码中哪个线程先执行synchronized关键字的方法，哪个线程就持有该方法所属对象的锁（Lock）
+
+### 代码示例说明2
+1. 在静态方法上printNum（）加一个synchronized关键字修饰的话，那这个线程调用printNum()获得锁，就是这个类级别的锁。这是时候无论你实例化出多少个对象m1,m2都是没有任何关系的，代码Demo如下所示：
+```java
+public class MultiThread {
+
+// ②修改为static关键字修饰
+private static int num = 0;
+
+// ①修改为static修饰该方法
+public static synchronized void printNum(String tag) {
+    try {
+
+        if (tag.equals(&quot;a&quot;)) {
+            num = 100;
+            System.out.println(&quot;tag a, set num over!&quot;);
+            Thread.sleep(1000);
+        } else {
+            num = 200;
+            System.out.println(&quot;tag b, set num over!&quot;);
+        }
+        System.out.println(&quot;tag &quot; + tag + &quot;, num = &quot; + num);
+
+    } catch (InterruptedException e) {
+        e.printStackTrace();
+    }
+}
+
+// 注意观察run方法输出顺序
+public static void main(String[] args) {
+
+    // 俩个不同的对象
+    final MultiThread m1 = new MultiThread();
+    final MultiThread m2 = new MultiThread();
+
+    Thread t1 = new Thread(new Runnable() {
+        @Override
+        public void run() {
+            m1.printNum(&quot;a&quot;);
+        }
+    });
+
+    Thread t2 = new Thread(new Runnable() {
+        @Override
+        public void run() {
+            m2.printNum(&quot;b&quot;);
+        }
+    });
+    t1.start();
+    t2.start();
+}
+}
+</code></pre></li>
+
+<li><p>运行结果如下,可以看出<code>t1执行完了</code>，然后<code>执行t2</code>,他们之间有一个顺序</p>
+
+<pre><code>tag a, set num over!
+tag a, num = 100
+tag b, set num over!
+tag b, num = 200
+</code></pre>
+
+<h3 id="多个线程多个锁小结">多个线程多个锁小结</h3></li>
+
+<li><p>关键字<code>synchronized</code>取得的<code>锁</code>都是<code>对象锁</code>，而不是把一段代码或方法当做<code>锁</code>，所以示例中代码中的<code>哪个线程先执行synchronized关键字的方法</code>，<code>哪个线程就持有该方法对象的锁</code>，也就是Lock,两个对象，线程获得的就是两个不同的锁，他们互不影响。</p></li>
+
+<li><p>有一种情况则是相同的锁，即在静态方法上加<code>synchronized</code>关键字，表示锁定<code>.class类</code>，类一级别的锁独占.class类。</p></li>
+</ol>
+
+<h2 id="对象锁的同步和异步">对象锁的同步和异步</h2>
+
+<h3 id="锁同步和异步的概念">锁同步和异步的概念</h3>
+
+<ol>
+<li>同步-synchronized
+同步的概念就是共享，需要记住共享这个概念，如果不是共享的资源，就没有必要同步。</li>
+<li>异步-asynchronized
+异步是相互独立的，相互之间不受任何约制，类似于http中的Ajax请求。</li>
+</ol>
+
+<blockquote>
+<p>同步的目的就是为了线程安全，其实对于线程安全来说，需要满足两个特性：<code>原子性</code>，<code>可见性</code>。</p>
+</blockquote>
+
+<h3 id="代码示例1">代码示例1</h3>
+
+<pre><code class="language-java">public class TestObject {
+
+    /** synchronized */
+    public synchronized void method1() {
+        try {
+            System.out.println(Thread.currentThread().getName());
+            //休眠4秒
+            Thread.sleep(4000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+    }
+    public void method2() {
+        System.out.println(Thread.currentThread().getName());
+    }
+
+    public static void main(String[] args) {
+
+        final TestObject mo = new TestObject();
+
+        /**
+         * 分析： t1线程先持有TestObject对象的Lock锁，t2线程可以以异步的方式调用对象中的非synchronized修饰的方法
+         * t1线程先持有TestObject对象的Lock锁，t2线程如果在这个时候调用对象中的同步（synchronized）方法则需等待，也就是同步
+         */
+        Thread t1 = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                mo.method1();
+            }
+        }, &quot;t1&quot;);
+
+        Thread t2 = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                mo.method2();
+            }
+        }, &quot;t2&quot;);
+
+        t1.start();
+        t2.start();
+
+    }
+
+}
+</code></pre>
+
+<p>运行结果如下，因为t1,t2两个线程访问TestObject对象的mo的method1，method2方法是异步的，所以直接打出。</p>
+
+<pre><code>t2
+t1
+</code></pre>
+
+<blockquote>
+<p>分析： t1线程若先持有TestObject对象的Lock锁，t2线程可以以异步的方式调用对象中的非synchronized修饰的方法，这就是异步。</p>
+</blockquote>
+
+<h3 id="代码示例2">代码示例2</h3>
+
+<p>把上面代码中的method2，也加上<code>synchronized</code>去修饰，代码如下:</p>
+
+<pre><code class="language-java">public class TestObject {
+
+    public synchronized void method1() {
+        try {
+            System.out.println(Thread.currentThread().getName());
+            Thread.sleep(4000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+    }
+
+    /** 加上synchronized修饰method2 */
+    public synchronized void method2() {
+        System.out.println(Thread.currentThread().getName());
+    }
+
+    public static void main(String[] args) {
+
+        final TestObject mo = new TestObject();
+
+        /**
+         * 分析： t1线程先持有TestObject对象的Lock锁，t2线程可以以异步的方式调用对象中的非synchronized修饰的方法
+         * t1线程先持有TestObject对象的Lock锁，t2线程如果在这个时候调用对象中的同步（synchronized）方法则需等待，也就是同步
+         */
+        Thread t1 = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                mo.method1();
+            }
+        }, &quot;t1&quot;);
+
+        Thread t2 = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                mo.method2();
+            }
+        }, &quot;t2&quot;);
+
+        t1.start();
+        t2.start();
+
+    }
+
+}
+</code></pre>
+
+<p>打印结果如下,由于CPU随机分配，若t1线程先执行，先打印t1,然后t1线程先休眠4s，后释放了Lock，然后打印t2。</p>
+
+<pre><code>t1
+t2
+</code></pre>
+
+<blockquote>
+<p>t1线程先持有TestObject对象的Lock锁，t2线程如果在这个时候调用对象中的同步（synchronized）方法则需等待，也就是同步</p>
+</blockquote>
+
+</article>
+
+<div id="gitalk-container"></div>
+<link rel="stylesheet" href="https://unpkg.com/gitalk/dist/gitalk.css">
+<script src="https://unpkg.com/gitalk/dist/gitalk.min.js"></script>
+<script>
+  const gitalk = new Gitalk({
+    clientID: '6928118cff8d42e226a1',
+    clientSecret: '24edd8a31c50467e0d741b3a803c199e7ad53567',
+    repo: 'softwareking.github.io',
+    owner: 'Softwareking',
+    admin: ['Softwareking'],
+    id: location.pathname, 
+    distractionFreeMode: false 
+  });
+  (function() {
+    if (["localhost", "127.0.0.1"].indexOf(window.location.hostname) != -1) {
+      document.getElementById('gitalk-container').innerHTML = 'Gitalk comments not available by default when the website is previewed locally.';
+      return;
+    }
+    gitalk.render('gitalk-container');
+  })();
+</script>
+<style>
+
+  .gt-container .gt-btn-login {
+      background-color: #ff6a00;
+      border: 1px solid #ff6a00;
+  }
+
+  .gt-container .gt-btn-public {
+      background-color: #ff6a00;
+      border: 1px solid #ff6a00;
+  }
+
+  .gt-container .gt-btn-public:hover {
+      background-color: #ff6a00;
+      border: 1px solid #ff6a00;
+  }
+
+  .gt-container .gt-btn-preview {
+    background-color: #fff;
+    color: #ff6a00;
+  }
+  .gt-container .gt-btn {
+    padding: 0.75em 1.25em;
+    display: inline-block;
+    line-height: 1;
+    text-decoration: none;
+    white-space: nowrap;
+    cursor: pointer;
+    border: 1px solid #ff6a00;
+    border-radius: 5px;
+    background-color: #ff6a00;
+    color: #fff;
+    outline: none;
+    font-size: 0.75em;
+   }
+
+
+  .gt-container a {
+      color: #ff6a00;
+  }
+
+  .gt-container .gt-btn-preview:hover {
+      border: 1px solid #ff6a00;
+  }
+
+  .gt-container .gt-svg svg {
+      fill: #ff6a00;
+  }
+
+  .gt-container .gt-comment-username {
+      color: #ff6a00;
+  }
+  
+  .gt-container .gt-popup .gt-action.is--active:before {
+      background: #ff6a00;
+  }
+
+  .gt-container .gt-header-controls-tip {
+    font-size: 0.875em;
+    color: #ff6a00;
+    text-decoration: none;
+    vertical-align: sub;
+}
+
+</style>
+
+		<div class="-show-mobile">
+			
+
+	<nav class="ss-pagination-next">
+		
+		<a class="link-next" href="/blog/bf/bf-synchronized/">
+			<span class="text">下一篇: </span>
+			<span class="text">并发编程总结之synchronized细节问题</span>
+		</a>
+	</nav>
+
+		</div>
+	</main>
+
+	<aside class="ss-layout-aside">
+		
+
+
+<div class="ss-card ss-aside-toc">
+	<h2 class="card-title">
+		目录
+	</h2>
+  <nav id="TableOfContents">
+<ul>
+<li>
+<ul>
+<li><a href="#线程安全">线程安全</a>
+<ul>
+<li><a href="#线程安全概念">线程安全概念</a></li>
+<li><a href="#代码示例说明1">代码示例说明1</a></li>
+<li><a href="#小结">小结</a></li>
+</ul></li>
+<li><a href="#多个线程多个锁">多个线程多个锁</a>
+<ul>
+<li><a href="#代码示例说明1-1">代码示例说明1</a></li>
+<li><a href="#多个线程多个锁小结">多个线程多个锁小结</a></li>
+</ul></li>
+<li><a href="#对象锁的同步和异步">对象锁的同步和异步</a>
+<ul>
+<li><a href="#锁同步和异步的概念">锁同步和异步的概念</a></li>
+<li><a href="#代码示例1">代码示例1</a></li>
+<li><a href="#代码示例2">代码示例2</a></li>
+</ul></li>
+</ul></li>
+</ul>
+</nav>
+</div>
+
+
+		<div class="ss-card -hidden-mobile">
+	<h2 class="card-title">
+		分类
+	</h2>
+	<ul class="ss-aside-related">
+		
+		<li><a href="/categories/eureka-server/">Eureka Server</a></li>
+		
+		<li><a href="/categories/halo-tools/">Halo Tools</a></li>
+		
+		<li><a href="/categories/muse/">Muse</a></li>
+		
+		<li><a href="/categories/mybatis/">Mybatis</a></li>
+		
+		<li><a href="/categories/nacos/">Nacos</a></li>
+		
+		<li><a href="/categories/spring-boot/">Spring Boot</a></li>
+		
+		<li><a href="/categories/spring-boot-admin/">Spring Boot Admin</a></li>
+		
+		<li><a href="/categories/spring-cloud/">Spring Cloud</a></li>
+		
+		<li><a href="/categories/spring-cloud-gateway/">Spring Cloud Gateway</a></li>
+		
+		<li><a href="/categories/%E4%B8%AD%E5%8F%B0/">中台</a></li>
+		
+		<li><a href="/categories/%E4%B8%AD%E9%97%B4%E4%BB%B6/">中间件</a></li>
+		
+		<li><a href="/categories/%E5%B9%B6%E5%8F%91%E7%BC%96%E7%A8%8B/">并发编程</a></li>
+		
+		<li><a href="/categories/%E7%A4%BE%E5%8C%BA%E6%B2%99%E9%BE%99/">社区沙龙</a></li>
+		
+	</ul>
+</div>
+		
+
+
+		<div class="ss-aside-tags ss-card">
+	<h2 class="card-title">
+		标签
+		<span class="card-extra"></span>
+	</h2>
+	<ul class="tag-list">
+		
+			<li class="tag"><a href="/tags/eureka-server/">Eureka Server</a></li>
+		
+			<li class="tag"><a href="/tags/halo-tools/">Halo Tools</a></li>
+		
+			<li class="tag"><a href="/tags/myabtis/">Myabtis</a></li>
+		
+			<li class="tag"><a href="/tags/nacos/">Nacos</a></li>
+		
+			<li class="tag"><a href="/tags/ngnix/">Ngnix</a></li>
+		
+			<li class="tag"><a href="/tags/spring-boot-admin/">Spring Boot Admin</a></li>
+		
+			<li class="tag"><a href="/tags/spring-cloud/">Spring Cloud</a></li>
+		
+			<li class="tag"><a href="/tags/spring-cloud-gateway/">Spring Cloud Gateway</a></li>
+		
+			<li class="tag"><a href="/tags/spring-cloud%E4%B8%AD%E5%9B%BD%E7%A4%BE%E5%8C%BA/">Spring Cloud中国社区</a></li>
+		
+			<li class="tag"><a href="/tags/switch/">Switch</a></li>
+		
+			<li class="tag"><a href="/tags/%E4%B8%9A%E5%8A%A1%E4%B8%AD%E5%8F%B0/">业务中台</a></li>
+		
+			<li class="tag"><a href="/tags/%E4%B8%AD%E9%97%B4%E4%BB%B6/">中间件</a></li>
+		
+			<li class="tag"><a href="/tags/%E5%A4%9A%E7%BA%BF%E7%A8%8B/">多线程</a></li>
+		
+			<li class="tag"><a href="/tags/%E5%B9%B6%E5%8F%91%E7%BC%96%E7%A8%8B/">并发编程</a></li>
+		
+			<li class="tag"><a href="/tags/%E7%A4%BE%E5%8C%BA%E6%B2%99%E9%BE%99/">社区沙龙</a></li>
+		
+			<li class="tag"><a href="/tags/%E9%A1%B9%E7%9B%AE%E7%BB%8F%E9%AA%8C/">项目经验</a></li>
+		
+	</ul>
+</div>
+	</aside>
+</div>
+
+
+
+	
+
+<footer class="ss-footer">
+	<div class="container">
+		<div class="links">
+			
+				<div class="cate">
+					<h2 class="cate-title">个人链接</h2>
+					
+						<a class="link" href="https://github.com/softwareking">Github</a>
+					
+						<a class="link" href="https://www.cnblogs.com/ACMer/">博客园</a>
+					
+						<a class="link" href="http://blog.sina.com.cn/softwaremi">新浪博客</a>
+					
+				</div>
+			
+				<div class="cate">
+					<h2 class="cate-title">社区</h2>
+					
+						<a class="link" href="http://springcloud.cn">主站</a>
+					
+						<a class="link" href="https://github.com/springcloud">Github</a>
+					
+				</div>
+			
+				<div class="cate">
+					<h2 class="cate-title">友情链接</h2>
+					
+						<a class="link" href="https://www.ramostear.com/">谭潮红博客</a>
+					
+						<a class="link" href="http://springcloud.cn">社区</a>
+					
+						<a class="link" href="http://blog.springcloud.cn">博客</a>
+					
+						<a class="link" href="http://tietang.wang/">王铁堂博客</a>
+					
+						<a class="link" href="https://tianhui.xin/">怪咖晨</a>
+					
+				</div>
+			
+				<div class="cate">
+					<h2 class="cate-title">工具</h2>
+					
+						<a class="link" href="http://md.aclickall.com/">微信排版</a>
+					
+						<a class="link" href="https://www.gaoding.com">稿定设计</a>
+					
+						<a class="link" href="http://www.processon.com/">ProcessOn</a>
+					
+						<a class="link" href="https://www.draw.io/">Draw</a>
+					
+				</div>
+			
+		</div>
+		<div class="qrcode">
+			
+				<div>
+					<img class="qrcode-img" src="/img/qrcode/wxgzh.png" />
+					<p class="qrcode-desc">玹霖志</p>
+				</div>
+			
+				<div>
+					<img class="qrcode-img" src="/img/qrcode/sqgz.jpeg" />
+					<p class="qrcode-desc">Spring Cloud中国</p>
+				</div>
+			
+		</div>
+	</div>
+	<div class="copyright">
+		<p>
+			© 2019 玹霖志
+			<a href="#">滇ICP备14007546号</a>
+
+			<span id="busuanzi_container_site_pv">
+            本站访问量：<span id="busuanzi_value_site_pv"></span>次
+        </span>
+        &nbsp;
+        <span id="busuanzi_container_site_uv">
+            您是本站第 <span id="busuanzi_value_site_uv"></span> 位访问者
+        </span>
+		</p>
+
+	</div>
+</footer>
+
+	
+
+
+<aside class="ss-aside hidden" id="scroll_top">
+	<div class="go-top-btn">
+		<a class="logo-link" href="javascript:window.scrollTo(0,0)">
+			<img class="logo" src="/img/gotop.png">
+		</a>
+	</div>
+</aside>
+<script>
+    var typed = new Typed('#sloganTitle', {
+		strings: [
+        '  ',
+		"架构治理之道",
+      ],
+      cursorChar: "|",
+      typeSpeed: 70,
+	  loop: false,
+	});
+	
+     var typed = new Typed('#sloganDesc', {
+		strings: [
+        '  ',
+        "Hi,欢迎访问玹霖志。专注于基础架构，应用架构，业务架构，中台架构治理之道和代码防腐。Halo Ecology™（光环生态）为企业基础架构和中台架构的落地保驾护航！欢迎加我微信Software_King探讨",
+      ],
+      cursorChar: "|",
+      typeSpeed: 70,
+	  loop: false,
+	});
+	
+  </script>
+
+</body>
+
+</html>

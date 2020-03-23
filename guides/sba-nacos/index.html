@@ -1,0 +1,706 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<title>
+	Spring Boot Admin和Nacos集成 · 玹霖志
+</title>
+	<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+<meta name="viewport" content="width=device-width,minimum-scale=1">
+<meta name="description" content="玹霖志,许进沉思录,许进|Spring Cloud,中间件，基础架构，www.xujin.org,xujin.org,-许进沉思录,Venus&#43;,云首科技有限公司,云计算，大数据，物联网，Software_king的博客,云计算Saas，云计算Paas，云计算Iaas Hadoop，大数据，JavaEE，Java，物联网，Hadoop， NoSQL，MongoDB,Spring, Hibernate,Struts2," />
+
+<meta name="generator" content="Hugo 0.55.6" /><link rel="shortcut icon" href=/img/icon.png type="image/png">
+
+<link href="https://unpkg.com/purecss@1.0.0/build/base-min.css" rel="stylesheet">
+
+
+
+<link href="/css/main.css" rel="stylesheet">
+<link href="/css/zoom-image.css" rel="stylesheet">
+
+<script src="/js/iconfont.js"></script>
+<script src="/js/highlight.pack.js"></script>
+<script>hljs.initHighlightingOnLoad();</script>
+
+
+<script>window.SITE_LANGUAGE = "zh"</script>
+<script src="/js/app.js"></script>
+<script src="https://cdn.bootcss.com/typed.js/2.0.11/typed.js"></script>
+
+
+
+<script async src="//cdn.busuanzi.ibruce.info/cdn/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+<script src="//cdn.bootcss.com/jquery/3.2.1/jquery.min.js"></script>
+
+<script>
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    $(window).scroll(function () {
+        
+        if ($(window).scrollTop() >= 200) {
+            $("#scroll_top").removeClass("hidden").addClass("show"); 
+        } else {
+            $("#scroll_top").removeClass("show").addClass("hidden"); 
+        }
+    });
+</script>
+
+
+
+
+
+
+
+<script type="application/javascript">
+var doNotTrack = false;
+if (!doNotTrack) {
+	(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+	(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+	m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+	})(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+	ga('create', 'UA-142131411-1', 'auto');
+	
+	ga('send', 'pageview');
+}
+</script>
+
+</head>
+
+<body>
+	<header class="ss-header">
+	<nav class="navbar" role="navigation" aria-label="main navigation">
+		<div class="navbar-brand">
+			<a class="logo-link" href="/">
+				<img class="logo" src="/img/logo.png">
+			</a>
+			<div class="-show-mobile">
+				<a id="mobile-menu-icon">
+					<svg class="icon" aria-hidden="true">
+						<use xlink:href="#icon-menu"></use>
+					</svg>
+				</a>
+				<nav id="mobile-menu">
+					
+          
+            <a
+              class=""
+              href="/projects/">
+              <span>
+                项目
+              </span>
+              <svg class="icon" aria-hidden="true"><use xlink:href="#icon-ARROW"></use></svg>
+            </a>
+					
+            <a
+              class=""
+              href="/guides/">
+              <span>
+                案例
+              </span>
+              <svg class="icon" aria-hidden="true"><use xlink:href="#icon-ARROW"></use></svg>
+            </a>
+					
+            <a
+              class=""
+              href="/muse/">
+              <span>
+                Muse
+              </span>
+              <svg class="icon" aria-hidden="true"><use xlink:href="#icon-ARROW"></use></svg>
+            </a>
+					
+            <a
+              class=""
+              href="/blog/">
+              <span>
+                博客
+              </span>
+              <svg class="icon" aria-hidden="true"><use xlink:href="#icon-ARROW"></use></svg>
+            </a>
+					
+            <a
+              class=""
+              href="/activities/">
+              <span>
+                活动
+              </span>
+              <svg class="icon" aria-hidden="true"><use xlink:href="#icon-ARROW"></use></svg>
+            </a>
+					
+            <a
+              class=""
+              href="/projects/halo/overview/">
+              <span>
+                Halo
+              </span>
+              <svg class="icon" aria-hidden="true"><use xlink:href="#icon-ARROW"></use></svg>
+            </a>
+					
+            <a
+              class=""
+              href="/about/">
+              <span>
+                关于我
+              </span>
+              <svg class="icon" aria-hidden="true"><use xlink:href="#icon-ARROW"></use></svg>
+            </a>
+					
+					
+				</nav>
+			</div>
+		</div>
+
+		<div class="navbar-menu -hidden-mobile">
+			<div class="navbar-start">
+				
+				
+					<a class="navbar-item "
+						href="/projects/">项目</a>
+				
+					<a class="navbar-item "
+						href="/guides/">案例</a>
+				
+					<a class="navbar-item "
+						href="/muse/">Muse</a>
+				
+					<a class="navbar-item "
+						href="/blog/">博客</a>
+				
+					<a class="navbar-item "
+						href="/activities/">活动</a>
+				
+					<a class="navbar-item "
+						href="/projects/halo/overview/">Halo</a>
+				
+					<a class="navbar-item "
+						href="/about/">关于我</a>
+				
+			</div>
+			<div class="navbar-end">
+				<div class="navbar-item">
+					<div id="js-menu-search" class="navbar-search">
+						<input class="input" placeholder="请输入要搜索的关键词">
+						<svg class="icon" aria-hidden="true">
+							<use xlink:href="#icon-search"></use>
+						</svg>
+					</div>
+				</div>
+				
+			</div>
+		</div>
+	</nav>
+</header>
+
+
+	
+
+	
+
+	
+
+	
+
+	
+
+	
+
+	
+
+
+
+	
+
+<div class="ss-layout-container">
+	<main class="ss-layout-main -card">
+		<div class="ss-meta">
+	<h1 class="title">
+		Spring Boot Admin和Nacos集成
+	</h1>
+	<div class="meta"></div>
+</div>
+		<article class="typo">
+	<p><strong>摘要</strong>:本文主要讲解如何将Spring Boot Admin与Spring Cloud Alibaba中的spring-cloud-starter-alibaba-nacos-discovery进行整合使用。</p>
+
+<h2 id="1-整合概述">1. 整合概述</h2>
+
+<p>通过搭建一个Spring Boot Admin Server，并将其通过spring-cloud-starter-alibaba-nacos-discovery注册到Nacos Server中即可。
+ 源码工程地址为:<a href="https://github.com/SoftwareKing/sba-nacos">https://github.com/SoftwareKing/sba-nacos</a></p>
+
+<blockquote>
+<p>说明本文使用的Spring Boot Admin的版本为2.1.2，Spring Cloud的版本为Greenwich.RELEASE，Spring Cloud Alibaba的版本为0.2.1.RELEASE。至于其它版本，请读者自行适配处理。</p>
+</blockquote>
+
+<h2 id="2-创建sba-nacos工程">2. 创建sba-nacos工程</h2>
+
+<p>1.创建sba-nacos工程，添加maven依赖如下所示:</p>
+
+<pre><code class="language-xml">&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;
+&lt;project xmlns=&quot;http://maven.apache.org/POM/4.0.0&quot;
+         xmlns:xsi=&quot;http://www.w3.org/2001/XMLSchema-instance&quot;
+         xsi:schemaLocation=&quot;http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd&quot;&gt;
+
+    &lt;modelVersion&gt;4.0.0&lt;/modelVersion&gt;
+    &lt;parent&gt;
+        &lt;groupId&gt;org.springframework.boot&lt;/groupId&gt;
+        &lt;artifactId&gt;spring-boot-starter-parent&lt;/artifactId&gt;
+        &lt;version&gt;2.1.2.RELEASE&lt;/version&gt;
+    &lt;/parent&gt;
+
+    &lt;groupId&gt;org.xujin.moss&lt;/groupId&gt;
+    &lt;artifactId&gt;sba-nacos&lt;/artifactId&gt;
+
+    &lt;properties&gt;
+        &lt;spring.boot.admin.version&gt;2.1.2&lt;/spring.boot.admin.version&gt;
+    &lt;/properties&gt;
+
+    &lt;dependencyManagement&gt;
+        &lt;dependencies&gt;
+            &lt;dependency&gt;
+                &lt;groupId&gt;org.springframework.cloud&lt;/groupId&gt;
+                &lt;artifactId&gt;spring-cloud-dependencies&lt;/artifactId&gt;
+                &lt;version&gt;Greenwich.RELEASE&lt;/version&gt;
+                &lt;type&gt;pom&lt;/type&gt;
+                &lt;scope&gt;import&lt;/scope&gt;
+            &lt;/dependency&gt;
+            &lt;dependency&gt;
+                &lt;groupId&gt;org.springframework.cloud&lt;/groupId&gt;
+                &lt;artifactId&gt;spring-cloud-alibaba-dependencies&lt;/artifactId&gt;
+                &lt;version&gt;0.2.1.RELEASE&lt;/version&gt;
+                &lt;type&gt;pom&lt;/type&gt;
+                &lt;scope&gt;import&lt;/scope&gt;
+            &lt;/dependency&gt;
+        &lt;/dependencies&gt;
+    &lt;/dependencyManagement&gt;
+
+    &lt;dependencies&gt;
+
+        &lt;dependency&gt;
+            &lt;groupId&gt;org.springframework.boot&lt;/groupId&gt;
+            &lt;artifactId&gt;spring-boot-starter-actuator&lt;/artifactId&gt;
+        &lt;/dependency&gt;
+
+        &lt;dependency&gt;
+            &lt;groupId&gt;org.springframework.cloud&lt;/groupId&gt;
+            &lt;artifactId&gt;spring-cloud-starter-alibaba-nacos-discovery&lt;/artifactId&gt;
+        &lt;/dependency&gt;
+
+        &lt;dependency&gt;
+            &lt;groupId&gt;de.codecentric&lt;/groupId&gt;
+            &lt;artifactId&gt;spring-boot-admin-starter-server&lt;/artifactId&gt;
+            &lt;version&gt;${spring.boot.admin.version}&lt;/version&gt;
+        &lt;/dependency&gt;
+
+        &lt;dependency&gt;
+            &lt;groupId&gt;org.springframework.boot&lt;/groupId&gt;
+            &lt;artifactId&gt;spring-boot-starter-web&lt;/artifactId&gt;
+        &lt;/dependency&gt;
+
+        &lt;dependency&gt;
+            &lt;groupId&gt;org.jolokia&lt;/groupId&gt;
+            &lt;artifactId&gt;jolokia-core&lt;/artifactId&gt;
+        &lt;/dependency&gt;
+    &lt;/dependencies&gt;
+    &lt;build&gt;
+        &lt;finalName&gt;sba-nacos&lt;/finalName&gt;
+        &lt;plugins&gt;
+            &lt;plugin&gt;
+                &lt;groupId&gt;org.springframework.boot&lt;/groupId&gt;
+                &lt;artifactId&gt;spring-boot-maven-plugin&lt;/artifactId&gt;
+            &lt;/plugin&gt;
+        &lt;/plugins&gt;
+    &lt;/build&gt;
+&lt;/project&gt;
+</code></pre>
+
+<ol>
+<li>创建主入口程序，代码如下所示:</li>
+</ol>
+
+<pre><code class="language-java">package org.xujin.moss.nacos;
+
+import de.codecentric.boot.admin.server.config.EnableAdminServer;
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
+
+
+@SpringBootApplication
+@EnableAdminServer
+@EnableDiscoveryClient
+public class MossNacosApplication {
+    public static void main(String[] args) {
+        SpringApplication.run(MossNacosApplication.class, args);
+    }
+}
+
+</code></pre>
+
+<p>3.application.yml配置如下所示:</p>
+
+<pre><code class="language-yml">spring:
+    application:
+        name: sba-nacos
+    cloud:
+      nacos:
+        discovery:
+          server-addr: 127.0.0.1:8848
+
+server:
+    port: 8080 #启动端口
+
+info.groupId: @project.groupId@
+info.artifactId: @project.artifactId@
+info.version: @project.version@
+
+
+#开启端点
+management:
+  endpoints:
+    web:
+      exposure:
+        include: '*'
+  security:
+    enabled: false
+  endpoint:
+    health:
+      show-details: ALWAYS
+</code></pre>
+
+<blockquote>
+<p>其中127.0.0.1:8848为Nacos Server的地址。</p>
+</blockquote>
+
+<h2 id="3-启动测试">3.启动测试</h2>
+
+<h3 id="3-1-本地源码启动nacos">3.1 本地源码启动Nacos</h3>
+
+<p>至于什么是Nacos，这里不做过多介绍。有兴趣者可以访问<a href="http://nacos.io">http://nacos.io</a>,或者访问: <a href="http://nacos.net">http://nacos.net</a>.</p>
+
+<blockquote>
+<p>说明: <a href="http://nacos.net">http://nacos.net</a>.目前内容为快照版本。</p>
+</blockquote>
+
+<p>访问<a href="https://github.com/alibaba/nacos">https://github.com/alibaba/nacos</a> ,使用Git克隆Nacos代码，直接导入到IDEA中，如下所示设置启动参数，直接启动。
+<img src="1.png" alt="" /></p>
+
+<blockquote>
+<p>从IDE中启动Nacos是我个人喜欢的方式，因为可以随时Debug Nacos任何代码，其它启动方式请参考官网。</p>
+</blockquote>
+
+<h3 id="3-2-启动sba-nacos">3.2 启动sba-nacos</h3>
+
+<p>以Debug方式启动，sba-nacos，如下图所示：</p>
+
+<p><img src="2.png" alt="" /></p>
+
+<p>启动之后访问nacos控制台，我们可以看到sba-nacos已经注册到Nacos注册中心。如下图所示.
+<img src="3.png" alt="" /></p>
+
+<blockquote>
+<p>说明访问Nacos控制台，需要输入用户名和密码默认为用户名为nacos，密码:nacos</p>
+</blockquote>
+
+<p>访问<a href="http://localhost:8080/#/instances/92cfba09790d/details，我们可以看到Spring">http://localhost:8080/#/instances/92cfba09790d/details，我们可以看到Spring</a> Boot Admin Server已经成功启动，并且通过EndPoint获取到自己的端点信息，如下图所示:</p>
+
+<p><img src="4.png" alt="" /></p>
+
+</article>
+
+<div id="gitalk-container"></div>
+<link rel="stylesheet" href="https://unpkg.com/gitalk/dist/gitalk.css">
+<script src="https://unpkg.com/gitalk/dist/gitalk.min.js"></script>
+<script>
+  const gitalk = new Gitalk({
+    clientID: '6928118cff8d42e226a1',
+    clientSecret: '24edd8a31c50467e0d741b3a803c199e7ad53567',
+    repo: 'softwareking.github.io',
+    owner: 'Softwareking',
+    admin: ['Softwareking'],
+    id: location.pathname, 
+    distractionFreeMode: false 
+  });
+  (function() {
+    if (["localhost", "127.0.0.1"].indexOf(window.location.hostname) != -1) {
+      document.getElementById('gitalk-container').innerHTML = 'Gitalk comments not available by default when the website is previewed locally.';
+      return;
+    }
+    gitalk.render('gitalk-container');
+  })();
+</script>
+<style>
+
+  .gt-container .gt-btn-login {
+      background-color: #ff6a00;
+      border: 1px solid #ff6a00;
+  }
+
+  .gt-container .gt-btn-public {
+      background-color: #ff6a00;
+      border: 1px solid #ff6a00;
+  }
+
+  .gt-container .gt-btn-public:hover {
+      background-color: #ff6a00;
+      border: 1px solid #ff6a00;
+  }
+
+  .gt-container .gt-btn-preview {
+    background-color: #fff;
+    color: #ff6a00;
+  }
+  .gt-container .gt-btn {
+    padding: 0.75em 1.25em;
+    display: inline-block;
+    line-height: 1;
+    text-decoration: none;
+    white-space: nowrap;
+    cursor: pointer;
+    border: 1px solid #ff6a00;
+    border-radius: 5px;
+    background-color: #ff6a00;
+    color: #fff;
+    outline: none;
+    font-size: 0.75em;
+   }
+
+
+  .gt-container a {
+      color: #ff6a00;
+  }
+
+  .gt-container .gt-btn-preview:hover {
+      border: 1px solid #ff6a00;
+  }
+
+  .gt-container .gt-svg svg {
+      fill: #ff6a00;
+  }
+
+  .gt-container .gt-comment-username {
+      color: #ff6a00;
+  }
+  
+  .gt-container .gt-popup .gt-action.is--active:before {
+      background: #ff6a00;
+  }
+
+  .gt-container .gt-header-controls-tip {
+    font-size: 0.875em;
+    color: #ff6a00;
+    text-decoration: none;
+    vertical-align: sub;
+}
+
+</style>
+
+		
+
+	<nav class="ss-pagination-next">
+		<a class="link-prev" href="/guides/sc-gw-01/">
+			<span class="text">上一篇: </span>
+			<span class="text">Spring Cloud Gateway的权重路由</span>
+		</a>
+		<a class="link-next" href="/guides/idea-02/">
+			<span class="text">下一篇: </span>
+			<span class="text">IDEA插件-自定义行标记开发</span>
+		</a>
+	</nav>
+
+	</main>
+
+	<aside class="ss-layout-aside">
+		<div class="ss-card">
+	<h2 class="card-title">
+		获取代码
+	</h2>
+	<div id="js-code" class="ss-aside-code">
+		<div class="button-group">
+			<button class="button">HTTPS</button>
+			<button class="button">SSH</button>
+		</div>
+		<div class="input-group">
+			<input class="input" value="https://github.com/SoftwareKing/sba-nacos" spellcheck="false" />
+			<span class="addon">
+				<svg class="icon copy" aria-hidden="true"><use xlink:href="#icon-copy"></use></svg>
+				<svg class="icon tick" aria-hidden="true"><use xlink:href="#icon-ictick"></use></svg>
+			</span>
+		</div>
+		<a class="button download"
+			href="https://github.com/SoftwareKing/sba-nacos/archive/master.zip"
+		>下载 ZIP</a>
+	</div>
+</div>
+		
+	<div class="ss-card">
+		<h2 class="card-title">
+			项目
+		</h2>
+		<div class="ss-aside-project">
+			
+				<a class="link" href="https://github.com/springcoud/moss">Moss</a>
+			
+		</div>
+	</div>
+
+		
+
+
+<div class="ss-card ss-aside-toc">
+	<h2 class="card-title">
+		目录
+	</h2>
+  <nav id="TableOfContents">
+<ul>
+<li>
+<ul>
+<li><a href="#1-整合概述">1. 整合概述</a></li>
+<li><a href="#2-创建sba-nacos工程">2. 创建sba-nacos工程</a></li>
+<li><a href="#3-启动测试">3.启动测试</a>
+<ul>
+<li><a href="#3-1-本地源码启动nacos">3.1 本地源码启动Nacos</a></li>
+<li><a href="#3-2-启动sba-nacos">3.2 启动sba-nacos</a></li>
+</ul></li>
+</ul></li>
+</ul>
+</nav>
+</div>
+
+
+	</aside>
+</div>
+
+
+
+	
+
+<footer class="ss-footer">
+	<div class="container">
+		<div class="links">
+			
+				<div class="cate">
+					<h2 class="cate-title">个人链接</h2>
+					
+						<a class="link" href="https://github.com/softwareking">Github</a>
+					
+						<a class="link" href="https://www.cnblogs.com/ACMer/">博客园</a>
+					
+						<a class="link" href="http://blog.sina.com.cn/softwaremi">新浪博客</a>
+					
+				</div>
+			
+				<div class="cate">
+					<h2 class="cate-title">社区</h2>
+					
+						<a class="link" href="http://springcloud.cn">主站</a>
+					
+						<a class="link" href="https://github.com/springcloud">Github</a>
+					
+				</div>
+			
+				<div class="cate">
+					<h2 class="cate-title">友情链接</h2>
+					
+						<a class="link" href="https://www.ramostear.com/">谭潮红博客</a>
+					
+						<a class="link" href="http://springcloud.cn">社区</a>
+					
+						<a class="link" href="http://blog.springcloud.cn">博客</a>
+					
+						<a class="link" href="http://tietang.wang/">王铁堂博客</a>
+					
+						<a class="link" href="https://tianhui.xin/">怪咖晨</a>
+					
+				</div>
+			
+				<div class="cate">
+					<h2 class="cate-title">工具</h2>
+					
+						<a class="link" href="http://md.aclickall.com/">微信排版</a>
+					
+						<a class="link" href="https://www.gaoding.com">稿定设计</a>
+					
+						<a class="link" href="http://www.processon.com/">ProcessOn</a>
+					
+						<a class="link" href="https://www.draw.io/">Draw</a>
+					
+				</div>
+			
+		</div>
+		<div class="qrcode">
+			
+				<div>
+					<img class="qrcode-img" src="/img/qrcode/wxgzh.png" />
+					<p class="qrcode-desc">玹霖志</p>
+				</div>
+			
+				<div>
+					<img class="qrcode-img" src="/img/qrcode/sqgz.jpeg" />
+					<p class="qrcode-desc">Spring Cloud中国</p>
+				</div>
+			
+		</div>
+	</div>
+	<div class="copyright">
+		<p>
+			© 2019 玹霖志
+			<a href="#">滇ICP备14007546号</a>
+
+			<span id="busuanzi_container_site_pv">
+            本站访问量：<span id="busuanzi_value_site_pv"></span>次
+        </span>
+        &nbsp;
+        <span id="busuanzi_container_site_uv">
+            您是本站第 <span id="busuanzi_value_site_uv"></span> 位访问者
+        </span>
+		</p>
+
+	</div>
+</footer>
+
+	
+
+
+<aside class="ss-aside hidden" id="scroll_top">
+	<div class="go-top-btn">
+		<a class="logo-link" href="javascript:window.scrollTo(0,0)">
+			<img class="logo" src="/img/gotop.png">
+		</a>
+	</div>
+</aside>
+<script>
+    var typed = new Typed('#sloganTitle', {
+		strings: [
+        '  ',
+		"架构治理之道",
+      ],
+      cursorChar: "|",
+      typeSpeed: 70,
+	  loop: false,
+	});
+	
+     var typed = new Typed('#sloganDesc', {
+		strings: [
+        '  ',
+        "Hi,欢迎访问玹霖志。专注于基础架构，应用架构，业务架构，中台架构治理之道和代码防腐。Halo Ecology™（光环生态）为企业基础架构和中台架构的落地保驾护航！欢迎加我微信Software_King探讨",
+      ],
+      cursorChar: "|",
+      typeSpeed: 70,
+	  loop: false,
+	});
+	
+  </script>
+
+</body>
+
+</html>

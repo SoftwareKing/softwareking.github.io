@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>CAP中间件 on 玹霖志</title>
+    <link>/projects/cap/</link>
+    <description>Recent content in CAP中间件 on 玹霖志</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>zh-CN</language>
+    <lastBuildDate>Thu, 12 Jul 2018 00:00:00 +0000</lastBuildDate>
+    
+	<atom:link href="/projects/cap/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>CAP介绍</title>
+      <link>/projects/cap/overview/</link>
+      <pubDate>Thu, 12 Jul 2018 00:00:00 +0000</pubDate>
+      
+      <guid>/projects/cap/overview/</guid>
+      <description>1.CAP概述 CAP-专注于数据一致性领域，为注册中心，开关中心，配置中心，网关提供数据一致性下发的强大基石。 1.1 CAP命名由来 大家都知道CA</description>
+    </item>
+    
+  </channel>
+</rss>

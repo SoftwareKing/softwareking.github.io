@@ -1,0 +1,510 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>玹霖志</title>
+    <link>/</link>
+    <description>Recent content on 玹霖志</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>zh-CN</language>
+    <lastBuildDate>Thu, 27 Feb 2020 21:00:00 +0800</lastBuildDate>
+    
+	<atom:link href="/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>ECS中配置公网域名访问多个Spring Boot应用</title>
+      <link>/muse/1/</link>
+      <pubDate>Thu, 27 Feb 2020 21:00:00 +0800</pubDate>
+      
+      <guid>/muse/1/</guid>
+      <description>本文主要记录在阿里云ECS上安装配置Ngnix，通过公网域名访问多个Spring Boot应用。 1.安装Ngnix 1.yum安装Nginx sudo yum</description>
+    </item>
+    
+    <item>
+      <title>基于MyBatis Plus扩展对Empty Where拦截</title>
+      <link>/blog/mybatis/2/</link>
+      <pubDate>Sun, 19 Jan 2020 14:00:00 +0800</pubDate>
+      
+      <guid>/blog/mybatis/2/</guid>
+      <description>1.背景 项目中经常出现因为Mybatis的动态where条件不满足导致实际sql语句的where条件为空,进而查询全表,当数据量比较大的时候</description>
+    </item>
+    
+    <item>
+      <title>基础架构及中间件体系概述</title>
+      <link>/blog/mw/2/</link>
+      <pubDate>Thu, 14 Nov 2019 15:00:00 +0800</pubDate>
+      
+      <guid>/blog/mw/2/</guid>
+      <description>1.基础架构职责 设计和开发新一代的基础组件，为重构项目提供技术平台 设计和构建统一的应用开发框架，提高应用开发效率和质量 建立统一的应用构建标准</description>
+    </item>
+    
+    <item>
+      <title>如何平滑将注册中心从Eureka迁移到Nacos？</title>
+      <link>/blog/eureka-sync-nacos/</link>
+      <pubDate>Sun, 10 Nov 2019 14:00:00 +0800</pubDate>
+      
+      <guid>/blog/eureka-sync-nacos/</guid>
+      <description>1.背景 Nacos与Eureka相比，Nacos的优点非常明显，当然首选Nacos作为注册中心。本文主要介绍如何从Eureka无缝平滑迁移到</description>
+    </item>
+    
+    <item>
+      <title>向左还是向右？聊聊中台建设中的那些纠结事</title>
+      <link>/blog/zt/2/</link>
+      <pubDate>Tue, 29 Oct 2019 14:00:00 +0800</pubDate>
+      
+      <guid>/blog/zt/2/</guid>
+      <description>背景 今年参加了云栖大会，作为中台的践行者，我也更关注中台架构实施的行业状况，学习了其他公司中台的思想和经验。云栖大会上，我和做中台实践的同学</description>
+    </item>
+    
+    <item>
+      <title>中国互联网20多年中间件合集</title>
+      <link>/blog/mw/1/</link>
+      <pubDate>Fri, 25 Oct 2019 15:00:00 +0800</pubDate>
+      
+      <guid>/blog/mw/1/</guid>
+      <description>中间件列表</description>
+    </item>
+    
+    <item>
+      <title>如何打造业务中台发动机?</title>
+      <link>/blog/zt/1/</link>
+      <pubDate>Tue, 22 Oct 2019 14:00:00 +0800</pubDate>
+      
+      <guid>/blog/zt/1/</guid>
+      <description>前言 从2018年开始，“中台”成为风靡IT技术圈的热词，每个人对中台的理解就像一千个观众眼中有一千个哈姆雷特一样。本文将从可落地的角度，分享</description>
+    </item>
+    
+    <item>
+      <title>IDEA插件开发-自定义行标记</title>
+      <link>/blog/idea/line-marker-2/</link>
+      <pubDate>Fri, 18 Oct 2019 17:00:00 +0800</pubDate>
+      
+      <guid>/blog/idea/line-marker-2/</guid>
+      <description>1.行标记 1.1 行标记概述 IDEA源码编辑代码区域，可以编辑代码。大家肯定看到行上面有一些图标，其实我们也可以定义自己的行标记结合自己的需要弹窗</description>
+    </item>
+    
+    <item>
+      <title>Halo Check 介绍</title>
+      <link>/projects/halo-check/overview/</link>
+      <pubDate>Fri, 18 Oct 2019 00:00:00 +0000</pubDate>
+      
+      <guid>/projects/halo-check/overview/</guid>
+      <description>1. Halo Check概述 Halo Check基于Git Hook+JGit+CheckStyle+PMD对代码增量diff Check是否满足Halo Styl</description>
+    </item>
+    
+    <item>
+      <title>Halo Plugin 介绍</title>
+      <link>/projects/halo-plugin/overview/</link>
+      <pubDate>Fri, 18 Oct 2019 00:00:00 +0000</pubDate>
+      
+      <guid>/projects/halo-plugin/overview/</guid>
+      <description>1. Halo Plugin概述 Halo Plugin是Halo框架量身打造的maven插件或Gradle插件。 2.Halo Plugin 2.1 Gradle插件 halo-referenc</description>
+    </item>
+    
+    <item>
+      <title>Switch-开关中间件设计</title>
+      <link>/blog/mw/switch1/</link>
+      <pubDate>Thu, 17 Oct 2019 20:00:00 +0800</pubDate>
+      
+      <guid>/blog/mw/switch1/</guid>
+      <description>1.开关中间件 1.1 Switch概述 switch提供统一的方式来定义开关、统一的控制台和api来对开关进行查询和操控。Switch定义的开关包含</description>
+    </item>
+    
+    <item>
+      <title>Halo Admin概述</title>
+      <link>/projects/halo-admin/overview/</link>
+      <pubDate>Sun, 13 Oct 2019 21:00:00 +0800</pubDate>
+      
+      <guid>/projects/halo-admin/overview/</guid>
+      <description>1. Halo Admin Halo Framework对应的中台可视化管控平台，主要包括业务中台域管理，应用管理,业务流程可视化，业务身份管理等</description>
+    </item>
+    
+    <item>
+      <title>Halo Codegen概述</title>
+      <link>/projects/halo-codegen/overview/</link>
+      <pubDate>Sat, 12 Oct 2019 21:00:00 +0800</pubDate>
+      
+      <guid>/projects/halo-codegen/overview/</guid>
+      <description>1. 代码生成器 1.1 什么是代码生成器 早起进行软件工程开发，用文本编辑器去开发写代码，后来为了加快开发效率，出现一系列IDE（开发集成开发工具),比</description>
+    </item>
+    
+    <item>
+      <title>IDEA插件运行报错:Write access is allowed inside write-action only</title>
+      <link>/blog/idea/line-marker-1/</link>
+      <pubDate>Wed, 09 Oct 2019 17:00:00 +0800</pubDate>
+      
+      <guid>/blog/idea/line-marker-1/</guid>
+      <description>1. @Domain行标记修改 Halo框架所创建的应用需要管中台可视化纳管，因此当应用启动的时候会判断当前应用是否属于某个域，不属于某个域将停止</description>
+    </item>
+    
+    <item>
+      <title>Spring Boot Admin和Nacos集成</title>
+      <link>/blog/sba-nacos/</link>
+      <pubDate>Mon, 16 Sep 2019 20:00:00 +0800</pubDate>
+      
+      <guid>/blog/sba-nacos/</guid>
+      <description>摘要:本文主要讲解如何将Spring Boot Admin与Spring Cloud Alibaba中的spring-cloud-starter-alibaba-</description>
+    </item>
+    
+    <item>
+      <title>Spring Cloud Gateway中的GatewayFilter和GlobalFilter</title>
+      <link>/blog/scg-03/</link>
+      <pubDate>Mon, 16 Sep 2019 20:00:00 +0800</pubDate>
+      
+      <guid>/blog/scg-03/</guid>
+      <description>摘要:本文主要介绍了什么是GatewayFilter和GlobalFilter，以及区别和联系。然后介绍如何在Spring Cloud Gateway中</description>
+    </item>
+    
+    <item>
+      <title>Spring Cloud Gateway基于服务发现的默认路由规则</title>
+      <link>/blog/scg-05/</link>
+      <pubDate>Mon, 16 Sep 2019 20:00:00 +0800</pubDate>
+      
+      <guid>/blog/scg-05/</guid>
+      <description>摘要:本篇文章主要介绍了Spring Cloud Gateway的基于服务发现的默认路由规则，从中可以看出Gateway的路由规则:http://Gat</description>
+    </item>
+    
+    <item>
+      <title>Spring Cloud Gateway的Before路由断言工厂</title>
+      <link>/blog/scg-06/</link>
+      <pubDate>Mon, 16 Sep 2019 20:00:00 +0800</pubDate>
+      
+      <guid>/blog/scg-06/</guid>
+      <description>摘要:在上本篇文章Spring Cloud Gateway的After路由断言工厂介绍了Spring Cloud Gateway核心概念和After路由断言，本文简</description>
+    </item>
+    
+    <item>
+      <title>Spring Cloud Gateway的动态路由的简单实现方式</title>
+      <link>/blog/scg-dmy-route/</link>
+      <pubDate>Mon, 16 Sep 2019 20:00:00 +0800</pubDate>
+      
+      <guid>/blog/scg-dmy-route/</guid>
+      <description>1.前言 网关中有两个重要的概念，那就是路由配置和路由规则，路由配置是指配置某请求路径路由到指定的目的地址。而路由规则是指匹配到路由配置之后，</description>
+    </item>
+    
+    <item>
+      <title>Spring Cloud Gateway的权重路由</title>
+      <link>/blog/scg-02/</link>
+      <pubDate>Mon, 16 Sep 2019 20:00:00 +0800</pubDate>
+      
+      <guid>/blog/scg-02/</guid>
+      <description>1.权重路由 1.1 权重路由使用场景 在开发或者测试的时候，或者线上发布，线上服务多版本控制的时候，需要对服务提供权重路由，最常见的使用就是，一个服</description>
+    </item>
+    
+    <item>
+      <title>Spring Cloud第二代</title>
+      <link>/blog/sc-2/</link>
+      <pubDate>Mon, 16 Sep 2019 20:00:00 +0800</pubDate>
+      
+      <guid>/blog/sc-2/</guid>
+      <description>摘要: 随着Eureka不再维护，Hystrix不再开发新功能，进入维护状态。以及最近中国开源出现一些大事，预测一下2019年未来Spring</description>
+    </item>
+    
+    <item>
+      <title>使用Nacos实现Spring Cloud Gateway的动态路由</title>
+      <link>/blog/scg-nacos-01/</link>
+      <pubDate>Mon, 16 Sep 2019 20:00:00 +0800</pubDate>
+      
+      <guid>/blog/scg-nacos-01/</guid>
+      <description>1.前言 网关中有两个重要的概念，那就是路由配置和路由规则，路由配置是指配置某请求路径路由到指定的目的地址。而路由规则是指匹配到路由配置之后，</description>
+    </item>
+    
+    <item>
+      <title>Halo Boot 介绍</title>
+      <link>/projects/halo-boot/overview/</link>
+      <pubDate>Thu, 12 Sep 2019 00:00:00 +0000</pubDate>
+      
+      <guid>/projects/halo-boot/overview/</guid>
+      <description>Halo Boot概述 Halo Boot 是基于 Spring Boot 的研发框架，基于Spring Boot 的中间件轻量集成方案，与标准的 Spring Boot 工程无缝集成。其在完美集成各个中间件的前提下对用</description>
+    </item>
+    
+    <item>
+      <title>Spring Cloud中国社区沙龙-北京站</title>
+      <link>/activities/sq-01/</link>
+      <pubDate>Wed, 17 Oct 2018 10:20:00 +0000</pubDate>
+      
+      <guid>/activities/sq-01/</guid>
+      <description>活动主题：Spring Cloud中国社区沙龙-北京站 活动时间：2018-10-28 13:00 ~ 2018-10-28 17:30 活动形式：现场沙龙 介绍 Spring Cloud中国社区(htt</description>
+    </item>
+    
+    <item>
+      <title>快速开始</title>
+      <link>/projects/halo/quick-start/</link>
+      <pubDate>Fri, 14 Sep 2018 00:00:00 +0000</pubDate>
+      
+      <guid>/projects/halo/quick-start/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Halo 介绍</title>
+      <link>/projects/halo/overview/</link>
+      <pubDate>Wed, 12 Sep 2018 00:00:00 +0000</pubDate>
+      
+      <guid>/projects/halo/overview/</guid>
+      <description>1.Halo Framework概述 Halo Framework是将DDD，洋葱架构，整洁架构，读写分离架构有机整合一起，基于业务身份+扩展点的设计思想，采用应</description>
+    </item>
+    
+    <item>
+      <title>常见问题</title>
+      <link>/projects/halo/faq/</link>
+      <pubDate>Wed, 12 Sep 2018 00:00:00 +0000</pubDate>
+      
+      <guid>/projects/halo/faq/</guid>
+      <description>Q: Halo Flow有啥应用场景？ 应用内部流程编排 Q: Halo DDD是什么？ Halo DDD是Halo框架对领域驱动的封装</description>
+    </item>
+    
+    <item>
+      <title>版权声明</title>
+      <link>/projects/halo/notice/</link>
+      <pubDate>Wed, 12 Sep 2018 00:00:00 +0000</pubDate>
+      
+      <guid>/projects/halo/notice/</guid>
+      <description>Halo使用了一些三方开源组件，他们分别是： 一些主要依赖： Spring under Apache 2.0 license Spring Boot under Apache 2.0 license SLF4j under the MIT License 一些扩展依赖： nuxeo under Apache License, Version 2.0 &amp;hellip; 其它整理中。</description>
+    </item>
+    
+    <item>
+      <title>CAP介绍</title>
+      <link>/projects/cap/overview/</link>
+      <pubDate>Thu, 12 Jul 2018 00:00:00 +0000</pubDate>
+      
+      <guid>/projects/cap/overview/</guid>
+      <description>1.CAP概述 CAP-专注于数据一致性领域，为注册中心，开关中心，配置中心，网关提供数据一致性下发的强大基石。 1.1 CAP命名由来 大家都知道CA</description>
+    </item>
+    
+    <item>
+      <title>Defensor介绍</title>
+      <link>/projects/defensor/overview/</link>
+      <pubDate>Thu, 12 Jul 2018 00:00:00 +0000</pubDate>
+      
+      <guid>/projects/defensor/overview/</guid>
+      <description>1.Defensor概述 Defensor是Halo Framework的守护神(测试工程)，用于保证Halo生态中框架的质量。</description>
+    </item>
+    
+    <item>
+      <title>Janus网关介绍</title>
+      <link>/projects/janus/overview/</link>
+      <pubDate>Thu, 12 Jul 2018 00:00:00 +0000</pubDate>
+      
+      <guid>/projects/janus/overview/</guid>
+      <description>1.Janus概述 Janus网关中间件，掌管着企业级服务对外提供所有请求的入口和出口。功能包括协议适配，协议转发等。 1.1 Janus命名由来 在罗</description>
+    </item>
+    
+    <item>
+      <title>Spring Cloud Gateway只有Pre和POST两种类型的Filter</title>
+      <link>/blog/scg-04/</link>
+      <pubDate>Mon, 21 May 2018 20:00:00 +0800</pubDate>
+      
+      <guid>/blog/scg-04/</guid>
+      <description>摘要:Spring Cloud Gateway只有两种类型的Filter，本文介绍如何在Spring Cloud Gateway中创建一个Pre或Post类型的Fi</description>
+    </item>
+    
+    <item>
+      <title>公益Eureka Server与定制方法</title>
+      <link>/blog/sc-diy-eureka/</link>
+      <pubDate>Mon, 14 May 2018 20:00:00 +0800</pubDate>
+      
+      <guid>/blog/sc-diy-eureka/</guid>
+      <description>1. Spring Cloud中国公益Eureka Server Eureka Server为作为Spring Cloud开发过程中常用的注册中心组件，作为基础设施组件，开发学习过程中</description>
+    </item>
+    
+    <item>
+      <title>Spring Cloud Gateway的Before路由断言工厂</title>
+      <link>/blog/scg-4-1/</link>
+      <pubDate>Wed, 28 Mar 2018 14:00:00 +0800</pubDate>
+      
+      <guid>/blog/scg-4-1/</guid>
+      <description>1. Spring Cloud Gateway核心概念 网关简单的说就是提供一个对外统一的API入口和出口，统管企业对外的所有API出口。一般来说，网关对外暴露的URL</description>
+    </item>
+    
+    <item>
+      <title> Spring Cloud Gateway的After路由断言工厂</title>
+      <link>/blog/scg-07/</link>
+      <pubDate>Sun, 25 Mar 2018 20:00:00 +0800</pubDate>
+      
+      <guid>/blog/scg-07/</guid>
+      <description>摘要:本篇文章主要介绍了Spring Cloud Gateway核心概念和After路由断言，因为比较简单所以就抛砖引玉，旨在帮助大家快速入门Sprin</description>
+    </item>
+    
+    <item>
+      <title>Spring Cloud Gateway揭秘之处理请求流程</title>
+      <link>/blog/scg-08/</link>
+      <pubDate>Sat, 17 Mar 2018 20:00:00 +0800</pubDate>
+      
+      <guid>/blog/scg-08/</guid>
+      <description>1.Spring Gateway概述 Spring Cloud Gateway是Spring官方基于Spring 5.0，Spring Boot 2.0和Project Reactor等技术开发</description>
+    </item>
+    
+    <item>
+      <title>Spring Cloud Gateway入门案例</title>
+      <link>/blog/scg-01/</link>
+      <pubDate>Thu, 15 Mar 2018 14:00:00 +0800</pubDate>
+      
+      <guid>/blog/scg-01/</guid>
+      <description>1.Spring Gateway概述 1.1 什么是Spring Cloud Gateway Spring Cloud Gateway是Spring官方基于Spring 5.0，Spring Boot 2.0和Project</description>
+    </item>
+    
+    <item>
+      <title>并发编程总结之同类容器和异步容器</title>
+      <link>/blog/bf/bf01/</link>
+      <pubDate>Tue, 03 Oct 2017 21:00:00 +0800</pubDate>
+      
+      <guid>/blog/bf/bf01/</guid>
+      <description>1. 同步类容器 同步类容器都是线程安全的，但在某些场景下可能需要加锁来保护复合操作。 复合操作如： * 迭代(反复访问元素，遍历容器中所有的元素)， *</description>
+    </item>
+    
+    <item>
+      <title>Spring Boot中自定义注解&#43;AOP实现主备库切换</title>
+      <link>/blog/sb/sb-aop/</link>
+      <pubDate>Tue, 26 Sep 2017 14:00:00 +0800</pubDate>
+      
+      <guid>/blog/sb/sb-aop/</guid>
+      <description>1.通过AOP 自定义注解实现主库到备库的切换 1.1 自定义注解 自定义注解如下代码所示 import java.lang.annotation.ElementType; import java.lang.annotation.Retention; import java.lang.annotation.RetentionPolicy; import java.lang.annotation.Target; @Retention(RetentionPolicy.RUNTIME) @Target(ElementType.METHOD) public @interface SwitchDataBase { boolean switch2Backup() default false; } 1.2 实现方法拦截器对自定义</description>
+    </item>
+    
+    <item>
+      <title>并发编程之ThreadLocal与单例的推荐写法</title>
+      <link>/blog/bf/bf-th-sing/</link>
+      <pubDate>Sun, 27 Aug 2017 21:00:00 +0800</pubDate>
+      
+      <guid>/blog/bf/bf-th-sing/</guid>
+      <description>一.ThreadLocal的概念 1.1 ThreadLocal概念 ThreadLocal概念：线程局部变量，是一种多线程间并发访问变量的解决方案。</description>
+    </item>
+    
+    <item>
+      <title>Mybatis代码生成&#43;分页&#43;Mapper继承扩展</title>
+      <link>/blog/mybatis/1/</link>
+      <pubDate>Fri, 25 Aug 2017 14:00:00 +0800</pubDate>
+      
+      <guid>/blog/mybatis/1/</guid>
+      <description>1. mybatis-gennerator 1.1 mybatis-gennerator自动生成代码 1.1.1 mybatis-gennerator的安装 Mybatis-Generator的下载地</description>
+    </item>
+    
+    <item>
+      <title>并发编程总结之volatile</title>
+      <link>/blog/bf/bf-volatile/</link>
+      <pubDate>Tue, 09 Aug 2016 21:00:00 +0800</pubDate>
+      
+      <guid>/blog/bf/bf-volatile/</guid>
+      <description>1. volatile概念 在java中，每个线程都会有一块工作内存区，其中存放着所有线程共享的主内存中的变量值的拷贝。当线程执行时，它在自己的工</description>
+    </item>
+    
+    <item>
+      <title>并发编程总结之线程间的通信</title>
+      <link>/blog/bf/bf-thread-singal/</link>
+      <pubDate>Tue, 09 Aug 2016 21:00:00 +0800</pubDate>
+      
+      <guid>/blog/bf/bf-thread-singal/</guid>
+      <description>1. 线程间通信概念 线程是操作系统中独立的个体，但这些个体如果不经过特殊的处理就不能成为一个整体，线程间的通信就成为整体的必用方式之一。当线程存</description>
+    </item>
+    
+    <item>
+      <title>并发编程总结之synchronized细节问题</title>
+      <link>/blog/bf/bf-synchronized/</link>
+      <pubDate>Tue, 26 Jul 2016 21:00:00 +0800</pubDate>
+      
+      <guid>/blog/bf/bf-synchronized/</guid>
+      <description>1. 脏读 1.1 什么是脏读 对于对象的同步和异步方法，我们在设计程序，一定要考虑问题的整体性，不然会出现数据不一致的错误，最经典的错误就是脏读(Dir</description>
+    </item>
+    
+    <item>
+      <title>并发编程总结之多线程基础</title>
+      <link>/blog/bf/bf-multithread/</link>
+      <pubDate>Thu, 21 Jul 2016 21:00:00 +0800</pubDate>
+      
+      <guid>/blog/bf/bf-multithread/</guid>
+      <description>线程安全 线程安全概念 当多个线程访问访问某一个类(对象或方法)时，这个类或对象或方法始终能表现出正确的行为或我们想要的结果，那么这个类(对象或</description>
+    </item>
+    
+    <item>
+      <title>Halo Settings功能</title>
+      <link>/projects/halo-toolkit/halo-settings/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>/projects/halo-toolkit/halo-settings/</guid>
+      <description>1.Halo Settings 1.1 Halo Server设置 Halo ToolKit支持自定义Halo框架对应的代码生成器服务端和Halo Admin可视化中台管控服务端，如下图所示: 主</description>
+    </item>
+    
+    <item>
+      <title>Halo ToolKit概述</title>
+      <link>/projects/halo-toolkit/overview/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>/projects/halo-toolkit/overview/</guid>
+      <description>1. Halo Toolkit概述 Enhances Your Productivity When Developing Applications Based on Halo Framework 2. Halo ToolKit功能 Halo ToolKit是一款IDEA插件，只为加速Halo应用开发而生。目前主要包</description>
+    </item>
+    
+    <item>
+      <title>Halo ToolKit行标记功能</title>
+      <link>/projects/halo-toolkit/line-marker/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>/projects/halo-toolkit/line-marker/</guid>
+      <description>1.行标记功能 1.1 @Domain行标记修改 Halo框架所创建的应用需要管中台可视化纳管，因此当应用启动的时候会判断当前应用是否属于某个域，不属</description>
+    </item>
+    
+    <item>
+      <title>Halo Toolkit创建工程功能</title>
+      <link>/projects/halo-toolkit/create-project/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>/projects/halo-toolkit/create-project/</guid>
+      <description>1.选择应用类型创建工程 2.配置工程基本信息 3.数据库相关配置 4.点击Finish生成工程</description>
+    </item>
+    
+    <item>
+      <title>Halo Tools右键创建功能</title>
+      <link>/projects/halo-toolkit/right-create/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>/projects/halo-toolkit/right-create/</guid>
+      <description>Halo Tools增强右键 Halo Tools提供右键增强功能，帮助开发快速创建常用的Java类，提高开发效率。如下图所示: 如下图所示，右键支持创建13种</description>
+    </item>
+    
+    <item>
+      <title>IDEA插件-添加右键菜单</title>
+      <link>/guides/idea-01/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>/guides/idea-01/</guid>
+      <description>1.背景 使用IDEA或者其它IDE集成开发工具，无论写Java代码还是其它代码都需要很多右键操作，比如包上右键创建Java类，IDEA提供的</description>
+    </item>
+    
+    <item>
+      <title>IDEA插件-自定义行标记开发</title>
+      <link>/guides/idea-02/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>/guides/idea-02/</guid>
+      <description>1.行标记 1.1 行标记概述 IDEA源码编辑代码区域，可以编辑代码。大家肯定看到行上面有一些图标，其实我们也可以定义自己的行标记结合自己的需要弹窗</description>
+    </item>
+    
+    <item>
+      <title>Moss(莫斯) 介绍</title>
+      <link>/projects/moss/overview/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>/projects/moss/overview/</guid>
+      <description>1.什么是Moss 1.1 什么是服务治理 服务治理，我也称之为微服务治理，是指用来管理微服务的整个生命周期。包括应用的创建，服务名的规范，服务的上下</description>
+    </item>
+    
+    <item>
+      <title>Spring Boot Admin和Nacos集成</title>
+      <link>/guides/sba-nacos/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>/guides/sba-nacos/</guid>
+      <description>摘要:本文主要讲解如何将Spring Boot Admin与Spring Cloud Alibaba中的spring-cloud-starter-alibaba-</description>
+    </item>
+    
+    <item>
+      <title>Spring Cloud Gateway的权重路由</title>
+      <link>/guides/sc-gw-01/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>/guides/sc-gw-01/</guid>
+      <description>1.权重路由 1.1 权重路由使用场景 在开发或者测试的时候，或者线上发布，线上服务多版本控制的时候，需要对服务提供权重路由，最常见的使用就是，一个服</description>
+    </item>
+    
+  </channel>
+</rss>

@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Switch on 玹霖志</title>
+    <link>/tags/switch/</link>
+    <description>Recent content in Switch on 玹霖志</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>zh-CN</language>
+    <lastBuildDate>Thu, 17 Oct 2019 20:00:00 +0800</lastBuildDate>
+    
+	<atom:link href="/tags/switch/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>Switch-开关中间件设计</title>
+      <link>/blog/mw/switch1/</link>
+      <pubDate>Thu, 17 Oct 2019 20:00:00 +0800</pubDate>
+      
+      <guid>/blog/mw/switch1/</guid>
+      <description>1.开关中间件 1.1 Switch概述 switch提供统一的方式来定义开关、统一的控制台和api来对开关进行查询和操控。Switch定义的开关包含</description>
+    </item>
+    
+  </channel>
+</rss>

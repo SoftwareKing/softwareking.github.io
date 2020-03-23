@@ -1,0 +1,620 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<title>
+	
+	
+		玹霖志
+	
+</title>
+	<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+<meta name="viewport" content="width=device-width,minimum-scale=1">
+<meta name="description" content="玹霖志,许进沉思录,许进|Spring Cloud,中间件，基础架构，www.xujin.org,xujin.org,-许进沉思录,Venus&#43;,云首科技有限公司,云计算，大数据，物联网，Software_king的博客,云计算Saas，云计算Paas，云计算Iaas Hadoop，大数据，JavaEE，Java，物联网，Hadoop， NoSQL，MongoDB,Spring, Hibernate,Struts2," />
+
+<meta name="generator" content="Hugo 0.55.6" /><link rel="shortcut icon" href=/img/icon.png type="image/png">
+
+<link href="https://unpkg.com/purecss@1.0.0/build/base-min.css" rel="stylesheet">
+
+
+
+<link href="/css/main.css" rel="stylesheet">
+<link href="/css/zoom-image.css" rel="stylesheet">
+
+<script src="/js/iconfont.js"></script>
+<script src="/js/highlight.pack.js"></script>
+<script>hljs.initHighlightingOnLoad();</script>
+
+
+<script>window.SITE_LANGUAGE = "zh"</script>
+<script src="/js/app.js"></script>
+<script src="https://cdn.bootcss.com/typed.js/2.0.11/typed.js"></script>
+
+
+
+<script async src="//cdn.busuanzi.ibruce.info/cdn/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+<script src="//cdn.bootcss.com/jquery/3.2.1/jquery.min.js"></script>
+
+<script>
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    $(window).scroll(function () {
+        
+        if ($(window).scrollTop() >= 200) {
+            $("#scroll_top").removeClass("hidden").addClass("show"); 
+        } else {
+            $("#scroll_top").removeClass("show").addClass("hidden"); 
+        }
+    });
+</script>
+
+
+
+
+
+
+
+<script type="application/javascript">
+var doNotTrack = false;
+if (!doNotTrack) {
+	(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+	(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+	m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+	})(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+	ga('create', 'UA-142131411-1', 'auto');
+	
+	ga('send', 'pageview');
+}
+</script>
+
+</head>
+
+<body>
+	<header class="ss-header">
+	<nav class="navbar" role="navigation" aria-label="main navigation">
+		<div class="navbar-brand">
+			<a class="logo-link" href="/">
+				<img class="logo" src="/img/logo.png">
+			</a>
+			<div class="-show-mobile">
+				<a id="mobile-menu-icon">
+					<svg class="icon" aria-hidden="true">
+						<use xlink:href="#icon-menu"></use>
+					</svg>
+				</a>
+				<nav id="mobile-menu">
+					
+          
+            <a
+              class=""
+              href="/projects/">
+              <span>
+                项目
+              </span>
+              <svg class="icon" aria-hidden="true"><use xlink:href="#icon-ARROW"></use></svg>
+            </a>
+					
+            <a
+              class=""
+              href="/guides/">
+              <span>
+                案例
+              </span>
+              <svg class="icon" aria-hidden="true"><use xlink:href="#icon-ARROW"></use></svg>
+            </a>
+					
+            <a
+              class=""
+              href="/muse/">
+              <span>
+                Muse
+              </span>
+              <svg class="icon" aria-hidden="true"><use xlink:href="#icon-ARROW"></use></svg>
+            </a>
+					
+            <a
+              class=""
+              href="/blog/">
+              <span>
+                博客
+              </span>
+              <svg class="icon" aria-hidden="true"><use xlink:href="#icon-ARROW"></use></svg>
+            </a>
+					
+            <a
+              class=""
+              href="/activities/">
+              <span>
+                活动
+              </span>
+              <svg class="icon" aria-hidden="true"><use xlink:href="#icon-ARROW"></use></svg>
+            </a>
+					
+            <a
+              class=""
+              href="/projects/halo/overview/">
+              <span>
+                Halo
+              </span>
+              <svg class="icon" aria-hidden="true"><use xlink:href="#icon-ARROW"></use></svg>
+            </a>
+					
+            <a
+              class=""
+              href="/about/">
+              <span>
+                关于我
+              </span>
+              <svg class="icon" aria-hidden="true"><use xlink:href="#icon-ARROW"></use></svg>
+            </a>
+					
+					
+				</nav>
+			</div>
+		</div>
+
+		<div class="navbar-menu -hidden-mobile">
+			<div class="navbar-start">
+				
+				
+					<a class="navbar-item "
+						href="/projects/">项目</a>
+				
+					<a class="navbar-item "
+						href="/guides/">案例</a>
+				
+					<a class="navbar-item "
+						href="/muse/">Muse</a>
+				
+					<a class="navbar-item "
+						href="/blog/">博客</a>
+				
+					<a class="navbar-item "
+						href="/activities/">活动</a>
+				
+					<a class="navbar-item "
+						href="/projects/halo/overview/">Halo</a>
+				
+					<a class="navbar-item "
+						href="/about/">关于我</a>
+				
+			</div>
+			<div class="navbar-end">
+				<div class="navbar-item">
+					<div id="js-menu-search" class="navbar-search">
+						<input class="input" placeholder="请输入要搜索的关键词">
+						<svg class="icon" aria-hidden="true">
+							<use xlink:href="#icon-search"></use>
+						</svg>
+					</div>
+				</div>
+				
+			</div>
+		</div>
+	</nav>
+</header>
+
+
+	
+
+	
+
+	
+
+	
+
+	
+
+	
+
+	
+
+
+
+	
+
+<div class="home-background -no-max-width">
+	<img src="/img/cover-bg.png" />
+</div>
+
+<div class="ss-layout-container">
+	<main class="ss-layout-main">
+		
+			<article class="ss-summary ss-card">
+	
+	
+		
+			
+			
+			
+				
+			
+		
+	
+
+	<img class="cover" src="/blog/bf/bf01/1.png" />
+	<div class="container">
+		<h2 class="title"><a href='/blog/bf/bf01/'> 并发编程总结之同类容器和异步容器</a></h2>
+		<div class="meta">
+			2017-10-03 · 许进
+		</div>
+		<div class="summary">
+			
+				并发编程总结之同类容器和异步容器
+			
+		</div>
+		<div class="tags">
+			
+				
+					<a class="tag" href="/tags/%E5%B9%B6%E5%8F%91%E7%BC%96%E7%A8%8B/" rel="tag">#并发编程</a>
+				
+					<a class="tag" href="/tags/%E5%A4%9A%E7%BA%BF%E7%A8%8B/" rel="tag">#多线程</a>
+				
+			
+		</div>
+	</div>
+</article>
+		
+			<article class="ss-summary ss-card">
+	
+	
+		
+			
+			
+			
+				
+			
+		
+	
+
+	<img class="cover" src="/blog/bf/bf-th-sing/1.png" />
+	<div class="container">
+		<h2 class="title"><a href='/blog/bf/bf-th-sing/'> 并发编程之ThreadLocal与单例的推荐写法</a></h2>
+		<div class="meta">
+			2017-08-27 · 许进
+		</div>
+		<div class="summary">
+			
+				本文结合最近网关项目代码重构，总结介绍了`ThreadLocal`是一种`多线程间并发访问变量`的解决方案，用空间换时间，并用代码示例说明，还介绍了什么是单例以及单例的推荐两种写法分别是`静态内部类`写法和`dubbl check instance`的写法，扩展介绍了其它懒汉，枚举,饿汉的写法等
+			
+		</div>
+		<div class="tags">
+			
+				
+					<a class="tag" href="/tags/%E5%B9%B6%E5%8F%91%E7%BC%96%E7%A8%8B/" rel="tag">#并发编程</a>
+				
+					<a class="tag" href="/tags/%E5%A4%9A%E7%BA%BF%E7%A8%8B/" rel="tag">#多线程</a>
+				
+			
+		</div>
+	</div>
+</article>
+		
+			<article class="ss-summary ss-card">
+	
+	
+		
+			
+			
+			
+				
+			
+		
+	
+
+	<img class="cover" src="/blog/bf/bf-volatile/1.png" />
+	<div class="container">
+		<h2 class="title"><a href='/blog/bf/bf-volatile/'> 并发编程总结之volatile</a></h2>
+		<div class="meta">
+			2016-08-09 · 许进
+		</div>
+		<div class="summary">
+			
+				本文主要介绍了 volatile关键字的作用是使变量在多个线程间可见,但是不具有原子性，以及volatile的运行内存介绍
+			
+		</div>
+		<div class="tags">
+			
+				
+					<a class="tag" href="/tags/%E5%B9%B6%E5%8F%91%E7%BC%96%E7%A8%8B/" rel="tag">#并发编程</a>
+				
+					<a class="tag" href="/tags/%E5%A4%9A%E7%BA%BF%E7%A8%8B/" rel="tag">#多线程</a>
+				
+			
+		</div>
+	</div>
+</article>
+		
+			<article class="ss-summary ss-card">
+	
+	
+		
+			
+			
+			
+				
+			
+		
+	
+
+	<img class="cover" src="/blog/bf/bf-thread-singal/1.png" />
+	<div class="container">
+		<h2 class="title"><a href='/blog/bf/bf-thread-singal/'> 并发编程总结之线程间的通信</a></h2>
+		<div class="meta">
+			2016-08-09 · 许进
+		</div>
+		<div class="summary">
+			
+				使用wait/notify方法实现线程间的通信。wait和notify必须配合synchronized关键字使用，wait方法释放锁，notify方法不释放锁`。
+			
+		</div>
+		<div class="tags">
+			
+				
+					<a class="tag" href="/tags/%E5%B9%B6%E5%8F%91%E7%BC%96%E7%A8%8B/" rel="tag">#并发编程</a>
+				
+					<a class="tag" href="/tags/%E5%A4%9A%E7%BA%BF%E7%A8%8B/" rel="tag">#多线程</a>
+				
+			
+		</div>
+	</div>
+</article>
+		
+			<article class="ss-summary ss-card">
+	
+	
+		
+			
+			
+			
+				
+			
+		
+	
+
+	<img class="cover" src="/blog/bf/bf-synchronized/1.png" />
+	<div class="container">
+		<h2 class="title"><a href='/blog/bf/bf-synchronized/'> 并发编程总结之synchronized细节问题</a></h2>
+		<div class="meta">
+			2016-07-26 · 许进
+		</div>
+		<div class="summary">
+			
+				本节主要介绍了并发编程下怎么避免数据脏读和什么是synchronized的可重入锁，synchronized的可重入锁的几种使用场景下，是线程安全的。以及一些细节的synchronized使用问题和synchronized常见代码块示例Code可以直接Copy运行
+			
+		</div>
+		<div class="tags">
+			
+				
+					<a class="tag" href="/tags/%E5%B9%B6%E5%8F%91%E7%BC%96%E7%A8%8B/" rel="tag">#并发编程</a>
+				
+					<a class="tag" href="/tags/%E5%A4%9A%E7%BA%BF%E7%A8%8B/" rel="tag">#多线程</a>
+				
+			
+		</div>
+	</div>
+</article>
+		
+
+		
+
+
+	</main>
+
+	<aside class="ss-layout-aside">
+		<div class="ss-card -hidden-mobile">
+	<h2 class="card-title">
+		分类
+	</h2>
+	<ul class="ss-aside-related">
+		
+		<li><a href="/categories/eureka-server/">Eureka Server</a></li>
+		
+		<li><a href="/categories/halo-tools/">Halo Tools</a></li>
+		
+		<li><a href="/categories/muse/">Muse</a></li>
+		
+		<li><a href="/categories/mybatis/">Mybatis</a></li>
+		
+		<li><a href="/categories/nacos/">Nacos</a></li>
+		
+		<li><a href="/categories/spring-boot/">Spring Boot</a></li>
+		
+		<li><a href="/categories/spring-boot-admin/">Spring Boot Admin</a></li>
+		
+		<li><a href="/categories/spring-cloud/">Spring Cloud</a></li>
+		
+		<li><a href="/categories/spring-cloud-gateway/">Spring Cloud Gateway</a></li>
+		
+		<li><a href="/categories/%E4%B8%AD%E5%8F%B0/">中台</a></li>
+		
+		<li><a href="/categories/%E4%B8%AD%E9%97%B4%E4%BB%B6/">中间件</a></li>
+		
+		<li><a href="/categories/%E5%B9%B6%E5%8F%91%E7%BC%96%E7%A8%8B/">并发编程</a></li>
+		
+		<li><a href="/categories/%E7%A4%BE%E5%8C%BA%E6%B2%99%E9%BE%99/">社区沙龙</a></li>
+		
+	</ul>
+</div>
+		
+
+
+		<div class="ss-aside-tags ss-card">
+	<h2 class="card-title">
+		标签
+		<span class="card-extra"></span>
+	</h2>
+	<ul class="tag-list">
+		
+			<li class="tag"><a href="/tags/eureka-server/">Eureka Server</a></li>
+		
+			<li class="tag"><a href="/tags/halo-tools/">Halo Tools</a></li>
+		
+			<li class="tag"><a href="/tags/myabtis/">Myabtis</a></li>
+		
+			<li class="tag"><a href="/tags/nacos/">Nacos</a></li>
+		
+			<li class="tag"><a href="/tags/ngnix/">Ngnix</a></li>
+		
+			<li class="tag"><a href="/tags/spring-boot-admin/">Spring Boot Admin</a></li>
+		
+			<li class="tag"><a href="/tags/spring-cloud/">Spring Cloud</a></li>
+		
+			<li class="tag"><a href="/tags/spring-cloud-gateway/">Spring Cloud Gateway</a></li>
+		
+			<li class="tag"><a href="/tags/spring-cloud%E4%B8%AD%E5%9B%BD%E7%A4%BE%E5%8C%BA/">Spring Cloud中国社区</a></li>
+		
+			<li class="tag"><a href="/tags/switch/">Switch</a></li>
+		
+			<li class="tag"><a href="/tags/%E4%B8%9A%E5%8A%A1%E4%B8%AD%E5%8F%B0/">业务中台</a></li>
+		
+			<li class="tag"><a href="/tags/%E4%B8%AD%E9%97%B4%E4%BB%B6/">中间件</a></li>
+		
+			<li class="tag"><a href="/tags/%E5%A4%9A%E7%BA%BF%E7%A8%8B/">多线程</a></li>
+		
+			<li class="tag"><a href="/tags/%E5%B9%B6%E5%8F%91%E7%BC%96%E7%A8%8B/">并发编程</a></li>
+		
+			<li class="tag"><a href="/tags/%E7%A4%BE%E5%8C%BA%E6%B2%99%E9%BE%99/">社区沙龙</a></li>
+		
+			<li class="tag"><a href="/tags/%E9%A1%B9%E7%9B%AE%E7%BB%8F%E9%AA%8C/">项目经验</a></li>
+		
+	</ul>
+</div>
+	</aside>
+</div>
+
+
+
+	
+
+<footer class="ss-footer">
+	<div class="container">
+		<div class="links">
+			
+				<div class="cate">
+					<h2 class="cate-title">个人链接</h2>
+					
+						<a class="link" href="https://github.com/softwareking">Github</a>
+					
+						<a class="link" href="https://www.cnblogs.com/ACMer/">博客园</a>
+					
+						<a class="link" href="http://blog.sina.com.cn/softwaremi">新浪博客</a>
+					
+				</div>
+			
+				<div class="cate">
+					<h2 class="cate-title">社区</h2>
+					
+						<a class="link" href="http://springcloud.cn">主站</a>
+					
+						<a class="link" href="https://github.com/springcloud">Github</a>
+					
+				</div>
+			
+				<div class="cate">
+					<h2 class="cate-title">友情链接</h2>
+					
+						<a class="link" href="https://www.ramostear.com/">谭潮红博客</a>
+					
+						<a class="link" href="http://springcloud.cn">社区</a>
+					
+						<a class="link" href="http://blog.springcloud.cn">博客</a>
+					
+						<a class="link" href="http://tietang.wang/">王铁堂博客</a>
+					
+						<a class="link" href="https://tianhui.xin/">怪咖晨</a>
+					
+				</div>
+			
+				<div class="cate">
+					<h2 class="cate-title">工具</h2>
+					
+						<a class="link" href="http://md.aclickall.com/">微信排版</a>
+					
+						<a class="link" href="https://www.gaoding.com">稿定设计</a>
+					
+						<a class="link" href="http://www.processon.com/">ProcessOn</a>
+					
+						<a class="link" href="https://www.draw.io/">Draw</a>
+					
+				</div>
+			
+		</div>
+		<div class="qrcode">
+			
+				<div>
+					<img class="qrcode-img" src="/img/qrcode/wxgzh.png" />
+					<p class="qrcode-desc">玹霖志</p>
+				</div>
+			
+				<div>
+					<img class="qrcode-img" src="/img/qrcode/sqgz.jpeg" />
+					<p class="qrcode-desc">Spring Cloud中国</p>
+				</div>
+			
+		</div>
+	</div>
+	<div class="copyright">
+		<p>
+			© 2019 玹霖志
+			<a href="#">滇ICP备14007546号</a>
+
+			<span id="busuanzi_container_site_pv">
+            本站访问量：<span id="busuanzi_value_site_pv"></span>次
+        </span>
+        &nbsp;
+        <span id="busuanzi_container_site_uv">
+            您是本站第 <span id="busuanzi_value_site_uv"></span> 位访问者
+        </span>
+		</p>
+
+	</div>
+</footer>
+
+	
+
+
+<aside class="ss-aside hidden" id="scroll_top">
+	<div class="go-top-btn">
+		<a class="logo-link" href="javascript:window.scrollTo(0,0)">
+			<img class="logo" src="/img/gotop.png">
+		</a>
+	</div>
+</aside>
+<script>
+    var typed = new Typed('#sloganTitle', {
+		strings: [
+        '  ',
+		"架构治理之道",
+      ],
+      cursorChar: "|",
+      typeSpeed: 70,
+	  loop: false,
+	});
+	
+     var typed = new Typed('#sloganDesc', {
+		strings: [
+        '  ',
+        "Hi,欢迎访问玹霖志。专注于基础架构，应用架构，业务架构，中台架构治理之道和代码防腐。Halo Ecology™（光环生态）为企业基础架构和中台架构的落地保驾护航！欢迎加我微信Software_King探讨",
+      ],
+      cursorChar: "|",
+      typeSpeed: 70,
+	  loop: false,
+	});
+	
+  </script>
+
+</body>
+
+</html>

@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Defensor-守护神 on 玹霖志</title>
+    <link>/projects/defensor/</link>
+    <description>Recent content in Defensor-守护神 on 玹霖志</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>zh-CN</language>
+    <lastBuildDate>Thu, 12 Jul 2018 00:00:00 +0000</lastBuildDate>
+    
+	<atom:link href="/projects/defensor/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>Defensor介绍</title>
+      <link>/projects/defensor/overview/</link>
+      <pubDate>Thu, 12 Jul 2018 00:00:00 +0000</pubDate>
+      
+      <guid>/projects/defensor/overview/</guid>
+      <description>1.Defensor概述 Defensor是Halo Framework的守护神(测试工程)，用于保证Halo生态中框架的质量。</description>
+    </item>
+    
+  </channel>
+</rss>

@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Halo Framework on 玹霖志</title>
+    <link>/projects/halo/</link>
+    <description>Recent content in Halo Framework on 玹霖志</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>zh-CN</language>
+    <lastBuildDate>Fri, 14 Sep 2018 00:00:00 +0000</lastBuildDate>
+    
+	<atom:link href="/projects/halo/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>快速开始</title>
+      <link>/projects/halo/quick-start/</link>
+      <pubDate>Fri, 14 Sep 2018 00:00:00 +0000</pubDate>
+      
+      <guid>/projects/halo/quick-start/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Halo 介绍</title>
+      <link>/projects/halo/overview/</link>
+      <pubDate>Wed, 12 Sep 2018 00:00:00 +0000</pubDate>
+      
+      <guid>/projects/halo/overview/</guid>
+      <description>1.Halo Framework概述 Halo Framework是将DDD，洋葱架构，整洁架构，读写分离架构有机整合一起，基于业务身份+扩展点的设计思想，采用应</description>
+    </item>
+    
+    <item>
+      <title>常见问题</title>
+      <link>/projects/halo/faq/</link>
+      <pubDate>Wed, 12 Sep 2018 00:00:00 +0000</pubDate>
+      
+      <guid>/projects/halo/faq/</guid>
+      <description>Q: Halo Flow有啥应用场景？ 应用内部流程编排 Q: Halo DDD是什么？ Halo DDD是Halo框架对领域驱动的封装</description>
+    </item>
+    
+    <item>
+      <title>版权声明</title>
+      <link>/projects/halo/notice/</link>
+      <pubDate>Wed, 12 Sep 2018 00:00:00 +0000</pubDate>
+      
+      <guid>/projects/halo/notice/</guid>
+      <description>Halo使用了一些三方开源组件，他们分别是： 一些主要依赖： Spring under Apache 2.0 license Spring Boot under Apache 2.0 license SLF4j under the MIT License 一些扩展依赖： nuxeo under Apache License, Version 2.0 &amp;hellip; 其它整理中。</description>
+    </item>
+    
+  </channel>
+</rss>

@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Halo Tools on 玹霖志</title>
+    <link>/tags/halo-tools/</link>
+    <description>Recent content in Halo Tools on 玹霖志</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>zh-CN</language>
+    <lastBuildDate>Fri, 18 Oct 2019 17:00:00 +0800</lastBuildDate>
+    
+	<atom:link href="/tags/halo-tools/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>IDEA插件开发-自定义行标记</title>
+      <link>/blog/idea/line-marker-2/</link>
+      <pubDate>Fri, 18 Oct 2019 17:00:00 +0800</pubDate>
+      
+      <guid>/blog/idea/line-marker-2/</guid>
+      <description>1.行标记 1.1 行标记概述 IDEA源码编辑代码区域，可以编辑代码。大家肯定看到行上面有一些图标，其实我们也可以定义自己的行标记结合自己的需要弹窗</description>
+    </item>
+    
+    <item>
+      <title>IDEA插件运行报错:Write access is allowed inside write-action only</title>
+      <link>/blog/idea/line-marker-1/</link>
+      <pubDate>Wed, 09 Oct 2019 17:00:00 +0800</pubDate>
+      
+      <guid>/blog/idea/line-marker-1/</guid>
+      <description>1. @Domain行标记修改 Halo框架所创建的应用需要管中台可视化纳管，因此当应用启动的时候会判断当前应用是否属于某个域，不属于某个域将停止</description>
+    </item>
+    
+  </channel>
+</rss>

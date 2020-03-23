@@ -1,0 +1,1010 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<title>
+	并发编程之ThreadLocal与单例的推荐写法 · 玹霖志
+</title>
+	<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+<meta name="viewport" content="width=device-width,minimum-scale=1">
+<meta name="description" content="玹霖志,许进沉思录,许进|Spring Cloud,中间件，基础架构，www.xujin.org,xujin.org,-许进沉思录,Venus&#43;,云首科技有限公司,云计算，大数据，物联网，Software_king的博客,云计算Saas，云计算Paas，云计算Iaas Hadoop，大数据，JavaEE，Java，物联网，Hadoop， NoSQL，MongoDB,Spring, Hibernate,Struts2," />
+
+<meta name="generator" content="Hugo 0.55.6" /><link rel="shortcut icon" href=/img/icon.png type="image/png">
+
+<link href="https://unpkg.com/purecss@1.0.0/build/base-min.css" rel="stylesheet">
+
+
+
+<link href="/css/main.css" rel="stylesheet">
+<link href="/css/zoom-image.css" rel="stylesheet">
+
+<script src="/js/iconfont.js"></script>
+<script src="/js/highlight.pack.js"></script>
+<script>hljs.initHighlightingOnLoad();</script>
+
+
+<script>window.SITE_LANGUAGE = "zh"</script>
+<script src="/js/app.js"></script>
+<script src="https://cdn.bootcss.com/typed.js/2.0.11/typed.js"></script>
+
+
+
+<script async src="//cdn.busuanzi.ibruce.info/cdn/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+<script src="//cdn.bootcss.com/jquery/3.2.1/jquery.min.js"></script>
+
+<script>
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    $(window).scroll(function () {
+        
+        if ($(window).scrollTop() >= 200) {
+            $("#scroll_top").removeClass("hidden").addClass("show"); 
+        } else {
+            $("#scroll_top").removeClass("show").addClass("hidden"); 
+        }
+    });
+</script>
+
+
+
+
+
+
+
+<script type="application/javascript">
+var doNotTrack = false;
+if (!doNotTrack) {
+	(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+	(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+	m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+	})(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+	ga('create', 'UA-142131411-1', 'auto');
+	
+	ga('send', 'pageview');
+}
+</script>
+
+</head>
+
+<body>
+	<header class="ss-header">
+	<nav class="navbar" role="navigation" aria-label="main navigation">
+		<div class="navbar-brand">
+			<a class="logo-link" href="/">
+				<img class="logo" src="/img/logo.png">
+			</a>
+			<div class="-show-mobile">
+				<a id="mobile-menu-icon">
+					<svg class="icon" aria-hidden="true">
+						<use xlink:href="#icon-menu"></use>
+					</svg>
+				</a>
+				<nav id="mobile-menu">
+					
+          
+            <a
+              class=""
+              href="/projects/">
+              <span>
+                项目
+              </span>
+              <svg class="icon" aria-hidden="true"><use xlink:href="#icon-ARROW"></use></svg>
+            </a>
+					
+            <a
+              class=""
+              href="/guides/">
+              <span>
+                案例
+              </span>
+              <svg class="icon" aria-hidden="true"><use xlink:href="#icon-ARROW"></use></svg>
+            </a>
+					
+            <a
+              class=""
+              href="/muse/">
+              <span>
+                Muse
+              </span>
+              <svg class="icon" aria-hidden="true"><use xlink:href="#icon-ARROW"></use></svg>
+            </a>
+					
+            <a
+              class=""
+              href="/blog/">
+              <span>
+                博客
+              </span>
+              <svg class="icon" aria-hidden="true"><use xlink:href="#icon-ARROW"></use></svg>
+            </a>
+					
+            <a
+              class=""
+              href="/activities/">
+              <span>
+                活动
+              </span>
+              <svg class="icon" aria-hidden="true"><use xlink:href="#icon-ARROW"></use></svg>
+            </a>
+					
+            <a
+              class=""
+              href="/projects/halo/overview/">
+              <span>
+                Halo
+              </span>
+              <svg class="icon" aria-hidden="true"><use xlink:href="#icon-ARROW"></use></svg>
+            </a>
+					
+            <a
+              class=""
+              href="/about/">
+              <span>
+                关于我
+              </span>
+              <svg class="icon" aria-hidden="true"><use xlink:href="#icon-ARROW"></use></svg>
+            </a>
+					
+					
+				</nav>
+			</div>
+		</div>
+
+		<div class="navbar-menu -hidden-mobile">
+			<div class="navbar-start">
+				
+				
+					<a class="navbar-item "
+						href="/projects/">项目</a>
+				
+					<a class="navbar-item "
+						href="/guides/">案例</a>
+				
+					<a class="navbar-item "
+						href="/muse/">Muse</a>
+				
+					<a class="navbar-item "
+						href="/blog/">博客</a>
+				
+					<a class="navbar-item "
+						href="/activities/">活动</a>
+				
+					<a class="navbar-item "
+						href="/projects/halo/overview/">Halo</a>
+				
+					<a class="navbar-item "
+						href="/about/">关于我</a>
+				
+			</div>
+			<div class="navbar-end">
+				<div class="navbar-item">
+					<div id="js-menu-search" class="navbar-search">
+						<input class="input" placeholder="请输入要搜索的关键词">
+						<svg class="icon" aria-hidden="true">
+							<use xlink:href="#icon-search"></use>
+						</svg>
+					</div>
+				</div>
+				
+			</div>
+		</div>
+	</nav>
+</header>
+
+
+	
+
+	
+
+	
+
+	
+
+	
+
+	
+
+	
+
+
+
+	
+
+<div class="ss-layout-container">
+	<main class="ss-layout-main -card">
+		<div class="ss-meta">
+	<h1 class="title">
+	
+		<span id="postTitle"></span>
+
+	</h1>
+	<div class="meta">
+		
+			2017-08-27 ·
+			
+				许进 ·
+			
+			<span class="tags">
+				
+					<a class="tag" href="/tags/%E5%B9%B6%E5%8F%91%E7%BC%96%E7%A8%8B/" rel="tag">#并发编程</a>
+				
+					<a class="tag" href="/tags/%E5%A4%9A%E7%BA%BF%E7%A8%8B/" rel="tag">#多线程</a>
+				
+			</span>
+		
+		<span class="post-word-count">· 字数:3528·阅读时间 8 分钟</span>
+		
+		阅读量<span id="busuanzi_value_page_pv"></span>次
+		
+	</div>
+</div>
+  <script>
+    var typed = new Typed('#postTitle', {
+		strings: [
+        '  ',
+		"并发编程之ThreadLocal与单例的推荐写法",
+      ],
+      cursorChar: "|",
+      typeSpeed: 70,
+	  loop: false,
+	});
+  </script>
+		<article class="typo">
+	<h2 id="一-threadlocal的概念">一.ThreadLocal的概念</h2>
+
+<h3 id="1-1-threadlocal概念">1.1 ThreadLocal概念</h3>
+
+<p>ThreadLocal概念：线程局部变量，是一种多线程间并发访问变量的解决方案。与其synchronized等加锁的方式不同，ThreadLocal完全不提供锁，而使用以空间换时间的手段，为每个线程提供变量的独立副本，以保障线程安全。</p>
+
+<p>从性能上说，ThreadLocal不具有绝对的优势，在并发不是很高的时候，加锁的性能会更好，但作为一套与锁完全无关的线程安全解决方案，在高并发量或者竞争激烈的场景，使用ThreadLocal可以在一定程度上减少锁竞争。</p>
+
+<blockquote>
+<p>ThreadLocal多线程间并发访问变量的解决方案，为每个线程提供变量的副本，用空间换时间。
+因为ThreadLocal在每个线程中对该变量会创建一个副本，即每个线程内部都会有一个该变量，且在线程内部任何地方都可以使用，线程之间互不影响，这样一来就不存在线程安全问题，也不会严重影响程序执行性能。</p>
+</blockquote>
+
+<hr />
+
+<blockquote>
+<p>虽然ThreadLocal能够解决上面说的问题，但是由于在每个线程中都创建了副本，所以要考虑它对资源的消耗，比如内存的占用会比不使用ThreadLocal要大。</p>
+</blockquote>
+
+<h3 id="1-2-threadlocal代码示例">1.2 ThreadLocal代码示例</h3>
+
+<pre><code class="language-java">package org.xujin.bf;
+
+public class ConnThreadLocal {
+
+    //用ThreadLocal去存储多线程下访问的变量
+    public static ThreadLocal&lt;String&gt; th = new ThreadLocal&lt;String&gt;();
+    
+    public void setTh(String value){
+        th.set(value);
+    }
+    public void getTh(){
+        System.out.println(Thread.currentThread().getName() + &quot;:&quot; + this.th.get());
+    }
+    
+    public static void main(String[] args) throws InterruptedException {
+        
+        final ConnThreadLocal ct = new ConnThreadLocal();
+        Thread t1 = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                ct.setTh(&quot;张三&quot;);
+                ct.getTh();
+            }
+        }, &quot;t1&quot;);
+        
+        Thread t2 = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    Thread.sleep(1000);
+                    ct.setTh(&quot;李四&quot;);
+                    ct.getTh();
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
+        }, &quot;t2&quot;);
+        
+        t1.start();
+        t2.start();
+    }
+    
+}
+
+</code></pre>
+
+<p>执行结果如下:</p>
+
+<pre><code class="language-console"> t1:张三
+ t2:李四
+</code></pre>
+
+<hr />
+
+<p>如上述代码所示，如果把ct.setTh(&ldquo;李四&rdquo;)注释，执行结果如下：</p>
+
+<pre><code class="language-console">t1:张三
+t2:null
+</code></pre>
+
+<blockquote>
+<p>PS:两个线程之前都使用了ThreadLocal包装的变量th，但是Threadlocal两个线程之间数据独立，因此t1,t2两个线程之间数据访问隔离了。</p>
+</blockquote>
+
+<h2 id="二-单例与多线程">二.单例与多线程</h2>
+
+<p>什么是单例? 单例是应用或者系统中保证一个类仅有一个实例，并提供一个访问它的全局访问点。</p>
+
+<p>单例模式，最常见的就是饥饿模式和懒汉模式，一个直接实例化对象，一个是在调用方法时进行实例化对象。在多线程模式中，考虑到性能和线程安全，我们一般选择下面两种比较经典的单例模式，在性能提高的同时，又保证线程安全。</p>
+
+<p>单例推荐的写法有<code>dubble check instance</code>，<code>static inner class</code>(静态内部类的模式)，因为简单安全，源生就支持多线程，对多线程比较友好，因此推荐静态内部的写法。</p>
+
+<h3 id="2-1-饿汉模式">2.1 饿汉模式</h3>
+
+<p>这种方法非常简单，因为单例的实例被声明成 static 和 final 变量了，在第一次加载类到内存中时就会初始化，所以创建实例本身是线程安全的。</p>
+
+<pre><code class="language-java">  public class Singleton{
+    //类加载时就初始化
+    private static final Singleton instance = new Singleton();
+    
+    private Singleton(){}
+    public static Singleton getInstance(){
+        return instance;
+    }
+}
+
+</code></pre>
+
+<p>这种写法如果完美的话，就没必要在啰嗦那么多双检锁的问题了。缺点是它不是一种懒加载模式（lazy initialization），单例会在加载类后一开始就被初始化，即使客户端没有调用 getInstance()方法。饿汉式的创建方式在一些场景中将无法使用：譬如 Singleton 实例的创建是依赖参数或者配置文件的，在 getInstance() 之前必须调用某个方法设置参数给它，那样这种单例写法就无法使用了。</p>
+
+<h3 id="2-2-枚举写法">2.2 枚举写法</h3>
+
+<p>用枚举写单例实在太简单了！这也是它最大的优点。下面这段代码就是声明枚举实例的通常做法。</p>
+
+<pre><code class="language-java"> public enum EasySingleton{
+    INSTANCE;
+}
+
+</code></pre>
+
+<blockquote>
+<p>可以通过EasySingleton.INSTANCE来访问实例，这比调用getInstance()方法简单多了。创建枚举默认就是线程安全的，所以不需要担心double checked locking，而且还能防止反序列化导致重新创建新的对象。</p>
+</blockquote>
+
+<h3 id="2-3-懒汉式-线程不安全">2.3 懒汉式，线程不安全</h3>
+
+<pre><code class="language-java">  public class Singleton {
+    private static Singleton instance;
+    private Singleton (){}
+    public static Singleton getInstance() {
+     if (instance == null) {
+         instance = new Singleton();
+     }
+     return instance;
+    }
+}
+</code></pre>
+
+<blockquote>
+<p>这段代码简单明了，而且使用了懒加载模式，但是却存在致命的问题。当有多个线程并行调用 getInstance() 的时候，就会创建多个实例。也就是说在多线程下不能正常工作。</p>
+</blockquote>
+
+<h3 id="2-4-懒汉式-线程安全">2.4 懒汉式，线程安全</h3>
+
+<p>为了解决上面的问题，最简单的方法是将整个 getInstance() 方法设为同步（synchronized）。</p>
+
+<pre><code class="language-java">  public static synchronized Singleton getInstance() {
+    if (instance == null) {
+        instance = new Singleton();
+    }
+    return instance;
+}
+</code></pre>
+
+<blockquote>
+<p>虽然做到了线程安全，并且解决了多实例的问题，但是它并不高效。因为在任何时候只能有一个线程调用 getInstance() 方法。但是同步操作只需要在第一次调用时才被需要，即第一次创建单例实例对象时。这就引出了双重检验锁。</p>
+</blockquote>
+
+<h3 id="2-5-单例模式的两种推荐写法">2.5 单例模式的两种推荐写法</h3>
+
+<h4 id="2-5-1-静态内部类-static-inner-class-的方式">2.5.1 静态内部类(static inner class)的方式</h4>
+
+<p>个人推荐使用静态内部类的方法，这种方法也是《Effective Java》上所推荐的</p>
+
+<pre><code class="language-java">package org.xujin.bf;
+
+/**
+ * @author xujin
+ */
+public class InnerSingleton {
+    
+    //使用静态内部类，构造单例
+    private static class Singletion {
+        private static Singletion single = new Singletion();
+    }
+    
+    //用过暴露getInstance方法，return静态内部类的方式
+    public static Singletion getInstance(){
+        return Singletion.single;
+    }
+    
+}
+
+</code></pre>
+
+<p>这种写法仍然使用JVM本身机制保证了线程安全问题；由于 Singletion 是私有的，除了 getInstance() 之外没有办法访问它，因此它是懒汉式的；同时读取实例的时候不会进行同步，没有性能缺陷；也不依赖 JDK 版本。</p>
+
+<h4 id="2-5-2-dubble-check的方式">2.5.2 Dubble Check的方式</h4>
+
+<p>理解成Dubble Check的写法之前，大家先看一下，我在Janus网关项目的中的写法，如下所示：</p>
+
+<pre><code class="language-java">public class ConfigManager extends Observable {
+  private static ConfigManager instance;
+  private ConfigManager() {}
+    public static ConfigManager getInstance() {
+        if (instance == null) {
+            synchronized (ConfigManager.class) {
+                if (instance == null) {
+                    instance = new ConfigManager();
+                }
+            }
+        }
+        return instance;
+    }
+    
+}
+</code></pre>
+
+<p>双重检验锁模式（double checked locking pattern），是一种使用同步块加锁的方法。程序员称其为双重检查锁，因为会有两次检查 instance == null，一次是在同步块外，一次是在同步块内。为什么在同步块内还要再检验一次？因为可能会有多个线程一起进入同步块外的 if，如果在同步块内不进行二次检验的话就会生成多个实例了。</p>
+
+<h5 id="2-5-2-1-只做一次check的写法">2.5.2.1 只做一次check的写法</h5>
+
+<pre><code class="language-java">public class DubbleSingleton {
+
+    private static DubbleSingleton ds;
+    
+    public static DubbleSingleton getDs(){
+        //第一次check
+        if(ds == null){
+            try {
+                //模拟初始化对象的准备时间...
+                Thread.sleep(3000);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+            synchronized (DubbleSingleton.class) {
+                ds = new DubbleSingleton();
+            }
+        }
+        return ds;
+    }
+    
+    public static void main(String[] args) {
+        Thread t1 = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                System.out.println(DubbleSingleton.getDs().hashCode());
+            }
+        },&quot;t1&quot;);
+        Thread t2 = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                System.out.println(DubbleSingleton.getDs().hashCode());
+            }
+        },&quot;t2&quot;);
+        Thread t3 = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                System.out.println(DubbleSingleton.getDs().hashCode());
+            }
+        },&quot;t3&quot;);
+        
+        t1.start();
+        t2.start();
+        t3.start();
+    }
+    
+}
+</code></pre>
+
+<p>三个线程访问执行结果，打印出来的饿HashCode</p>
+
+<pre><code class="language-console">189210536
+1513896901
+1785098644
+</code></pre>
+
+<blockquote>
+<p>如上述所示，只做一次check的写法，导致三个线程访问，hashCode不一致，原因没有做两次check。</p>
+</blockquote>
+
+<h5 id="2-5-2-2-做两次check的写法">2.5.2.2 做两次check的写法</h5>
+
+<pre><code class="language-java">package org.xujin.bf;
+
+
+/**
+ * @author xujin
+ */
+public class DubbleSingleton {
+    private static DubbleSingleton ds;
+
+    public static DubbleSingleton getDs() {
+        //???check
+        if (ds == null) {
+            try {
+                //????????????...
+                Thread.sleep(3000);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+
+            synchronized (DubbleSingleton.class) {
+                //???check,??????check?
+                if (ds == null) {
+                    ds = new DubbleSingleton();
+                }
+            }
+        }
+
+        return ds;
+    }
+
+    public static void main(String[] args) {
+        Thread t1 = new Thread(new Runnable() {
+                    @Override
+                    public void run() {
+                        System.out.println(DubbleSingleton.getDs().hashCode());
+                    }
+                }, &quot;t1&quot;);
+        Thread t2 = new Thread(new Runnable() {
+                    @Override
+                    public void run() {
+                        System.out.println(DubbleSingleton.getDs().hashCode());
+                    }
+                }, &quot;t2&quot;);
+        Thread t3 = new Thread(new Runnable() {
+                    @Override
+                    public void run() {
+                        System.out.println(DubbleSingleton.getDs().hashCode());
+                    }
+                }, &quot;t3&quot;);
+
+        t1.start();
+        t2.start();
+        t3.start();
+    }
+}
+
+</code></pre>
+
+<p>三个线程访问执行结果，打印出来的饿HashCode</p>
+
+<pre><code class="language-console">786514993
+786514993
+786514993
+</code></pre>
+
+<p>这段代码看起来很完美，很可惜，它是有问题。主要在于ds = new DubbleSingleton();这句，这并非是一个原子操作，事实上在 JVM 中这句话大概做了下面 3 件事情。
+* 1.给 instance 分配内存
+* 2.调用 Singleton 的构造函数来初始化成员变量
+* 3.将instance对象指向分配的内存空间（执行完这步instance就为非null了）</p>
+
+<p>但是在 JVM 的即时编译器中存在指令重排序的优化。也就是说上面的第二步和第三步的顺序是不能保证的，最终的执行顺序可能是 1-2-3 也可能是 1-3-2。如果是后者，则在 3 执行完毕、2 未执行之前，被线程二抢占了，这时 instance 已经是非 null 了（但却没有初始化），所以线程二会直接返回 instance，然后使用，然后顺理成章地报错</p>
+
+<p>但是我们只需要将 instance 变量声明成 volatile如下所示，示例代码就OK。</p>
+
+<pre><code class="language-java">public class Singleton {
+    private volatile static Singleton instance; //声明成 volatile
+    private Singleton (){}
+    public static Singleton getSingleton() {
+        if (instance == null) {                         
+            synchronized (Singleton.class) {
+                if (instance == null) {       
+                    instance = new Singleton();
+                }
+            }
+        }
+        return instance;
+    }
+   
+}
+</code></pre>
+
+<p>有些人认为使用 volatile 的原因是可见性，也就是可以保证线程在本地不会存有 instance 的副本，每次都是去主内存中读取。但其实是不对的。使用 volatile 的主要原因是其另一个特性：禁止指令重排序优化。也就是说，在 volatile 变量的赋值操作后面会有一个内存屏障（生成的汇编代码上），读操作不会被重排序到内存屏障之前。比如上面的例子，取操作必须在执行完 1-2-3 之后或者 1-3-2 之后，不存在执行到 1-3 然后取到值的情况。从「先行发生原则」的角度理解的话，就是对于一个 volatile 变量的写操作都先行发生于后面对这个变量的读操作（这里的“后面”是时间上的先后顺序）。</p>
+
+<p>但是特别注意在 jdk 1.5 以前的版本使用了 volatile 的双检锁还是有问题的。其原因是 Java 5 以前的 JMM （Java 内存模型）是存在缺陷的，即时将变量声明成 volatile 也不能完全避免重排序，主要是 volatile 变量前后的代码仍然存在重排序问题。这个 volatile 屏蔽重排序的问题在 jdk 1.5 中才得以修复，所以在这之后才可以放心使用 volatile</p>
+
+<p>在JDK1.5及其后续版本中，扩充了volatile语义，系统将不允许对 写入一个volatile变量的操作与其之前的任何读写操作 重新排序，也不允许将 读取一个volatile变量的操作与其之后的任何读写操作 重新排序。</p>
+
+<h2 id="三-参考文章">三.参考文章</h2>
+
+<p><a href="http://www.cnblogs.com/lyl6796910/p/3938237.html">使用单例模式需要注意的几个问题</a></p>
+
+<p><a href="http://freish.iteye.com/blog/1008304">双重检查锁定失败可能性</a></p>
+
+</article>
+
+<div id="gitalk-container"></div>
+<link rel="stylesheet" href="https://unpkg.com/gitalk/dist/gitalk.css">
+<script src="https://unpkg.com/gitalk/dist/gitalk.min.js"></script>
+<script>
+  const gitalk = new Gitalk({
+    clientID: '6928118cff8d42e226a1',
+    clientSecret: '24edd8a31c50467e0d741b3a803c199e7ad53567',
+    repo: 'softwareking.github.io',
+    owner: 'Softwareking',
+    admin: ['Softwareking'],
+    id: location.pathname, 
+    distractionFreeMode: false 
+  });
+  (function() {
+    if (["localhost", "127.0.0.1"].indexOf(window.location.hostname) != -1) {
+      document.getElementById('gitalk-container').innerHTML = 'Gitalk comments not available by default when the website is previewed locally.';
+      return;
+    }
+    gitalk.render('gitalk-container');
+  })();
+</script>
+<style>
+
+  .gt-container .gt-btn-login {
+      background-color: #ff6a00;
+      border: 1px solid #ff6a00;
+  }
+
+  .gt-container .gt-btn-public {
+      background-color: #ff6a00;
+      border: 1px solid #ff6a00;
+  }
+
+  .gt-container .gt-btn-public:hover {
+      background-color: #ff6a00;
+      border: 1px solid #ff6a00;
+  }
+
+  .gt-container .gt-btn-preview {
+    background-color: #fff;
+    color: #ff6a00;
+  }
+  .gt-container .gt-btn {
+    padding: 0.75em 1.25em;
+    display: inline-block;
+    line-height: 1;
+    text-decoration: none;
+    white-space: nowrap;
+    cursor: pointer;
+    border: 1px solid #ff6a00;
+    border-radius: 5px;
+    background-color: #ff6a00;
+    color: #fff;
+    outline: none;
+    font-size: 0.75em;
+   }
+
+
+  .gt-container a {
+      color: #ff6a00;
+  }
+
+  .gt-container .gt-btn-preview:hover {
+      border: 1px solid #ff6a00;
+  }
+
+  .gt-container .gt-svg svg {
+      fill: #ff6a00;
+  }
+
+  .gt-container .gt-comment-username {
+      color: #ff6a00;
+  }
+  
+  .gt-container .gt-popup .gt-action.is--active:before {
+      background: #ff6a00;
+  }
+
+  .gt-container .gt-header-controls-tip {
+    font-size: 0.875em;
+    color: #ff6a00;
+    text-decoration: none;
+    vertical-align: sub;
+}
+
+</style>
+
+		<div class="-show-mobile">
+			
+
+	<nav class="ss-pagination-next">
+		<a class="link-prev" href="/blog/mybatis/1/">
+			<span class="text">上一篇: </span>
+			<span class="text">Mybatis代码生成&#43;分页&#43;Mapper继承扩展</span>
+		</a>
+		<a class="link-next" href="/blog/sb/sb-aop/">
+			<span class="text">下一篇: </span>
+			<span class="text">Spring Boot中自定义注解&#43;AOP实现主备库切换</span>
+		</a>
+	</nav>
+
+		</div>
+	</main>
+
+	<aside class="ss-layout-aside">
+		
+
+
+<div class="ss-card ss-aside-toc">
+	<h2 class="card-title">
+		目录
+	</h2>
+  <nav id="TableOfContents">
+<ul>
+<li>
+<ul>
+<li><a href="#一-threadlocal的概念">一.ThreadLocal的概念</a>
+<ul>
+<li><a href="#1-1-threadlocal概念">1.1 ThreadLocal概念</a></li>
+<li><a href="#1-2-threadlocal代码示例">1.2 ThreadLocal代码示例</a></li>
+</ul></li>
+<li><a href="#二-单例与多线程">二.单例与多线程</a>
+<ul>
+<li><a href="#2-1-饿汉模式">2.1 饿汉模式</a></li>
+<li><a href="#2-2-枚举写法">2.2 枚举写法</a></li>
+<li><a href="#2-3-懒汉式-线程不安全">2.3 懒汉式，线程不安全</a></li>
+<li><a href="#2-4-懒汉式-线程安全">2.4 懒汉式，线程安全</a></li>
+<li><a href="#2-5-单例模式的两种推荐写法">2.5 单例模式的两种推荐写法</a>
+<ul>
+<li><a href="#2-5-1-静态内部类-static-inner-class-的方式">2.5.1 静态内部类(static inner class)的方式</a></li>
+<li><a href="#2-5-2-dubble-check的方式">2.5.2 Dubble Check的方式</a>
+<ul>
+<li><a href="#2-5-2-1-只做一次check的写法">2.5.2.1 只做一次check的写法</a></li>
+<li><a href="#2-5-2-2-做两次check的写法">2.5.2.2 做两次check的写法</a></li>
+</ul></li>
+</ul></li>
+</ul></li>
+<li><a href="#三-参考文章">三.参考文章</a></li>
+</ul></li>
+</ul>
+</nav>
+</div>
+
+
+		<div class="ss-card -hidden-mobile">
+	<h2 class="card-title">
+		分类
+	</h2>
+	<ul class="ss-aside-related">
+		
+		<li><a href="/categories/eureka-server/">Eureka Server</a></li>
+		
+		<li><a href="/categories/halo-tools/">Halo Tools</a></li>
+		
+		<li><a href="/categories/muse/">Muse</a></li>
+		
+		<li><a href="/categories/mybatis/">Mybatis</a></li>
+		
+		<li><a href="/categories/nacos/">Nacos</a></li>
+		
+		<li><a href="/categories/spring-boot/">Spring Boot</a></li>
+		
+		<li><a href="/categories/spring-boot-admin/">Spring Boot Admin</a></li>
+		
+		<li><a href="/categories/spring-cloud/">Spring Cloud</a></li>
+		
+		<li><a href="/categories/spring-cloud-gateway/">Spring Cloud Gateway</a></li>
+		
+		<li><a href="/categories/%E4%B8%AD%E5%8F%B0/">中台</a></li>
+		
+		<li><a href="/categories/%E4%B8%AD%E9%97%B4%E4%BB%B6/">中间件</a></li>
+		
+		<li><a href="/categories/%E5%B9%B6%E5%8F%91%E7%BC%96%E7%A8%8B/">并发编程</a></li>
+		
+		<li><a href="/categories/%E7%A4%BE%E5%8C%BA%E6%B2%99%E9%BE%99/">社区沙龙</a></li>
+		
+	</ul>
+</div>
+		
+
+
+<div class="ss-card">
+	<h2 class="card-title">
+		相关推荐
+	</h2>
+	
+	<ul class="ss-aside-related">
+		
+			<li><a href="/blog/bf/bf-thread-singal/">并发编程总结之线程间的通信</a></li>
+		
+			<li><a href="/blog/bf/bf-volatile/">并发编程总结之volatile</a></li>
+		
+			<li><a href="/blog/bf/bf-synchronized/">并发编程总结之synchronized细节问题</a></li>
+		
+			<li><a href="/blog/bf/bf-multithread/">并发编程总结之多线程基础</a></li>
+		
+	</ul>
+	
+</div>
+
+		<div class="ss-aside-tags ss-card">
+	<h2 class="card-title">
+		标签
+		<span class="card-extra"></span>
+	</h2>
+	<ul class="tag-list">
+		
+			<li class="tag"><a href="/tags/eureka-server/">Eureka Server</a></li>
+		
+			<li class="tag"><a href="/tags/halo-tools/">Halo Tools</a></li>
+		
+			<li class="tag"><a href="/tags/myabtis/">Myabtis</a></li>
+		
+			<li class="tag"><a href="/tags/nacos/">Nacos</a></li>
+		
+			<li class="tag"><a href="/tags/ngnix/">Ngnix</a></li>
+		
+			<li class="tag"><a href="/tags/spring-boot-admin/">Spring Boot Admin</a></li>
+		
+			<li class="tag"><a href="/tags/spring-cloud/">Spring Cloud</a></li>
+		
+			<li class="tag"><a href="/tags/spring-cloud-gateway/">Spring Cloud Gateway</a></li>
+		
+			<li class="tag"><a href="/tags/spring-cloud%E4%B8%AD%E5%9B%BD%E7%A4%BE%E5%8C%BA/">Spring Cloud中国社区</a></li>
+		
+			<li class="tag"><a href="/tags/switch/">Switch</a></li>
+		
+			<li class="tag"><a href="/tags/%E4%B8%9A%E5%8A%A1%E4%B8%AD%E5%8F%B0/">业务中台</a></li>
+		
+			<li class="tag"><a href="/tags/%E4%B8%AD%E9%97%B4%E4%BB%B6/">中间件</a></li>
+		
+			<li class="tag"><a href="/tags/%E5%A4%9A%E7%BA%BF%E7%A8%8B/">多线程</a></li>
+		
+			<li class="tag"><a href="/tags/%E5%B9%B6%E5%8F%91%E7%BC%96%E7%A8%8B/">并发编程</a></li>
+		
+			<li class="tag"><a href="/tags/%E7%A4%BE%E5%8C%BA%E6%B2%99%E9%BE%99/">社区沙龙</a></li>
+		
+			<li class="tag"><a href="/tags/%E9%A1%B9%E7%9B%AE%E7%BB%8F%E9%AA%8C/">项目经验</a></li>
+		
+	</ul>
+</div>
+	</aside>
+</div>
+
+
+
+	
+
+<footer class="ss-footer">
+	<div class="container">
+		<div class="links">
+			
+				<div class="cate">
+					<h2 class="cate-title">个人链接</h2>
+					
+						<a class="link" href="https://github.com/softwareking">Github</a>
+					
+						<a class="link" href="https://www.cnblogs.com/ACMer/">博客园</a>
+					
+						<a class="link" href="http://blog.sina.com.cn/softwaremi">新浪博客</a>
+					
+				</div>
+			
+				<div class="cate">
+					<h2 class="cate-title">社区</h2>
+					
+						<a class="link" href="http://springcloud.cn">主站</a>
+					
+						<a class="link" href="https://github.com/springcloud">Github</a>
+					
+				</div>
+			
+				<div class="cate">
+					<h2 class="cate-title">友情链接</h2>
+					
+						<a class="link" href="https://www.ramostear.com/">谭潮红博客</a>
+					
+						<a class="link" href="http://springcloud.cn">社区</a>
+					
+						<a class="link" href="http://blog.springcloud.cn">博客</a>
+					
+						<a class="link" href="http://tietang.wang/">王铁堂博客</a>
+					
+						<a class="link" href="https://tianhui.xin/">怪咖晨</a>
+					
+				</div>
+			
+				<div class="cate">
+					<h2 class="cate-title">工具</h2>
+					
+						<a class="link" href="http://md.aclickall.com/">微信排版</a>
+					
+						<a class="link" href="https://www.gaoding.com">稿定设计</a>
+					
+						<a class="link" href="http://www.processon.com/">ProcessOn</a>
+					
+						<a class="link" href="https://www.draw.io/">Draw</a>
+					
+				</div>
+			
+		</div>
+		<div class="qrcode">
+			
+				<div>
+					<img class="qrcode-img" src="/img/qrcode/wxgzh.png" />
+					<p class="qrcode-desc">玹霖志</p>
+				</div>
+			
+				<div>
+					<img class="qrcode-img" src="/img/qrcode/sqgz.jpeg" />
+					<p class="qrcode-desc">Spring Cloud中国</p>
+				</div>
+			
+		</div>
+	</div>
+	<div class="copyright">
+		<p>
+			© 2019 玹霖志
+			<a href="#">滇ICP备14007546号</a>
+
+			<span id="busuanzi_container_site_pv">
+            本站访问量：<span id="busuanzi_value_site_pv"></span>次
+        </span>
+        &nbsp;
+        <span id="busuanzi_container_site_uv">
+            您是本站第 <span id="busuanzi_value_site_uv"></span> 位访问者
+        </span>
+		</p>
+
+	</div>
+</footer>
+
+	
+
+
+<aside class="ss-aside hidden" id="scroll_top">
+	<div class="go-top-btn">
+		<a class="logo-link" href="javascript:window.scrollTo(0,0)">
+			<img class="logo" src="/img/gotop.png">
+		</a>
+	</div>
+</aside>
+<script>
+    var typed = new Typed('#sloganTitle', {
+		strings: [
+        '  ',
+		"架构治理之道",
+      ],
+      cursorChar: "|",
+      typeSpeed: 70,
+	  loop: false,
+	});
+	
+     var typed = new Typed('#sloganDesc', {
+		strings: [
+        '  ',
+        "Hi,欢迎访问玹霖志。专注于基础架构，应用架构，业务架构，中台架构治理之道和代码防腐。Halo Ecology™（光环生态）为企业基础架构和中台架构的落地保驾护航！欢迎加我微信Software_King探讨",
+      ],
+      cursorChar: "|",
+      typeSpeed: 70,
+	  loop: false,
+	});
+	
+  </script>
+
+</body>
+
+</html>

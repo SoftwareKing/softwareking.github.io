@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>业务中台 on 玹霖志</title>
+    <link>/tags/%E4%B8%9A%E5%8A%A1%E4%B8%AD%E5%8F%B0/</link>
+    <description>Recent content in 业务中台 on 玹霖志</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>zh-CN</language>
+    <lastBuildDate>Tue, 29 Oct 2019 14:00:00 +0800</lastBuildDate>
+    
+	<atom:link href="/tags/%E4%B8%9A%E5%8A%A1%E4%B8%AD%E5%8F%B0/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>向左还是向右？聊聊中台建设中的那些纠结事</title>
+      <link>/blog/zt/2/</link>
+      <pubDate>Tue, 29 Oct 2019 14:00:00 +0800</pubDate>
+      
+      <guid>/blog/zt/2/</guid>
+      <description>背景 今年参加了云栖大会，作为中台的践行者，我也更关注中台架构实施的行业状况，学习了其他公司中台的思想和经验。云栖大会上，我和做中台实践的同学</description>
+    </item>
+    
+    <item>
+      <title>如何打造业务中台发动机?</title>
+      <link>/blog/zt/1/</link>
+      <pubDate>Tue, 22 Oct 2019 14:00:00 +0800</pubDate>
+      
+      <guid>/blog/zt/1/</guid>
+      <description>前言 从2018年开始，“中台”成为风靡IT技术圈的热词，每个人对中台的理解就像一千个观众眼中有一千个哈姆雷特一样。本文将从可落地的角度，分享</description>
+    </item>
+    
+  </channel>
+</rss>

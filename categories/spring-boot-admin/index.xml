@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Spring Boot Admin on 玹霖志</title>
+    <link>/categories/spring-boot-admin/</link>
+    <description>Recent content in Spring Boot Admin on 玹霖志</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>zh-CN</language>
+    <lastBuildDate>Mon, 16 Sep 2019 20:00:00 +0800</lastBuildDate>
+    
+	<atom:link href="/categories/spring-boot-admin/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>Spring Boot Admin和Nacos集成</title>
+      <link>/blog/sba-nacos/</link>
+      <pubDate>Mon, 16 Sep 2019 20:00:00 +0800</pubDate>
+      
+      <guid>/blog/sba-nacos/</guid>
+      <description>摘要:本文主要讲解如何将Spring Boot Admin与Spring Cloud Alibaba中的spring-cloud-starter-alibaba-</description>
+    </item>
+    
+  </channel>
+</rss>

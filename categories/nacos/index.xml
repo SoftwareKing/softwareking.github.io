@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Nacos on 玹霖志</title>
+    <link>/categories/nacos/</link>
+    <description>Recent content in Nacos on 玹霖志</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>zh-CN</language>
+    <lastBuildDate>Sun, 10 Nov 2019 14:00:00 +0800</lastBuildDate>
+    
+	<atom:link href="/categories/nacos/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>如何平滑将注册中心从Eureka迁移到Nacos？</title>
+      <link>/blog/eureka-sync-nacos/</link>
+      <pubDate>Sun, 10 Nov 2019 14:00:00 +0800</pubDate>
+      
+      <guid>/blog/eureka-sync-nacos/</guid>
+      <description>1.背景 Nacos与Eureka相比，Nacos的优点非常明显，当然首选Nacos作为注册中心。本文主要介绍如何从Eureka无缝平滑迁移到</description>
+    </item>
+    
+  </channel>
+</rss>

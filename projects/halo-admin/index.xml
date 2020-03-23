@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Halo Admin on 玹霖志</title>
+    <link>/projects/halo-admin/</link>
+    <description>Recent content in Halo Admin on 玹霖志</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>zh-CN</language>
+    <lastBuildDate>Sun, 13 Oct 2019 21:00:00 +0800</lastBuildDate>
+    
+	<atom:link href="/projects/halo-admin/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>Halo Admin概述</title>
+      <link>/projects/halo-admin/overview/</link>
+      <pubDate>Sun, 13 Oct 2019 21:00:00 +0800</pubDate>
+      
+      <guid>/projects/halo-admin/overview/</guid>
+      <description>1. Halo Admin Halo Framework对应的中台可视化管控平台，主要包括业务中台域管理，应用管理,业务流程可视化，业务身份管理等</description>
+    </item>
+    
+  </channel>
+</rss>

@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Halo CodeGen on 玹霖志</title>
+    <link>/projects/halo-codegen/</link>
+    <description>Recent content in Halo CodeGen on 玹霖志</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>zh-CN</language>
+    <lastBuildDate>Sat, 12 Oct 2019 21:00:00 +0800</lastBuildDate>
+    
+	<atom:link href="/projects/halo-codegen/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>Halo Codegen概述</title>
+      <link>/projects/halo-codegen/overview/</link>
+      <pubDate>Sat, 12 Oct 2019 21:00:00 +0800</pubDate>
+      
+      <guid>/projects/halo-codegen/overview/</guid>
+      <description>1. 代码生成器 1.1 什么是代码生成器 早起进行软件工程开发，用文本编辑器去开发写代码，后来为了加快开发效率，出现一系列IDE（开发集成开发工具),比</description>
+    </item>
+    
+  </channel>
+</rss>

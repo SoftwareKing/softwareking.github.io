@@ -1,0 +1,967 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<title>
+	Switch-开关中间件设计 · 玹霖志
+</title>
+	<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+<meta name="viewport" content="width=device-width,minimum-scale=1">
+<meta name="description" content="玹霖志,许进沉思录,许进|Spring Cloud,中间件，基础架构，www.xujin.org,xujin.org,-许进沉思录,Venus&#43;,云首科技有限公司,云计算，大数据，物联网，Software_king的博客,云计算Saas，云计算Paas，云计算Iaas Hadoop，大数据，JavaEE，Java，物联网，Hadoop， NoSQL，MongoDB,Spring, Hibernate,Struts2," />
+
+<meta name="generator" content="Hugo 0.55.6" /><link rel="shortcut icon" href=/img/icon.png type="image/png">
+
+<link href="https://unpkg.com/purecss@1.0.0/build/base-min.css" rel="stylesheet">
+
+
+
+<link href="/css/main.css" rel="stylesheet">
+<link href="/css/zoom-image.css" rel="stylesheet">
+
+<script src="/js/iconfont.js"></script>
+<script src="/js/highlight.pack.js"></script>
+<script>hljs.initHighlightingOnLoad();</script>
+
+
+<script>window.SITE_LANGUAGE = "zh"</script>
+<script src="/js/app.js"></script>
+<script src="https://cdn.bootcss.com/typed.js/2.0.11/typed.js"></script>
+
+
+
+<script async src="//cdn.busuanzi.ibruce.info/cdn/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+<script src="//cdn.bootcss.com/jquery/3.2.1/jquery.min.js"></script>
+
+<script>
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    $(window).scroll(function () {
+        
+        if ($(window).scrollTop() >= 200) {
+            $("#scroll_top").removeClass("hidden").addClass("show"); 
+        } else {
+            $("#scroll_top").removeClass("show").addClass("hidden"); 
+        }
+    });
+</script>
+
+
+
+
+
+
+
+<script type="application/javascript">
+var doNotTrack = false;
+if (!doNotTrack) {
+	(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+	(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+	m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+	})(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+	ga('create', 'UA-142131411-1', 'auto');
+	
+	ga('send', 'pageview');
+}
+</script>
+
+</head>
+
+<body>
+	<header class="ss-header">
+	<nav class="navbar" role="navigation" aria-label="main navigation">
+		<div class="navbar-brand">
+			<a class="logo-link" href="/">
+				<img class="logo" src="/img/logo.png">
+			</a>
+			<div class="-show-mobile">
+				<a id="mobile-menu-icon">
+					<svg class="icon" aria-hidden="true">
+						<use xlink:href="#icon-menu"></use>
+					</svg>
+				</a>
+				<nav id="mobile-menu">
+					
+          
+            <a
+              class=""
+              href="/projects/">
+              <span>
+                项目
+              </span>
+              <svg class="icon" aria-hidden="true"><use xlink:href="#icon-ARROW"></use></svg>
+            </a>
+					
+            <a
+              class=""
+              href="/guides/">
+              <span>
+                案例
+              </span>
+              <svg class="icon" aria-hidden="true"><use xlink:href="#icon-ARROW"></use></svg>
+            </a>
+					
+            <a
+              class=""
+              href="/muse/">
+              <span>
+                Muse
+              </span>
+              <svg class="icon" aria-hidden="true"><use xlink:href="#icon-ARROW"></use></svg>
+            </a>
+					
+            <a
+              class=""
+              href="/blog/">
+              <span>
+                博客
+              </span>
+              <svg class="icon" aria-hidden="true"><use xlink:href="#icon-ARROW"></use></svg>
+            </a>
+					
+            <a
+              class=""
+              href="/activities/">
+              <span>
+                活动
+              </span>
+              <svg class="icon" aria-hidden="true"><use xlink:href="#icon-ARROW"></use></svg>
+            </a>
+					
+            <a
+              class=""
+              href="/projects/halo/overview/">
+              <span>
+                Halo
+              </span>
+              <svg class="icon" aria-hidden="true"><use xlink:href="#icon-ARROW"></use></svg>
+            </a>
+					
+            <a
+              class=""
+              href="/about/">
+              <span>
+                关于我
+              </span>
+              <svg class="icon" aria-hidden="true"><use xlink:href="#icon-ARROW"></use></svg>
+            </a>
+					
+					
+				</nav>
+			</div>
+		</div>
+
+		<div class="navbar-menu -hidden-mobile">
+			<div class="navbar-start">
+				
+				
+					<a class="navbar-item "
+						href="/projects/">项目</a>
+				
+					<a class="navbar-item "
+						href="/guides/">案例</a>
+				
+					<a class="navbar-item "
+						href="/muse/">Muse</a>
+				
+					<a class="navbar-item "
+						href="/blog/">博客</a>
+				
+					<a class="navbar-item "
+						href="/activities/">活动</a>
+				
+					<a class="navbar-item "
+						href="/projects/halo/overview/">Halo</a>
+				
+					<a class="navbar-item "
+						href="/about/">关于我</a>
+				
+			</div>
+			<div class="navbar-end">
+				<div class="navbar-item">
+					<div id="js-menu-search" class="navbar-search">
+						<input class="input" placeholder="请输入要搜索的关键词">
+						<svg class="icon" aria-hidden="true">
+							<use xlink:href="#icon-search"></use>
+						</svg>
+					</div>
+				</div>
+				
+			</div>
+		</div>
+	</nav>
+</header>
+
+
+	
+
+	
+
+	
+
+	
+
+	
+
+	
+
+	
+
+
+
+	
+
+<div class="ss-layout-container">
+	<main class="ss-layout-main -card">
+		<div class="ss-meta">
+	<h1 class="title">
+	
+		<span id="postTitle"></span>
+
+	</h1>
+	<div class="meta">
+		
+			2019-10-17 ·
+			
+				许进 ·
+			
+			<span class="tags">
+				
+					<a class="tag" href="/tags/switch/" rel="tag">#Switch</a>
+				
+					<a class="tag" href="/tags/%E4%B8%AD%E9%97%B4%E4%BB%B6/" rel="tag">#中间件</a>
+				
+			</span>
+		
+		<span class="post-word-count">· 字数:3749·阅读时间 8 分钟</span>
+		
+		阅读量<span id="busuanzi_value_page_pv"></span>次
+		
+	</div>
+</div>
+  <script>
+    var typed = new Typed('#postTitle', {
+		strings: [
+        '  ',
+		"Switch-开关中间件设计",
+      ],
+      cursorChar: "|",
+      typeSpeed: 70,
+	  loop: false,
+	});
+  </script>
+		<article class="typo">
+	<h2 id="1-开关中间件">1.开关中间件</h2>
+
+<h3 id="1-1-switch概述">1.1 Switch概述</h3>
+
+<p>switch提供统一的方式来定义开关、统一的控制台和api来对开关进行查询和操控。Switch定义的开关包含丰富的可读性属性，为开关信息的维护和传承提供便利。</p>
+
+<p><img src="1.png" alt="" /></p>
+
+<h3 id="1-2-switch使用的业务场景">1.2 Switch使用的业务场景</h3>
+
+<p>在分布式系统中为什么要使用开关？例如双十一电商平台需要做促销活动，此时订单量暴增，在下单环节，可能需要调用A、B、C三个接口来完成，但是其实A和B是必须的，C只是附加的功能（例如在下单的时候获取用户常用地址，或者发个推送消息之类的），可有可无，在平时系统没有压力，在容量充足的情况下，调用下没问题，但是在特殊节日的大促环节，系统已经满负荷了，这时候其实完全可以不去调用C接口，怎么实现这个呢？改代码重新发布？no，这样不太现实，于是开关诞生了，开发人员只要简单执行一下命令或者点一下页面，就可以关掉对于C接口的调用，在请求高峰过去之后，再把开关恢复回去即可。类似的使用场景还有A/B Test、灰度发布和数据的不停服切换等。</p>
+
+<p>早期这样的业务开关都是由各个部门自行实现和管理。随着业务开关的数量的增多，大量的业务开关信息都分布在不同的系统中，甚至代码中，造成运维的成本越来越高，当开关不使用之后，无法进行统一的下线处理。
+因此需要开发一套统一的标准和规范的业务开关管理的Switch平台。还有其它业务使用场景，如下所示:</p>
+
+<ul>
+<li>业务降级中需要对代码中的static值的修改</li>
+<li>应用不同版本的兼容</li>
+<li>不用时间走不同的优惠服务</li>
+<li>采用业务开关的方式，通过修改程序中的static值实现业务逻辑的切换。</li>
+<li>业务复杂，从面向对象到面向开关编程</li>
+</ul>
+
+<blockquote>
+<p>Q:是否需要支持跨应用的开关推送,某些业务场景需要跨应用推送</p>
+
+<p>A:目前<code>阿里的开关</code>不支持跨应用开关的推送，某个业务场景需要好几个应用一起打开开关。</p>
+</blockquote>
+
+<h3 id="2-2-switch的分类">2.2 Switch的分类:</h3>
+
+<p>我们可以将开关分为三大类，分别是功能开关、降级开关、灰度开关：</p>
+
+<ul>
+<li><p>功能开关：针对某一个功能是否打开，例如在订单下单的时候需要获取下单用户的历史换绑手机号信息，但是由于B系统只是提供了接口定义，实际业务还未开发完成，A系统可以先提前开发并上线，待B系统上线之后，A系统将该功能开关打开。</p></li>
+
+<li><p>降级开关:典型的应用场景是电商做促销的时候，比如双十一电商做促销，用户下单的时候获取用户历史常用地址，因为双十一系统已经达到负荷，为了系统性能，将该业务逻辑降级。或者A系统调用B系统，由于B系统整体宕机，为了不影响A系统继续运行，可以手动将B系统降级等。</p></li>
+
+<li><p>灰度开关:针对某一功能做灰度，例如我们需要针对刷单用户在下单过程中做拦截，为此我们在下单阶段做了一套黑白名单处理，但是我们也无法知晓该套黑白名单的正确率多少，为了避免造成误拦，我们需要对该功能做灰度采样，以便及时调整我们的黑白名单逻辑。通常的灰度策略为 1% 灰度，10%灰度，30%灰度，50%。。。</p></li>
+</ul>
+
+<h3 id="2-3-分布式switch的需求">2.3 分布式Switch的需求</h3>
+
+<p>开关的核心需求主要有以下几点:
+1.  支持开关的分布式化管理</p>
+
+<ul>
+<li><p><code>开关统一管理，发布、更新</code>等操作只需在管控平台上执行一次变更，整个集群生效。</p></li>
+
+<li><p> 当开关值<code>发生变更</code>，<code>订阅该开关的客户端</code>会自动感知发现变更，进而应用内部更新值。</p></li>
+
+<li><p> 支持<code>单台服务器的开关变更</code>
+  </p></li>
+
+<li><p> 具有<code>容灾机制</code>，保证服务的HA（高可用）</p>
+
+<ul>
+<li><p> 管控平台HA
+&gt; 部署两个，通过Ngnix或LVS保证高可用</p></li>
+
+<li><p> 服务集群的高可用,当集群中的一台server不可用了，client发现后可以自动切换到其他server上进行访问
+&gt; 基于Apollo或者Nacos实现
+ </p></li>
+
+<li><p>  客户端具备容灾机制，当开关中心完全不可用，可以在客户端对开关进行操作。
+&gt; 配置中心或管控平台Http接口实现对客户端的操作</p></li>
+</ul></li>
+</ul>
+
+<h3 id="2-4-switch竞品分析">2.4 Switch竞品分析</h3>
+
+<p>目前开关中间件市面上开源可用的产品为0，下面对竞品做简单介绍对比，如下表所示:</p>
+
+<table>
+<thead>
+<tr>
+<th align="center">开关</th>
+<th align="center">数据一致性</th>
+<th align="center">说明</th>
+<th align="center">备注</th>
+</tr>
+</thead>
+
+<tbody>
+<tr>
+<td align="center">点我达</td>
+<td align="center">基于Zk</td>
+<td align="center">依赖ZK，有管控平台</td>
+<td align="center"><a href="http://tech.dianwoda.com/2017/10/30/fen-bu-shi-kai-guan-she-ji-yu-shi-xian/">点我达开关设计</a></td>
+</tr>
+
+<tr>
+<td align="center">阿里</td>
+<td align="center">基于Diamond（即目前开源的Nacos中的Config)</td>
+<td align="center">依赖配置中心Diamond，有管控平台，支持Http API变更开关</td>
+<td align="center"></td>
+</tr>
+</tbody>
+</table>
+
+<h3 id="2-5-switch具备的功能">2.5 Switch具备的功能</h3>
+
+<p>通过对目前市面上开关的竞品分析，下面的功能将是Switch的RoadMap需要实现的功能</p>
+
+<ul class="task-list">
+<li><label><input type="checkbox" checked disabled class="task-list-item"> 支持不同类型的配置项和业务开关的基础推送功能</label></li>
+<li><label><input type="checkbox" checked disabled class="task-list-item"> 支持多种灵活的推送方式</label></li>
+<li><label><input type="checkbox" checked disabled class="task-list-item"> 支持Nacos和Apollo</label></li>
+<li><label><input type="checkbox" checked disabled class="task-list-item"> 线上控制台可以直接推送到内存，正常情况下使用开关控制台推送开关值到内存。</label></li>
+<li><label><input type="checkbox" checked disabled class="task-list-item"> 支持集群推送和单机推送</label></li>
+<li><label><input type="checkbox" checked disabled class="task-list-item"> 线上控制台持久化推送，借助配置中心Naocos或Apollo持久化业务开关。即使在应用重启了，也会生效。</label></li>
+<li><label><input type="checkbox" checked disabled class="task-list-item"> 高可用，如果开关控制台出现异常或挂掉，可以直接通过Nacos或者Apollo自身的控制台来编辑开关值。</label></li>
+<li><label><input type="checkbox" checked disabled class="task-list-item"> Http API推送。若配置中心Nacos或Apollo推送延迟高或者出现异常挂掉。可直接通过Http API接口来才操作开关。</label></li>
+<li><label><input type="checkbox" checked disabled class="task-list-item"> Switch保证业务开关推送的正取性，实时性的同时，提供业务开关的监控功能，
+  能监控集群开关状态，降低开关不一致带来的风险。若有机器的开关值不一致，或者某台机器已经下线，则会提醒相应的操作人员及时调整开关值，保持集群状态一致。
+<br /></label></li>
+</ul>
+
+<h2 id="3-switch设计">3.Switch设计</h2>
+
+<p>Switch的设计将会从Client，管控平台，适配多种配置中心，高可用等几个角度来设计。做到以下几点</p>
+
+<blockquote>
+<p>Switch尽可能使用简单,switch框架提供非常简单的使用方式，对应用方原来的使用侵入小</p>
+
+<p>基于配置中心Nacos或Apollo实现推送，为了保证更可靠需要支持Http API的推送方式</p>
+</blockquote>
+
+<h3 id="3-1-switch的方案设计">3.1 Switch的方案设计</h3>
+
+<p>Switch总体架构，如下图所示:</p>
+
+<p><img src="2.png" alt="" /></p>
+
+<ul>
+<li><p>a. Switch Admin-管理控制台</p>
+
+<p>管理控制台主要用于对分组、应用及开关进行操作，核心功能就是对开关进行控制，包括分布式和单机操作模式
+  </p></li>
+
+<li><p>b. Apollo或Nacos</p></li>
+</ul>
+
+<p>   分布式开关统一注册中心，主要提供变更通知服务，客户端通过订阅开关节点，实时获取开关变更信息，从而同步更新到本地内存
+  
+* c. 开关client</p>
+
+<p>   基于spi机制加载应用内开关组件，并注册到配置中心，并基于netty实现tcp及http通信交互，方便本地及管理控制台调用。
+  </p>
+
+<h3 id="3-2-功能模块设计">3.2 功能模块设计</h3>
+
+<p>Switch的功能模块设计图，如下所示:</p>
+
+<p><img src="3.png" alt="" /></p>
+
+<table>
+<thead>
+<tr>
+<th align="left">模块</th>
+<th align="left">说明</th>
+<th align="left">备注</th>
+</tr>
+</thead>
+
+<tbody>
+<tr>
+<td align="left">switch</td>
+<td align="left">父模块</td>
+<td align="left"></td>
+</tr>
+
+<tr>
+<td align="left">switch-core</td>
+<td align="left">开关的核心模块</td>
+<td align="left">核心逻辑</td>
+</tr>
+
+<tr>
+<td align="left">switch-adpater</td>
+<td align="left">开关底层抽象适配</td>
+<td align="left"></td>
+</tr>
+
+<tr>
+<td align="left">switch-admin</td>
+<td align="left">开关管控平台</td>
+<td align="left">管控平台</td>
+</tr>
+
+<tr>
+<td align="left">switch-adpater-apollo</td>
+<td align="left">开关管控平台适配阿波罗</td>
+<td align="left">通过OpenAPI下发开关</td>
+</tr>
+
+<tr>
+<td align="left">switch-adpater-nacos</td>
+<td align="left">开关管控平台适配阿波罗</td>
+<td align="left">通过OpenAPI下发开关</td>
+</tr>
+
+<tr>
+<td align="left">switch-client</td>
+<td align="left">开关Client的父模块</td>
+<td align="left"></td>
+</tr>
+
+<tr>
+<td align="left">switch-client-adapter</td>
+<td align="left">开关Client的适配器接口</td>
+<td align="left"></td>
+</tr>
+
+<tr>
+<td align="left">switch-client-adapter-apollo</td>
+<td align="left">开关客户端Apollo Starter提供的二方包</td>
+<td align="left"></td>
+</tr>
+
+<tr>
+<td align="left">switch-client-adapter-nacos</td>
+<td align="left">开关客户端Nacos Stater 提供的二方包</td>
+<td align="left"></td>
+</tr>
+</tbody>
+</table>
+
+<h3 id="3-3-switch的客户端设计">3.3 Switch的客户端设计</h3>
+
+<p>Switch开关Client会以Spring Boot Starter的方式嵌入到应用中，采用注解的方式让开发人员非常方便的接入开关平台，示例代码如下:</p>
+
+<pre><code class="language-java">public class AppSwitch {
+
+    @Switch(groupName=&quot;whole_Single_Gray&quot;,desc=&quot;整零灰度开关&quot; )
+    public static  boolean  isOpenWholeAndSingleGray=true;
+
+    @Switch(groupName=&quot;whole_Single_Gray&quot;,desc=&quot;整零灰度列表&quot;)
+    public static List wholeAndSingleGrayList;
+
+}
+
+</code></pre>
+
+<h4 id="3-3-1-开关命名重复问题">3.3.1  开关命名重复问题</h4>
+
+<p>在设计系统的时候，开关是否要共享给所有系统，还是其中某一个系统，如果共享给所有系统，那么有权限的人对开关命名的时候难免会重复，针对此，一个系统对应一个appid，在一个appid内开关名称不允许有重复，只有该appid的owner才有权限对该appid的下的开关做操作。</p>
+
+<blockquote>
+<p>这里的AppId和配置中心的Appid一一对应</p>
+</blockquote>
+
+<h2 id="4-管控平台设计">4.管控平台设计</h2>
+
+<h3 id="4-1管控平台原型设计">4.1管控平台原型设计</h3>
+
+<h4 id="4-1-1-开关管理">4.1.1 开关管理</h4>
+
+<p>整个应用某个开关推送</p>
+
+<p><img src="4.png" alt="" /></p>
+
+<h4 id="4-1-2-应用管理">4.1.2 应用管理</h4>
+
+<p>对接入开关中间件的应用进行管理</p>
+
+<h4 id="4-1-3-推送记录">4.1.3 推送记录</h4>
+
+<p><img src="5.png" alt="" /></p>
+
+<h4 id="4-1-4-机器管理">4.1.4 机器管理</h4>
+
+<p>接入开关中间件的开关应用实例机器管理</p>
+
+<h4 id="4-1-4-开关权限管理">4.1.4 开关权限管理</h4>
+
+<p>开关的修改变更管理</p>
+
+<h3 id="4-2-表设计">4.2 表设计</h3>
+
+<pre><code class="language-sql">DROP TABLE IF EXISTS `switch`;
+CREATE TABLE `switch` (
+  `id` bigint(20) NOT NULL AUTO_INCREMENT COMMENT '主键',
+  `name` varchar(150) DEFAULT NULL COMMENT '开关名',
+  `app_name` varchar(200) NOT NULL COMMENT 'app的名称',
+  `value` varchar(1000) NOT NULL COMMENT '开关对应的值',
+  `group_name` varchar(128) NOT NULL COMMENT '开关分组名称',
+  `group_code` varchar(128) NOT NULL COMMENT '开关分组code',
+  `is_deleted` tinyint(4) NOT NULL DEFAULT '0' COMMENT '是否删除 0 否，1 已经删除',
+  `create_time` timestamp NOT NULL DEFAULT '1970-01-02 00:00:00' COMMENT '创建时间',
+  `update_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
+  `status` tinyint(4) NOT NULL COMMENT '开关状态(0 注册、1 在线、2.下线 3 失效)',
+  PRIMARY KEY (`id`),
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='开关表';
+
+DROP TABLE IF EXISTS `machine`;
+CREATE TABLE `machine` (
+  `id` bigint(20) NOT NULL AUTO_INCREMENT COMMENT '主键',
+  `host_name` varchar(150) NOT NULL COMMENT '主机名',
+  `ip` varchar(150) NOT NULL COMMENT 'ip',
+  `switch_id` bigint(20) NOT NULL COMMENT '开关的Id',
+  `switch_name` varchar(1000) NOT NULL COMMENT '开关名称',
+  `switch_value` varchar(1000) NOT NULL COMMENT '开关当前的值',
+  `create_time` timestamp NOT NULL DEFAULT '1970-01-02 00:00:00' COMMENT '创建时间',
+  `update_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
+  `is_deleted` tinyint(4) NOT NULL DEFAULT '0' COMMENT '是否删除 0 否，1 已经删除',
+  PRIMARY KEY (`id`),
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='机器表';
+
+DROP TABLE IF EXISTS `push_log`;
+CREATE TABLE `push_log` (
+  `id` bigint(20) NOT NULL AUTO_INCREMENT COMMENT '主键',
+  `switch_id` bigint(20) NOT NULL COMMENT '开关的Id',
+  `switch_name` varchar(100) NOT NULL COMMENT '开关名称',
+  `switch_value` varchar(1000) NOT NULL COMMENT '开关当前的值',
+  `operator_name` varchar(20) NOT NULL COMMENT '操作人姓名',
+  `host_name_list` varchar(150) NOT NULL COMMENT '主机名列表',
+  `machine_id_list` bigint(20) NOT NULL COMMENT '机器id列表',
+  `ip_list` varchar(150) NOT NULL COMMENT 'ip',
+  `status` tinyint(4) NOT NULL COMMENT '推送 0 成功 1 失败',
+  `create_time` timestamp NOT NULL DEFAULT '1970-01-02 00:00:00' COMMENT '创建时间',
+  `update_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
+  `is_deleted` tinyint(4) NOT NULL DEFAULT '0' COMMENT '是否删除 0 否，1 已经删除',
+  PRIMARY KEY (`id`),
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='开关推送记录';
+
+</code></pre>
+
+<h2 id="5-开关接入">5.开关接入</h2>
+
+<p>引入SDK，配置应用名自动注册发现接入</p>
+
+<h3 id="5-1-定义开关">5.1 定义开关</h3>
+
+<p>通过@Switch注解即可定义开关。</p>
+
+<h2 id="6-总结">6 总结</h2>
+
+<p>Switch开关中间件还在设计开发之中，后续会分享更多内容。</p>
+
+</article>
+
+<div id="gitalk-container"></div>
+<link rel="stylesheet" href="https://unpkg.com/gitalk/dist/gitalk.css">
+<script src="https://unpkg.com/gitalk/dist/gitalk.min.js"></script>
+<script>
+  const gitalk = new Gitalk({
+    clientID: '6928118cff8d42e226a1',
+    clientSecret: '24edd8a31c50467e0d741b3a803c199e7ad53567',
+    repo: 'softwareking.github.io',
+    owner: 'Softwareking',
+    admin: ['Softwareking'],
+    id: location.pathname, 
+    distractionFreeMode: false 
+  });
+  (function() {
+    if (["localhost", "127.0.0.1"].indexOf(window.location.hostname) != -1) {
+      document.getElementById('gitalk-container').innerHTML = 'Gitalk comments not available by default when the website is previewed locally.';
+      return;
+    }
+    gitalk.render('gitalk-container');
+  })();
+</script>
+<style>
+
+  .gt-container .gt-btn-login {
+      background-color: #ff6a00;
+      border: 1px solid #ff6a00;
+  }
+
+  .gt-container .gt-btn-public {
+      background-color: #ff6a00;
+      border: 1px solid #ff6a00;
+  }
+
+  .gt-container .gt-btn-public:hover {
+      background-color: #ff6a00;
+      border: 1px solid #ff6a00;
+  }
+
+  .gt-container .gt-btn-preview {
+    background-color: #fff;
+    color: #ff6a00;
+  }
+  .gt-container .gt-btn {
+    padding: 0.75em 1.25em;
+    display: inline-block;
+    line-height: 1;
+    text-decoration: none;
+    white-space: nowrap;
+    cursor: pointer;
+    border: 1px solid #ff6a00;
+    border-radius: 5px;
+    background-color: #ff6a00;
+    color: #fff;
+    outline: none;
+    font-size: 0.75em;
+   }
+
+
+  .gt-container a {
+      color: #ff6a00;
+  }
+
+  .gt-container .gt-btn-preview:hover {
+      border: 1px solid #ff6a00;
+  }
+
+  .gt-container .gt-svg svg {
+      fill: #ff6a00;
+  }
+
+  .gt-container .gt-comment-username {
+      color: #ff6a00;
+  }
+  
+  .gt-container .gt-popup .gt-action.is--active:before {
+      background: #ff6a00;
+  }
+
+  .gt-container .gt-header-controls-tip {
+    font-size: 0.875em;
+    color: #ff6a00;
+    text-decoration: none;
+    vertical-align: sub;
+}
+
+</style>
+
+		<div class="-show-mobile">
+			
+
+	<nav class="ss-pagination-next">
+		<a class="link-prev" href="/blog/idea/line-marker-1/">
+			<span class="text">上一篇: </span>
+			<span class="text">IDEA插件运行报错:Write access is allowed inside write-action only</span>
+		</a>
+		<a class="link-next" href="/blog/idea/line-marker-2/">
+			<span class="text">下一篇: </span>
+			<span class="text">IDEA插件开发-自定义行标记</span>
+		</a>
+	</nav>
+
+		</div>
+	</main>
+
+	<aside class="ss-layout-aside">
+		
+
+
+<div class="ss-card ss-aside-toc">
+	<h2 class="card-title">
+		目录
+	</h2>
+  <nav id="TableOfContents">
+<ul>
+<li>
+<ul>
+<li><a href="#1-开关中间件">1.开关中间件</a>
+<ul>
+<li><a href="#1-1-switch概述">1.1 Switch概述</a></li>
+<li><a href="#1-2-switch使用的业务场景">1.2 Switch使用的业务场景</a></li>
+<li><a href="#2-2-switch的分类">2.2 Switch的分类:</a></li>
+<li><a href="#2-3-分布式switch的需求">2.3 分布式Switch的需求</a></li>
+<li><a href="#2-4-switch竞品分析">2.4 Switch竞品分析</a></li>
+<li><a href="#2-5-switch具备的功能">2.5 Switch具备的功能</a></li>
+</ul></li>
+<li><a href="#3-switch设计">3.Switch设计</a>
+<ul>
+<li><a href="#3-1-switch的方案设计">3.1 Switch的方案设计</a></li>
+<li><a href="#3-2-功能模块设计">3.2 功能模块设计</a></li>
+<li><a href="#3-3-switch的客户端设计">3.3 Switch的客户端设计</a>
+<ul>
+<li><a href="#3-3-1-开关命名重复问题">3.3.1  开关命名重复问题</a></li>
+</ul></li>
+</ul></li>
+<li><a href="#4-管控平台设计">4.管控平台设计</a>
+<ul>
+<li><a href="#4-1管控平台原型设计">4.1管控平台原型设计</a>
+<ul>
+<li><a href="#4-1-1-开关管理">4.1.1 开关管理</a></li>
+<li><a href="#4-1-2-应用管理">4.1.2 应用管理</a></li>
+<li><a href="#4-1-3-推送记录">4.1.3 推送记录</a></li>
+<li><a href="#4-1-4-机器管理">4.1.4 机器管理</a></li>
+<li><a href="#4-1-4-开关权限管理">4.1.4 开关权限管理</a></li>
+</ul></li>
+<li><a href="#4-2-表设计">4.2 表设计</a></li>
+</ul></li>
+<li><a href="#5-开关接入">5.开关接入</a>
+<ul>
+<li><a href="#5-1-定义开关">5.1 定义开关</a></li>
+</ul></li>
+<li><a href="#6-总结">6 总结</a></li>
+</ul></li>
+</ul>
+</nav>
+</div>
+
+
+		<div class="ss-card -hidden-mobile">
+	<h2 class="card-title">
+		分类
+	</h2>
+	<ul class="ss-aside-related">
+		
+		<li><a href="/categories/eureka-server/">Eureka Server</a></li>
+		
+		<li><a href="/categories/halo-tools/">Halo Tools</a></li>
+		
+		<li><a href="/categories/muse/">Muse</a></li>
+		
+		<li><a href="/categories/mybatis/">Mybatis</a></li>
+		
+		<li><a href="/categories/nacos/">Nacos</a></li>
+		
+		<li><a href="/categories/spring-boot/">Spring Boot</a></li>
+		
+		<li><a href="/categories/spring-boot-admin/">Spring Boot Admin</a></li>
+		
+		<li><a href="/categories/spring-cloud/">Spring Cloud</a></li>
+		
+		<li><a href="/categories/spring-cloud-gateway/">Spring Cloud Gateway</a></li>
+		
+		<li><a href="/categories/%E4%B8%AD%E5%8F%B0/">中台</a></li>
+		
+		<li><a href="/categories/%E4%B8%AD%E9%97%B4%E4%BB%B6/">中间件</a></li>
+		
+		<li><a href="/categories/%E5%B9%B6%E5%8F%91%E7%BC%96%E7%A8%8B/">并发编程</a></li>
+		
+		<li><a href="/categories/%E7%A4%BE%E5%8C%BA%E6%B2%99%E9%BE%99/">社区沙龙</a></li>
+		
+	</ul>
+</div>
+		
+
+
+		<div class="ss-aside-tags ss-card">
+	<h2 class="card-title">
+		标签
+		<span class="card-extra"></span>
+	</h2>
+	<ul class="tag-list">
+		
+			<li class="tag"><a href="/tags/eureka-server/">Eureka Server</a></li>
+		
+			<li class="tag"><a href="/tags/halo-tools/">Halo Tools</a></li>
+		
+			<li class="tag"><a href="/tags/myabtis/">Myabtis</a></li>
+		
+			<li class="tag"><a href="/tags/nacos/">Nacos</a></li>
+		
+			<li class="tag"><a href="/tags/ngnix/">Ngnix</a></li>
+		
+			<li class="tag"><a href="/tags/spring-boot-admin/">Spring Boot Admin</a></li>
+		
+			<li class="tag"><a href="/tags/spring-cloud/">Spring Cloud</a></li>
+		
+			<li class="tag"><a href="/tags/spring-cloud-gateway/">Spring Cloud Gateway</a></li>
+		
+			<li class="tag"><a href="/tags/spring-cloud%E4%B8%AD%E5%9B%BD%E7%A4%BE%E5%8C%BA/">Spring Cloud中国社区</a></li>
+		
+			<li class="tag"><a href="/tags/switch/">Switch</a></li>
+		
+			<li class="tag"><a href="/tags/%E4%B8%9A%E5%8A%A1%E4%B8%AD%E5%8F%B0/">业务中台</a></li>
+		
+			<li class="tag"><a href="/tags/%E4%B8%AD%E9%97%B4%E4%BB%B6/">中间件</a></li>
+		
+			<li class="tag"><a href="/tags/%E5%A4%9A%E7%BA%BF%E7%A8%8B/">多线程</a></li>
+		
+			<li class="tag"><a href="/tags/%E5%B9%B6%E5%8F%91%E7%BC%96%E7%A8%8B/">并发编程</a></li>
+		
+			<li class="tag"><a href="/tags/%E7%A4%BE%E5%8C%BA%E6%B2%99%E9%BE%99/">社区沙龙</a></li>
+		
+			<li class="tag"><a href="/tags/%E9%A1%B9%E7%9B%AE%E7%BB%8F%E9%AA%8C/">项目经验</a></li>
+		
+	</ul>
+</div>
+	</aside>
+</div>
+
+
+
+	
+
+<footer class="ss-footer">
+	<div class="container">
+		<div class="links">
+			
+				<div class="cate">
+					<h2 class="cate-title">个人链接</h2>
+					
+						<a class="link" href="https://github.com/softwareking">Github</a>
+					
+						<a class="link" href="https://www.cnblogs.com/ACMer/">博客园</a>
+					
+						<a class="link" href="http://blog.sina.com.cn/softwaremi">新浪博客</a>
+					
+				</div>
+			
+				<div class="cate">
+					<h2 class="cate-title">社区</h2>
+					
+						<a class="link" href="http://springcloud.cn">主站</a>
+					
+						<a class="link" href="https://github.com/springcloud">Github</a>
+					
+				</div>
+			
+				<div class="cate">
+					<h2 class="cate-title">友情链接</h2>
+					
+						<a class="link" href="https://www.ramostear.com/">谭潮红博客</a>
+					
+						<a class="link" href="http://springcloud.cn">社区</a>
+					
+						<a class="link" href="http://blog.springcloud.cn">博客</a>
+					
+						<a class="link" href="http://tietang.wang/">王铁堂博客</a>
+					
+						<a class="link" href="https://tianhui.xin/">怪咖晨</a>
+					
+				</div>
+			
+				<div class="cate">
+					<h2 class="cate-title">工具</h2>
+					
+						<a class="link" href="http://md.aclickall.com/">微信排版</a>
+					
+						<a class="link" href="https://www.gaoding.com">稿定设计</a>
+					
+						<a class="link" href="http://www.processon.com/">ProcessOn</a>
+					
+						<a class="link" href="https://www.draw.io/">Draw</a>
+					
+				</div>
+			
+		</div>
+		<div class="qrcode">
+			
+				<div>
+					<img class="qrcode-img" src="/img/qrcode/wxgzh.png" />
+					<p class="qrcode-desc">玹霖志</p>
+				</div>
+			
+				<div>
+					<img class="qrcode-img" src="/img/qrcode/sqgz.jpeg" />
+					<p class="qrcode-desc">Spring Cloud中国</p>
+				</div>
+			
+		</div>
+	</div>
+	<div class="copyright">
+		<p>
+			© 2019 玹霖志
+			<a href="#">滇ICP备14007546号</a>
+
+			<span id="busuanzi_container_site_pv">
+            本站访问量：<span id="busuanzi_value_site_pv"></span>次
+        </span>
+        &nbsp;
+        <span id="busuanzi_container_site_uv">
+            您是本站第 <span id="busuanzi_value_site_uv"></span> 位访问者
+        </span>
+		</p>
+
+	</div>
+</footer>
+
+	
+
+
+<aside class="ss-aside hidden" id="scroll_top">
+	<div class="go-top-btn">
+		<a class="logo-link" href="javascript:window.scrollTo(0,0)">
+			<img class="logo" src="/img/gotop.png">
+		</a>
+	</div>
+</aside>
+<script>
+    var typed = new Typed('#sloganTitle', {
+		strings: [
+        '  ',
+		"架构治理之道",
+      ],
+      cursorChar: "|",
+      typeSpeed: 70,
+	  loop: false,
+	});
+	
+     var typed = new Typed('#sloganDesc', {
+		strings: [
+        '  ',
+        "Hi,欢迎访问玹霖志。专注于基础架构，应用架构，业务架构，中台架构治理之道和代码防腐。Halo Ecology™（光环生态）为企业基础架构和中台架构的落地保驾护航！欢迎加我微信Software_King探讨",
+      ],
+      cursorChar: "|",
+      typeSpeed: 70,
+	  loop: false,
+	});
+	
+  </script>
+
+</body>
+
+</html>

@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>多线程 on 玹霖志</title>
+    <link>/tags/%E5%A4%9A%E7%BA%BF%E7%A8%8B/</link>
+    <description>Recent content in 多线程 on 玹霖志</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>zh-CN</language>
+    <lastBuildDate>Tue, 03 Oct 2017 21:00:00 +0800</lastBuildDate>
+    
+	<atom:link href="/tags/%E5%A4%9A%E7%BA%BF%E7%A8%8B/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>并发编程总结之同类容器和异步容器</title>
+      <link>/blog/bf/bf01/</link>
+      <pubDate>Tue, 03 Oct 2017 21:00:00 +0800</pubDate>
+      
+      <guid>/blog/bf/bf01/</guid>
+      <description>1. 同步类容器 同步类容器都是线程安全的，但在某些场景下可能需要加锁来保护复合操作。 复合操作如： * 迭代(反复访问元素，遍历容器中所有的元素)， *</description>
+    </item>
+    
+    <item>
+      <title>并发编程之ThreadLocal与单例的推荐写法</title>
+      <link>/blog/bf/bf-th-sing/</link>
+      <pubDate>Sun, 27 Aug 2017 21:00:00 +0800</pubDate>
+      
+      <guid>/blog/bf/bf-th-sing/</guid>
+      <description>一.ThreadLocal的概念 1.1 ThreadLocal概念 ThreadLocal概念：线程局部变量，是一种多线程间并发访问变量的解决方案。</description>
+    </item>
+    
+    <item>
+      <title>并发编程总结之volatile</title>
+      <link>/blog/bf/bf-volatile/</link>
+      <pubDate>Tue, 09 Aug 2016 21:00:00 +0800</pubDate>
+      
+      <guid>/blog/bf/bf-volatile/</guid>
+      <description>1. volatile概念 在java中，每个线程都会有一块工作内存区，其中存放着所有线程共享的主内存中的变量值的拷贝。当线程执行时，它在自己的工</description>
+    </item>
+    
+    <item>
+      <title>并发编程总结之线程间的通信</title>
+      <link>/blog/bf/bf-thread-singal/</link>
+      <pubDate>Tue, 09 Aug 2016 21:00:00 +0800</pubDate>
+      
+      <guid>/blog/bf/bf-thread-singal/</guid>
+      <description>1. 线程间通信概念 线程是操作系统中独立的个体，但这些个体如果不经过特殊的处理就不能成为一个整体，线程间的通信就成为整体的必用方式之一。当线程存</description>
+    </item>
+    
+    <item>
+      <title>并发编程总结之synchronized细节问题</title>
+      <link>/blog/bf/bf-synchronized/</link>
+      <pubDate>Tue, 26 Jul 2016 21:00:00 +0800</pubDate>
+      
+      <guid>/blog/bf/bf-synchronized/</guid>
+      <description>1. 脏读 1.1 什么是脏读 对于对象的同步和异步方法，我们在设计程序，一定要考虑问题的整体性，不然会出现数据不一致的错误，最经典的错误就是脏读(Dir</description>
+    </item>
+    
+  </channel>
+</rss>

@@ -1,0 +1,1184 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<title>
+	并发编程总结之synchronized细节问题 · 玹霖志
+</title>
+	<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+<meta name="viewport" content="width=device-width,minimum-scale=1">
+<meta name="description" content="玹霖志,许进沉思录,许进|Spring Cloud,中间件，基础架构，www.xujin.org,xujin.org,-许进沉思录,Venus&#43;,云首科技有限公司,云计算，大数据，物联网，Software_king的博客,云计算Saas，云计算Paas，云计算Iaas Hadoop，大数据，JavaEE，Java，物联网，Hadoop， NoSQL，MongoDB,Spring, Hibernate,Struts2," />
+
+<meta name="generator" content="Hugo 0.55.6" /><link rel="shortcut icon" href=/img/icon.png type="image/png">
+
+<link href="https://unpkg.com/purecss@1.0.0/build/base-min.css" rel="stylesheet">
+
+
+
+<link href="/css/main.css" rel="stylesheet">
+<link href="/css/zoom-image.css" rel="stylesheet">
+
+<script src="/js/iconfont.js"></script>
+<script src="/js/highlight.pack.js"></script>
+<script>hljs.initHighlightingOnLoad();</script>
+
+
+<script>window.SITE_LANGUAGE = "zh"</script>
+<script src="/js/app.js"></script>
+<script src="https://cdn.bootcss.com/typed.js/2.0.11/typed.js"></script>
+
+
+
+<script async src="//cdn.busuanzi.ibruce.info/cdn/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+<script src="//cdn.bootcss.com/jquery/3.2.1/jquery.min.js"></script>
+
+<script>
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    $(window).scroll(function () {
+        
+        if ($(window).scrollTop() >= 200) {
+            $("#scroll_top").removeClass("hidden").addClass("show"); 
+        } else {
+            $("#scroll_top").removeClass("show").addClass("hidden"); 
+        }
+    });
+</script>
+
+
+
+
+
+
+
+<script type="application/javascript">
+var doNotTrack = false;
+if (!doNotTrack) {
+	(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+	(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+	m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+	})(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+	ga('create', 'UA-142131411-1', 'auto');
+	
+	ga('send', 'pageview');
+}
+</script>
+
+</head>
+
+<body>
+	<header class="ss-header">
+	<nav class="navbar" role="navigation" aria-label="main navigation">
+		<div class="navbar-brand">
+			<a class="logo-link" href="/">
+				<img class="logo" src="/img/logo.png">
+			</a>
+			<div class="-show-mobile">
+				<a id="mobile-menu-icon">
+					<svg class="icon" aria-hidden="true">
+						<use xlink:href="#icon-menu"></use>
+					</svg>
+				</a>
+				<nav id="mobile-menu">
+					
+          
+            <a
+              class=""
+              href="/projects/">
+              <span>
+                项目
+              </span>
+              <svg class="icon" aria-hidden="true"><use xlink:href="#icon-ARROW"></use></svg>
+            </a>
+					
+            <a
+              class=""
+              href="/guides/">
+              <span>
+                案例
+              </span>
+              <svg class="icon" aria-hidden="true"><use xlink:href="#icon-ARROW"></use></svg>
+            </a>
+					
+            <a
+              class=""
+              href="/muse/">
+              <span>
+                Muse
+              </span>
+              <svg class="icon" aria-hidden="true"><use xlink:href="#icon-ARROW"></use></svg>
+            </a>
+					
+            <a
+              class=""
+              href="/blog/">
+              <span>
+                博客
+              </span>
+              <svg class="icon" aria-hidden="true"><use xlink:href="#icon-ARROW"></use></svg>
+            </a>
+					
+            <a
+              class=""
+              href="/activities/">
+              <span>
+                活动
+              </span>
+              <svg class="icon" aria-hidden="true"><use xlink:href="#icon-ARROW"></use></svg>
+            </a>
+					
+            <a
+              class=""
+              href="/projects/halo/overview/">
+              <span>
+                Halo
+              </span>
+              <svg class="icon" aria-hidden="true"><use xlink:href="#icon-ARROW"></use></svg>
+            </a>
+					
+            <a
+              class=""
+              href="/about/">
+              <span>
+                关于我
+              </span>
+              <svg class="icon" aria-hidden="true"><use xlink:href="#icon-ARROW"></use></svg>
+            </a>
+					
+					
+				</nav>
+			</div>
+		</div>
+
+		<div class="navbar-menu -hidden-mobile">
+			<div class="navbar-start">
+				
+				
+					<a class="navbar-item "
+						href="/projects/">项目</a>
+				
+					<a class="navbar-item "
+						href="/guides/">案例</a>
+				
+					<a class="navbar-item "
+						href="/muse/">Muse</a>
+				
+					<a class="navbar-item "
+						href="/blog/">博客</a>
+				
+					<a class="navbar-item "
+						href="/activities/">活动</a>
+				
+					<a class="navbar-item "
+						href="/projects/halo/overview/">Halo</a>
+				
+					<a class="navbar-item "
+						href="/about/">关于我</a>
+				
+			</div>
+			<div class="navbar-end">
+				<div class="navbar-item">
+					<div id="js-menu-search" class="navbar-search">
+						<input class="input" placeholder="请输入要搜索的关键词">
+						<svg class="icon" aria-hidden="true">
+							<use xlink:href="#icon-search"></use>
+						</svg>
+					</div>
+				</div>
+				
+			</div>
+		</div>
+	</nav>
+</header>
+
+
+	
+
+	
+
+	
+
+	
+
+	
+
+	
+
+	
+
+
+
+	
+
+<div class="ss-layout-container">
+	<main class="ss-layout-main -card">
+		<div class="ss-meta">
+	<h1 class="title">
+	
+		<span id="postTitle"></span>
+
+	</h1>
+	<div class="meta">
+		
+			2016-07-26 ·
+			
+				许进 ·
+			
+			<span class="tags">
+				
+					<a class="tag" href="/tags/%E5%B9%B6%E5%8F%91%E7%BC%96%E7%A8%8B/" rel="tag">#并发编程</a>
+				
+					<a class="tag" href="/tags/%E5%A4%9A%E7%BA%BF%E7%A8%8B/" rel="tag">#多线程</a>
+				
+			</span>
+		
+		<span class="post-word-count">· 字数:4512·阅读时间 10 分钟</span>
+		
+		阅读量<span id="busuanzi_value_page_pv"></span>次
+		
+	</div>
+</div>
+  <script>
+    var typed = new Typed('#postTitle', {
+		strings: [
+        '  ',
+		"并发编程总结之synchronized细节问题",
+      ],
+      cursorChar: "|",
+      typeSpeed: 70,
+	  loop: false,
+	});
+  </script>
+		<article class="typo">
+	<h2 id="1-脏读">1. 脏读</h2>
+
+<h3 id="1-1-什么是脏读">1.1 什么是脏读</h3>
+
+<p>对于对象的同步和异步方法，我们在设计程序，一定要考虑问题的整体性，不然会出现数据不一致的错误，最经典的错误就是脏读(DirtyRead)。</p>
+
+<h3 id="1-2-示例code">1.2 示例Code</h3>
+
+<p>业务整体需要使用完整的synchronized，保持业务的原子性。</p>
+
+<pre><code class="language-java">/**
+ * 业务整体需要使用完整的synchronized，保持业务的原子性。
+ * 
+ * @author xujin
+ *
+ */
+public class DirtyRead {
+
+    private String username = &quot;xujin&quot;;
+    private String password = &quot;123&quot;;
+
+    public synchronized void setValue(String username, String password) {
+        this.username = username;
+        try {
+            Thread.sleep(2000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
+        this.password = password;
+
+        System.out.println(&quot;setValue最终结果：username = &quot; + username + &quot; , password = &quot; + password);
+    }
+    //①这里getValue没有加synchronized修饰
+    public void getValue() {
+        System.out.println(&quot;getValue方法得到：username = &quot; + this.username + &quot; , password = &quot; + this.password);
+    }
+
+    public static void main(String[] args) throws Exception {
+
+        final DirtyRead dr = new DirtyRead();
+        Thread t1 = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                dr.setValue(&quot;张三&quot;, &quot;456&quot;);
+            }
+        });
+        t1.start();
+        Thread.sleep(1000);
+
+        dr.getValue();
+    }
+
+}
+</code></pre>
+
+<p>上面的Code中，getValue没有加synchronized修饰，打印结果如下,出现脏读</p>
+
+<pre><code>getValue方法得到：username = 张三 , password = 123
+setValue最终结果：username = 张三 , password = 456
+</code></pre>
+
+<p>只需在getValue加synchronized修饰，如下:</p>
+
+<pre><code class="language-java">public synchronized void getValue() {
+  System.out.println(&quot;getValue方法得到：username = &quot; + this.username + &quot; , password = &quot; + this.password);
+}
+</code></pre>
+
+<p>运行结果如下,没有造成数据脏读</p>
+
+<pre><code>setValue最终结果：username = 张三 , password = 456
+getValue方法得到：username = 张三 , password = 456
+</code></pre>
+
+<h3 id="1-3-小结">1.3 小结</h3>
+
+<p>在我们对对象中的一个方法加锁的时候，需要考虑业务的或程序的整体性，也就是为程序中的set和get方法同时加锁synchronized同步关键字，保证业务的(service层)的原子性，不然会出现数据错误，脏读。</p>
+
+<h2 id="2-synchronized的重入">2.synchronized的重入</h2>
+
+<h3 id="2-1-什么是synchronized的重入锁">2.1 什么是synchronized的重入锁</h3>
+
+<ol>
+<li>synchronized,它拥有强制原子性的内置锁机制,是一个重入锁,所以在使用synchronized时,当一个线程请求得到一个对象锁后再次请求此对象锁,可以再次得到该对象锁,就是说在一个synchronized方法/块的内部调用本类的其他synchronized方法/块时，是永远可以拿到锁。</li>
+<li>当线程请求一个由其它线程持有的对象锁时，该线程会阻塞，而当线程请求由自己持有的对象锁时，如果该锁是重入锁,请求就会成功,否则阻塞.</li>
+</ol>
+
+<blockquote>
+<p>简单的说:关键字synchronized具有<code>锁重入</code>的功能，也就是在使用<code>synchronized时</code>，<code>当一个线程</code>得到一个<code>对象锁</code>的<code>锁后</code>，<code>再次请求此对象时</code>可以<code>再次</code>得到该<code>对象对应的锁</code>。</p>
+</blockquote>
+
+<h3 id="2-2-嵌套调用关系synchronized的重入">2.2 嵌套调用关系synchronized的重入</h3>
+
+<p>嵌套调用关系synchronized的重入也是线程安全的，下面是method1，method2，method3都被synchronized修饰，调用关系method1&ndash;&gt;method2&ndash;&gt;method3,也是线程安全的。</p>
+
+<pre><code class="language-java">/**
+ * synchronized的重入
+ * 
+ * @author xujin
+ *
+ */
+public class SyncReenTrant {
+
+    public synchronized void method1() {
+        System.out.println(&quot;method1..&quot;);
+        method2();
+    }
+
+    public synchronized void method2() {
+        System.out.println(&quot;method2..&quot;);
+        method3();
+    }
+
+    public synchronized void method3() {
+        System.out.println(&quot;method3..&quot;);
+    }
+
+    public static void main(String[] args) {
+        final SyncReenTrant sd = new SyncReenTrant();
+        Thread t1 = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                sd.method1();
+            }
+        });
+        t1.start();
+    }
+</code></pre>
+
+<p>运行结果如下:</p>
+
+<pre><code>method1..
+method2..
+method3..
+</code></pre>
+
+<h3 id="2-3-继承关系的synchronized的重入">2.3 继承关系的synchronized的重入</h3>
+
+<p>简单 Code1：</p>
+
+<pre><code>public class Son extends Father {
+
+    public synchronized void doSomething() {
+        System.out.println(&quot;child.doSomething()&quot;);
+        // 调用自己类中其他的synchronized方法
+        doAnotherThing();
+
+    }
+
+    private synchronized void doAnotherThing() {
+        // 调用父类的synchronized方法
+        super.doSomething();
+        System.out.println(&quot;child.doAnotherThing()&quot;);
+    }
+
+    public static void main(String[] args) {
+        Son child = new Son();
+        child.doSomething();
+    }
+}
+
+class Father {
+    public synchronized void doSomething() {
+        System.out.println(&quot;father.doSomething()&quot;);
+    }
+
+}
+</code></pre>
+
+<p>运行结果:</p>
+
+<pre><code>child.doSomething()
+father.doSomething()
+child.doAnotherThing()
+</code></pre>
+
+<ol>
+<li>这里的对象锁只有一个,就是child对象的锁,当执行child.doSomething时，该线程获得child对象的锁，在doSomething方法内执行doAnotherThing时再次请求child对象的锁，因为synchronized是重入锁，所以可以得到该锁，继续在doAnotherThing里执行父类的doSomething方法时第三次请求child对象的锁，同理可得到，如果不是重入锁的话，那这后面这两次请求锁将会被一直阻塞，从而导致死锁。</li>
+<li>所以在Java内部，同一线程在调用自己类中其他synchronized方法/块或调用父类的synchronized方法/块都不会阻碍该线程的执行，就是说同一线程对同一个对象锁是可重入的，而且同一个线程可以获取同一把锁多次，也就是可以多次重入。因为java线程是基于“每线程（per-thread）”，而不是基于“每调用（per-invocation）”的（java中线程获得对象锁的操作是以每线程为粒度的，per-invocation互斥体获得对象锁的操作是以每调用作为粒度的）</li>
+</ol>
+
+<blockquote>
+<p>我们再来看看重入锁是怎么实现可重入性的，其实现方法是为每个锁关联一个线程持有者和计数器，当计数器为0时表示该锁没有被任何线程持有，那么任何线程都可能获得该锁而调用相应的方法；当某一线程请求成功后，JVM会记下锁的持有线程，并且将计数器置为1；此时其它线程请求该锁，则必须等待；而该持有锁的线程如果再次请求这个锁，就可以再次拿到这个锁，同时计数器会递增；当线程退出同步代码块时，计数器会递减，如果计数器为0，则释放该锁。</p>
+</blockquote>
+
+<pre><code class="language-java">public class SyncExtends {
+
+    // 父类
+    static class Father {
+        public int i = 10;
+
+        public synchronized void operationSup() {
+            try {
+                i--;
+                System.out.println(&quot;Father print i = &quot; + i);
+                Thread.sleep(100);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    // 子类继承父类
+    static class Son extends Father {
+        public synchronized void operationSub() {
+            try {
+                while (i &gt; 0) {
+                    i--;
+                    System.out.println(&quot;Son print i = &quot; + i);
+                    Thread.sleep(100);
+                    this.operationSup();
+                }
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    public static void main(String[] args) {
+
+        Thread t1 = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                Son sub = new Son();
+                sub.operationSub();
+            }
+        });
+
+        t1.start();
+    }
+
+}
+</code></pre>
+
+<p>运行结果如下:</p>
+
+<pre><code>Son print i = 9
+Father print i = 8
+Son print i = 7
+Father print i = 6
+Son print i = 5
+Father print i = 4
+Son print i = 3
+Father print i = 2
+Son print i = 1
+Father print i = 0
+</code></pre>
+
+<p>参考文章:
+<a href="http://blog.csdn.net/aigoogle/article/details/29893667">http://blog.csdn.net/aigoogle/article/details/29893667</a></p>
+
+<h3 id="2-4-synchronized常见代码块">2.4 synchronized常见代码块</h3>
+
+<ol>
+<li>synchronized可以使用任意的Object进行加锁， 使用synchronized代码块加锁,比较灵活，如下代码所示:</li>
+</ol>
+
+<pre><code class="language-java">public class ObjectLock {
+
+    public void method1() {
+        // 对this当前ObjectLock实例对象加锁
+        synchronized (this) {
+            try {
+                System.out.println(&quot;do method1..&quot;);
+                Thread.sleep(2000);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    public void method2() {
+        // 对ObjectLock类加锁
+        synchronized (ObjectLock.class) {
+            try {
+                System.out.println(&quot;do method2..&quot;);
+                Thread.sleep(2000);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    // 任何对象锁
+    private Object anyObjectlock = new Object();
+
+    public void method3() {
+        synchronized (anyObjectlock) {
+            try {
+                System.out.println(&quot;do method3..&quot;);
+                Thread.sleep(2000);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    public static void main(String[] args) {
+
+        final ObjectLock objLock = new ObjectLock();
+        Thread t1 = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                objLock.method1();
+            }
+        });
+        Thread t2 = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                objLock.method2();
+            }
+        });
+        Thread t3 = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                objLock.method3();
+            }
+        });
+
+        t1.start();
+        t2.start();
+        t3.start();
+
+    }
+
+}
+</code></pre>
+
+<p>2.使用synchronized声明的方法在某些情况下，是有弊端的，比如A线程调用同步的方法执行一个很长时间的任务,那么B线程就必须等待很长的时间才可以执行，这样情况下可以使用synchronize的去优化代码执行时间，也就是我们通常所说的减小锁的粒度。</p>
+
+<pre><code class="language-java">   public class Optimize {
+
+       public void doLongTimeTask() {
+           try {
+
+               System.out.println(&quot;当前线程开始：&quot; + Thread.currentThread().getName() + &quot;, 正在执行一个较长时间的业务操作，其内容不需要同步&quot;);
+               Thread.sleep(2000);
+               // 使用synchronized代码块减小锁的粒度，提高性能
+               synchronized (this) {
+                   System.out.println(&quot;当前线程：&quot; + Thread.currentThread().getName() + &quot;, 执行同步代码块，对其同步变量进行操作&quot;);
+                   Thread.sleep(1000);
+               }
+               System.out.println(&quot;当前线程结束：&quot; + Thread.currentThread().getName() + &quot;, 执行完毕&quot;);
+
+           } catch (InterruptedException e) {
+               e.printStackTrace();
+           }
+       }
+
+       public static void main(String[] args) {
+           final Optimize otz = new Optimize();
+           Thread t1 = new Thread(new Runnable() {
+               @Override
+               public void run() {
+                   otz.doLongTimeTask();
+               }
+           }, &quot;t1&quot;);
+           Thread t2 = new Thread(new Runnable() {
+               @Override
+               public void run() {
+                   otz.doLongTimeTask();
+               }
+           }, &quot;t2&quot;);
+           t1.start();
+           t2.start();
+       }
+
+   }
+</code></pre>
+
+<p>执行结果:</p>
+
+<pre><code>当前线程开始：t1, 正在执行一个较长时间的业务操作，其内容不需要同步
+当前线程开始：t2, 正在执行一个较长时间的业务操作，其内容不需要同步
+当前线程：t2, 执行同步代码块，对其同步变量进行操作
+当前线程结束：t2, 执行完毕
+当前线程：t1, 执行同步代码块，对其同步变量进行操作
+当前线程结束：t1, 执行完毕
+</code></pre>
+
+<p>3.注意就是不要使用String的常量加锁，会出现死循环问题。</p>
+
+<p>synchronized代码块对字符串的锁，注意String常量池的缓存功能,示例代码如下:</p>
+
+<pre><code class="language-java">   public class StringLock {
+
+    public void method() {
+        synchronized (&quot;字符串常量&quot;) {
+            try {
+                while(true){
+                    System.out.println(&quot;当前线程 : &quot;  + Thread.currentThread().getName() + &quot;开始&quot;);
+                    Thread.sleep(1000);     
+                    System.out.println(&quot;当前线程 : &quot;  + Thread.currentThread().getName() + &quot;结束&quot;);
+                }
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+    
+    public static void main(String[] args) {
+        final StringLock stringLock = new StringLock();
+        Thread t1 = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                stringLock.method();
+            }
+        },&quot;t1&quot;);
+        Thread t2 = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                stringLock.method();
+            }
+        },&quot;t2&quot;);
+        
+        t1.start();
+        t2.start();
+    }
+   }
+</code></pre>
+
+<p><strong>提示</strong>:运行结果是:<strong>t1线程一直死循环</strong>。<strong>t2线程不执行</strong>。修改为如下代码,t1和t2线程交替执行</p>
+
+<pre><code class="language-java">    public void method() {
+           //把synchronized (&quot;字符串常量&quot;) 修改为synchronized (new String(&quot;字符串常量&quot;))
+           synchronized (new String(&quot;字符串常量&quot;)) {
+               try {
+                   while (true) {
+                       System.out.println(&quot;当前线程 : &quot; + Thread.currentThread().getName() + &quot;开始&quot;);
+                       Thread.sleep(1000);
+                       System.out.println(&quot;当前线程 : &quot; + Thread.currentThread().getName() + &quot;结束&quot;);
+                   }
+               } catch (InterruptedException e) {
+                   e.printStackTrace();
+               }
+           }
+       }
+</code></pre>
+
+<p>4.锁对象的改变问题:
+   当使用一个对象进行加锁的时候，要注意对象本身发生变化的时候，那么持有的锁就不同。如果对象本身不发生改变，那么依然是同步的，即使是对象的属性发生了变化。</p>
+
+<p>4.1 示例代码1:<code>对象本身发生变化的时候,那么对象持有的锁就发生变化</code></p>
+
+<pre><code class="language-java">   public class ChangeLock {
+
+       private String lock = &quot;lock&quot;;
+
+       private void method() {
+           synchronized (lock) {
+               try {
+                   System.out.println(&quot;当前线程 : &quot; + Thread.currentThread().getName() + &quot;开始&quot;);
+                   // 这里把锁的内容改变了，因此t1,t2线程基本同时进来，而不是t1休眠2秒后，t2进来
+                   lock = &quot;change lock&quot;;
+                   Thread.sleep(2000);
+                   System.out.println(&quot;当前线程 : &quot; + Thread.currentThread().getName() + &quot;结束&quot;);
+               } catch (InterruptedException e) {
+                   e.printStackTrace();
+               }
+           }
+       }
+
+       public static void main(String[] args) {
+
+           final ChangeLock changeLock = new ChangeLock();
+           Thread t1 = new Thread(new Runnable() {
+               @Override
+               public void run() {
+                   changeLock.method();
+               }
+           }, &quot;t1&quot;);
+           Thread t2 = new Thread(new Runnable() {
+               @Override
+               public void run() {
+                   changeLock.method();
+               }
+           }, &quot;t2&quot;);
+           t1.start();
+           try {
+               Thread.sleep(100);
+           } catch (InterruptedException e) {
+               e.printStackTrace();
+           }
+           t2.start();
+       }
+
+   }
+</code></pre>
+
+<p>4.2 示例代码2:<code>同一对象属性的修改不会影响锁的情况</code></p>
+
+<pre><code class="language-java">   public class ModifyLock {
+
+       private String name;
+       private int age;
+
+       public String getName() {
+           return name;
+       }
+
+       public void setName(String name) {
+           this.name = name;
+       }
+
+       public int getAge() {
+           return age;
+       }
+
+       public void setAge(int age) {
+           this.age = age;
+       }
+
+       public synchronized void changeAttributte(String name, int age) {
+           try {
+               System.out.println(&quot;当前线程 : &quot; + Thread.currentThread().getName() + &quot; 开始&quot;);
+               this.setName(name);
+               this.setAge(age);
+
+               System.out.println(&quot;当前线程 : &quot; + Thread.currentThread().getName() + &quot; 修改对象内容为： &quot; + this.getName() + &quot;, &quot;
+                       + this.getAge());
+
+               Thread.sleep(2000);
+               System.out.println(&quot;当前线程 : &quot; + Thread.currentThread().getName() + &quot; 结束&quot;);
+           } catch (InterruptedException e) {
+               e.printStackTrace();
+           }
+       }
+
+       public static void main(String[] args) {
+           final ModifyLock modifyLock = new ModifyLock();
+           Thread t1 = new Thread(new Runnable() {
+               @Override
+               public void run() {
+                   modifyLock.changeAttributte(&quot;许进&quot;, 25);
+               }
+           }, &quot;t1&quot;);
+           Thread t2 = new Thread(new Runnable() {
+               @Override
+               public void run() {
+                   modifyLock.changeAttributte(&quot;李四X&quot;, 21);
+               }
+           }, &quot;t2&quot;);
+
+           t1.start();
+           try {
+               Thread.sleep(100);
+           } catch (InterruptedException e) {
+               e.printStackTrace();
+           }
+           t2.start();
+       }
+
+   }
+</code></pre>
+
+<p>运行结果:</p>
+
+<pre><code>   当前线程 : t1 开始
+   当前线程 : t1 修改对象内容为： 许进, 25
+   当前线程 : t1 结束
+   当前线程 : t2 开始
+   当前线程 : t2 修改对象内容为： 李四X, 21
+   当前线程 : t2 结束
+</code></pre>
+
+</article>
+
+<div id="gitalk-container"></div>
+<link rel="stylesheet" href="https://unpkg.com/gitalk/dist/gitalk.css">
+<script src="https://unpkg.com/gitalk/dist/gitalk.min.js"></script>
+<script>
+  const gitalk = new Gitalk({
+    clientID: '6928118cff8d42e226a1',
+    clientSecret: '24edd8a31c50467e0d741b3a803c199e7ad53567',
+    repo: 'softwareking.github.io',
+    owner: 'Softwareking',
+    admin: ['Softwareking'],
+    id: location.pathname, 
+    distractionFreeMode: false 
+  });
+  (function() {
+    if (["localhost", "127.0.0.1"].indexOf(window.location.hostname) != -1) {
+      document.getElementById('gitalk-container').innerHTML = 'Gitalk comments not available by default when the website is previewed locally.';
+      return;
+    }
+    gitalk.render('gitalk-container');
+  })();
+</script>
+<style>
+
+  .gt-container .gt-btn-login {
+      background-color: #ff6a00;
+      border: 1px solid #ff6a00;
+  }
+
+  .gt-container .gt-btn-public {
+      background-color: #ff6a00;
+      border: 1px solid #ff6a00;
+  }
+
+  .gt-container .gt-btn-public:hover {
+      background-color: #ff6a00;
+      border: 1px solid #ff6a00;
+  }
+
+  .gt-container .gt-btn-preview {
+    background-color: #fff;
+    color: #ff6a00;
+  }
+  .gt-container .gt-btn {
+    padding: 0.75em 1.25em;
+    display: inline-block;
+    line-height: 1;
+    text-decoration: none;
+    white-space: nowrap;
+    cursor: pointer;
+    border: 1px solid #ff6a00;
+    border-radius: 5px;
+    background-color: #ff6a00;
+    color: #fff;
+    outline: none;
+    font-size: 0.75em;
+   }
+
+
+  .gt-container a {
+      color: #ff6a00;
+  }
+
+  .gt-container .gt-btn-preview:hover {
+      border: 1px solid #ff6a00;
+  }
+
+  .gt-container .gt-svg svg {
+      fill: #ff6a00;
+  }
+
+  .gt-container .gt-comment-username {
+      color: #ff6a00;
+  }
+  
+  .gt-container .gt-popup .gt-action.is--active:before {
+      background: #ff6a00;
+  }
+
+  .gt-container .gt-header-controls-tip {
+    font-size: 0.875em;
+    color: #ff6a00;
+    text-decoration: none;
+    vertical-align: sub;
+}
+
+</style>
+
+		<div class="-show-mobile">
+			
+
+	<nav class="ss-pagination-next">
+		<a class="link-prev" href="/blog/bf/bf-multithread/">
+			<span class="text">上一篇: </span>
+			<span class="text">并发编程总结之多线程基础</span>
+		</a>
+		<a class="link-next" href="/blog/bf/bf-thread-singal/">
+			<span class="text">下一篇: </span>
+			<span class="text">并发编程总结之线程间的通信</span>
+		</a>
+	</nav>
+
+		</div>
+	</main>
+
+	<aside class="ss-layout-aside">
+		
+
+
+<div class="ss-card ss-aside-toc">
+	<h2 class="card-title">
+		目录
+	</h2>
+  <nav id="TableOfContents">
+<ul>
+<li>
+<ul>
+<li><a href="#1-脏读">1. 脏读</a>
+<ul>
+<li><a href="#1-1-什么是脏读">1.1 什么是脏读</a></li>
+<li><a href="#1-2-示例code">1.2 示例Code</a></li>
+<li><a href="#1-3-小结">1.3 小结</a></li>
+</ul></li>
+<li><a href="#2-synchronized的重入">2.synchronized的重入</a>
+<ul>
+<li><a href="#2-1-什么是synchronized的重入锁">2.1 什么是synchronized的重入锁</a></li>
+<li><a href="#2-2-嵌套调用关系synchronized的重入">2.2 嵌套调用关系synchronized的重入</a></li>
+<li><a href="#2-3-继承关系的synchronized的重入">2.3 继承关系的synchronized的重入</a></li>
+<li><a href="#2-4-synchronized常见代码块">2.4 synchronized常见代码块</a></li>
+</ul></li>
+</ul></li>
+</ul>
+</nav>
+</div>
+
+
+		<div class="ss-card -hidden-mobile">
+	<h2 class="card-title">
+		分类
+	</h2>
+	<ul class="ss-aside-related">
+		
+		<li><a href="/categories/eureka-server/">Eureka Server</a></li>
+		
+		<li><a href="/categories/halo-tools/">Halo Tools</a></li>
+		
+		<li><a href="/categories/muse/">Muse</a></li>
+		
+		<li><a href="/categories/mybatis/">Mybatis</a></li>
+		
+		<li><a href="/categories/nacos/">Nacos</a></li>
+		
+		<li><a href="/categories/spring-boot/">Spring Boot</a></li>
+		
+		<li><a href="/categories/spring-boot-admin/">Spring Boot Admin</a></li>
+		
+		<li><a href="/categories/spring-cloud/">Spring Cloud</a></li>
+		
+		<li><a href="/categories/spring-cloud-gateway/">Spring Cloud Gateway</a></li>
+		
+		<li><a href="/categories/%E4%B8%AD%E5%8F%B0/">中台</a></li>
+		
+		<li><a href="/categories/%E4%B8%AD%E9%97%B4%E4%BB%B6/">中间件</a></li>
+		
+		<li><a href="/categories/%E5%B9%B6%E5%8F%91%E7%BC%96%E7%A8%8B/">并发编程</a></li>
+		
+		<li><a href="/categories/%E7%A4%BE%E5%8C%BA%E6%B2%99%E9%BE%99/">社区沙龙</a></li>
+		
+	</ul>
+</div>
+		
+
+
+<div class="ss-card">
+	<h2 class="card-title">
+		相关推荐
+	</h2>
+	
+	<ul class="ss-aside-related">
+		
+			<li><a href="/blog/bf/bf-multithread/">并发编程总结之多线程基础</a></li>
+		
+	</ul>
+	
+</div>
+
+		<div class="ss-aside-tags ss-card">
+	<h2 class="card-title">
+		标签
+		<span class="card-extra"></span>
+	</h2>
+	<ul class="tag-list">
+		
+			<li class="tag"><a href="/tags/eureka-server/">Eureka Server</a></li>
+		
+			<li class="tag"><a href="/tags/halo-tools/">Halo Tools</a></li>
+		
+			<li class="tag"><a href="/tags/myabtis/">Myabtis</a></li>
+		
+			<li class="tag"><a href="/tags/nacos/">Nacos</a></li>
+		
+			<li class="tag"><a href="/tags/ngnix/">Ngnix</a></li>
+		
+			<li class="tag"><a href="/tags/spring-boot-admin/">Spring Boot Admin</a></li>
+		
+			<li class="tag"><a href="/tags/spring-cloud/">Spring Cloud</a></li>
+		
+			<li class="tag"><a href="/tags/spring-cloud-gateway/">Spring Cloud Gateway</a></li>
+		
+			<li class="tag"><a href="/tags/spring-cloud%E4%B8%AD%E5%9B%BD%E7%A4%BE%E5%8C%BA/">Spring Cloud中国社区</a></li>
+		
+			<li class="tag"><a href="/tags/switch/">Switch</a></li>
+		
+			<li class="tag"><a href="/tags/%E4%B8%9A%E5%8A%A1%E4%B8%AD%E5%8F%B0/">业务中台</a></li>
+		
+			<li class="tag"><a href="/tags/%E4%B8%AD%E9%97%B4%E4%BB%B6/">中间件</a></li>
+		
+			<li class="tag"><a href="/tags/%E5%A4%9A%E7%BA%BF%E7%A8%8B/">多线程</a></li>
+		
+			<li class="tag"><a href="/tags/%E5%B9%B6%E5%8F%91%E7%BC%96%E7%A8%8B/">并发编程</a></li>
+		
+			<li class="tag"><a href="/tags/%E7%A4%BE%E5%8C%BA%E6%B2%99%E9%BE%99/">社区沙龙</a></li>
+		
+			<li class="tag"><a href="/tags/%E9%A1%B9%E7%9B%AE%E7%BB%8F%E9%AA%8C/">项目经验</a></li>
+		
+	</ul>
+</div>
+	</aside>
+</div>
+
+
+
+	
+
+<footer class="ss-footer">
+	<div class="container">
+		<div class="links">
+			
+				<div class="cate">
+					<h2 class="cate-title">个人链接</h2>
+					
+						<a class="link" href="https://github.com/softwareking">Github</a>
+					
+						<a class="link" href="https://www.cnblogs.com/ACMer/">博客园</a>
+					
+						<a class="link" href="http://blog.sina.com.cn/softwaremi">新浪博客</a>
+					
+				</div>
+			
+				<div class="cate">
+					<h2 class="cate-title">社区</h2>
+					
+						<a class="link" href="http://springcloud.cn">主站</a>
+					
+						<a class="link" href="https://github.com/springcloud">Github</a>
+					
+				</div>
+			
+				<div class="cate">
+					<h2 class="cate-title">友情链接</h2>
+					
+						<a class="link" href="https://www.ramostear.com/">谭潮红博客</a>
+					
+						<a class="link" href="http://springcloud.cn">社区</a>
+					
+						<a class="link" href="http://blog.springcloud.cn">博客</a>
+					
+						<a class="link" href="http://tietang.wang/">王铁堂博客</a>
+					
+						<a class="link" href="https://tianhui.xin/">怪咖晨</a>
+					
+				</div>
+			
+				<div class="cate">
+					<h2 class="cate-title">工具</h2>
+					
+						<a class="link" href="http://md.aclickall.com/">微信排版</a>
+					
+						<a class="link" href="https://www.gaoding.com">稿定设计</a>
+					
+						<a class="link" href="http://www.processon.com/">ProcessOn</a>
+					
+						<a class="link" href="https://www.draw.io/">Draw</a>
+					
+				</div>
+			
+		</div>
+		<div class="qrcode">
+			
+				<div>
+					<img class="qrcode-img" src="/img/qrcode/wxgzh.png" />
+					<p class="qrcode-desc">玹霖志</p>
+				</div>
+			
+				<div>
+					<img class="qrcode-img" src="/img/qrcode/sqgz.jpeg" />
+					<p class="qrcode-desc">Spring Cloud中国</p>
+				</div>
+			
+		</div>
+	</div>
+	<div class="copyright">
+		<p>
+			© 2019 玹霖志
+			<a href="#">滇ICP备14007546号</a>
+
+			<span id="busuanzi_container_site_pv">
+            本站访问量：<span id="busuanzi_value_site_pv"></span>次
+        </span>
+        &nbsp;
+        <span id="busuanzi_container_site_uv">
+            您是本站第 <span id="busuanzi_value_site_uv"></span> 位访问者
+        </span>
+		</p>
+
+	</div>
+</footer>
+
+	
+
+
+<aside class="ss-aside hidden" id="scroll_top">
+	<div class="go-top-btn">
+		<a class="logo-link" href="javascript:window.scrollTo(0,0)">
+			<img class="logo" src="/img/gotop.png">
+		</a>
+	</div>
+</aside>
+<script>
+    var typed = new Typed('#sloganTitle', {
+		strings: [
+        '  ',
+		"架构治理之道",
+      ],
+      cursorChar: "|",
+      typeSpeed: 70,
+	  loop: false,
+	});
+	
+     var typed = new Typed('#sloganDesc', {
+		strings: [
+        '  ',
+        "Hi,欢迎访问玹霖志。专注于基础架构，应用架构，业务架构，中台架构治理之道和代码防腐。Halo Ecology™（光环生态）为企业基础架构和中台架构的落地保驾护航！欢迎加我微信Software_King探讨",
+      ],
+      cursorChar: "|",
+      typeSpeed: 70,
+	  loop: false,
+	});
+	
+  </script>
+
+</body>
+
+</html>

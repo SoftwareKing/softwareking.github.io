@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Eureka Server on 玹霖志</title>
+    <link>/tags/eureka-server/</link>
+    <description>Recent content in Eureka Server on 玹霖志</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>zh-CN</language>
+    <lastBuildDate>Mon, 14 May 2018 20:00:00 +0800</lastBuildDate>
+    
+	<atom:link href="/tags/eureka-server/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>公益Eureka Server与定制方法</title>
+      <link>/blog/sc-diy-eureka/</link>
+      <pubDate>Mon, 14 May 2018 20:00:00 +0800</pubDate>
+      
+      <guid>/blog/sc-diy-eureka/</guid>
+      <description>1. Spring Cloud中国公益Eureka Server Eureka Server为作为Spring Cloud开发过程中常用的注册中心组件，作为基础设施组件，开发学习过程中</description>
+    </item>
+    
+  </channel>
+</rss>

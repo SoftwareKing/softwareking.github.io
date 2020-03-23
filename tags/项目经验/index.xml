@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>项目经验 on 玹霖志</title>
+    <link>/tags/%E9%A1%B9%E7%9B%AE%E7%BB%8F%E9%AA%8C/</link>
+    <description>Recent content in 项目经验 on 玹霖志</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>zh-CN</language>
+    <lastBuildDate>Sun, 19 Jan 2020 14:00:00 +0800</lastBuildDate>
+    
+	<atom:link href="/tags/%E9%A1%B9%E7%9B%AE%E7%BB%8F%E9%AA%8C/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>基于MyBatis Plus扩展对Empty Where拦截</title>
+      <link>/blog/mybatis/2/</link>
+      <pubDate>Sun, 19 Jan 2020 14:00:00 +0800</pubDate>
+      
+      <guid>/blog/mybatis/2/</guid>
+      <description>1.背景 项目中经常出现因为Mybatis的动态where条件不满足导致实际sql语句的where条件为空,进而查询全表,当数据量比较大的时候</description>
+    </item>
+    
+    <item>
+      <title>Spring Boot中自定义注解&#43;AOP实现主备库切换</title>
+      <link>/blog/sb/sb-aop/</link>
+      <pubDate>Tue, 26 Sep 2017 14:00:00 +0800</pubDate>
+      
+      <guid>/blog/sb/sb-aop/</guid>
+      <description>1.通过AOP 自定义注解实现主库到备库的切换 1.1 自定义注解 自定义注解如下代码所示 import java.lang.annotation.ElementType; import java.lang.annotation.Retention; import java.lang.annotation.RetentionPolicy; import java.lang.annotation.Target; @Retention(RetentionPolicy.RUNTIME) @Target(ElementType.METHOD) public @interface SwitchDataBase { boolean switch2Backup() default false; } 1.2 实现方法拦截器对自定义</description>
+    </item>
+    
+    <item>
+      <title>Mybatis代码生成&#43;分页&#43;Mapper继承扩展</title>
+      <link>/blog/mybatis/1/</link>
+      <pubDate>Fri, 25 Aug 2017 14:00:00 +0800</pubDate>
+      
+      <guid>/blog/mybatis/1/</guid>
+      <description>1. mybatis-gennerator 1.1 mybatis-gennerator自动生成代码 1.1.1 mybatis-gennerator的安装 Mybatis-Generator的下载地</description>
+    </item>
+    
+  </channel>
+</rss>

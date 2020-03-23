@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Moss on 玹霖志</title>
+    <link>/projects/moss/</link>
+    <description>Recent content in Moss on 玹霖志</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>zh-CN</language>
+    
+	<atom:link href="/projects/moss/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>Moss(莫斯) 介绍</title>
+      <link>/projects/moss/overview/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>/projects/moss/overview/</guid>
+      <description>1.什么是Moss 1.1 什么是服务治理 服务治理，我也称之为微服务治理，是指用来管理微服务的整个生命周期。包括应用的创建，服务名的规范，服务的上下</description>
+    </item>
+    
+  </channel>
+</rss>

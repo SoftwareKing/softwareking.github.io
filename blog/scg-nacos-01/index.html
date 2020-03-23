@@ -1,0 +1,936 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<title>
+	使用Nacos实现Spring Cloud Gateway的动态路由 · 玹霖志
+</title>
+	<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+<meta name="viewport" content="width=device-width,minimum-scale=1">
+<meta name="description" content="玹霖志,许进沉思录,许进|Spring Cloud,中间件，基础架构，www.xujin.org,xujin.org,-许进沉思录,Venus&#43;,云首科技有限公司,云计算，大数据，物联网，Software_king的博客,云计算Saas，云计算Paas，云计算Iaas Hadoop，大数据，JavaEE，Java，物联网，Hadoop， NoSQL，MongoDB,Spring, Hibernate,Struts2," />
+
+<meta name="generator" content="Hugo 0.55.6" /><link rel="shortcut icon" href=/img/icon.png type="image/png">
+
+<link href="https://unpkg.com/purecss@1.0.0/build/base-min.css" rel="stylesheet">
+
+
+
+<link href="/css/main.css" rel="stylesheet">
+<link href="/css/zoom-image.css" rel="stylesheet">
+
+<script src="/js/iconfont.js"></script>
+<script src="/js/highlight.pack.js"></script>
+<script>hljs.initHighlightingOnLoad();</script>
+
+
+<script>window.SITE_LANGUAGE = "zh"</script>
+<script src="/js/app.js"></script>
+<script src="https://cdn.bootcss.com/typed.js/2.0.11/typed.js"></script>
+
+
+
+<script async src="//cdn.busuanzi.ibruce.info/cdn/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+<script src="//cdn.bootcss.com/jquery/3.2.1/jquery.min.js"></script>
+
+<script>
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    $(window).scroll(function () {
+        
+        if ($(window).scrollTop() >= 200) {
+            $("#scroll_top").removeClass("hidden").addClass("show"); 
+        } else {
+            $("#scroll_top").removeClass("show").addClass("hidden"); 
+        }
+    });
+</script>
+
+
+
+
+
+
+
+<script type="application/javascript">
+var doNotTrack = false;
+if (!doNotTrack) {
+	(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+	(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+	m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+	})(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+	ga('create', 'UA-142131411-1', 'auto');
+	
+	ga('send', 'pageview');
+}
+</script>
+
+</head>
+
+<body>
+	<header class="ss-header">
+	<nav class="navbar" role="navigation" aria-label="main navigation">
+		<div class="navbar-brand">
+			<a class="logo-link" href="/">
+				<img class="logo" src="/img/logo.png">
+			</a>
+			<div class="-show-mobile">
+				<a id="mobile-menu-icon">
+					<svg class="icon" aria-hidden="true">
+						<use xlink:href="#icon-menu"></use>
+					</svg>
+				</a>
+				<nav id="mobile-menu">
+					
+          
+            <a
+              class=""
+              href="/projects/">
+              <span>
+                项目
+              </span>
+              <svg class="icon" aria-hidden="true"><use xlink:href="#icon-ARROW"></use></svg>
+            </a>
+					
+            <a
+              class=""
+              href="/guides/">
+              <span>
+                案例
+              </span>
+              <svg class="icon" aria-hidden="true"><use xlink:href="#icon-ARROW"></use></svg>
+            </a>
+					
+            <a
+              class=""
+              href="/muse/">
+              <span>
+                Muse
+              </span>
+              <svg class="icon" aria-hidden="true"><use xlink:href="#icon-ARROW"></use></svg>
+            </a>
+					
+            <a
+              class=""
+              href="/blog/">
+              <span>
+                博客
+              </span>
+              <svg class="icon" aria-hidden="true"><use xlink:href="#icon-ARROW"></use></svg>
+            </a>
+					
+            <a
+              class=""
+              href="/activities/">
+              <span>
+                活动
+              </span>
+              <svg class="icon" aria-hidden="true"><use xlink:href="#icon-ARROW"></use></svg>
+            </a>
+					
+            <a
+              class=""
+              href="/projects/halo/overview/">
+              <span>
+                Halo
+              </span>
+              <svg class="icon" aria-hidden="true"><use xlink:href="#icon-ARROW"></use></svg>
+            </a>
+					
+            <a
+              class=""
+              href="/about/">
+              <span>
+                关于我
+              </span>
+              <svg class="icon" aria-hidden="true"><use xlink:href="#icon-ARROW"></use></svg>
+            </a>
+					
+					
+				</nav>
+			</div>
+		</div>
+
+		<div class="navbar-menu -hidden-mobile">
+			<div class="navbar-start">
+				
+				
+					<a class="navbar-item "
+						href="/projects/">项目</a>
+				
+					<a class="navbar-item "
+						href="/guides/">案例</a>
+				
+					<a class="navbar-item "
+						href="/muse/">Muse</a>
+				
+					<a class="navbar-item "
+						href="/blog/">博客</a>
+				
+					<a class="navbar-item "
+						href="/activities/">活动</a>
+				
+					<a class="navbar-item "
+						href="/projects/halo/overview/">Halo</a>
+				
+					<a class="navbar-item "
+						href="/about/">关于我</a>
+				
+			</div>
+			<div class="navbar-end">
+				<div class="navbar-item">
+					<div id="js-menu-search" class="navbar-search">
+						<input class="input" placeholder="请输入要搜索的关键词">
+						<svg class="icon" aria-hidden="true">
+							<use xlink:href="#icon-search"></use>
+						</svg>
+					</div>
+				</div>
+				
+			</div>
+		</div>
+	</nav>
+</header>
+
+
+	
+
+	
+
+	
+
+	
+
+	
+
+	
+
+	
+
+
+
+	
+
+<div class="ss-layout-container">
+	<main class="ss-layout-main -card">
+		<div class="ss-meta">
+	<h1 class="title">
+	
+		<span id="postTitle"></span>
+
+	</h1>
+	<div class="meta">
+		
+			2019-09-16 ·
+			
+				许进 ·
+			
+			<span class="tags">
+				
+					<a class="tag" href="/tags/spring-cloud-gateway/" rel="tag">#Spring Cloud Gateway</a>
+				
+			</span>
+		
+		<span class="post-word-count">· 字数:2495·阅读时间 5 分钟</span>
+		
+		阅读量<span id="busuanzi_value_page_pv"></span>次
+		
+	</div>
+</div>
+  <script>
+    var typed = new Typed('#postTitle', {
+		strings: [
+        '  ',
+		"使用Nacos实现Spring Cloud Gateway的动态路由",
+      ],
+      cursorChar: "|",
+      typeSpeed: 70,
+	  loop: false,
+	});
+  </script>
+		<article class="typo">
+	<h2 id="1-前言">1.前言</h2>
+
+<p>网关中有两个重要的概念，那就是路由配置和路由规则，路由配置是指配置某请求路径路由到指定的目的地址。而路由规则是指匹配到路由配置之后，再根据路由规则进行转发处理。
+   Spring Cloud Gateway作为所有请求流量的入口，在实际生产环境中为了保证高可靠和高可用，尽量避免重启,需要实现Spring Cloud Gateway动态路由配置。前面章节介绍了Spring Cloud Gateway提供的两种方法去配置路由规则，但都是在Spring Cloud Gateway启动时候，就将路由配置和规则加载到内存里，无法做到不重启网关就可以动态的对应路由的配置和规则进行增加，修改和删除。本文是基于<a href="http://xujin.org/sc/gw/gw09/">Spring Cloud Gateway的动态路由实现</a>
+基础之上编写，通过Nacos配置服务下发路由配置实现动态路由。</p>
+
+<h2 id="2-spring-cloud-gateway简单的动态路由实现">2. Spring Cloud Gateway简单的动态路由实现</h2>
+
+<p>Spring Cloud Gateway的官方文档并没有讲如何动态配置，查看 Spring Cloud Gateway的源码，发现<code>在org.springframework.cloud.gateway.actuate.GatewayControllerEndpoint</code>类中提供了动态配置的Rest接口，但是<code>需要开启Gateway的端点</code>，而且提供的功能不是很强大。通过参考和GatewayControllerEndpoint相关的代码，可以自己编码实际动态路由配置。
+下面通过案例的方式去讲解怎么通Nacos实现Spring Cloud Gateway的动态路由。案例工程如spring-cloud-gateway-nacos所示。</p>
+
+<blockquote>
+<p>代码地址:<a href="https://github.com/SpringCloud/spring-cloud-gateway-nacos">https://github.com/SpringCloud/spring-cloud-gateway-nacos</a></p>
+</blockquote>
+
+<h2 id="3-简单动态路由的实现">3. 简单动态路由的实现</h2>
+
+<h3 id="3-1-新建maven工程sc-gateway-server">3.1 新建Maven工程sc-gateway-server</h3>
+
+<p>配置主要的核心依赖如代码清单所示：
+  代码清单: spring-cloud-gateway-nacos/sc-gateway-server/pom.xml</p>
+
+<pre><code class="language-xml">
+ &lt;dependency&gt;
+        &lt;groupId&gt;org.springframework.cloud&lt;/groupId&gt;
+        &lt;artifactId&gt;spring-cloud-starter-gateway&lt;/artifactId&gt;
+    &lt;/dependency&gt;
+
+    &lt;dependency&gt;
+        &lt;groupId&gt;com.alibaba.nacos&lt;/groupId&gt;
+        &lt;artifactId&gt;nacos-client&lt;/artifactId&gt;
+        &lt;version&gt;0.4.0&lt;/version&gt;
+    &lt;/dependency&gt;
+
+    &lt;dependency&gt;
+        &lt;groupId&gt;org.springframework.boot&lt;/groupId&gt;
+        &lt;artifactId&gt;spring-boot-starter-webflux&lt;/artifactId&gt;
+    &lt;/dependency&gt;
+
+    &lt;dependency&gt;
+        &lt;groupId&gt;org.springframework.boot&lt;/groupId&gt;
+        &lt;artifactId&gt;spring-boot-starter-actuator&lt;/artifactId&gt;
+    &lt;/dependency&gt;
+
+    &lt;dependency&gt;
+        &lt;groupId&gt;com.alibaba&lt;/groupId&gt;
+        &lt;artifactId&gt;fastjson&lt;/artifactId&gt;
+        &lt;version&gt;1.2.47&lt;/version&gt;
+    &lt;/dependency&gt;
+</code></pre>
+
+<h3 id="3-2-根据spring-cloud-gateway的路由模型定义数据传输模型">3.2 根据Spring Cloud Gateway的路由模型定义数据传输模型</h3>
+
+<p>分别创建GatewayRouteDefinition.java, GatewayPredicateDefinition.java, GatewayFilterDefinition.java这三个类。
+(1) 创建路由定义模型</p>
+
+<pre><code class="language-java">public class GatewayRouteDefinition {
+    //路由的Id
+    private String id;
+    //路由断言集合配置
+    private List&lt;GatewayPredicateDefinition&gt; predicates = new ArrayList&lt;&gt;();
+    //路由过滤器集合配置
+    private List&lt;GatewayFilterDefinition&gt; filters = new ArrayList&lt;&gt;();
+    //路由规则转发的目标uri
+    private String uri;
+    //路由执行的顺序
+    private int order = 0;
+    //此处省略get和set方法
+}
+
+</code></pre>
+
+<p>(2)创建过滤器定义模型</p>
+
+<pre><code class="language-java">public class GatewayFilterDefinition {
+    //Filter Name
+    private String name;
+    //对应的路由规则
+    private Map&lt;String, String&gt; args = new LinkedHashMap&lt;&gt;();
+    //此处省略Get和Set方法
+}
+</code></pre>
+
+<p>(3)创建路由断言定义模型</p>
+
+<pre><code class="language-java">public class GatewayPredicateDefinition {
+    //断言对应的Name
+    private String name;
+    //配置的断言规则
+    private Map&lt;String, String&gt; args = new LinkedHashMap&lt;&gt;();
+    //此处省略Get和Set方法
+}
+
+</code></pre>
+
+<h3 id="3-3-编写动态路由实现类">3.3 编写动态路由实现类</h3>
+
+<p>编写DynamicRouteServiceImpl并实现ApplicationEventPublisherAware接口，代码如下所示</p>
+
+<pre><code class="language-Java">@Service
+public class DynamicRouteServiceImpl implements ApplicationEventPublisherAware {
+    @Autowired
+    private RouteDefinitionWriter routeDefinitionWriter;
+    private ApplicationEventPublisher publisher;
+    //增加路由
+    public String add(RouteDefinition definition) {
+        routeDefinitionWriter.save(Mono.just(definition)).subscribe();
+        this.publisher.publishEvent(new RefreshRoutesEvent(this));
+        return &quot;success&quot;;
+    }
+    //更新路由
+    public String update(RouteDefinition definition) {
+        try {
+            this.routeDefinitionWriter.delete(Mono.just(definition.getId()));
+        } catch (Exception e) {
+            return &quot;update fail,not find route  routeId: &quot;+definition.getId();
+        }
+        try {
+            routeDefinitionWriter.save(Mono.just(definition)).subscribe();
+            this.publisher.publishEvent(new RefreshRoutesEvent(this));
+            return &quot;success&quot;;
+        } catch (Exception e) {
+            return &quot;update route  fail&quot;;
+        }
+    }
+    //删除路由
+    public Mono&lt;ResponseEntity&lt;Object&gt;&gt; delete(String id) {
+        return this.routeDefinitionWriter.delete(Mono.just(id))
+                .then(Mono.defer(() -&gt; Mono.just(ResponseEntity.ok().build())))
+                .onErrorResume(t -&gt; t instanceof NotFoundException, t -&gt; Mono.just(ResponseEntity.notFound().build()));
+    }
+    @Override
+    public void setApplicationEventPublisher(ApplicationEventPublisher applicationEventPublisher) {
+        this.publisher = applicationEventPublisher;
+    }
+}
+
+</code></pre>
+
+<h3 id="3-4-编写nacos监听接收下发的路由配置">3.4 编写Nacos监听接收下发的路由配置</h3>
+
+<h3 id="3-4-1-使用nacos监听下发的配置">3.4.1 使用Nacos监听下发的配置</h3>
+
+<p>监听Nacos Config Server下发配置的代码如下所示：</p>
+
+<pre><code class="language-java">@Component
+public class DynamicRouteServiceImplByNacos {
+
+    @Autowired
+    private DynamicRouteServiceImpl dynamicRouteService;
+
+    public DynamicRouteServiceImplByNacos() {
+
+        dynamicRouteByNacosListener(&quot;sc-gateway&quot;,&quot;xujin_test&quot;);
+    }
+
+    /**
+     * 监听Nacos Server下发的动态路由配置
+     * @param dataId
+     * @param group
+     */
+    public void dynamicRouteByNacosListener (String dataId, String group){
+        try {
+            ConfigService configService=NacosFactory.createConfigService(&quot;127.0.0.1:8848&quot;);
+            String content = configService.getConfig(dataId, group, 5000);
+            System.out.println(content);
+            configService.addListener(dataId, group, new Listener()  {
+                @Override
+                public void receiveConfigInfo(String configInfo) {
+                    RouteDefinition definition= JSON.parseObject(configInfo,RouteDefinition.class);
+                    dynamicRouteService.update(definition);
+                }
+                @Override
+                public Executor getExecutor() {
+                    return null;
+                }
+            });
+        } catch (NacosException e) {
+            //todo 提醒:异常自行处理此处省略
+        }
+    }
+
+}
+</code></pre>
+
+<h4 id="3-4-2-两种方式创建configservice">3.4.2 两种方式创建ConfigService</h4>
+
+<p>使用两种方式创建com.alibaba.nacos.api.config.ConfigService</p>
+
+<ul>
+<li>1.构建Properties创建</li>
+</ul>
+
+<p>使用createConfigService(Properties properties)，代码如下所示:</p>
+
+<pre><code class="language-java">Properties properties = new Properties();
+            properties.put(&quot;nacos.server-addr&quot;, &quot;&quot;);
+            properties.put(PropertyKeyConst.SERVER_ADDR, &quot;127.0.0.1:8848&quot;);
+            ConfigService configService=NacosFactory.createConfigService(properties);
+</code></pre>
+
+<blockquote>
+<p>注意:PropertyKeyConst是com.alibaba.nacos.api.PropertyKeyConst</p>
+</blockquote>
+
+<ul>
+<li>2.只传递Nacos Config Server的地址</li>
+</ul>
+
+<pre><code class="language-java"> ConfigService configService=NacosFactory.createConfigService(&quot;127.0.0.1:8848&quot;);
+</code></pre>
+
+<h2 id="4-使用nacos下发配置">4. 使用Nacos下发配置</h2>
+
+<h3 id="4-1-nacos概述">4.1 Nacos概述</h3>
+
+<p>Naocs由阿里开源，Nacos 致力于帮助您发现、配置和管理微服务。Nacos 提供了一组简单易用的特性集，帮助您快速实现动态服务发现、服务配置、服务元数据及流量管理。
+   Nacos 帮助您更敏捷和容易地构建、交付和管理微服务平台。 Nacos 是构建以“服务”为中心的现代应用架构 (例如微服务范式、云原生范式) 的服务基础设施。github地址:<a href="https://github.com/alibaba/nacos">https://github.com/alibaba/nacos</a>
+   &gt; 更多Nacos的介绍，请访问官方网站:<a href="https://nacos.io/">https://nacos.io/</a></p>
+
+<h3 id="4-2-在ide中启动-nacos">4.2 在IDE中启动 Nacos</h3>
+
+<p>访问<a href="https://github.com/alibaba/nacos">https://github.com/alibaba/nacos</a> ,使用Git克隆Nacos代码，直接导入到IDEA中，如下所示设置启动参数，直接启动。</p>
+
+<p><img src="nacos0.jpg" alt="" /></p>
+
+<blockquote>
+<p>从IDE中启动Nacos是我比较推荐的方式，因为可以随时Debug Nacos任何代码，其它启动方式请参考官网。</p>
+</blockquote>
+
+<h2 id="5-测试">5.测试</h2>
+
+<h3 id="5-1-nacos中下发spring-cloud-gateway的路由配置">5.1  Nacos中下发Spring Cloud Gateway的路由配置</h3>
+
+<ul>
+<li>1.打开浏览器访问URL:<a href="http://localhost:8848/nacos/index.html">http://localhost:8848/nacos/index.html</a> ,Nacos的管控平台如下所示:</li>
+</ul>
+
+<p><img src="nacos1.jpg" alt="" /></p>
+
+<ul>
+<li>2.在Nacos的配置列表点击<code>+</code>按钮，下发Spring Cloud Gateway的路由配置，如下所示:</li>
+</ul>
+
+<p><img src="nacos2.jpg" alt="" /></p>
+
+<hr />
+
+<p>用于测试的示例数据，如下所示:</p>
+
+<pre><code class="language-json">{
+    &quot;filters&quot;: [],
+    &quot;id&quot;: &quot;jd_route&quot;,
+    &quot;order&quot;: 0,
+    &quot;predicates&quot;: [{
+        &quot;args&quot;: {
+            &quot;pattern&quot;: &quot;/jd&quot;
+        },
+        &quot;name&quot;: &quot;Path&quot;
+    }],
+    &quot;uri&quot;: &quot;http://www.jd.com&quot;
+}
+</code></pre>
+
+<p><img src="nacos3.jpg" alt="" /></p>
+
+<p><img src="nacos4.jpg" alt="" /></p>
+
+<h3 id="5-2-启动sc-gateway-server">5.2 启动sc-gateway-server</h3>
+
+<ul>
+<li>1.Debug启动sc-gateway-server,调试截图如下所示:</li>
+</ul>
+
+<p><img src="nacos5.jpg" alt="" />
+* 2.通过Spring Cloud gateway的端点，查看路由信息</p>
+
+<p><img src="nacos6.jpg" alt="" /></p>
+
+<ul>
+<li>3.通过访问<a href="http://localhost:8080/jd">http://localhost:8080/jd</a> ,可以转发到京东商城主页</li>
+</ul>
+
+<h3 id="5-3-更新路由配置">5.3 更新路由配置</h3>
+
+<ul>
+<li>1.通过Nacos下发配置，修改Spring Cloud Gateway的动态路由规则</li>
+</ul>
+
+<p><img src="nacos7.jpg" alt="" /></p>
+
+<ul>
+<li>2.查看访问Spring Cloud gateway的端点配置，可以看到动态路由修改如下:</li>
+</ul>
+
+<p><img src="nacos8.jpg" alt="" /></p>
+
+<ul>
+<li>3.通过访问<a href="http://localhost:8080/jd">http://localhost:8080/jd</a> ,可以转发到百度相关页面</li>
+</ul>
+
+</article>
+
+<div id="gitalk-container"></div>
+<link rel="stylesheet" href="https://unpkg.com/gitalk/dist/gitalk.css">
+<script src="https://unpkg.com/gitalk/dist/gitalk.min.js"></script>
+<script>
+  const gitalk = new Gitalk({
+    clientID: '6928118cff8d42e226a1',
+    clientSecret: '24edd8a31c50467e0d741b3a803c199e7ad53567',
+    repo: 'softwareking.github.io',
+    owner: 'Softwareking',
+    admin: ['Softwareking'],
+    id: location.pathname, 
+    distractionFreeMode: false 
+  });
+  (function() {
+    if (["localhost", "127.0.0.1"].indexOf(window.location.hostname) != -1) {
+      document.getElementById('gitalk-container').innerHTML = 'Gitalk comments not available by default when the website is previewed locally.';
+      return;
+    }
+    gitalk.render('gitalk-container');
+  })();
+</script>
+<style>
+
+  .gt-container .gt-btn-login {
+      background-color: #ff6a00;
+      border: 1px solid #ff6a00;
+  }
+
+  .gt-container .gt-btn-public {
+      background-color: #ff6a00;
+      border: 1px solid #ff6a00;
+  }
+
+  .gt-container .gt-btn-public:hover {
+      background-color: #ff6a00;
+      border: 1px solid #ff6a00;
+  }
+
+  .gt-container .gt-btn-preview {
+    background-color: #fff;
+    color: #ff6a00;
+  }
+  .gt-container .gt-btn {
+    padding: 0.75em 1.25em;
+    display: inline-block;
+    line-height: 1;
+    text-decoration: none;
+    white-space: nowrap;
+    cursor: pointer;
+    border: 1px solid #ff6a00;
+    border-radius: 5px;
+    background-color: #ff6a00;
+    color: #fff;
+    outline: none;
+    font-size: 0.75em;
+   }
+
+
+  .gt-container a {
+      color: #ff6a00;
+  }
+
+  .gt-container .gt-btn-preview:hover {
+      border: 1px solid #ff6a00;
+  }
+
+  .gt-container .gt-svg svg {
+      fill: #ff6a00;
+  }
+
+  .gt-container .gt-comment-username {
+      color: #ff6a00;
+  }
+  
+  .gt-container .gt-popup .gt-action.is--active:before {
+      background: #ff6a00;
+  }
+
+  .gt-container .gt-header-controls-tip {
+    font-size: 0.875em;
+    color: #ff6a00;
+    text-decoration: none;
+    vertical-align: sub;
+}
+
+</style>
+
+		<div class="-show-mobile">
+			
+
+	<nav class="ss-pagination-next">
+		<a class="link-prev" href="/blog/scg-04/">
+			<span class="text">上一篇: </span>
+			<span class="text">Spring Cloud Gateway只有Pre和POST两种类型的Filter</span>
+		</a>
+		<a class="link-next" href="/blog/sc-2/">
+			<span class="text">下一篇: </span>
+			<span class="text">Spring Cloud第二代</span>
+		</a>
+	</nav>
+
+		</div>
+	</main>
+
+	<aside class="ss-layout-aside">
+		
+
+
+<div class="ss-card ss-aside-toc">
+	<h2 class="card-title">
+		目录
+	</h2>
+  <nav id="TableOfContents">
+<ul>
+<li>
+<ul>
+<li><a href="#1-前言">1.前言</a></li>
+<li><a href="#2-spring-cloud-gateway简单的动态路由实现">2. Spring Cloud Gateway简单的动态路由实现</a></li>
+<li><a href="#3-简单动态路由的实现">3. 简单动态路由的实现</a>
+<ul>
+<li><a href="#3-1-新建maven工程sc-gateway-server">3.1 新建Maven工程sc-gateway-server</a></li>
+<li><a href="#3-2-根据spring-cloud-gateway的路由模型定义数据传输模型">3.2 根据Spring Cloud Gateway的路由模型定义数据传输模型</a></li>
+<li><a href="#3-3-编写动态路由实现类">3.3 编写动态路由实现类</a></li>
+<li><a href="#3-4-编写nacos监听接收下发的路由配置">3.4 编写Nacos监听接收下发的路由配置</a></li>
+<li><a href="#3-4-1-使用nacos监听下发的配置">3.4.1 使用Nacos监听下发的配置</a>
+<ul>
+<li><a href="#3-4-2-两种方式创建configservice">3.4.2 两种方式创建ConfigService</a></li>
+</ul></li>
+</ul></li>
+<li><a href="#4-使用nacos下发配置">4. 使用Nacos下发配置</a>
+<ul>
+<li><a href="#4-1-nacos概述">4.1 Nacos概述</a></li>
+<li><a href="#4-2-在ide中启动-nacos">4.2 在IDE中启动 Nacos</a></li>
+</ul></li>
+<li><a href="#5-测试">5.测试</a>
+<ul>
+<li><a href="#5-1-nacos中下发spring-cloud-gateway的路由配置">5.1  Nacos中下发Spring Cloud Gateway的路由配置</a></li>
+<li><a href="#5-2-启动sc-gateway-server">5.2 启动sc-gateway-server</a></li>
+<li><a href="#5-3-更新路由配置">5.3 更新路由配置</a></li>
+</ul></li>
+</ul></li>
+</ul>
+</nav>
+</div>
+
+
+		<div class="ss-card -hidden-mobile">
+	<h2 class="card-title">
+		分类
+	</h2>
+	<ul class="ss-aside-related">
+		
+		<li><a href="/categories/eureka-server/">Eureka Server</a></li>
+		
+		<li><a href="/categories/halo-tools/">Halo Tools</a></li>
+		
+		<li><a href="/categories/muse/">Muse</a></li>
+		
+		<li><a href="/categories/mybatis/">Mybatis</a></li>
+		
+		<li><a href="/categories/nacos/">Nacos</a></li>
+		
+		<li><a href="/categories/spring-boot/">Spring Boot</a></li>
+		
+		<li><a href="/categories/spring-boot-admin/">Spring Boot Admin</a></li>
+		
+		<li><a href="/categories/spring-cloud/">Spring Cloud</a></li>
+		
+		<li><a href="/categories/spring-cloud-gateway/">Spring Cloud Gateway</a></li>
+		
+		<li><a href="/categories/%E4%B8%AD%E5%8F%B0/">中台</a></li>
+		
+		<li><a href="/categories/%E4%B8%AD%E9%97%B4%E4%BB%B6/">中间件</a></li>
+		
+		<li><a href="/categories/%E5%B9%B6%E5%8F%91%E7%BC%96%E7%A8%8B/">并发编程</a></li>
+		
+		<li><a href="/categories/%E7%A4%BE%E5%8C%BA%E6%B2%99%E9%BE%99/">社区沙龙</a></li>
+		
+	</ul>
+</div>
+		
+
+
+<div class="ss-card">
+	<h2 class="card-title">
+		相关推荐
+	</h2>
+	
+	<ul class="ss-aside-related">
+		
+			<li><a href="/blog/scg-03/">Spring Cloud Gateway中的GatewayFilter和GlobalFilter</a></li>
+		
+			<li><a href="/blog/scg-05/">Spring Cloud Gateway基于服务发现的默认路由规则</a></li>
+		
+			<li><a href="/blog/scg-02/">Spring Cloud Gateway的权重路由</a></li>
+		
+			<li><a href="/blog/scg-dmy-route/">Spring Cloud Gateway的动态路由的简单实现方式</a></li>
+		
+			<li><a href="/blog/scg-06/">Spring Cloud Gateway的Before路由断言工厂</a></li>
+		
+	</ul>
+	
+</div>
+
+		<div class="ss-aside-tags ss-card">
+	<h2 class="card-title">
+		标签
+		<span class="card-extra"></span>
+	</h2>
+	<ul class="tag-list">
+		
+			<li class="tag"><a href="/tags/eureka-server/">Eureka Server</a></li>
+		
+			<li class="tag"><a href="/tags/halo-tools/">Halo Tools</a></li>
+		
+			<li class="tag"><a href="/tags/myabtis/">Myabtis</a></li>
+		
+			<li class="tag"><a href="/tags/nacos/">Nacos</a></li>
+		
+			<li class="tag"><a href="/tags/ngnix/">Ngnix</a></li>
+		
+			<li class="tag"><a href="/tags/spring-boot-admin/">Spring Boot Admin</a></li>
+		
+			<li class="tag"><a href="/tags/spring-cloud/">Spring Cloud</a></li>
+		
+			<li class="tag"><a href="/tags/spring-cloud-gateway/">Spring Cloud Gateway</a></li>
+		
+			<li class="tag"><a href="/tags/spring-cloud%E4%B8%AD%E5%9B%BD%E7%A4%BE%E5%8C%BA/">Spring Cloud中国社区</a></li>
+		
+			<li class="tag"><a href="/tags/switch/">Switch</a></li>
+		
+			<li class="tag"><a href="/tags/%E4%B8%9A%E5%8A%A1%E4%B8%AD%E5%8F%B0/">业务中台</a></li>
+		
+			<li class="tag"><a href="/tags/%E4%B8%AD%E9%97%B4%E4%BB%B6/">中间件</a></li>
+		
+			<li class="tag"><a href="/tags/%E5%A4%9A%E7%BA%BF%E7%A8%8B/">多线程</a></li>
+		
+			<li class="tag"><a href="/tags/%E5%B9%B6%E5%8F%91%E7%BC%96%E7%A8%8B/">并发编程</a></li>
+		
+			<li class="tag"><a href="/tags/%E7%A4%BE%E5%8C%BA%E6%B2%99%E9%BE%99/">社区沙龙</a></li>
+		
+			<li class="tag"><a href="/tags/%E9%A1%B9%E7%9B%AE%E7%BB%8F%E9%AA%8C/">项目经验</a></li>
+		
+	</ul>
+</div>
+	</aside>
+</div>
+
+
+
+	
+
+<footer class="ss-footer">
+	<div class="container">
+		<div class="links">
+			
+				<div class="cate">
+					<h2 class="cate-title">个人链接</h2>
+					
+						<a class="link" href="https://github.com/softwareking">Github</a>
+					
+						<a class="link" href="https://www.cnblogs.com/ACMer/">博客园</a>
+					
+						<a class="link" href="http://blog.sina.com.cn/softwaremi">新浪博客</a>
+					
+				</div>
+			
+				<div class="cate">
+					<h2 class="cate-title">社区</h2>
+					
+						<a class="link" href="http://springcloud.cn">主站</a>
+					
+						<a class="link" href="https://github.com/springcloud">Github</a>
+					
+				</div>
+			
+				<div class="cate">
+					<h2 class="cate-title">友情链接</h2>
+					
+						<a class="link" href="https://www.ramostear.com/">谭潮红博客</a>
+					
+						<a class="link" href="http://springcloud.cn">社区</a>
+					
+						<a class="link" href="http://blog.springcloud.cn">博客</a>
+					
+						<a class="link" href="http://tietang.wang/">王铁堂博客</a>
+					
+						<a class="link" href="https://tianhui.xin/">怪咖晨</a>
+					
+				</div>
+			
+				<div class="cate">
+					<h2 class="cate-title">工具</h2>
+					
+						<a class="link" href="http://md.aclickall.com/">微信排版</a>
+					
+						<a class="link" href="https://www.gaoding.com">稿定设计</a>
+					
+						<a class="link" href="http://www.processon.com/">ProcessOn</a>
+					
+						<a class="link" href="https://www.draw.io/">Draw</a>
+					
+				</div>
+			
+		</div>
+		<div class="qrcode">
+			
+				<div>
+					<img class="qrcode-img" src="/img/qrcode/wxgzh.png" />
+					<p class="qrcode-desc">玹霖志</p>
+				</div>
+			
+				<div>
+					<img class="qrcode-img" src="/img/qrcode/sqgz.jpeg" />
+					<p class="qrcode-desc">Spring Cloud中国</p>
+				</div>
+			
+		</div>
+	</div>
+	<div class="copyright">
+		<p>
+			© 2019 玹霖志
+			<a href="#">滇ICP备14007546号</a>
+
+			<span id="busuanzi_container_site_pv">
+            本站访问量：<span id="busuanzi_value_site_pv"></span>次
+        </span>
+        &nbsp;
+        <span id="busuanzi_container_site_uv">
+            您是本站第 <span id="busuanzi_value_site_uv"></span> 位访问者
+        </span>
+		</p>
+
+	</div>
+</footer>
+
+	
+
+
+<aside class="ss-aside hidden" id="scroll_top">
+	<div class="go-top-btn">
+		<a class="logo-link" href="javascript:window.scrollTo(0,0)">
+			<img class="logo" src="/img/gotop.png">
+		</a>
+	</div>
+</aside>
+<script>
+    var typed = new Typed('#sloganTitle', {
+		strings: [
+        '  ',
+		"架构治理之道",
+      ],
+      cursorChar: "|",
+      typeSpeed: 70,
+	  loop: false,
+	});
+	
+     var typed = new Typed('#sloganDesc', {
+		strings: [
+        '  ',
+        "Hi,欢迎访问玹霖志。专注于基础架构，应用架构，业务架构，中台架构治理之道和代码防腐。Halo Ecology™（光环生态）为企业基础架构和中台架构的落地保驾护航！欢迎加我微信Software_King探讨",
+      ],
+      cursorChar: "|",
+      typeSpeed: 70,
+	  loop: false,
+	});
+	
+  </script>
+
+</body>
+
+</html>

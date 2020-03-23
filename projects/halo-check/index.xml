@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Halo Check on 玹霖志</title>
+    <link>/projects/halo-check/</link>
+    <description>Recent content in Halo Check on 玹霖志</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>zh-CN</language>
+    <lastBuildDate>Fri, 18 Oct 2019 00:00:00 +0000</lastBuildDate>
+    
+	<atom:link href="/projects/halo-check/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>Halo Check 介绍</title>
+      <link>/projects/halo-check/overview/</link>
+      <pubDate>Fri, 18 Oct 2019 00:00:00 +0000</pubDate>
+      
+      <guid>/projects/halo-check/overview/</guid>
+      <description>1. Halo Check概述 Halo Check基于Git Hook+JGit+CheckStyle+PMD对代码增量diff Check是否满足Halo Styl</description>
+    </item>
+    
+  </channel>
+</rss>

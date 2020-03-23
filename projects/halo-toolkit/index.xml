@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Halo ToolKit on 玹霖志</title>
+    <link>/projects/halo-toolkit/</link>
+    <description>Recent content in Halo ToolKit on 玹霖志</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>zh-CN</language>
+    
+	<atom:link href="/projects/halo-toolkit/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>Halo Settings功能</title>
+      <link>/projects/halo-toolkit/halo-settings/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>/projects/halo-toolkit/halo-settings/</guid>
+      <description>1.Halo Settings 1.1 Halo Server设置 Halo ToolKit支持自定义Halo框架对应的代码生成器服务端和Halo Admin可视化中台管控服务端，如下图所示: 主</description>
+    </item>
+    
+    <item>
+      <title>Halo ToolKit概述</title>
+      <link>/projects/halo-toolkit/overview/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>/projects/halo-toolkit/overview/</guid>
+      <description>1. Halo Toolkit概述 Enhances Your Productivity When Developing Applications Based on Halo Framework 2. Halo ToolKit功能 Halo ToolKit是一款IDEA插件，只为加速Halo应用开发而生。目前主要包</description>
+    </item>
+    
+    <item>
+      <title>Halo ToolKit行标记功能</title>
+      <link>/projects/halo-toolkit/line-marker/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>/projects/halo-toolkit/line-marker/</guid>
+      <description>1.行标记功能 1.1 @Domain行标记修改 Halo框架所创建的应用需要管中台可视化纳管，因此当应用启动的时候会判断当前应用是否属于某个域，不属</description>
+    </item>
+    
+    <item>
+      <title>Halo Toolkit创建工程功能</title>
+      <link>/projects/halo-toolkit/create-project/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>/projects/halo-toolkit/create-project/</guid>
+      <description>1.选择应用类型创建工程 2.配置工程基本信息 3.数据库相关配置 4.点击Finish生成工程</description>
+    </item>
+    
+    <item>
+      <title>Halo Tools右键创建功能</title>
+      <link>/projects/halo-toolkit/right-create/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>/projects/halo-toolkit/right-create/</guid>
+      <description>Halo Tools增强右键 Halo Tools提供右键增强功能，帮助开发快速创建常用的Java类，提高开发效率。如下图所示: 如下图所示，右键支持创建13种</description>
+    </item>
+    
+  </channel>
+</rss>

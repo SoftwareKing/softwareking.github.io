@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Activities on 玹霖志</title>
+    <link>/activities/</link>
+    <description>Recent content in Activities on 玹霖志</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>zh-CN</language>
+    <lastBuildDate>Wed, 17 Oct 2018 10:20:00 +0000</lastBuildDate>
+    
+	<atom:link href="/activities/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>Spring Cloud中国社区沙龙-北京站</title>
+      <link>/activities/sq-01/</link>
+      <pubDate>Wed, 17 Oct 2018 10:20:00 +0000</pubDate>
+      
+      <guid>/activities/sq-01/</guid>
+      <description>活动主题：Spring Cloud中国社区沙龙-北京站 活动时间：2018-10-28 13:00 ~ 2018-10-28 17:30 活动形式：现场沙龙 介绍 Spring Cloud中国社区(htt</description>
+    </item>
+    
+  </channel>
+</rss>

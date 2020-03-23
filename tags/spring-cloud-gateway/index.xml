@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Spring Cloud Gateway on 玹霖志</title>
+    <link>/tags/spring-cloud-gateway/</link>
+    <description>Recent content in Spring Cloud Gateway on 玹霖志</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>zh-CN</language>
+    <lastBuildDate>Mon, 16 Sep 2019 20:00:00 +0800</lastBuildDate>
+    
+	<atom:link href="/tags/spring-cloud-gateway/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>Spring Cloud Gateway中的GatewayFilter和GlobalFilter</title>
+      <link>/blog/scg-03/</link>
+      <pubDate>Mon, 16 Sep 2019 20:00:00 +0800</pubDate>
+      
+      <guid>/blog/scg-03/</guid>
+      <description>摘要:本文主要介绍了什么是GatewayFilter和GlobalFilter，以及区别和联系。然后介绍如何在Spring Cloud Gateway中</description>
+    </item>
+    
+    <item>
+      <title>Spring Cloud Gateway基于服务发现的默认路由规则</title>
+      <link>/blog/scg-05/</link>
+      <pubDate>Mon, 16 Sep 2019 20:00:00 +0800</pubDate>
+      
+      <guid>/blog/scg-05/</guid>
+      <description>摘要:本篇文章主要介绍了Spring Cloud Gateway的基于服务发现的默认路由规则，从中可以看出Gateway的路由规则:http://Gat</description>
+    </item>
+    
+    <item>
+      <title>Spring Cloud Gateway的Before路由断言工厂</title>
+      <link>/blog/scg-06/</link>
+      <pubDate>Mon, 16 Sep 2019 20:00:00 +0800</pubDate>
+      
+      <guid>/blog/scg-06/</guid>
+      <description>摘要:在上本篇文章Spring Cloud Gateway的After路由断言工厂介绍了Spring Cloud Gateway核心概念和After路由断言，本文简</description>
+    </item>
+    
+    <item>
+      <title>Spring Cloud Gateway的动态路由的简单实现方式</title>
+      <link>/blog/scg-dmy-route/</link>
+      <pubDate>Mon, 16 Sep 2019 20:00:00 +0800</pubDate>
+      
+      <guid>/blog/scg-dmy-route/</guid>
+      <description>1.前言 网关中有两个重要的概念，那就是路由配置和路由规则，路由配置是指配置某请求路径路由到指定的目的地址。而路由规则是指匹配到路由配置之后，</description>
+    </item>
+    
+    <item>
+      <title>Spring Cloud Gateway的权重路由</title>
+      <link>/blog/scg-02/</link>
+      <pubDate>Mon, 16 Sep 2019 20:00:00 +0800</pubDate>
+      
+      <guid>/blog/scg-02/</guid>
+      <description>1.权重路由 1.1 权重路由使用场景 在开发或者测试的时候，或者线上发布，线上服务多版本控制的时候，需要对服务提供权重路由，最常见的使用就是，一个服</description>
+    </item>
+    
+    <item>
+      <title>使用Nacos实现Spring Cloud Gateway的动态路由</title>
+      <link>/blog/scg-nacos-01/</link>
+      <pubDate>Mon, 16 Sep 2019 20:00:00 +0800</pubDate>
+      
+      <guid>/blog/scg-nacos-01/</guid>
+      <description>1.前言 网关中有两个重要的概念，那就是路由配置和路由规则，路由配置是指配置某请求路径路由到指定的目的地址。而路由规则是指匹配到路由配置之后，</description>
+    </item>
+    
+    <item>
+      <title>Spring Cloud Gateway只有Pre和POST两种类型的Filter</title>
+      <link>/blog/scg-04/</link>
+      <pubDate>Mon, 21 May 2018 20:00:00 +0800</pubDate>
+      
+      <guid>/blog/scg-04/</guid>
+      <description>摘要:Spring Cloud Gateway只有两种类型的Filter，本文介绍如何在Spring Cloud Gateway中创建一个Pre或Post类型的Fi</description>
+    </item>
+    
+    <item>
+      <title>Spring Cloud Gateway的Before路由断言工厂</title>
+      <link>/blog/scg-4-1/</link>
+      <pubDate>Wed, 28 Mar 2018 14:00:00 +0800</pubDate>
+      
+      <guid>/blog/scg-4-1/</guid>
+      <description>1. Spring Cloud Gateway核心概念 网关简单的说就是提供一个对外统一的API入口和出口，统管企业对外的所有API出口。一般来说，网关对外暴露的URL</description>
+    </item>
+    
+    <item>
+      <title> Spring Cloud Gateway的After路由断言工厂</title>
+      <link>/blog/scg-07/</link>
+      <pubDate>Sun, 25 Mar 2018 20:00:00 +0800</pubDate>
+      
+      <guid>/blog/scg-07/</guid>
+      <description>摘要:本篇文章主要介绍了Spring Cloud Gateway核心概念和After路由断言，因为比较简单所以就抛砖引玉，旨在帮助大家快速入门Sprin</description>
+    </item>
+    
+    <item>
+      <title>Spring Cloud Gateway揭秘之处理请求流程</title>
+      <link>/blog/scg-08/</link>
+      <pubDate>Sat, 17 Mar 2018 20:00:00 +0800</pubDate>
+      
+      <guid>/blog/scg-08/</guid>
+      <description>1.Spring Gateway概述 Spring Cloud Gateway是Spring官方基于Spring 5.0，Spring Boot 2.0和Project Reactor等技术开发</description>
+    </item>
+    
+    <item>
+      <title>Spring Cloud Gateway入门案例</title>
+      <link>/blog/scg-01/</link>
+      <pubDate>Thu, 15 Mar 2018 14:00:00 +0800</pubDate>
+      
+      <guid>/blog/scg-01/</guid>
+      <description>1.Spring Gateway概述 1.1 什么是Spring Cloud Gateway Spring Cloud Gateway是Spring官方基于Spring 5.0，Spring Boot 2.0和Project</description>
+    </item>
+    
+  </channel>
+</rss>

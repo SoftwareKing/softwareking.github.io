@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>中间件 on 玹霖志</title>
+    <link>/tags/%E4%B8%AD%E9%97%B4%E4%BB%B6/</link>
+    <description>Recent content in 中间件 on 玹霖志</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>zh-CN</language>
+    <lastBuildDate>Thu, 14 Nov 2019 15:00:00 +0800</lastBuildDate>
+    
+	<atom:link href="/tags/%E4%B8%AD%E9%97%B4%E4%BB%B6/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>基础架构及中间件体系概述</title>
+      <link>/blog/mw/2/</link>
+      <pubDate>Thu, 14 Nov 2019 15:00:00 +0800</pubDate>
+      
+      <guid>/blog/mw/2/</guid>
+      <description>1.基础架构职责 设计和开发新一代的基础组件，为重构项目提供技术平台 设计和构建统一的应用开发框架，提高应用开发效率和质量 建立统一的应用构建标准</description>
+    </item>
+    
+    <item>
+      <title>中国互联网20多年中间件合集</title>
+      <link>/blog/mw/1/</link>
+      <pubDate>Fri, 25 Oct 2019 15:00:00 +0800</pubDate>
+      
+      <guid>/blog/mw/1/</guid>
+      <description>中间件列表</description>
+    </item>
+    
+    <item>
+      <title>Switch-开关中间件设计</title>
+      <link>/blog/mw/switch1/</link>
+      <pubDate>Thu, 17 Oct 2019 20:00:00 +0800</pubDate>
+      
+      <guid>/blog/mw/switch1/</guid>
+      <description>1.开关中间件 1.1 Switch概述 switch提供统一的方式来定义开关、统一的控制台和api来对开关进行查询和操控。Switch定义的开关包含</description>
+    </item>
+    
+  </channel>
+</rss>

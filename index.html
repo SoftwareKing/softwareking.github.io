@@ -1,0 +1,859 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<title>
+	
+	
+
+	玹霖志 · 架构治理之道
+</title>
+	<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+<meta name="viewport" content="width=device-width,minimum-scale=1">
+<meta name="description" content="玹霖志,许进沉思录,许进|Spring Cloud,中间件，基础架构，www.xujin.org,xujin.org,-许进沉思录,Venus&#43;,云首科技有限公司,云计算，大数据，物联网，Software_king的博客,云计算Saas，云计算Paas，云计算Iaas Hadoop，大数据，JavaEE，Java，物联网，Hadoop， NoSQL，MongoDB,Spring, Hibernate,Struts2," />
+
+<meta name="generator" content="Hugo 0.55.6" /><link rel="shortcut icon" href=/img/icon.png type="image/png">
+
+<link href="https://unpkg.com/purecss@1.0.0/build/base-min.css" rel="stylesheet">
+
+
+
+<link href="/css/main.css" rel="stylesheet">
+<link href="/css/zoom-image.css" rel="stylesheet">
+
+<script src="/js/iconfont.js"></script>
+<script src="/js/highlight.pack.js"></script>
+<script>hljs.initHighlightingOnLoad();</script>
+
+
+<script>window.SITE_LANGUAGE = "zh"</script>
+<script src="/js/app.js"></script>
+<script src="https://cdn.bootcss.com/typed.js/2.0.11/typed.js"></script>
+
+
+
+<script async src="//cdn.busuanzi.ibruce.info/cdn/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+<script src="//cdn.bootcss.com/jquery/3.2.1/jquery.min.js"></script>
+
+<script>
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    $(window).scroll(function () {
+        
+        if ($(window).scrollTop() >= 200) {
+            $("#scroll_top").removeClass("hidden").addClass("show"); 
+        } else {
+            $("#scroll_top").removeClass("show").addClass("hidden"); 
+        }
+    });
+</script>
+
+
+
+
+
+
+
+<script type="application/javascript">
+var doNotTrack = false;
+if (!doNotTrack) {
+	(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+	(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+	m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+	})(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+	ga('create', 'UA-142131411-1', 'auto');
+	
+	ga('send', 'pageview');
+}
+</script>
+
+</head>
+
+<body>
+	<header class="ss-header">
+	<nav class="navbar" role="navigation" aria-label="main navigation">
+		<div class="navbar-brand">
+			<a class="logo-link" href="/">
+				<img class="logo" src="/img/logo.png">
+			</a>
+			<div class="-show-mobile">
+				<a id="mobile-menu-icon">
+					<svg class="icon" aria-hidden="true">
+						<use xlink:href="#icon-menu"></use>
+					</svg>
+				</a>
+				<nav id="mobile-menu">
+					
+          
+            <a
+              class=""
+              href="/projects/">
+              <span>
+                项目
+              </span>
+              <svg class="icon" aria-hidden="true"><use xlink:href="#icon-ARROW"></use></svg>
+            </a>
+					
+            <a
+              class=""
+              href="/guides/">
+              <span>
+                案例
+              </span>
+              <svg class="icon" aria-hidden="true"><use xlink:href="#icon-ARROW"></use></svg>
+            </a>
+					
+            <a
+              class=""
+              href="/muse/">
+              <span>
+                Muse
+              </span>
+              <svg class="icon" aria-hidden="true"><use xlink:href="#icon-ARROW"></use></svg>
+            </a>
+					
+            <a
+              class=""
+              href="/blog/">
+              <span>
+                博客
+              </span>
+              <svg class="icon" aria-hidden="true"><use xlink:href="#icon-ARROW"></use></svg>
+            </a>
+					
+            <a
+              class=""
+              href="/activities/">
+              <span>
+                活动
+              </span>
+              <svg class="icon" aria-hidden="true"><use xlink:href="#icon-ARROW"></use></svg>
+            </a>
+					
+            <a
+              class=""
+              href="/projects/halo/overview/">
+              <span>
+                Halo
+              </span>
+              <svg class="icon" aria-hidden="true"><use xlink:href="#icon-ARROW"></use></svg>
+            </a>
+					
+            <a
+              class=""
+              href="/about/">
+              <span>
+                关于我
+              </span>
+              <svg class="icon" aria-hidden="true"><use xlink:href="#icon-ARROW"></use></svg>
+            </a>
+					
+					
+				</nav>
+			</div>
+		</div>
+
+		<div class="navbar-menu -hidden-mobile">
+			<div class="navbar-start">
+				
+				
+					<a class="navbar-item "
+						href="/projects/">项目</a>
+				
+					<a class="navbar-item "
+						href="/guides/">案例</a>
+				
+					<a class="navbar-item "
+						href="/muse/">Muse</a>
+				
+					<a class="navbar-item "
+						href="/blog/">博客</a>
+				
+					<a class="navbar-item "
+						href="/activities/">活动</a>
+				
+					<a class="navbar-item "
+						href="/projects/halo/overview/">Halo</a>
+				
+					<a class="navbar-item "
+						href="/about/">关于我</a>
+				
+			</div>
+			<div class="navbar-end">
+				<div class="navbar-item">
+					<div id="js-menu-search" class="navbar-search">
+						<input class="input" placeholder="请输入要搜索的关键词">
+						<svg class="icon" aria-hidden="true">
+							<use xlink:href="#icon-search"></use>
+						</svg>
+					</div>
+				</div>
+				
+			</div>
+		</div>
+	</nav>
+</header>
+
+
+	
+
+	
+
+	
+
+	
+
+	
+
+	
+
+	
+
+
+
+	
+
+
+
+
+
+
+
+<link rel="stylesheet" href="https://unpkg.com/swiper/css/swiper.min.css">
+<script src="https://unpkg.com/swiper/js/swiper.min.js"> </script>
+<style>
+.swiper-container {
+    position: absolute;
+    top: 64px;
+    width: 100%;
+    z-index: -3;
+    overflow: hidden;
+}
+
+.swiper-container img {
+    display: block;
+    width: 100%;
+    margin: 0 auto;
+    z-index: -2;
+}
+
+.swiper-button-prev, .swiper-container-rtl .swiper-button-next {
+    left: 10px;
+    right: auto;
+    color: #ff6a00;
+}
+
+.swiper-button-next, .swiper-container-rtl .swiper-button-prev {
+    right: 10px;
+    left: auto;
+    color: #ff6a00;
+}
+
+ 
+.swiper-pagination-custom {
+	bottom: 5%;
+	left: 0;
+	width: 100%;
+	height: 120px;
+     
+	text-align: center;
+}
+ 
+.swiper-pagination-customs {
+	width: 12px;
+	height: 12px;
+	display: inline-block;
+	background: #000;
+	opacity: .3;
+	border-radius: 50%;
+				 
+	margin: 0 5px;
+	outline: 0;
+}
+ 
+.swiper-pagination-customs-active {
+	opacity: 1;
+	border:  3px solid #ff6a00;
+	background-color: #ff6a00;
+}
+
+</style>
+<div class="swiper-container">
+	<div class="swiper-wrapper">
+        <div class="swiper-slide"><img src="https://img.alicdn.com/tfs/TB1udlGhuH2gK0jSZFEXXcqMpXa-1880-640.png" />
+		</div>
+
+		<div class="swiper-slide"><img src="https://img.alicdn.com/tfs/TB1riozxkT2gK0jSZFkXXcIQFXa-1492-508.png" />
+		</div>
+		
+		<div class="swiper-slide"><img src="https://img.alicdn.com/tfs/TB19xj4sRr0gK0jSZFnXXbRRXXa-1880-640.jpg" />
+		</div>
+
+		<div class="swiper-slide"><img src="https://img.alicdn.com/tfs/TB1Ji2IkHr1gK0jSZFDXXb9yVXa-1880-640.jpg" />
+		</div>
+
+		<div class="swiper-slide"><img src="https://img.alicdn.com/tfs/TB1maQew7L0gK0jSZFAXXcA9pXa-1492-508.jpg" />
+		</div>
+
+		<div class="swiper-slide"><img src="https://img.alicdn.com/tfs/TB1Ex44p.z1gK0jSZLeXXb9kVXa-3600-1000.png" />
+		</div>
+
+		<div class="swiper-slide"><img src="https://img.alicdn.com/tfs/TB1ALOoqbr1gK0jSZR0XXbP8XXa-1880-640.jpg" />
+		</div>
+
+		<div class="swiper-slide"><img src="https://img.alicdn.com/tfs/TB1Kae2vxn1gK0jSZKPXXXvUXXa-1880-640.png" />
+		</div>
+
+	</div>
+	
+    <div class="swiper-pagination"></div>
+    
+
+	
+   
+   
+</div>
+<script>
+	window.onload = function () {
+		var mySwiper = new Swiper('.swiper-container', {
+			
+			effect : 'fade',
+			paginationClickable: true, 
+            fadeEffect: {
+             crossFade: true,
+            },
+			autoplay: true, 
+			speed:  1800,
+			loop: true, 
+			
+			
+			pagination: {
+				el: '.swiper-pagination',
+			},
+			
+			
+			
+			
+			
+			pagination: {
+				el: '.swiper-pagination',
+				type: 'custom',
+				autoplayDisableOnInteraction : false,
+				renderCustom: function (swiper, current, total) {
+					var paginationHtml = " ";
+					for (var i = 0; i < total; i++) {
+						
+						if (i === (current - 1)) {
+							paginationHtml += '<span class="swiper-pagination-customs swiper-pagination-customs-active"></span>';
+						}else{
+							paginationHtml += '<span class="swiper-pagination-customs"></span>';
+						}						  
+					}
+					return paginationHtml;
+				},
+			}
+		});
+	}
+
+</script>
+
+
+
+<div class="slogan">
+	<div class="home-container">
+		<h1 class="slogan-title">
+		    <span id="sloganTitle"></span>
+		</h1>
+		<p class="slogan-description">
+			<span id="sloganDesc"></span>
+		</p>
+
+		<div class="button-groups">
+			<a class="home-button -shadow" href="/blog">访问博客</a>
+			<a class="home-button -outline" href="https://github.com/softwareking">GitHub</a>
+		</div>
+
+		<!DOCTYPE html>
+<html lang="en"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <style>
+      .scenarios ul li.logo {
+          width: 50% !important;
+          text-align: center;
+      }
+
+      .scenarios ul li.logo p {
+          color: #000000;
+          line-height: 60px;
+      }
+      .scenarios .contents {
+        margin-left: 389px;
+        margin-top: -368px;
+      }
+
+      .scenarios ul li {
+          height: 300px;
+          width: 25%;
+          display: inline-block;
+          float: left;
+          background-size: cover;
+          position: relative;
+      }
+
+      .scenarios ul li p {
+          font-size: 20px;
+          color: #ffffff;
+          text-align: center;
+          line-height: 300px;
+      }
+       
+
+      .scenarios .logo .container {
+          display: flex;
+          flex-direction: row;
+      }
+
+      .scenarios .logo .container div:first-child(1) {
+          background-color: #ccffcc;
+          flex: 1;
+          height: 100px;
+          width: 100px;
+          text-align: center;
+      }
+
+      .scenarios .logo .second {
+          -webkit-flex: 2;
+          flex: 2;
+          float: left
+      }
+      .scenarios .logo p {
+          z-index: 999;
+          margin-left: -5px;
+          font-size: 36px;
+          margin-top: -26px;
+          color: #fff !important;
+          paddig: 0px;
+          position: relative;
+          -webkit-animation: neon2 1.5s ease-in-out infinite alternate;
+          -moz-animation: neon2 1.5s ease-in-out infinite alternate;
+          animation: neon2 1.5s ease-in-out infinite alternate;
+          text-shadow: 0 0 15px #ff6a00;
+          width: 180px;
+      }
+
+      .scenarios .logo #loader-wrapper {
+          position: relative;
+          top: 66px;
+          left: 40%;
+          width: 260px;
+          height: 260px;
+          float: left
+           
+           
+      }
+
+      .scenarios .logo #loader {
+          display: block;
+          position: relative;
+          left: 50%;
+          top: 50%;
+          width: 100%;
+          height: 100%;
+          margin: -175px 0 0 -175px;
+          border-radius: 50%;
+          border: 3px solid transparent;
+          border-top-color: #ff6a00;
+          border-bottom-color: #ff6a00;
+          border-right-color: #ff6a00;
+          border-left-color: #ff6a00;
+          box-shadow: 0 0 15px #ff6a00;
+
+          -webkit-animation: spin 30s linear infinite;  
+          animation: spin 30s linear infinite;  
+      }
+
+      .scenarios .logo #loader1:before {
+          content: "";
+          position: absolute;
+          top: 70px;
+          left: 70px;
+          right: 70px;
+          bottom: 70px;
+          border-radius: 50%;
+          border: 3px solid transparent;
+          border-color: #ff6a00;
+          background-color: #ff6a00;
+          border-style: dotted;
+
+          -webkit-animation: spin 18s linear infinite;  
+          animation: spin 18s linear infinite;  
+      }
+
+      .scenarios .logo #loader1:after {
+          content: "";
+          position: absolute;
+          top: 55px;
+          left: 55px;
+          right: 55px;
+          bottom: 55px;
+          border-radius: 50%;
+          border-color: #ff6022;
+          border-width: 5px;
+          border-style: double dashed solid dotted;
+          box-shadow: 0 0 40px #ff6a00;
+          -webkit-animation: spin 60s linear infinite;  
+          animation: spin 60s linear infinite;  
+      }
+
+      .scenarios .logo #loader:before {
+          content: "";
+          position: absolute;
+          top: 15px;
+          left: 15px;
+          right: 15px;
+          bottom: 15px;
+          border-radius: 50%;
+          border: 3px solid transparent;
+          border-color: #ff6022;
+
+          border-style: dotted;
+
+          -webkit-animation: spin 18s linear infinite;  
+          animation: spin 18s linear infinite;  
+      }
+
+      .scenarios .logo #loader:after {
+          content: "";
+          position: absolute;
+          top: 25px;
+          left: 25px;
+          right: 25px;
+          bottom: 25px;
+          border-radius: 50%;
+          border: 3px solid transparent;
+          border-color: #ff6022;
+          border-width: 5px;
+          border-style: dotted solid;
+          -webkit-animation: spin 60s linear infinite;  
+          animation: spin 60s linear infinite;  
+      }
+
+      @-webkit-keyframes spin {
+          0% {
+              -webkit-transform: rotate(0deg);  
+              -ms-transform: rotate(0deg);  
+              transform: rotate(0deg);  
+          }
+          100% {
+              -webkit-transform: rotate(360deg);  
+              -ms-transform: rotate(360deg);  
+              transform: rotate(360deg);  
+          }
+      }
+
+      @keyframes spin {
+          0% {
+              -webkit-transform: rotate(0deg);  
+              -ms-transform: rotate(0deg);  
+              transform: rotate(0deg);  
+          }
+          100% {
+              -webkit-transform: rotate(360deg);  
+              -ms-transform: rotate(360deg);  
+              transform: rotate(360deg);  
+          }
+      }
+
+      @-webkit-keyframes neon2 {
+          from {
+              text-shadow: 0 0 10px #fff, 0 0 20px #fff, 0 0 30px #fff, 0 0 40px #ff6a00, 0 0 70px #ff6a00, 0 0 80px #ff6a00, 0 0 100px #ff6a00, 0 0 150px #ff6a00;
+          }
+          to {
+              text-shadow: 0 0 5px #fff, 0 0 10px #fff, 0 0 15px #fff, 0 0 20px #ff6a00, 0 0 35px #ff6a00, 0 0 40px #ff6a00, 0 0 50px #ff6a00, 0 0 75px #ff6a00;
+          }
+      }
+    </style>
+</head>
+<body>
+<div class="scenarios public">
+    <div class="contents">
+        <ul>
+            <li class="logo">
+                <div class="second">
+                    <div id="loader-wrapper">
+                        <div id="loader">
+                            <div id="loader1">
+                            </div>
+                        </div>
+                        <p>Halo</p>
+                    </div>
+                </div>
+            </li>
+        </ul>
+
+    </div>
+</div>
+
+</body></html>
+		
+		<div class="feature">
+			
+
+			<div class="feature-container">
+				<img class="img" src="/img/home/2.png" />
+				<h2 class="feature-title">基础架构</h2>
+				<p class="home-description">
+					专注于基础架构的应用框架，代码生成器，IDEA插件，网关中间件，注册中心，配置中心等开发与设计。
+					
+					<a style="text-decoration: none;cursor: pointer;color: #ff6a00;" target="_blank" href="https://xujin.org/categories/%E4%B8%AD%E9%97%B4%E4%BB%B6/">More+</a>
+                    
+				</p>
+			</div>
+			
+
+			<div class="feature-container">
+				<img class="img" src="/img/home/4.png" />
+				<h2 class="feature-title">业务架构</h2>
+				<p class="home-description">
+					熟练商品模型，订单，优惠，交易等业务架构设计，进行代码防腐，业务架构治理。
+					
+					
+				</p>
+			</div>
+			
+
+			<div class="feature-container">
+				<img class="img" src="/img/home/7.png" />
+				<h2 class="feature-title">应用架构</h2>
+				<p class="home-description">
+					专注于应用架构的分层设计，DDD，CQRS，扩展性设计，代码防腐，业务架构治理。
+					
+					
+				</p>
+			</div>
+			
+
+			<div class="feature-container">
+				<img class="img" src="/img/home/12.png" />
+				<h2 class="feature-title">中台架构</h2>
+				<p class="home-description">
+					运用“业务架构&#43;应用架构&#43;基础架构”-研发出中台架构，实现业务与业务隔离，业务与平台隔离，业务可视化。
+					
+					<a style="text-decoration: none;cursor: pointer;color: #ff6a00;" target="_blank" href="https://xujin.org/categories/%E4%B8%AD%E5%8F%B0/">More+</a>
+                    
+				</p>
+			</div>
+			
+		</div>
+	</div>
+</div>
+
+<div class="charpter-description">
+	<div class="home-container">
+		
+			<div class="container">
+				
+
+				<div class="description-container">
+					<h3 class="title">基础架构(Infrastructure) </h3>
+					<p class="home-description">
+						设计和开发新一代的基础组件，为重构项目提供技术平台;设计和构建统一的应用开发框架，提高应用开发效率和质量，建立统一的应用构建标准，为实现对应用的管理，监控和治理的自动化建立基础
+						
+					    <a style="text-decoration: none;cursor: pointer;color: #ff6a00;" target="_blank" href="/categories/%e4%b8%ad%e9%97%b4%e4%bb%b6/">More+</a>
+                        
+					</p>
+				</div>
+
+				
+					<div class="img-container">
+						<img style="width:500px"
+							src="/img/home/infra.png"
+						>
+					</div>
+				
+			</div>
+		
+			<div class="container">
+				
+					<div class="img-container">
+						<img style="width:500px"
+							src="/img/home/halo-module.png"
+						>
+					</div>
+				
+
+				<div class="description-container">
+					<h3 class="title">中台架构(Halo Architecture) </h3>
+					<p class="home-description">
+						Halo Architecture将DDD，洋葱架构，整洁架构，读写分离架构有机整合一起，基于业务身份&#43;扩展点的设计思想，采用应用内部流程编排的方式形成可复用的业务资产库。最终架构落地达到业务与业务隔离，业务与平台隔离，管理域与运行域分开，帮助企业快速落地业务中台。
+						
+					    <a style="text-decoration: none;cursor: pointer;color: #ff6a00;" target="_blank" href="/projects/halo/overview/">More+</a>
+                        
+					</p>
+				</div>
+
+				
+			</div>
+		
+			<div class="container">
+				
+
+				<div class="description-container">
+					<h3 class="title">业务中台(Biz Enabling Platform) </h3>
+					<p class="home-description">
+						业务中台是企业实现各业务板块之间链接和协同，持续提升业务创新效率，确保关键业务链路的稳定高效和经济性兼顾的思想体系，包含了技术和组织两大部分，通过“方法&#43;工具&#43;业务理解”加以实现。但本质按照业务域划分，把业务代码做成可复用的业务资产组件库，快速响应业务。建业务中台的原则分别是业务与业务隔离，业务与平台隔离，业务资产可视化，全局业务身份管理。
+						
+					    <a style="text-decoration: none;cursor: pointer;color: #ff6a00;" target="_blank" href="https://xujin.org/categories/%E4%B8%AD%E5%8F%B0/">More+</a>
+                        
+					</p>
+				</div>
+
+				
+					<div class="img-container">
+						<img style="width:500px"
+							src="/img/home/ztzl.png"
+						>
+					</div>
+				
+			</div>
+		
+	</div>
+</div>
+
+
+
+
+
+
+	
+
+<footer class="ss-footer">
+	<div class="container">
+		<div class="links">
+			
+				<div class="cate">
+					<h2 class="cate-title">个人链接</h2>
+					
+						<a class="link" href="https://github.com/softwareking">Github</a>
+					
+						<a class="link" href="https://www.cnblogs.com/ACMer/">博客园</a>
+					
+						<a class="link" href="http://blog.sina.com.cn/softwaremi">新浪博客</a>
+					
+				</div>
+			
+				<div class="cate">
+					<h2 class="cate-title">社区</h2>
+					
+						<a class="link" href="http://springcloud.cn">主站</a>
+					
+						<a class="link" href="https://github.com/springcloud">Github</a>
+					
+				</div>
+			
+				<div class="cate">
+					<h2 class="cate-title">友情链接</h2>
+					
+						<a class="link" href="https://www.ramostear.com/">谭潮红博客</a>
+					
+						<a class="link" href="http://springcloud.cn">社区</a>
+					
+						<a class="link" href="http://blog.springcloud.cn">博客</a>
+					
+						<a class="link" href="http://tietang.wang/">王铁堂博客</a>
+					
+						<a class="link" href="https://tianhui.xin/">怪咖晨</a>
+					
+				</div>
+			
+				<div class="cate">
+					<h2 class="cate-title">工具</h2>
+					
+						<a class="link" href="http://md.aclickall.com/">微信排版</a>
+					
+						<a class="link" href="https://www.gaoding.com">稿定设计</a>
+					
+						<a class="link" href="http://www.processon.com/">ProcessOn</a>
+					
+						<a class="link" href="https://www.draw.io/">Draw</a>
+					
+				</div>
+			
+		</div>
+		<div class="qrcode">
+			
+				<div>
+					<img class="qrcode-img" src="/img/qrcode/wxgzh.png" />
+					<p class="qrcode-desc">玹霖志</p>
+				</div>
+			
+				<div>
+					<img class="qrcode-img" src="/img/qrcode/sqgz.jpeg" />
+					<p class="qrcode-desc">Spring Cloud中国</p>
+				</div>
+			
+		</div>
+	</div>
+	<div class="copyright">
+		<p>
+			© 2019 玹霖志
+			<a href="#">滇ICP备14007546号</a>
+
+			<span id="busuanzi_container_site_pv">
+            本站访问量：<span id="busuanzi_value_site_pv"></span>次
+        </span>
+        &nbsp;
+        <span id="busuanzi_container_site_uv">
+            您是本站第 <span id="busuanzi_value_site_uv"></span> 位访问者
+        </span>
+		</p>
+
+	</div>
+</footer>
+
+	
+
+
+<aside class="ss-aside hidden" id="scroll_top">
+	<div class="go-top-btn">
+		<a class="logo-link" href="javascript:window.scrollTo(0,0)">
+			<img class="logo" src="/img/gotop.png">
+		</a>
+	</div>
+</aside>
+<script>
+    var typed = new Typed('#sloganTitle', {
+		strings: [
+        '  ',
+		"架构治理之道",
+      ],
+      cursorChar: "|",
+      typeSpeed: 70,
+	  loop: false,
+	});
+	
+     var typed = new Typed('#sloganDesc', {
+		strings: [
+        '  ',
+        "Hi,欢迎访问玹霖志。专注于基础架构，应用架构，业务架构，中台架构治理之道和代码防腐。Halo Ecology™（光环生态）为企业基础架构和中台架构的落地保驾护航！欢迎加我微信Software_King探讨",
+      ],
+      cursorChar: "|",
+      typeSpeed: 70,
+	  loop: false,
+	});
+	
+  </script>
+
+</body>
+
+</html>
