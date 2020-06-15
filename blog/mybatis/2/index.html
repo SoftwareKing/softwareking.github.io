@@ -10,7 +10,7 @@
 <meta name="viewport" content="width=device-width,minimum-scale=1">
 <meta name="description" content="玹霖志,许进沉思录,许进|Spring Cloud,中间件，基础架构，www.xujin.org,xujin.org,-许进沉思录,Venus&#43;,云首科技有限公司,云计算，大数据，物联网，Software_king的博客,云计算Saas，云计算Paas，云计算Iaas Hadoop，大数据，JavaEE，Java，物联网，Hadoop， NoSQL，MongoDB,Spring, Hibernate,Struts2," />
 
-<meta name="generator" content="Hugo 0.72.0" /><link rel="shortcut icon" href=/img/icon.png type="image/png">
+<meta name="generator" content="Hugo 0.55.6" /><link rel="shortcut icon" href=/img/icon.png type="image/png">
 
 <link href="https://unpkg.com/purecss@1.0.0/build/base-min.css" rel="stylesheet">
 
@@ -261,108 +261,165 @@ if (!doNotTrack) {
 	});
   </script>
 		<article class="typo">
-	<!-- raw HTML omitted -->
-<p><!-- raw HTML omitted -->import<!-- raw HTML omitted --> java.lang.reflect.InvocationTargetException<!-- raw HTML omitted -->;<!-- raw HTML omitted -->
-<!-- raw HTML omitted -->import<!-- raw HTML omitted --> java.sql.Connection<!-- raw HTML omitted -->;<!-- raw HTML omitted -->
-<!-- raw HTML omitted -->import<!-- raw HTML omitted --> java.util.List<!-- raw HTML omitted -->;<!-- raw HTML omitted -->
-<!-- raw HTML omitted -->import<!-- raw HTML omitted --> java.util.Properties<!-- raw HTML omitted -->;<!-- raw HTML omitted -->
-<!-- raw HTML omitted -->import<!-- raw HTML omitted --> java.util.Set<!-- raw HTML omitted -->;<!-- raw HTML omitted --></p>
-<p><!-- raw HTML omitted -->/**
-<!-- raw HTML omitted --><!-- raw HTML omitted --> *  当Mybatis SQL出现空where并拦截
-<!-- raw HTML omitted --><!-- raw HTML omitted --> * @author xujin
-<!-- raw HTML omitted --><!-- raw HTML omitted --> */<!-- raw HTML omitted -->
-<!-- raw HTML omitted -->@Intercepts<!-- raw HTML omitted --><!-- raw HTML omitted -->({<!-- raw HTML omitted --> <!-- raw HTML omitted -->@Signature<!-- raw HTML omitted --><!-- raw HTML omitted -->(<!-- raw HTML omitted -->type <!-- raw HTML omitted -->=<!-- raw HTML omitted --> StatementHandler<!-- raw HTML omitted -->.<!-- raw HTML omitted --><!-- raw HTML omitted -->class<!-- raw HTML omitted --><!-- raw HTML omitted -->,<!-- raw HTML omitted --> method <!-- raw HTML omitted -->=<!-- raw HTML omitted --> <!-- raw HTML omitted -->&quot;prepare&quot;<!-- raw HTML omitted --><!-- raw HTML omitted -->,<!-- raw HTML omitted --> args <!-- raw HTML omitted -->=<!-- raw HTML omitted --> <!-- raw HTML omitted -->{<!-- raw HTML omitted --> Connection<!-- raw HTML omitted -->.<!-- raw HTML omitted --><!-- raw HTML omitted -->class<!-- raw HTML omitted --><!-- raw HTML omitted -->,<!-- raw HTML omitted --> Integer<!-- raw HTML omitted -->.<!-- raw HTML omitted --><!-- raw HTML omitted -->class<!-- raw HTML omitted --> <!-- raw HTML omitted -->})})<!-- raw HTML omitted -->
-<!-- raw HTML omitted -->@Slf4j<!-- raw HTML omitted -->
-<!-- raw HTML omitted -->public<!-- raw HTML omitted --> <!-- raw HTML omitted -->class<!-- raw HTML omitted --> <!-- raw HTML omitted -->HaloEmptyWhereInterceptor<!-- raw HTML omitted --> <!-- raw HTML omitted -->extends<!-- raw HTML omitted --> AbstractSqlParserHandler <!-- raw HTML omitted -->implements<!-- raw HTML omitted --> Interceptor <!-- raw HTML omitted -->{<!-- raw HTML omitted --></p>
-<pre><code>&lt;span style=&quot;color:#66d9ef&quot;&gt;private&lt;/span&gt; HaloMybatisProperties haloMybatisProperties&lt;span style=&quot;color:#f92672&quot;&gt;;&lt;/span&gt;
+	<h2 id="1-背景">1.背景</h2>
 
-&lt;span style=&quot;color:#66d9ef&quot;&gt;public&lt;/span&gt; &lt;span style=&quot;color:#a6e22e&quot;&gt;HaloEmptyWhereInterceptor&lt;/span&gt;&lt;span style=&quot;color:#f92672&quot;&gt;(&lt;/span&gt;HaloMybatisProperties haloMybatisProperties&lt;span style=&quot;color:#f92672&quot;&gt;)&lt;/span&gt; &lt;span style=&quot;color:#f92672&quot;&gt;{&lt;/span&gt;
-    &lt;span style=&quot;color:#66d9ef&quot;&gt;this&lt;/span&gt;&lt;span style=&quot;color:#f92672&quot;&gt;.&lt;/span&gt;&lt;span style=&quot;color:#a6e22e&quot;&gt;haloMybatisProperties&lt;/span&gt;&lt;span style=&quot;color:#f92672&quot;&gt;=&lt;/span&gt;haloMybatisProperties&lt;span style=&quot;color:#f92672&quot;&gt;;&lt;/span&gt;
-&lt;span style=&quot;color:#f92672&quot;&gt;}&lt;/span&gt;
+<p>项目中经常出现因为Mybatis的动态where条件不满足导致实际sql语句的where条件为空,进而查询全表,当数据量比较大的时候,导致OOM的情况。比如当用户表的数据量为4千万时,如果load全表数据量将会导致OOM，如下图所示,为了解决这种情况基于Mybatis Plus自定义Interceptor实现统一的拦截。</p>
 
-&lt;span style=&quot;color:#75715e&quot;&gt;/**
-</code></pre>
-<p><!-- raw HTML omitted --><!-- raw HTML omitted -->     * 拦截的 COMMAND 类型
-<!-- raw HTML omitted --><!-- raw HTML omitted -->     */<!-- raw HTML omitted -->
-<!-- raw HTML omitted -->private<!-- raw HTML omitted --> <!-- raw HTML omitted -->static<!-- raw HTML omitted --> <!-- raw HTML omitted -->final<!-- raw HTML omitted --> Set<!-- raw HTML omitted -->&lt;<!-- raw HTML omitted -->String<!-- raw HTML omitted -->&gt;<!-- raw HTML omitted --> INTERCEPTOR_COMMAND <!-- raw HTML omitted -->=<!-- raw HTML omitted --> Sets<!-- raw HTML omitted -->.<!-- raw HTML omitted --><!-- raw HTML omitted -->newHashSet<!-- raw HTML omitted --><!-- raw HTML omitted -->(<!-- raw HTML omitted --><!-- raw HTML omitted -->&quot;select&quot;<!-- raw HTML omitted --><!-- raw HTML omitted -->,<!-- raw HTML omitted --> <!-- raw HTML omitted -->&quot;update&quot;<!-- raw HTML omitted --><!-- raw HTML omitted -->,<!-- raw HTML omitted --> <!-- raw HTML omitted -->&quot;delete&quot;<!-- raw HTML omitted --><!-- raw HTML omitted -->);<!-- raw HTML omitted --></p>
-<pre><code>&lt;span style=&quot;color:#75715e&quot;&gt;/**
-</code></pre>
-<p><!-- raw HTML omitted --><!-- raw HTML omitted -->     * sql中的where关键字
-<!-- raw HTML omitted --><!-- raw HTML omitted -->     */<!-- raw HTML omitted -->
-<!-- raw HTML omitted -->private<!-- raw HTML omitted --> <!-- raw HTML omitted -->static<!-- raw HTML omitted --> <!-- raw HTML omitted -->final<!-- raw HTML omitted --> String WHERE<!-- raw HTML omitted -->=<!-- raw HTML omitted --><!-- raw HTML omitted -->&quot;where&quot;<!-- raw HTML omitted --><!-- raw HTML omitted -->;<!-- raw HTML omitted --></p>
-<pre><code>&lt;span style=&quot;color:#a6e22e&quot;&gt;@Override&lt;/span&gt;
-&lt;span style=&quot;color:#66d9ef&quot;&gt;public&lt;/span&gt; Object &lt;span style=&quot;color:#a6e22e&quot;&gt;intercept&lt;/span&gt;&lt;span style=&quot;color:#f92672&quot;&gt;(&lt;/span&gt;Invocation invocation&lt;span style=&quot;color:#f92672&quot;&gt;)&lt;/span&gt; &lt;span style=&quot;color:#66d9ef&quot;&gt;throws&lt;/span&gt; Throwable &lt;span style=&quot;color:#f92672&quot;&gt;{&lt;/span&gt;
-    String originSql &lt;span style=&quot;color:#f92672&quot;&gt;=&lt;/span&gt; &lt;span style=&quot;color:#e6db74&quot;&gt;&amp;#34;&amp;#34;&lt;/span&gt;&lt;span style=&quot;color:#f92672&quot;&gt;;&lt;/span&gt;
-    &lt;span style=&quot;color:#66d9ef&quot;&gt;try&lt;/span&gt; &lt;span style=&quot;color:#f92672&quot;&gt;{&lt;/span&gt;
-        StatementHandler handler &lt;span style=&quot;color:#f92672&quot;&gt;=&lt;/span&gt; PluginUtils&lt;span style=&quot;color:#f92672&quot;&gt;.&lt;/span&gt;&lt;span style=&quot;color:#a6e22e&quot;&gt;realTarget&lt;/span&gt;&lt;span style=&quot;color:#f92672&quot;&gt;(&lt;/span&gt;invocation&lt;span style=&quot;color:#f92672&quot;&gt;.&lt;/span&gt;&lt;span style=&quot;color:#a6e22e&quot;&gt;getTarget&lt;/span&gt;&lt;span style=&quot;color:#f92672&quot;&gt;());&lt;/span&gt;
-        MetaObject metaObject &lt;span style=&quot;color:#f92672&quot;&gt;=&lt;/span&gt; SystemMetaObject&lt;span style=&quot;color:#f92672&quot;&gt;.&lt;/span&gt;&lt;span style=&quot;color:#a6e22e&quot;&gt;forObject&lt;/span&gt;&lt;span style=&quot;color:#f92672&quot;&gt;(&lt;/span&gt;handler&lt;span style=&quot;color:#f92672&quot;&gt;);&lt;/span&gt;
+<p><img src="empty-where-oom.png" alt="" /></p>
 
-        &lt;span style=&quot;color:#75715e&quot;&gt;// SQL 解析
-</code></pre>
-<p><!-- raw HTML omitted --><!-- raw HTML omitted --><!-- raw HTML omitted -->            <!-- raw HTML omitted -->this<!-- raw HTML omitted --><!-- raw HTML omitted -->.<!-- raw HTML omitted --><!-- raw HTML omitted -->sqlParser<!-- raw HTML omitted --><!-- raw HTML omitted -->(<!-- raw HTML omitted -->metaObject<!-- raw HTML omitted -->);<!-- raw HTML omitted --></p>
-<pre><code>        MappedStatement mappedStatement &lt;span style=&quot;color:#f92672&quot;&gt;=&lt;/span&gt; &lt;span style=&quot;color:#f92672&quot;&gt;(&lt;/span&gt;MappedStatement&lt;span style=&quot;color:#f92672&quot;&gt;)&lt;/span&gt; metaObject&lt;span style=&quot;color:#f92672&quot;&gt;.&lt;/span&gt;&lt;span style=&quot;color:#a6e22e&quot;&gt;getValue&lt;/span&gt;&lt;span style=&quot;color:#f92672&quot;&gt;(&lt;/span&gt;&lt;span style=&quot;color:#e6db74&quot;&gt;&amp;#34;delegate.mappedStatement&amp;#34;&lt;/span&gt;&lt;span style=&quot;color:#f92672&quot;&gt;);&lt;/span&gt;
-        &lt;span style=&quot;color:#75715e&quot;&gt;//获取当前的Statement的ID
-</code></pre>
-<p><!-- raw HTML omitted --><!-- raw HTML omitted --><!-- raw HTML omitted -->            String mappedStatementId <!-- raw HTML omitted -->=<!-- raw HTML omitted --> mappedStatement<!-- raw HTML omitted -->.<!-- raw HTML omitted --><!-- raw HTML omitted -->getId<!-- raw HTML omitted --><!-- raw HTML omitted -->();<!-- raw HTML omitted -->
-log<!-- raw HTML omitted -->.<!-- raw HTML omitted --><!-- raw HTML omitted -->info<!-- raw HTML omitted --><!-- raw HTML omitted -->(<!-- raw HTML omitted --><!-- raw HTML omitted -->&quot;Halo Mybatis check Empty Where StatementId Is:{} &quot;<!-- raw HTML omitted --><!-- raw HTML omitted -->,<!-- raw HTML omitted -->mappedStatementId<!-- raw HTML omitted -->);<!-- raw HTML omitted -->
-List<!-- raw HTML omitted -->&lt;<!-- raw HTML omitted -->String<!-- raw HTML omitted -->&gt;<!-- raw HTML omitted --> whiteList<!-- raw HTML omitted -->=<!-- raw HTML omitted -->haloMybatisProperties<!-- raw HTML omitted -->.<!-- raw HTML omitted --><!-- raw HTML omitted -->getEmptyWhereWhiteList<!-- raw HTML omitted --><!-- raw HTML omitted -->();<!-- raw HTML omitted -->
-<!-- raw HTML omitted -->if<!-- raw HTML omitted --><!-- raw HTML omitted -->(<!-- raw HTML omitted -->CollectionUtils<!-- raw HTML omitted -->.<!-- raw HTML omitted --><!-- raw HTML omitted -->isNotEmpty<!-- raw HTML omitted --><!-- raw HTML omitted -->(<!-- raw HTML omitted -->whiteList<!-- raw HTML omitted -->)){<!-- raw HTML omitted -->
-<!-- raw HTML omitted -->//在白名单中不进行check
-<!-- raw HTML omitted --><!-- raw HTML omitted --><!-- raw HTML omitted -->                <!-- raw HTML omitted -->if<!-- raw HTML omitted --><!-- raw HTML omitted -->(<!-- raw HTML omitted -->whiteList<!-- raw HTML omitted -->.<!-- raw HTML omitted --><!-- raw HTML omitted -->contains<!-- raw HTML omitted --><!-- raw HTML omitted -->(<!-- raw HTML omitted -->mappedStatementId<!-- raw HTML omitted -->))<!-- raw HTML omitted --> <!-- raw HTML omitted -->{<!-- raw HTML omitted -->
-<!-- raw HTML omitted -->return<!-- raw HTML omitted --> invocation<!-- raw HTML omitted -->.<!-- raw HTML omitted --><!-- raw HTML omitted -->proceed<!-- raw HTML omitted --><!-- raw HTML omitted -->();<!-- raw HTML omitted -->
-<!-- raw HTML omitted -->}<!-- raw HTML omitted -->
-<!-- raw HTML omitted -->}<!-- raw HTML omitted -->
-<!-- raw HTML omitted -->//获取SqlCommandType
-<!-- raw HTML omitted --><!-- raw HTML omitted --><!-- raw HTML omitted -->            String commandType <!-- raw HTML omitted -->=<!-- raw HTML omitted --> getCommandType<!-- raw HTML omitted -->(<!-- raw HTML omitted -->handler<!-- raw HTML omitted -->);<!-- raw HTML omitted -->
-<!-- raw HTML omitted -->if<!-- raw HTML omitted --> <!-- raw HTML omitted -->(!<!-- raw HTML omitted -->INTERCEPTOR_COMMAND<!-- raw HTML omitted -->.<!-- raw HTML omitted --><!-- raw HTML omitted -->contains<!-- raw HTML omitted --><!-- raw HTML omitted -->(<!-- raw HTML omitted -->commandType<!-- raw HTML omitted -->))<!-- raw HTML omitted --> <!-- raw HTML omitted -->{<!-- raw HTML omitted -->
-<!-- raw HTML omitted -->return<!-- raw HTML omitted --> invocation<!-- raw HTML omitted -->.<!-- raw HTML omitted --><!-- raw HTML omitted -->proceed<!-- raw HTML omitted --><!-- raw HTML omitted -->();<!-- raw HTML omitted -->
-<!-- raw HTML omitted -->}<!-- raw HTML omitted --></p>
-<pre><code>        &lt;span style=&quot;color:#75715e&quot;&gt;//获取执行的sql判断sql是否包含where
-</code></pre>
-<p><!-- raw HTML omitted --><!-- raw HTML omitted --><!-- raw HTML omitted -->            String sql<!-- raw HTML omitted -->=<!-- raw HTML omitted -->handler<!-- raw HTML omitted -->.<!-- raw HTML omitted --><!-- raw HTML omitted -->getBoundSql<!-- raw HTML omitted --><!-- raw HTML omitted -->().<!-- raw HTML omitted --><!-- raw HTML omitted -->getSql<!-- raw HTML omitted --><!-- raw HTML omitted -->();<!-- raw HTML omitted -->
-<!-- raw HTML omitted -->if<!-- raw HTML omitted --><!-- raw HTML omitted -->(<!-- raw HTML omitted -->StringUtils<!-- raw HTML omitted -->.<!-- raw HTML omitted --><!-- raw HTML omitted -->isEmpty<!-- raw HTML omitted --><!-- raw HTML omitted -->(<!-- raw HTML omitted -->sql<!-- raw HTML omitted -->)){<!-- raw HTML omitted -->
-<!-- raw HTML omitted -->return<!-- raw HTML omitted --> invocation<!-- raw HTML omitted -->.<!-- raw HTML omitted --><!-- raw HTML omitted -->proceed<!-- raw HTML omitted --><!-- raw HTML omitted -->();<!-- raw HTML omitted -->
-<!-- raw HTML omitted -->}<!-- raw HTML omitted -->
-originSql <!-- raw HTML omitted -->=<!-- raw HTML omitted --> sql<!-- raw HTML omitted -->.<!-- raw HTML omitted --><!-- raw HTML omitted -->toLowerCase<!-- raw HTML omitted --><!-- raw HTML omitted -->();<!-- raw HTML omitted -->
-<!-- raw HTML omitted -->}<!-- raw HTML omitted --> <!-- raw HTML omitted -->catch<!-- raw HTML omitted --> <!-- raw HTML omitted -->(<!-- raw HTML omitted -->InvocationTargetException e<!-- raw HTML omitted -->)<!-- raw HTML omitted --> <!-- raw HTML omitted -->{<!-- raw HTML omitted -->
-log<!-- raw HTML omitted -->.<!-- raw HTML omitted --><!-- raw HTML omitted -->error<!-- raw HTML omitted --><!-- raw HTML omitted -->(<!-- raw HTML omitted --><!-- raw HTML omitted -->&quot;halo check EmptyWhere fail!&quot;<!-- raw HTML omitted --><!-- raw HTML omitted -->,<!-- raw HTML omitted -->e<!-- raw HTML omitted -->);<!-- raw HTML omitted -->
-<!-- raw HTML omitted -->}<!-- raw HTML omitted --> <!-- raw HTML omitted -->catch<!-- raw HTML omitted --> <!-- raw HTML omitted -->(<!-- raw HTML omitted -->IllegalAccessException e<!-- raw HTML omitted -->)<!-- raw HTML omitted --> <!-- raw HTML omitted -->{<!-- raw HTML omitted -->
-log<!-- raw HTML omitted -->.<!-- raw HTML omitted --><!-- raw HTML omitted -->error<!-- raw HTML omitted --><!-- raw HTML omitted -->(<!-- raw HTML omitted --><!-- raw HTML omitted -->&quot;halo check EmptyWhere fail!&quot;<!-- raw HTML omitted --><!-- raw HTML omitted -->,<!-- raw HTML omitted -->e<!-- raw HTML omitted -->);<!-- raw HTML omitted -->
-<!-- raw HTML omitted -->}<!-- raw HTML omitted -->
-<!-- raw HTML omitted -->//当select,update,delete中不包含where的时候,记录error日志,并抛出运行时异常
-<!-- raw HTML omitted --><!-- raw HTML omitted --><!-- raw HTML omitted -->        <!-- raw HTML omitted -->if<!-- raw HTML omitted --><!-- raw HTML omitted -->(<!-- raw HTML omitted -->StringUtils<!-- raw HTML omitted -->.<!-- raw HTML omitted --><!-- raw HTML omitted -->isEmpty<!-- raw HTML omitted --><!-- raw HTML omitted -->(<!-- raw HTML omitted -->originSql<!-- raw HTML omitted -->)){<!-- raw HTML omitted -->
-<!-- raw HTML omitted -->return<!-- raw HTML omitted --> invocation<!-- raw HTML omitted -->.<!-- raw HTML omitted --><!-- raw HTML omitted -->proceed<!-- raw HTML omitted --><!-- raw HTML omitted -->();<!-- raw HTML omitted -->
-<!-- raw HTML omitted -->}<!-- raw HTML omitted -->
-<!-- raw HTML omitted -->if<!-- raw HTML omitted --> <!-- raw HTML omitted -->(!<!-- raw HTML omitted -->originSql<!-- raw HTML omitted -->.<!-- raw HTML omitted --><!-- raw HTML omitted -->contains<!-- raw HTML omitted --><!-- raw HTML omitted -->(<!-- raw HTML omitted -->WHERE<!-- raw HTML omitted -->))<!-- raw HTML omitted --> <!-- raw HTML omitted -->{<!-- raw HTML omitted -->
-log<!-- raw HTML omitted -->.<!-- raw HTML omitted --><!-- raw HTML omitted -->error<!-- raw HTML omitted --><!-- raw HTML omitted -->(<!-- raw HTML omitted --><!-- raw HTML omitted -->&quot;Prohibit The Use of SQL statements Without Where conditions.originSql is:{}&quot;<!-- raw HTML omitted --><!-- raw HTML omitted -->,<!-- raw HTML omitted --> originSql<!-- raw HTML omitted -->);<!-- raw HTML omitted -->
-<!-- raw HTML omitted -->throw<!-- raw HTML omitted --> <!-- raw HTML omitted -->new<!-- raw HTML omitted --> RuntimeException<!-- raw HTML omitted -->(<!-- raw HTML omitted --><!-- raw HTML omitted -->&quot;Prohibit The Use of SQL statements Without Where conditions.originSql is:&quot;<!-- raw HTML omitted --><!-- raw HTML omitted -->+<!-- raw HTML omitted -->originSql<!-- raw HTML omitted -->);<!-- raw HTML omitted -->
-<!-- raw HTML omitted -->}<!-- raw HTML omitted -->
-<!-- raw HTML omitted -->return<!-- raw HTML omitted --> invocation<!-- raw HTML omitted -->.<!-- raw HTML omitted --><!-- raw HTML omitted -->proceed<!-- raw HTML omitted --><!-- raw HTML omitted -->();<!-- raw HTML omitted -->
-<!-- raw HTML omitted -->}<!-- raw HTML omitted --></p>
-<pre><code>&lt;span style=&quot;color:#a6e22e&quot;&gt;@Override&lt;/span&gt;
-&lt;span style=&quot;color:#66d9ef&quot;&gt;public&lt;/span&gt; Object &lt;span style=&quot;color:#a6e22e&quot;&gt;plugin&lt;/span&gt;&lt;span style=&quot;color:#f92672&quot;&gt;(&lt;/span&gt;Object target&lt;span style=&quot;color:#f92672&quot;&gt;)&lt;/span&gt; &lt;span style=&quot;color:#f92672&quot;&gt;{&lt;/span&gt;
-    &lt;span style=&quot;color:#66d9ef&quot;&gt;return&lt;/span&gt; Plugin&lt;span style=&quot;color:#f92672&quot;&gt;.&lt;/span&gt;&lt;span style=&quot;color:#a6e22e&quot;&gt;wrap&lt;/span&gt;&lt;span style=&quot;color:#f92672&quot;&gt;(&lt;/span&gt;target&lt;span style=&quot;color:#f92672&quot;&gt;,&lt;/span&gt; &lt;span style=&quot;color:#66d9ef&quot;&gt;this&lt;/span&gt;&lt;span style=&quot;color:#f92672&quot;&gt;);&lt;/span&gt;
-&lt;span style=&quot;color:#f92672&quot;&gt;}&lt;/span&gt;
+<h2 id="2-开发">2.开发</h2>
 
-&lt;span style=&quot;color:#a6e22e&quot;&gt;@Override&lt;/span&gt;
-&lt;span style=&quot;color:#66d9ef&quot;&gt;public&lt;/span&gt; &lt;span style=&quot;color:#66d9ef&quot;&gt;void&lt;/span&gt; &lt;span style=&quot;color:#a6e22e&quot;&gt;setProperties&lt;/span&gt;&lt;span style=&quot;color:#f92672&quot;&gt;(&lt;/span&gt;Properties properties&lt;span style=&quot;color:#f92672&quot;&gt;)&lt;/span&gt; &lt;span style=&quot;color:#f92672&quot;&gt;{&lt;/span&gt;
-&lt;span style=&quot;color:#f92672&quot;&gt;}&lt;/span&gt;
+<p>Halo Mybatis从1.2版本开始将会，增加如下的功能:</p>
 
-&lt;span style=&quot;color:#75715e&quot;&gt;/**
+<ul>
+<li><p>对空Where进行拦截判断</p></li>
+
+<li><p>并支持开关关闭空where拦截</p></li>
+
+<li><p>支持白名单设置,即在白名单中的表名将不会进行拦截</p></li>
+
+<li><p>支持多数据源进行拦截check</p></li>
+</ul>
+
+<h3 id="2-1-核心代码实现">2.1 核心代码实现</h3>
+
+<pre><code class="language-java">import com.baomidou.mybatisplus.core.toolkit.CollectionUtils;
+import com.baomidou.mybatisplus.core.toolkit.PluginUtils;
+import com.baomidou.mybatisplus.core.toolkit.StringUtils;
+import com.baomidou.mybatisplus.extension.handlers.AbstractSqlParserHandler;
+import com.google.common.collect.Sets;
+import org.xujin.halo.mybatis.properties.HaloMybatisProperties;
+import lombok.extern.slf4j.Slf4j;
+import org.apache.ibatis.executor.statement.StatementHandler;
+import org.apache.ibatis.mapping.MappedStatement;
+import org.apache.ibatis.plugin.*;
+import org.apache.ibatis.reflection.MetaObject;
+import org.apache.ibatis.reflection.SystemMetaObject;
+
+import java.lang.reflect.InvocationTargetException;
+import java.sql.Connection;
+import java.util.List;
+import java.util.Properties;
+import java.util.Set;
+
+
+/**
+ *  当Mybatis SQL出现空where并拦截
+ * @author xujin
+ */
+@Intercepts({ @Signature(type = StatementHandler.class, method = &quot;prepare&quot;, args = { Connection.class, Integer.class })})
+@Slf4j
+public class HaloEmptyWhereInterceptor extends AbstractSqlParserHandler implements Interceptor {
+
+    private HaloMybatisProperties haloMybatisProperties;
+
+    public HaloEmptyWhereInterceptor(HaloMybatisProperties haloMybatisProperties) {
+        this.haloMybatisProperties=haloMybatisProperties;
+    }
+
+    /**
+     * 拦截的 COMMAND 类型
+     */
+    private static final Set&lt;String&gt; INTERCEPTOR_COMMAND = Sets.newHashSet(&quot;select&quot;, &quot;update&quot;, &quot;delete&quot;);
+
+    /**
+     * sql中的where关键字
+     */
+    private static final String WHERE=&quot;where&quot;;
+
+    @Override
+    public Object intercept(Invocation invocation) throws Throwable {
+        String originSql = &quot;&quot;;
+        try {
+            StatementHandler handler = PluginUtils.realTarget(invocation.getTarget());
+            MetaObject metaObject = SystemMetaObject.forObject(handler);
+
+            // SQL 解析
+            this.sqlParser(metaObject);
+
+            MappedStatement mappedStatement = (MappedStatement) metaObject.getValue(&quot;delegate.mappedStatement&quot;);
+            //获取当前的Statement的ID
+            String mappedStatementId = mappedStatement.getId();
+            log.info(&quot;Halo Mybatis check Empty Where StatementId Is:{} &quot;,mappedStatementId);
+            List&lt;String&gt; whiteList=haloMybatisProperties.getEmptyWhereWhiteList();
+            if(CollectionUtils.isNotEmpty(whiteList)){
+                //在白名单中不进行check
+                if(whiteList.contains(mappedStatementId)) {
+                    return invocation.proceed();
+                }
+            }
+            //获取SqlCommandType
+            String commandType = getCommandType(handler);
+            if (!INTERCEPTOR_COMMAND.contains(commandType)) {
+                return invocation.proceed();
+            }
+
+            //获取执行的sql判断sql是否包含where
+            String sql=handler.getBoundSql().getSql();
+            if(StringUtils.isEmpty(sql)){
+                return invocation.proceed();
+            }
+            originSql = sql.toLowerCase();
+        } catch (InvocationTargetException e) {
+            log.error(&quot;halo check EmptyWhere fail!&quot;,e);
+        } catch (IllegalAccessException e) {
+            log.error(&quot;halo check EmptyWhere fail!&quot;,e);
+        }
+        //当select,update,delete中不包含where的时候,记录error日志,并抛出运行时异常
+        if(StringUtils.isEmpty(originSql)){
+            return invocation.proceed();
+        }
+        if (!originSql.contains(WHERE)) {
+            log.error(&quot;Prohibit The Use of SQL statements Without Where conditions.originSql is:{}&quot;, originSql);
+            throw new RuntimeException(&quot;Prohibit The Use of SQL statements Without Where conditions.originSql is:&quot;+originSql);
+        }
+        return invocation.proceed();
+    }
+
+    @Override
+    public Object plugin(Object target) {
+        return Plugin.wrap(target, this);
+    }
+
+    @Override
+    public void setProperties(Properties properties) {
+    }
+
+    /**
+     * 获取Command类型转小写并返回
+     * @param statementHandler
+     * @return
+     */
+    private String getCommandType(StatementHandler statementHandler) {
+        MetaObject metaObject = SystemMetaObject.forObject(statementHandler);
+        MappedStatement mappedStatement = (MappedStatement) metaObject.getValue(&quot;delegate.mappedStatement&quot;);
+        String sqlCommandType=String.valueOf(mappedStatement.getSqlCommandType());
+        return sqlCommandType.toLowerCase();
+    }
+}
 </code></pre>
-<p><!-- raw HTML omitted --><!-- raw HTML omitted -->     * 获取Command类型转小写并返回
-<!-- raw HTML omitted --><!-- raw HTML omitted -->     * @param statementHandler
-<!-- raw HTML omitted --><!-- raw HTML omitted -->     * @return
-<!-- raw HTML omitted --><!-- raw HTML omitted -->     */<!-- raw HTML omitted -->
-<!-- raw HTML omitted -->private<!-- raw HTML omitted --> String <!-- raw HTML omitted -->getCommandType<!-- raw HTML omitted --><!-- raw HTML omitted -->(<!-- raw HTML omitted -->StatementHandler statementHandler<!-- raw HTML omitted -->)<!-- raw HTML omitted --> <!-- raw HTML omitted -->{<!-- raw HTML omitted -->
-MetaObject metaObject <!-- raw HTML omitted -->=<!-- raw HTML omitted --> SystemMetaObject<!-- raw HTML omitted -->.<!-- raw HTML omitted --><!-- raw HTML omitted -->forObject<!-- raw HTML omitted --><!-- raw HTML omitted -->(<!-- raw HTML omitted -->statementHandler<!-- raw HTML omitted -->);<!-- raw HTML omitted -->
-MappedStatement mappedStatement <!-- raw HTML omitted -->=<!-- raw HTML omitted --> <!-- raw HTML omitted -->(<!-- raw HTML omitted -->MappedStatement<!-- raw HTML omitted -->)<!-- raw HTML omitted --> metaObject<!-- raw HTML omitted -->.<!-- raw HTML omitted --><!-- raw HTML omitted -->getValue<!-- raw HTML omitted --><!-- raw HTML omitted -->(<!-- raw HTML omitted --><!-- raw HTML omitted -->&quot;delegate.mappedStatement&quot;<!-- raw HTML omitted --><!-- raw HTML omitted -->);<!-- raw HTML omitted -->
-String sqlCommandType<!-- raw HTML omitted -->=<!-- raw HTML omitted -->String<!-- raw HTML omitted -->.<!-- raw HTML omitted --><!-- raw HTML omitted -->valueOf<!-- raw HTML omitted --><!-- raw HTML omitted -->(<!-- raw HTML omitted -->mappedStatement<!-- raw HTML omitted -->.<!-- raw HTML omitted --><!-- raw HTML omitted -->getSqlCommandType<!-- raw HTML omitted --><!-- raw HTML omitted -->());<!-- raw HTML omitted -->
-<!-- raw HTML omitted -->return<!-- raw HTML omitted --> sqlCommandType<!-- raw HTML omitted -->.<!-- raw HTML omitted --><!-- raw HTML omitted -->toLowerCase<!-- raw HTML omitted --><!-- raw HTML omitted -->();<!-- raw HTML omitted -->
-<!-- raw HTML omitted -->}<!-- raw HTML omitted -->
-<!-- raw HTML omitted -->}<!-- raw HTML omitted -->
-<!-- raw HTML omitted --><!-- raw HTML omitted --><!-- raw HTML omitted --><!-- raw HTML omitted -->2.2 使用<!-- raw HTML omitted --></p>
-<!-- raw HTML omitted -->
+
+<h3 id="2-2-使用">2.2 使用</h3>
+
+<p>引入对应的Halo Mybatis Starter，yml文件配置如下:</p>
+
+<pre><code class="language-yml">halo:
+  mybatis:
+    #empty-where-intercept: false  
+    empty-where-white-list:
+      - org.xujin.halo.admin.tunnel.db.dao.AppMapper.queryHaloVersionChart 
+      - org.xujin.halo.admin.tunnel.db.dao.AppMapper.queryApp  
+</code></pre>
+
+<blockquote>
+<p>halo.mybatis.empty-where-intercept默认为true,即开启空Where条件判断,当为false关闭check</p>
+</blockquote>
+
+<hr />
+
+<blockquote>
+<p>org.xujin.halo.admin.tunnel.db.dao.AppMapper.queryHaloVersionChart表示配置白名单全限定Mapper类型.方法名,在白名单中的不进行check</p>
+</blockquote>
 
 </article>
 
@@ -476,15 +533,17 @@ String sqlCommandType<!-- raw HTML omitted -->=<!-- raw HTML omitted -->String<!
 		目录
 	</h2>
   <nav id="TableOfContents">
-  <ul>
-    <li><a href="#1背景">1.背景</a></li>
-    <li><a href="#2开发">2.开发</a>
-      <ul>
-        <li><a href="#21-核心代码实现">2.1 核心代码实现</a></li>
-        <li><a href="#22-使用">2.2 使用</a></li>
-      </ul>
-    </li>
-  </ul>
+<ul>
+<li>
+<ul>
+<li><a href="#1-背景">1.背景</a></li>
+<li><a href="#2-开发">2.开发</a>
+<ul>
+<li><a href="#2-1-核心代码实现">2.1 核心代码实现</a></li>
+<li><a href="#2-2-使用">2.2 使用</a></li>
+</ul></li>
+</ul></li>
+</ul>
 </nav>
 </div>
 

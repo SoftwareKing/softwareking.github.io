@@ -10,7 +10,7 @@
 <meta name="viewport" content="width=device-width,minimum-scale=1">
 <meta name="description" content="玹霖志,许进沉思录,许进|Spring Cloud,中间件，基础架构，www.xujin.org,xujin.org,-许进沉思录,Venus&#43;,云首科技有限公司,云计算，大数据，物联网，Software_king的博客,云计算Saas，云计算Paas，云计算Iaas Hadoop，大数据，JavaEE，Java，物联网，Hadoop， NoSQL，MongoDB,Spring, Hibernate,Struts2," />
 
-<meta name="generator" content="Hugo 0.72.0" /><link rel="shortcut icon" href=/img/icon.png type="image/png">
+<meta name="generator" content="Hugo 0.55.6" /><link rel="shortcut icon" href=/img/icon.png type="image/png">
 
 <link href="https://unpkg.com/purecss@1.0.0/build/base-min.css" rel="stylesheet">
 
@@ -557,7 +557,73 @@ if (!doNotTrack) {
 </div>
 
 		<article class="typo">
-	<!-- raw HTML omitted -->
+	<h2 id="1-halo-framework概述">1.Halo Framework概述</h2>
+
+<p>Halo Framework是将DDD，洋葱架构，整洁架构，读写分离架构有机整合一起，基于业务身份+扩展点的设计思想，采用应用内部流程编排的方式形成可复用的业务资产库。最终架构落地达到业务与业务隔离，业务与平台隔离，管理域与运行域分开，帮助企业快速落地业务中台。</p>
+
+<p>Halo设计原则简单，即在高内聚，低耦合，可扩展，易理解的指导思想下，尽可能的贯彻面向对象的设计思想和领域驱动设计的原则。</p>
+
+<blockquote>
+<p>Halo Framework是基于DDD+CQRS+扩展点的应用框架，业务系统使用之自带光环!</p>
+</blockquote>
+
+<h2 id="2-halo主要模块">2. Halo主要模块</h2>
+
+<p>Halo Framework的主要模块如下所示:</p>
+
+<p><img src="/img/home/halo-module.png" alt="" /></p>
+
+<p>halo-cqrs：读写分离架构-所有请求封装为命令对象，通过Command Bus分发到命令处理器执行，通过Event和Event Bus等实现读写分离。</p>
+
+<ul>
+<li><p>halo-ddd: 根据领域驱动设计思想，自定义注解 <code>@Entity(实体)</code>，<code>@Factory(工厂)</code>, <code>@DomainService(领域服务)</code>,
+<code>@ValueObject(值对象)</code>，<code>@DomainRepository(资源库)</code>，<code>@DomainAbility(域能力)</code> 等进行战术设计，落地DDD，实现 <code>业务与业务</code> 隔离。</p></li>
+
+<li><p><a href="/projects/halo-admin/overview/">Halo Admin</a>: 中台可视化管控平台，全链路可视化视角，对业务资产进行可视化。</p></li>
+
+<li><p><a href="/projects/halo-boot/overview/">Halo Boot</a>: 基于Spring Boot定制的Starter。包含Halo Web，Halo Swagger，Halo ES6，Halo Job,Halo Test,Halo MyBatis等</p></li>
+
+<li><p>halo-extension：基于扩展点的设计思想，自定义 <code>@ExtensionPoint(扩展点注解)</code> 和 <code>@Extension(扩展注解)</code>, 实现 <code>平台和插件</code> 隔离。</p></li>
+
+<li><p>halo-flow: 基于流程编排思想，开发业务组件，编排应用内部已有业务资产，快速响应前台需求，久而久之形成大量可复用的业务组件库。</p></li>
+
+<li><p><a href="/projects/halo-toolkit/overview/">Halo ToolKit</a>: 一款IDEA插件，只为加速Halo应用开发而生。</p></li>
+
+<li><p><a href="/projects/halo-codegen/overview/">Halo Codegen</a>: 通过设计代码生成器, 快速生成最佳实践的基础代码和规范，提高开发效率和生产力，让业务开发人员专注于业务开发。</p></li>
+
+<li><p><a href="/projects/halo-plugin/overview/">Halo Plugin</a>: Halo生态体系中的Gradle或Maven插件。</p></li>
+
+<li><p><a href="/projects/halo-check/overview/">Halo Check</a>:基于Git Hook+JGit+CheckStyle+PMD对代码增量diff Check是否满足Halo Style。该项目主要用于Git Commit提交的时候对代码进行检查。分为客户端和Gitlab服务端Check 。</p></li>
+</ul>
+
+<h2 id="3-halo-framework设计">3. Halo Framework设计</h2>
+
+<h3 id="4-1-halo-framework设计思想">4.1 Halo Framework设计思想</h3>
+
+<p>Halo框架的主要思想是 <code>流程组合节点</code>,<code>节点调用域服务</code>,<code>域服务包含若干域能力</code>,<code>域能力下若干个业务扩展</code>。</p>
+
+<ul>
+<li><p>业务包与平台分离的插件化架构： 平台提供插件包注册机制，实现业务方插件包在运行期的注册。业务代码只允许存在于插件包中，
+与平台代码严格分离。业务包的代码配置库也与平台的代码库分离，通过二方包的方式，提供给容器加载</p></li>
+
+<li><p>全链路统一的业务身份：<br />
+平台需要能有按“业务身份”进行业务与业务之间逻辑隔离的能力，而不是传统SPI架构不区分业务身份，
+简单过滤的方式。如何设计这个业务身份，也成为业务间隔离架构的关键。</p></li>
+
+<li><p>管理域与运行域分离： 业务逻辑不能依靠运行期动态计算，要能在静态期进行定义并可视化呈现。
+业务定义中出现的规则叠加冲突，也在静态器进行冲突决策。在运行期，严格按照静态器定义的业务规则、冲突决策策略执行。</p></li>
+</ul>
+
+<h3 id="4-2-halo架构">4.2 Halo架构</h3>
+
+<p>对外的一切请求交互调用，全部适配为命令。命令进入应用层服务-&gt;域服务-&gt;域能力。域能力基于接口的方式调用基础设施层的服务。如下图所示:</p>
+
+<p><img src="Halo-2.0.svg" alt="" /></p>
+
+<h3 id="4-3-halo对产品生命周期的支持">4.3 Halo对产品生命周期的支持</h3>
+
+<p><img src="halo-smzq.png" alt="" /></p>
+
 </article>
 
 <div id="gitalk-container"></div>

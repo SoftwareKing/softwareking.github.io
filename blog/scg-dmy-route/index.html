@@ -10,7 +10,7 @@
 <meta name="viewport" content="width=device-width,minimum-scale=1">
 <meta name="description" content="玹霖志,许进沉思录,许进|Spring Cloud,中间件，基础架构，www.xujin.org,xujin.org,-许进沉思录,Venus&#43;,云首科技有限公司,云计算，大数据，物联网，Software_king的博客,云计算Saas，云计算Paas，云计算Iaas Hadoop，大数据，JavaEE，Java，物联网，Hadoop， NoSQL，MongoDB,Spring, Hibernate,Struts2," />
 
-<meta name="generator" content="Hugo 0.72.0" /><link rel="shortcut icon" href=/img/icon.png type="image/png">
+<meta name="generator" content="Hugo 0.55.6" /><link rel="shortcut icon" href=/img/icon.png type="image/png">
 
 <link href="https://unpkg.com/purecss@1.0.0/build/base-min.css" rel="stylesheet">
 
@@ -259,29 +259,218 @@ if (!doNotTrack) {
 	});
   </script>
 		<article class="typo">
-	<!-- raw HTML omitted -->
-<p><!-- raw HTML omitted --><!-- raw HTML omitted --><!-- raw HTML omitted --><!-- raw HTML omitted -->(2)<!-- raw HTML omitted -->创建过滤器定义模型<!-- raw HTML omitted -->,代码如代码清单18-35所示：
-代码清单18-35: ch18-7/ch18-7-gateway/src/main/java/cn/springcloud/book/gateway/model/GatewayFilterDefinition.java<!-- raw HTML omitted --></p>
-<!-- raw HTML omitted -->
-<p><!-- raw HTML omitted --><!-- raw HTML omitted --><!-- raw HTML omitted --><!-- raw HTML omitted -->3.3 编写动态路由实现类<!-- raw HTML omitted --></p>
-<!-- raw HTML omitted -->
-<p><!-- raw HTML omitted --><!-- raw HTML omitted --><!-- raw HTML omitted --><!-- raw HTML omitted -->3.4 编写Rest接口<!-- raw HTML omitted --></p>
-<!-- raw HTML omitted -->
-<pre><code>&lt;span style=&quot;color:#75715e&quot;&gt;//删除路由
+	<h2 id="1-前言">1.前言</h2>
+
+<p>网关中有两个重要的概念，那就是路由配置和路由规则，路由配置是指配置某请求路径路由到指定的目的地址。而路由规则是指匹配到路由配置之后，再根据路由规则进行转发处理。
+   Spring Cloud Gateway作为所有请求流量的入口，在实际生产环境中为了保证高可靠和高可用，尽量避免重启,需要实现Spring Cloud Gateway动态路由配置。前面章节介绍了Spring Cloud Gateway提供的两种方法去配置路由规则，但都是在Spring Cloud Gateway启动时候，就将路由配置和规则加载到内存里，无法做到不重启网关就可以动态的对应路由的配置和规则进行增加，修改和删除。`本篇文章简单介绍如何实现Spring Cloud Gateway的动态路由。</p>
+
+<h2 id="2-spring-cloud-gateway简单的动态路由实现">2. Spring Cloud Gateway简单的动态路由实现</h2>
+
+<p>Spring Cloud Gateway的官方文档并没有讲如何动态配置，查看 Spring Cloud Gateway的源码，发现<code>在org.springframework.cloud.gateway.actuate.GatewayControllerEndpoint</code>类中提供了动态配置的Rest接口，但是<code>需要开启Gateway的端点</code>，而且提供的功能不是很强大。通过参考和GatewayControllerEndpoint相关的代码，可以自己编码实际动态路由配置。
+下面通过案例的方式去讲解怎么实现Gateway的动态路由配置。案例工程如ch18-7-gateway所示。</p>
+
+<blockquote>
+<p>代码地址:<a href="https://github.com/SpringCloud/spring-cloud-code/blob/master/ch18-7/ch18-7-gateway">https://github.com/SpringCloud/spring-cloud-code/blob/master/ch18-7/ch18-7-gateway</a></p>
+</blockquote>
+
+<h2 id="3-简单动态路由的实现">3. 简单动态路由的实现</h2>
+
+<h3 id="3-1-新建maven工程ch18-7-gateway">3.1 新建Maven工程ch18-7-gateway</h3>
+
+<p>配置主要的核心依赖如代码清单18-33所示：
+  代码清单: ch18-7/ch18-7-gateway/pom.xml</p>
+
+<pre><code class="language-xml">&lt;dependencies&gt;
+    &lt;dependency&gt;
+        &lt;groupId&gt;org.springframework.cloud&lt;/groupId&gt;
+        &lt;artifactId&gt;spring-cloud-starter-gateway&lt;/artifactId&gt;
+    &lt;/dependency&gt;
+    &lt;dependency&gt;
+        &lt;groupId&gt;org.springframework.boot&lt;/groupId&gt;
+        &lt;artifactId&gt;spring-boot-starter-webflux&lt;/artifactId&gt;
+    &lt;/dependency&gt;
+    &lt;dependency&gt;
+        &lt;groupId&gt;org.springframework.boot&lt;/groupId&gt;
+        &lt;artifactId&gt;spring-boot-starter-actuator&lt;/artifactId&gt;
+    &lt;/dependency&gt;
+&lt;/dependencies&gt;
 </code></pre>
-<p><!-- raw HTML omitted --><!-- raw HTML omitted --><!-- raw HTML omitted -->    <!-- raw HTML omitted -->@DeleteMapping<!-- raw HTML omitted --><!-- raw HTML omitted -->(<!-- raw HTML omitted --><!-- raw HTML omitted -->&quot;/routes/{id}&quot;<!-- raw HTML omitted --><!-- raw HTML omitted -->)<!-- raw HTML omitted -->
-<!-- raw HTML omitted -->public<!-- raw HTML omitted --> Mono<!-- raw HTML omitted -->&lt;<!-- raw HTML omitted -->ResponseEntity<!-- raw HTML omitted -->&lt;<!-- raw HTML omitted -->Object<!-- raw HTML omitted -->&gt;&gt;<!-- raw HTML omitted --> <!-- raw HTML omitted -->delete<!-- raw HTML omitted --><!-- raw HTML omitted -->(<!-- raw HTML omitted --><!-- raw HTML omitted -->@PathVariable<!-- raw HTML omitted --> String id<!-- raw HTML omitted -->)<!-- raw HTML omitted --> <!-- raw HTML omitted -->{<!-- raw HTML omitted -->
-<!-- raw HTML omitted -->return<!-- raw HTML omitted --> <!-- raw HTML omitted -->this<!-- raw HTML omitted --><!-- raw HTML omitted -->.<!-- raw HTML omitted --><!-- raw HTML omitted -->dynamicRouteService<!-- raw HTML omitted --><!-- raw HTML omitted -->.<!-- raw HTML omitted --><!-- raw HTML omitted -->delete<!-- raw HTML omitted --><!-- raw HTML omitted -->(<!-- raw HTML omitted -->id<!-- raw HTML omitted -->);<!-- raw HTML omitted -->
-<!-- raw HTML omitted -->}<!-- raw HTML omitted -->
-<!-- raw HTML omitted -->//更新路由
-<!-- raw HTML omitted --><!-- raw HTML omitted --><!-- raw HTML omitted -->    <!-- raw HTML omitted -->@PostMapping<!-- raw HTML omitted --><!-- raw HTML omitted -->(<!-- raw HTML omitted --><!-- raw HTML omitted -->&quot;/update&quot;<!-- raw HTML omitted --><!-- raw HTML omitted -->)<!-- raw HTML omitted -->
-<!-- raw HTML omitted -->public<!-- raw HTML omitted --> String <!-- raw HTML omitted -->update<!-- raw HTML omitted --><!-- raw HTML omitted -->(<!-- raw HTML omitted --><!-- raw HTML omitted -->@RequestBody<!-- raw HTML omitted --> GatewayRouteDefinition gwdefinition<!-- raw HTML omitted -->)<!-- raw HTML omitted --> <!-- raw HTML omitted -->{<!-- raw HTML omitted -->
-RouteDefinition definition <!-- raw HTML omitted -->=<!-- raw HTML omitted --> assembleRouteDefinition<!-- raw HTML omitted -->(<!-- raw HTML omitted -->gwdefinition<!-- raw HTML omitted -->);<!-- raw HTML omitted -->
-<!-- raw HTML omitted -->return<!-- raw HTML omitted --> <!-- raw HTML omitted -->this<!-- raw HTML omitted --><!-- raw HTML omitted -->.<!-- raw HTML omitted --><!-- raw HTML omitted -->dynamicRouteService<!-- raw HTML omitted --><!-- raw HTML omitted -->.<!-- raw HTML omitted --><!-- raw HTML omitted -->update<!-- raw HTML omitted --><!-- raw HTML omitted -->(<!-- raw HTML omitted -->definition<!-- raw HTML omitted -->);<!-- raw HTML omitted -->
-<!-- raw HTML omitted -->}<!-- raw HTML omitted -->
-<!-- raw HTML omitted -->}<!-- raw HTML omitted --></p>
-<p><!-- raw HTML omitted --><!-- raw HTML omitted --><!-- raw HTML omitted --><!-- raw HTML omitted -->3.5 配置application.yml文件<!-- raw HTML omitted --></p>
-<!-- raw HTML omitted -->
+
+<h3 id="3-2-根据spring-cloud-gateway的路由模型定义数据传输模型">3.2 根据Spring Cloud Gateway的路由模型定义数据传输模型</h3>
+
+<p>分别创建GatewayRouteDefinition.java, GatewayPredicateDefinition.java, GatewayFilterDefinition.java这三个类。
+(1) <code>创建路由定义模型</code>如下代码清单18-34所示：
+代码清单 18-34: ch18-7/ch18-7-gateway/src/main/java/cn/springcloud/book/gateway/model/GatewayRouteDefinition.java</p>
+
+<pre><code class="language-java">public class GatewayRouteDefinition {
+    //路由的Id
+    private String id;
+    //路由断言集合配置
+    private List&lt;GatewayPredicateDefinition&gt; predicates = new ArrayList&lt;&gt;();
+    //路由过滤器集合配置
+    private List&lt;GatewayFilterDefinition&gt; filters = new ArrayList&lt;&gt;();
+    //路由规则转发的目标uri
+    private String uri;
+    //路由执行的顺序
+    private int order = 0;
+    //此处省略get和set方法
+}
+
+</code></pre>
+
+<p>(2)<code>创建过滤器定义模型</code>,代码如代码清单18-35所示：
+代码清单18-35: ch18-7/ch18-7-gateway/src/main/java/cn/springcloud/book/gateway/model/GatewayFilterDefinition.java</p>
+
+<pre><code class="language-java">public class GatewayFilterDefinition {
+    //Filter Name
+    private String name;
+    //对应的路由规则
+    private Map&lt;String, String&gt; args = new LinkedHashMap&lt;&gt;();
+    //此处省略Get和Set方法
+}
+</code></pre>
+
+<p>(3)<code>路由断言定义模型</code>，代码如代码清单18-36所示:
+代码清单18-36: ch18-7/ch18-7-gateway/src/main/java/cn/springcloud/book/gateway/model/GatewayPredicateDefinition.java</p>
+
+<pre><code class="language-java">public class GatewayPredicateDefinition {
+    //断言对应的Name
+    private String name;
+    //配置的断言规则
+    private Map&lt;String, String&gt; args = new LinkedHashMap&lt;&gt;();
+    //此处省略Get和Set方法
+}
+
+</code></pre>
+
+<h3 id="3-3-编写动态路由实现类">3.3 编写动态路由实现类</h3>
+
+<p>编写DynamicRouteServiceImpl并实现ApplicationEventPublisherAware接口，代码如代码清单18-37所示: ch18-37/ch18-7-gateway/src/main/java/cn/springcloud/book/gateway/route/DynamicRouteServiceImpl.java</p>
+
+<pre><code class="language-Java">@Service
+public class DynamicRouteServiceImpl implements ApplicationEventPublisherAware {
+    @Autowired
+    private RouteDefinitionWriter routeDefinitionWriter;
+    private ApplicationEventPublisher publisher;
+    //增加路由
+    public String add(RouteDefinition definition) {
+        routeDefinitionWriter.save(Mono.just(definition)).subscribe();
+        this.publisher.publishEvent(new RefreshRoutesEvent(this));
+        return &quot;success&quot;;
+    }
+    //更新路由
+    public String update(RouteDefinition definition) {
+        try {
+            this.routeDefinitionWriter.delete(Mono.just(definition.getId()));
+        } catch (Exception e) {
+            return &quot;update fail,not find route  routeId: &quot;+definition.getId();
+        }
+        try {
+            routeDefinitionWriter.save(Mono.just(definition)).subscribe();
+            this.publisher.publishEvent(new RefreshRoutesEvent(this));
+            return &quot;success&quot;;
+        } catch (Exception e) {
+            return &quot;update route  fail&quot;;
+        }
+    }
+    //删除路由
+    public Mono&lt;ResponseEntity&lt;Object&gt;&gt; delete(String id) {
+        return this.routeDefinitionWriter.delete(Mono.just(id))
+                .then(Mono.defer(() -&gt; Mono.just(ResponseEntity.ok().build())))
+                .onErrorResume(t -&gt; t instanceof NotFoundException, t -&gt; Mono.just(ResponseEntity.notFound().build()));
+    }
+    @Override
+    public void setApplicationEventPublisher(ApplicationEventPublisher applicationEventPublisher) {
+        this.publisher = applicationEventPublisher;
+    }
+}
+
+</code></pre>
+
+<h3 id="3-4-编写rest接口">3.4 编写Rest接口</h3>
+
+<p>编写RouteController类的提供Rest接口，用于动态路由配置。代码如代码清单18-38所示:
+代码清单 18-38: ch18-7/ch18-7-gateway/src/main/java/cn/springcloud/book/gateway/controller/RouteController.java</p>
+
+<pre><code class="language-java">@RestController
+@RequestMapping(&quot;/route&quot;)
+public class RouteController {
+    @Autowired
+    private DynamicRouteServiceImpl dynamicRouteService;
+    //增加路由
+    @PostMapping(&quot;/add&quot;)
+    public String add(@RequestBody GatewayRouteDefinition gwdefinition) {
+        try {
+            RouteDefinition definition = assembleRouteDefinition(gwdefinition);
+            return this.dynamicRouteService.add(definition);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return &quot;succss&quot;;
+    }
+    
+    //删除路由
+    @DeleteMapping(&quot;/routes/{id}&quot;)
+    public Mono&lt;ResponseEntity&lt;Object&gt;&gt; delete(@PathVariable String id) {
+        return this.dynamicRouteService.delete(id);
+    }
+    //更新路由
+    @PostMapping(&quot;/update&quot;)
+    public String update(@RequestBody GatewayRouteDefinition gwdefinition) {
+        RouteDefinition definition = assembleRouteDefinition(gwdefinition);
+        return this.dynamicRouteService.update(definition);
+    }
+}
+
+</code></pre>
+
+<h3 id="3-5-配置application-yml文件">3.5 配置application.yml文件</h3>
+
+<p>在application.yml文件配置应用的配置信息，并开启Spring Cloud Gateway对外提供的端点Rest接口。代码如代码清单18-39所示:
+代码清单 18-39: ch18-7/ch18-7-gateway/src/main/resources/application.yml
+配置输出日志如下所示:</p>
+
+<pre><code class="language-yml"># 配置输出日志
+logging:
+  level:
+    org.springframework.cloud.gateway: TRACE
+    org.springframework.http.server.reactive: DEBUG
+    org.springframework.web.reactive: DEBUG
+    reactor.ipc.netty: DEBUG
+#开启端点
+management:
+  endpoints:
+    web:
+      exposure:
+        include: '*'
+  security:
+    enabled: false
+</code></pre>
+
+<h3 id="3-6-启动ch18-7-gateway应用测试">3.6 启动ch18-7-gateway应用测试</h3>
+
+<p>(1) 启动ch18-7-gateway应用之后，由于开启了端点，首先打开浏览器访问端点URL:
+<a href="http://localhost:8080/actuator/gateway/routes">http://localhost:8080/actuator/gateway/routes</a>  ,查看路由信息返回为空，如下图所示:</p>
+
+<p><img src="1.png" alt="空的路由信息" /></p>
+
+<p>(2)打开PostMan，访问<a href="http://localhost:8080/route/add">http://localhost:8080/route/add</a>, 发起Post请求，如下图所示,返回success说明向Gateway增加路由配置成功。
+<img src="2.png" alt="动态添加路由成功" /></p>
+
+<p>然后再打开PostMan访问端点URL:<a href="http://localhost:8080/actuator/gateway/routes">http://localhost:8080/actuator/gateway/routes</a> ,
+ 查看路由信息返回如下图所示，可以看到已经添加的路由配置。
+<img src="3.png" alt="路由端点返回结果" /></p>
+
+<p>(3) 打开浏览器访问<a href="http://localhost:8080/jd">http://localhost:8080/jd</a>, 可以正常转发<a href="https://www.jd.com/对应的京东商城首页。">https://www.jd.com/对应的京东商城首页。</a>
+(4) 通过访问<a href="http://localhost:8080/route/update">http://localhost:8080/route/update</a>, 对id为jd_route的路由更新配置，如下图所示：
+<img src="4.png" alt="更新路由配置" /></p>
+
+<p>然后再访问路由端点URL,发现路由配置已经被更新，如下图所示:
+<img src="5.png" alt="查看路由端点" /></p>
+
+<p>然后通过浏览器访问<a href="http://localhost:8080/taobao">http://localhost:8080/taobao</a> ,可以成功转发到淘宝网。
+(5) 通过访问http: //localhost:8080/route/delete/jd_route,其中的id为路由对应的id，删除路由结果如下图所示:
+<img src="6.png" alt="删除路由成功" /></p>
 
 </article>
 
@@ -398,20 +587,22 @@ RouteDefinition definition <!-- raw HTML omitted -->=<!-- raw HTML omitted --> a
 		目录
 	</h2>
   <nav id="TableOfContents">
-  <ul>
-    <li><a href="#1前言">1.前言</a></li>
-    <li><a href="#2-spring-cloud-gateway简单的动态路由实现">2. Spring Cloud Gateway简单的动态路由实现</a></li>
-    <li><a href="#3-简单动态路由的实现">3. 简单动态路由的实现</a>
-      <ul>
-        <li><a href="#31-新建maven工程ch18-7-gateway">3.1 新建Maven工程ch18-7-gateway</a></li>
-        <li><a href="#32-根据spring-cloud-gateway的路由模型定义数据传输模型">3.2 根据Spring Cloud Gateway的路由模型定义数据传输模型</a></li>
-        <li><a href="#33-编写动态路由实现类">3.3 编写动态路由实现类</a></li>
-        <li><a href="#34-编写rest接口">3.4 编写Rest接口</a></li>
-        <li><a href="#35-配置applicationyml文件">3.5 配置application.yml文件</a></li>
-        <li><a href="#36-启动ch18-7-gateway应用测试">3.6 启动ch18-7-gateway应用测试</a></li>
-      </ul>
-    </li>
-  </ul>
+<ul>
+<li>
+<ul>
+<li><a href="#1-前言">1.前言</a></li>
+<li><a href="#2-spring-cloud-gateway简单的动态路由实现">2. Spring Cloud Gateway简单的动态路由实现</a></li>
+<li><a href="#3-简单动态路由的实现">3. 简单动态路由的实现</a>
+<ul>
+<li><a href="#3-1-新建maven工程ch18-7-gateway">3.1 新建Maven工程ch18-7-gateway</a></li>
+<li><a href="#3-2-根据spring-cloud-gateway的路由模型定义数据传输模型">3.2 根据Spring Cloud Gateway的路由模型定义数据传输模型</a></li>
+<li><a href="#3-3-编写动态路由实现类">3.3 编写动态路由实现类</a></li>
+<li><a href="#3-4-编写rest接口">3.4 编写Rest接口</a></li>
+<li><a href="#3-5-配置application-yml文件">3.5 配置application.yml文件</a></li>
+<li><a href="#3-6-启动ch18-7-gateway应用测试">3.6 启动ch18-7-gateway应用测试</a></li>
+</ul></li>
+</ul></li>
+</ul>
 </nav>
 </div>
 
@@ -460,15 +651,15 @@ RouteDefinition definition <!-- raw HTML omitted -->=<!-- raw HTML omitted --> a
 	
 	<ul class="ss-aside-related">
 		
-			<li><a href="/blog/scg-03/">Spring Cloud Gateway中的GatewayFilter和GlobalFilter</a></li>
-		
 			<li><a href="/blog/scg-05/">Spring Cloud Gateway基于服务发现的默认路由规则</a></li>
+		
+			<li><a href="/blog/scg-06/">Spring Cloud Gateway的Before路由断言工厂</a></li>
 		
 			<li><a href="/blog/scg-nacos-01/">使用Nacos实现Spring Cloud Gateway的动态路由</a></li>
 		
-			<li><a href="/blog/scg-02/">Spring Cloud Gateway的权重路由</a></li>
+			<li><a href="/blog/scg-03/">Spring Cloud Gateway中的GatewayFilter和GlobalFilter</a></li>
 		
-			<li><a href="/blog/scg-06/">Spring Cloud Gateway的Before路由断言工厂</a></li>
+			<li><a href="/blog/scg-02/">Spring Cloud Gateway的权重路由</a></li>
 		
 	</ul>
 	

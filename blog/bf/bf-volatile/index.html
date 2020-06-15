@@ -10,7 +10,7 @@
 <meta name="viewport" content="width=device-width,minimum-scale=1">
 <meta name="description" content="玹霖志,许进沉思录,许进|Spring Cloud,中间件，基础架构，www.xujin.org,xujin.org,-许进沉思录,Venus&#43;,云首科技有限公司,云计算，大数据，物联网，Software_king的博客,云计算Saas，云计算Paas，云计算Iaas Hadoop，大数据，JavaEE，Java，物联网，Hadoop， NoSQL，MongoDB,Spring, Hibernate,Struts2," />
 
-<meta name="generator" content="Hugo 0.72.0" /><link rel="shortcut icon" href=/img/icon.png type="image/png">
+<meta name="generator" content="Hugo 0.55.6" /><link rel="shortcut icon" href=/img/icon.png type="image/png">
 
 <link href="https://unpkg.com/purecss@1.0.0/build/base-min.css" rel="stylesheet">
 
@@ -243,7 +243,7 @@ if (!doNotTrack) {
 				
 			</span>
 		
-		<span class="post-word-count">· 字数:1854·阅读时间 4 分钟</span>
+		<span class="post-word-count">· 字数:1860·阅读时间 4 分钟</span>
 		
 		阅读量<span id="busuanzi_value_page_pv"></span>次
 		
@@ -261,127 +261,197 @@ if (!doNotTrack) {
 	});
   </script>
 		<article class="typo">
-	<!-- raw HTML omitted -->
-<pre><code>&lt;span style=&quot;color:#75715e&quot;&gt;// isRunning没有被volatile关键字修饰
+	<h2 id="1-volatile概念">1. volatile概念</h2>
+
+<ol>
+<li><p>在java中，每个线程都会有一块<code>工作内存区</code>，其中存放着<code>所有线程共享</code>的<code>主内存中</code>的<code>变量值</code>的拷贝。当线程执行时，它在自己的<code>工作区内存中</code>操作<code>这些变量</code>。为了存取一个共享的变量，一个线程通常会先<code>获取锁定</code>并<code>清除它的内存工作区</code>，把这些<code>共享变量</code>从所有线程的<code>共享内存中</code>正确的装入到<code>它自己所在的工作内存中</code>，当线程解锁时，保证该工作内存中变量的值写回到共享内存中。</p></li>
+
+<li><p>volatile的作用就是<code>强制线程到主内存</code>(共享内存)里去读取变量，而不去线程工作区内存里去读取，从而实现了多个线程间的变量可见，也就是满足线程安全的可见性。</p></li>
+</ol>
+
+<h2 id="2-volatile概念-具有可见性">2 volatile概念-具有可见性</h2>
+
+<p>volatile关键字的作用是<code>使变量</code>在<code>多个线程间</code>可见。</p>
+
+<h3 id="2-1-代码示例">2.1 代码示例</h3>
+
+<p>如下代码所示，当isRunning没有被volatile关键字修饰的时候，程序一直循环，线程不会结束。</p>
+
+<pre><code class="language-java">public class RunThread extends Thread {
+
+    // isRunning没有被volatile关键字修饰
+    private boolean isRunning = true;//①
+
+    private void setRunning(boolean isRunning) {
+        this.isRunning = isRunning;
+    }
+
+    public void run() {
+        System.out.println(&quot;开始进入run方法..&quot;);
+        while (isRunning == true) {
+            // 一直循环........
+        }
+        System.out.println(&quot;while循环结束,线程停止&quot;);
+    }
+
+    public static void main(String[] args) throws InterruptedException {
+        RunThread rt = new RunThread();
+        rt.start();
+        Thread.sleep(3000);
+        rt.setRunning(false);
+        System.out.println(&quot;isRunning的值已经被设置了false&quot;);
+        Thread.sleep(1000);
+        System.out.println(rt.isRunning);
+    }
+}
 </code></pre>
-<p><!-- raw HTML omitted --><!-- raw HTML omitted --><!-- raw HTML omitted -->    <!-- raw HTML omitted -->private<!-- raw HTML omitted --> <!-- raw HTML omitted -->boolean<!-- raw HTML omitted --> isRunning <!-- raw HTML omitted -->=<!-- raw HTML omitted --> <!-- raw HTML omitted -->true<!-- raw HTML omitted --><!-- raw HTML omitted -->;<!-- raw HTML omitted --><!-- raw HTML omitted -->//①
-<!-- raw HTML omitted --><!-- raw HTML omitted --><!-- raw HTML omitted -->
-<!-- raw HTML omitted -->private<!-- raw HTML omitted --> <!-- raw HTML omitted -->void<!-- raw HTML omitted --> <!-- raw HTML omitted -->setRunning<!-- raw HTML omitted --><!-- raw HTML omitted -->(<!-- raw HTML omitted --><!-- raw HTML omitted -->boolean<!-- raw HTML omitted --> isRunning<!-- raw HTML omitted -->)<!-- raw HTML omitted --> <!-- raw HTML omitted -->{<!-- raw HTML omitted -->
-<!-- raw HTML omitted -->this<!-- raw HTML omitted --><!-- raw HTML omitted -->.<!-- raw HTML omitted --><!-- raw HTML omitted -->isRunning<!-- raw HTML omitted --> <!-- raw HTML omitted -->=<!-- raw HTML omitted --> isRunning<!-- raw HTML omitted -->;<!-- raw HTML omitted -->
-<!-- raw HTML omitted -->}<!-- raw HTML omitted --></p>
-<pre><code>&lt;span style=&quot;color:#66d9ef&quot;&gt;public&lt;/span&gt; &lt;span style=&quot;color:#66d9ef&quot;&gt;void&lt;/span&gt; &lt;span style=&quot;color:#a6e22e&quot;&gt;run&lt;/span&gt;&lt;span style=&quot;color:#f92672&quot;&gt;()&lt;/span&gt; &lt;span style=&quot;color:#f92672&quot;&gt;{&lt;/span&gt;
-    System&lt;span style=&quot;color:#f92672&quot;&gt;.&lt;/span&gt;&lt;span style=&quot;color:#a6e22e&quot;&gt;out&lt;/span&gt;&lt;span style=&quot;color:#f92672&quot;&gt;.&lt;/span&gt;&lt;span style=&quot;color:#a6e22e&quot;&gt;println&lt;/span&gt;&lt;span style=&quot;color:#f92672&quot;&gt;(&lt;/span&gt;&lt;span style=&quot;color:#e6db74&quot;&gt;&amp;#34;开始进入run方法..&amp;#34;&lt;/span&gt;&lt;span style=&quot;color:#f92672&quot;&gt;);&lt;/span&gt;
-    &lt;span style=&quot;color:#66d9ef&quot;&gt;while&lt;/span&gt; &lt;span style=&quot;color:#f92672&quot;&gt;(&lt;/span&gt;isRunning &lt;span style=&quot;color:#f92672&quot;&gt;==&lt;/span&gt; &lt;span style=&quot;color:#66d9ef&quot;&gt;true&lt;/span&gt;&lt;span style=&quot;color:#f92672&quot;&gt;)&lt;/span&gt; &lt;span style=&quot;color:#f92672&quot;&gt;{&lt;/span&gt;
-        &lt;span style=&quot;color:#75715e&quot;&gt;// 一直循环........
+
+<p>当把上述代码的①处，修改为如下时:</p>
+
+<pre><code class="language-java">private volatile boolean isRunning = true;
 </code></pre>
-<p><!-- raw HTML omitted --><!-- raw HTML omitted --><!-- raw HTML omitted -->        <!-- raw HTML omitted -->}<!-- raw HTML omitted -->
-System<!-- raw HTML omitted -->.<!-- raw HTML omitted --><!-- raw HTML omitted -->out<!-- raw HTML omitted --><!-- raw HTML omitted -->.<!-- raw HTML omitted --><!-- raw HTML omitted -->println<!-- raw HTML omitted --><!-- raw HTML omitted -->(<!-- raw HTML omitted --><!-- raw HTML omitted -->&quot;while循环结束,线程停止&quot;<!-- raw HTML omitted --><!-- raw HTML omitted -->);<!-- raw HTML omitted -->
-<!-- raw HTML omitted -->}<!-- raw HTML omitted --></p>
-<pre><code>&lt;span style=&quot;color:#66d9ef&quot;&gt;public&lt;/span&gt; &lt;span style=&quot;color:#66d9ef&quot;&gt;static&lt;/span&gt; &lt;span style=&quot;color:#66d9ef&quot;&gt;void&lt;/span&gt; &lt;span style=&quot;color:#a6e22e&quot;&gt;main&lt;/span&gt;&lt;span style=&quot;color:#f92672&quot;&gt;(&lt;/span&gt;String&lt;span style=&quot;color:#f92672&quot;&gt;[]&lt;/span&gt; args&lt;span style=&quot;color:#f92672&quot;&gt;)&lt;/span&gt; &lt;span style=&quot;color:#66d9ef&quot;&gt;throws&lt;/span&gt; InterruptedException &lt;span style=&quot;color:#f92672&quot;&gt;{&lt;/span&gt;
-    RunThread rt &lt;span style=&quot;color:#f92672&quot;&gt;=&lt;/span&gt; &lt;span style=&quot;color:#66d9ef&quot;&gt;new&lt;/span&gt; RunThread&lt;span style=&quot;color:#f92672&quot;&gt;();&lt;/span&gt;
-    rt&lt;span style=&quot;color:#f92672&quot;&gt;.&lt;/span&gt;&lt;span style=&quot;color:#a6e22e&quot;&gt;start&lt;/span&gt;&lt;span style=&quot;color:#f92672&quot;&gt;();&lt;/span&gt;
-    Thread&lt;span style=&quot;color:#f92672&quot;&gt;.&lt;/span&gt;&lt;span style=&quot;color:#a6e22e&quot;&gt;sleep&lt;/span&gt;&lt;span style=&quot;color:#f92672&quot;&gt;(&lt;/span&gt;3000&lt;span style=&quot;color:#f92672&quot;&gt;);&lt;/span&gt;
-    rt&lt;span style=&quot;color:#f92672&quot;&gt;.&lt;/span&gt;&lt;span style=&quot;color:#a6e22e&quot;&gt;setRunning&lt;/span&gt;&lt;span style=&quot;color:#f92672&quot;&gt;(&lt;/span&gt;&lt;span style=&quot;color:#66d9ef&quot;&gt;false&lt;/span&gt;&lt;span style=&quot;color:#f92672&quot;&gt;);&lt;/span&gt;
-    System&lt;span style=&quot;color:#f92672&quot;&gt;.&lt;/span&gt;&lt;span style=&quot;color:#a6e22e&quot;&gt;out&lt;/span&gt;&lt;span style=&quot;color:#f92672&quot;&gt;.&lt;/span&gt;&lt;span style=&quot;color:#a6e22e&quot;&gt;println&lt;/span&gt;&lt;span style=&quot;color:#f92672&quot;&gt;(&lt;/span&gt;&lt;span style=&quot;color:#e6db74&quot;&gt;&amp;#34;isRunning的值已经被设置了false&amp;#34;&lt;/span&gt;&lt;span style=&quot;color:#f92672&quot;&gt;);&lt;/span&gt;
-    Thread&lt;span style=&quot;color:#f92672&quot;&gt;.&lt;/span&gt;&lt;span style=&quot;color:#a6e22e&quot;&gt;sleep&lt;/span&gt;&lt;span style=&quot;color:#f92672&quot;&gt;(&lt;/span&gt;1000&lt;span style=&quot;color:#f92672&quot;&gt;);&lt;/span&gt;
-    System&lt;span style=&quot;color:#f92672&quot;&gt;.&lt;/span&gt;&lt;span style=&quot;color:#a6e22e&quot;&gt;out&lt;/span&gt;&lt;span style=&quot;color:#f92672&quot;&gt;.&lt;/span&gt;&lt;span style=&quot;color:#a6e22e&quot;&gt;println&lt;/span&gt;&lt;span style=&quot;color:#f92672&quot;&gt;(&lt;/span&gt;rt&lt;span style=&quot;color:#f92672&quot;&gt;.&lt;/span&gt;&lt;span style=&quot;color:#a6e22e&quot;&gt;isRunning&lt;/span&gt;&lt;span style=&quot;color:#f92672&quot;&gt;);&lt;/span&gt;
-&lt;span style=&quot;color:#f92672&quot;&gt;}&lt;/span&gt;
+
+<p>运行结果是isRunning修改为false之后，线程读取到isRunning = false，从而线程结束while循环，线程退出</p>
+
+<pre><code>开始进入run方法..
+isRunning的值已经被设置了false
+while循环结束,线程停止
+false
 </code></pre>
-<p><!-- raw HTML omitted -->}<!-- raw HTML omitted -->
-<!-- raw HTML omitted --><!-- raw HTML omitted --><!-- raw HTML omitted --><!-- raw HTML omitted -->当把上述代码的①处，修改为如下时:<!-- raw HTML omitted --></p>
-<!-- raw HTML omitted -->
-<pre><code>&lt;span style=&quot;color:#66d9ef&quot;&gt;public&lt;/span&gt; &lt;span style=&quot;color:#66d9ef&quot;&gt;void&lt;/span&gt; &lt;span style=&quot;color:#a6e22e&quot;&gt;run&lt;/span&gt;&lt;span style=&quot;color:#f92672&quot;&gt;()&lt;/span&gt; &lt;span style=&quot;color:#f92672&quot;&gt;{&lt;/span&gt;
-    addCount&lt;span style=&quot;color:#f92672&quot;&gt;();&lt;/span&gt;
-&lt;span style=&quot;color:#f92672&quot;&gt;}&lt;/span&gt;
 
-&lt;span style=&quot;color:#66d9ef&quot;&gt;public&lt;/span&gt; &lt;span style=&quot;color:#66d9ef&quot;&gt;static&lt;/span&gt; &lt;span style=&quot;color:#66d9ef&quot;&gt;void&lt;/span&gt; &lt;span style=&quot;color:#a6e22e&quot;&gt;main&lt;/span&gt;&lt;span style=&quot;color:#f92672&quot;&gt;(&lt;/span&gt;String&lt;span style=&quot;color:#f92672&quot;&gt;[]&lt;/span&gt; args&lt;span style=&quot;color:#f92672&quot;&gt;)&lt;/span&gt; &lt;span style=&quot;color:#f92672&quot;&gt;{&lt;/span&gt;
+<p>###示例代码线程操作内存简图
+<img src="/images/bf/volatile-boolean.png" alt="" /></p>
 
-    VolatileNoAtomic&lt;span style=&quot;color:#f92672&quot;&gt;[]&lt;/span&gt; arr &lt;span style=&quot;color:#f92672&quot;&gt;=&lt;/span&gt; &lt;span style=&quot;color:#66d9ef&quot;&gt;new&lt;/span&gt; VolatileNoAtomic&lt;span style=&quot;color:#f92672&quot;&gt;[&lt;/span&gt;100&lt;span style=&quot;color:#f92672&quot;&gt;];&lt;/span&gt;
-    &lt;span style=&quot;color:#66d9ef&quot;&gt;for&lt;/span&gt; &lt;span style=&quot;color:#f92672&quot;&gt;(&lt;/span&gt;&lt;span style=&quot;color:#66d9ef&quot;&gt;int&lt;/span&gt; i &lt;span style=&quot;color:#f92672&quot;&gt;=&lt;/span&gt; 0&lt;span style=&quot;color:#f92672&quot;&gt;;&lt;/span&gt; i &lt;span style=&quot;color:#f92672&quot;&gt;&amp;lt;&lt;/span&gt; 10&lt;span style=&quot;color:#f92672&quot;&gt;;&lt;/span&gt; i&lt;span style=&quot;color:#f92672&quot;&gt;++)&lt;/span&gt; &lt;span style=&quot;color:#f92672&quot;&gt;{&lt;/span&gt;
-        arr&lt;span style=&quot;color:#f92672&quot;&gt;[&lt;/span&gt;i&lt;span style=&quot;color:#f92672&quot;&gt;]&lt;/span&gt; &lt;span style=&quot;color:#f92672&quot;&gt;=&lt;/span&gt; &lt;span style=&quot;color:#66d9ef&quot;&gt;new&lt;/span&gt; VolatileNoAtomic&lt;span style=&quot;color:#f92672&quot;&gt;();&lt;/span&gt;
-    &lt;span style=&quot;color:#f92672&quot;&gt;}&lt;/span&gt;
+<h3 id="2-2-小结">2.2   小结</h3>
 
-    &lt;span style=&quot;color:#66d9ef&quot;&gt;for&lt;/span&gt; &lt;span style=&quot;color:#f92672&quot;&gt;(&lt;/span&gt;&lt;span style=&quot;color:#66d9ef&quot;&gt;int&lt;/span&gt; i &lt;span style=&quot;color:#f92672&quot;&gt;=&lt;/span&gt; 0&lt;span style=&quot;color:#f92672&quot;&gt;;&lt;/span&gt; i &lt;span style=&quot;color:#f92672&quot;&gt;&amp;lt;&lt;/span&gt; 10&lt;span style=&quot;color:#f92672&quot;&gt;;&lt;/span&gt; i&lt;span style=&quot;color:#f92672&quot;&gt;++)&lt;/span&gt; &lt;span style=&quot;color:#f92672&quot;&gt;{&lt;/span&gt;
-        arr&lt;span style=&quot;color:#f92672&quot;&gt;[&lt;/span&gt;i&lt;span style=&quot;color:#f92672&quot;&gt;].&lt;/span&gt;&lt;span style=&quot;color:#a6e22e&quot;&gt;start&lt;/span&gt;&lt;span style=&quot;color:#f92672&quot;&gt;();&lt;/span&gt;
-    &lt;span style=&quot;color:#f92672&quot;&gt;}&lt;/span&gt;
-&lt;span style=&quot;color:#f92672&quot;&gt;}&lt;/span&gt;
+<ol>
+<li>在java中，每个线程都会有一块工作内存区，其中存放着所有线程共享的主内存中的变量值得拷贝。当线程执行时，它在自己的工作区内存中操作这些变量。为了存取一个共享的变量，一个线程通常会先获取锁定并清除它的内存工作区，把这些共享变量从所有线程的共享内存中正确的装入到它自己所在的工作内存中，当线程解锁时，保证该工作内存中变量的值写回到共享内存中。</li>
+<li>一个线程可以执行的操作有<code>使用</code>(use)，<code>赋值</code>(assign),<code>装载</code>(load),<code>存储</code>(store),<code>锁定</code>(lock),解锁(unlock)。而<code>主内存</code>可以执行的操作有<code>读(read),写(write),锁定(lock),解锁（unlock)</code>，每个操作都是原子的。</li>
+<li>volatile的作用就是<code>强制线程</code>到<code>主内存</code>(共享内存)里<code>去读取变量</code>，而不去<code>线程工作区</code>内存里去读取，从而实现了<code>多个线程间的变量可见</code>，也就是满足线程安全的可见性。</li>
+</ol>
+
+<h2 id="3-volatile-不具有原子性">3.volatile-不具有原子性</h2>
+
+<p>volatile关键字虽然拥有多个线程之间的<code>可见性</code>，但是不具备<code>同步性，也就是原子性</code>，可以算得上一个<code>轻量级别的synchronized,性能要比synchronized强很多</code>，不会造成阻塞(在很多开源框架，比如Netty的底层代码就大量的使用volatile，由此可见Netty的性能非常不错),但是需要注意的是，volatile用于只针对于多个线程可见的变量操作，并不能替代synchronized的同步功能。</p>
+
+<h3 id="3-1-示例代码1">3.1  示例代码1</h3>
+
+<pre><code class="language-java">public class VolatileNoAtomic extends Thread {
+    private static volatile int count;
+    private static void addCount() {
+        for (int i = 0; i &lt; 1000; i++) {
+            count++;
+        }
+        System.out.println(count);
+    }
+
+    public void run() {
+        addCount();
+    }
+
+    public static void main(String[] args) {
+
+        VolatileNoAtomic[] arr = new VolatileNoAtomic[100];
+        for (int i = 0; i &lt; 10; i++) {
+            arr[i] = new VolatileNoAtomic();
+        }
+
+        for (int i = 0; i &lt; 10; i++) {
+            arr[i].start();
+        }
+    }
+}
 </code></pre>
-<p><!-- raw HTML omitted -->}<!-- raw HTML omitted -->
-<!-- raw HTML omitted --><!-- raw HTML omitted --><!-- raw HTML omitted --><!-- raw HTML omitted -->运行结果，随机因为volatile没有原子性，所以最终打印结果不是10000<!-- raw HTML omitted --></p>
-<!-- raw HTML omitted -->
-<pre><code>&lt;span style=&quot;color:#66d9ef&quot;&gt;private&lt;/span&gt; &lt;span style=&quot;color:#66d9ef&quot;&gt;static&lt;/span&gt; AtomicInteger count &lt;span style=&quot;color:#f92672&quot;&gt;=&lt;/span&gt; &lt;span style=&quot;color:#66d9ef&quot;&gt;new&lt;/span&gt; AtomicInteger&lt;span style=&quot;color:#f92672&quot;&gt;(&lt;/span&gt;0&lt;span style=&quot;color:#f92672&quot;&gt;);&lt;/span&gt;
 
-&lt;span style=&quot;color:#66d9ef&quot;&gt;private&lt;/span&gt; &lt;span style=&quot;color:#66d9ef&quot;&gt;static&lt;/span&gt; &lt;span style=&quot;color:#66d9ef&quot;&gt;void&lt;/span&gt; &lt;span style=&quot;color:#a6e22e&quot;&gt;addCount&lt;/span&gt;&lt;span style=&quot;color:#f92672&quot;&gt;()&lt;/span&gt; &lt;span style=&quot;color:#f92672&quot;&gt;{&lt;/span&gt;
-    &lt;span style=&quot;color:#66d9ef&quot;&gt;for&lt;/span&gt; &lt;span style=&quot;color:#f92672&quot;&gt;(&lt;/span&gt;&lt;span style=&quot;color:#66d9ef&quot;&gt;int&lt;/span&gt; i &lt;span style=&quot;color:#f92672&quot;&gt;=&lt;/span&gt; 0&lt;span style=&quot;color:#f92672&quot;&gt;;&lt;/span&gt; i &lt;span style=&quot;color:#f92672&quot;&gt;&amp;lt;&lt;/span&gt; 1000&lt;span style=&quot;color:#f92672&quot;&gt;;&lt;/span&gt; i&lt;span style=&quot;color:#f92672&quot;&gt;++)&lt;/span&gt; &lt;span style=&quot;color:#f92672&quot;&gt;{&lt;/span&gt;
-        count&lt;span style=&quot;color:#f92672&quot;&gt;.&lt;/span&gt;&lt;span style=&quot;color:#a6e22e&quot;&gt;incrementAndGet&lt;/span&gt;&lt;span style=&quot;color:#f92672&quot;&gt;();&lt;/span&gt;
-    &lt;span style=&quot;color:#f92672&quot;&gt;}&lt;/span&gt;
-    System&lt;span style=&quot;color:#f92672&quot;&gt;.&lt;/span&gt;&lt;span style=&quot;color:#a6e22e&quot;&gt;out&lt;/span&gt;&lt;span style=&quot;color:#f92672&quot;&gt;.&lt;/span&gt;&lt;span style=&quot;color:#a6e22e&quot;&gt;println&lt;/span&gt;&lt;span style=&quot;color:#f92672&quot;&gt;(&lt;/span&gt;count&lt;span style=&quot;color:#f92672&quot;&gt;);&lt;/span&gt;
-&lt;span style=&quot;color:#f92672&quot;&gt;}&lt;/span&gt;
+<p>运行结果，随机因为volatile没有原子性，所以最终打印结果不是10000</p>
 
-&lt;span style=&quot;color:#66d9ef&quot;&gt;public&lt;/span&gt; &lt;span style=&quot;color:#66d9ef&quot;&gt;void&lt;/span&gt; &lt;span style=&quot;color:#a6e22e&quot;&gt;run&lt;/span&gt;&lt;span style=&quot;color:#f92672&quot;&gt;()&lt;/span&gt; &lt;span style=&quot;color:#f92672&quot;&gt;{&lt;/span&gt;
-    addCount&lt;span style=&quot;color:#f92672&quot;&gt;();&lt;/span&gt;
-&lt;span style=&quot;color:#f92672&quot;&gt;}&lt;/span&gt;
+<h3 id="3-2-示例代码2">3.2  示例代码2</h3>
 
-&lt;span style=&quot;color:#66d9ef&quot;&gt;public&lt;/span&gt; &lt;span style=&quot;color:#66d9ef&quot;&gt;static&lt;/span&gt; &lt;span style=&quot;color:#66d9ef&quot;&gt;void&lt;/span&gt; &lt;span style=&quot;color:#a6e22e&quot;&gt;main&lt;/span&gt;&lt;span style=&quot;color:#f92672&quot;&gt;(&lt;/span&gt;String&lt;span style=&quot;color:#f92672&quot;&gt;[]&lt;/span&gt; args&lt;span style=&quot;color:#f92672&quot;&gt;)&lt;/span&gt; &lt;span style=&quot;color:#f92672&quot;&gt;{&lt;/span&gt;
+<pre><code class="language-java">public class VolatileNoAtomic extends Thread {
 
-    VolatileNoAtomic&lt;span style=&quot;color:#f92672&quot;&gt;[]&lt;/span&gt; arr &lt;span style=&quot;color:#f92672&quot;&gt;=&lt;/span&gt; &lt;span style=&quot;color:#66d9ef&quot;&gt;new&lt;/span&gt; VolatileNoAtomic&lt;span style=&quot;color:#f92672&quot;&gt;[&lt;/span&gt;100&lt;span style=&quot;color:#f92672&quot;&gt;];&lt;/span&gt;
-    &lt;span style=&quot;color:#66d9ef&quot;&gt;for&lt;/span&gt; &lt;span style=&quot;color:#f92672&quot;&gt;(&lt;/span&gt;&lt;span style=&quot;color:#66d9ef&quot;&gt;int&lt;/span&gt; i &lt;span style=&quot;color:#f92672&quot;&gt;=&lt;/span&gt; 0&lt;span style=&quot;color:#f92672&quot;&gt;;&lt;/span&gt; i &lt;span style=&quot;color:#f92672&quot;&gt;&amp;lt;&lt;/span&gt; 10&lt;span style=&quot;color:#f92672&quot;&gt;;&lt;/span&gt; i&lt;span style=&quot;color:#f92672&quot;&gt;++)&lt;/span&gt; &lt;span style=&quot;color:#f92672&quot;&gt;{&lt;/span&gt;
-        arr&lt;span style=&quot;color:#f92672&quot;&gt;[&lt;/span&gt;i&lt;span style=&quot;color:#f92672&quot;&gt;]&lt;/span&gt; &lt;span style=&quot;color:#f92672&quot;&gt;=&lt;/span&gt; &lt;span style=&quot;color:#66d9ef&quot;&gt;new&lt;/span&gt; VolatileNoAtomic&lt;span style=&quot;color:#f92672&quot;&gt;();&lt;/span&gt;
-    &lt;span style=&quot;color:#f92672&quot;&gt;}&lt;/span&gt;
+    private static AtomicInteger count = new AtomicInteger(0);
 
-    &lt;span style=&quot;color:#66d9ef&quot;&gt;for&lt;/span&gt; &lt;span style=&quot;color:#f92672&quot;&gt;(&lt;/span&gt;&lt;span style=&quot;color:#66d9ef&quot;&gt;int&lt;/span&gt; i &lt;span style=&quot;color:#f92672&quot;&gt;=&lt;/span&gt; 0&lt;span style=&quot;color:#f92672&quot;&gt;;&lt;/span&gt; i &lt;span style=&quot;color:#f92672&quot;&gt;&amp;lt;&lt;/span&gt; 10&lt;span style=&quot;color:#f92672&quot;&gt;;&lt;/span&gt; i&lt;span style=&quot;color:#f92672&quot;&gt;++)&lt;/span&gt; &lt;span style=&quot;color:#f92672&quot;&gt;{&lt;/span&gt;
-        arr&lt;span style=&quot;color:#f92672&quot;&gt;[&lt;/span&gt;i&lt;span style=&quot;color:#f92672&quot;&gt;].&lt;/span&gt;&lt;span style=&quot;color:#a6e22e&quot;&gt;start&lt;/span&gt;&lt;span style=&quot;color:#f92672&quot;&gt;();&lt;/span&gt;
-    &lt;span style=&quot;color:#f92672&quot;&gt;}&lt;/span&gt;
-&lt;span style=&quot;color:#f92672&quot;&gt;}&lt;/span&gt;
+    private static void addCount() {
+        for (int i = 0; i &lt; 1000; i++) {
+            count.incrementAndGet();
+        }
+        System.out.println(count);
+    }
+
+    public void run() {
+        addCount();
+    }
+
+    public static void main(String[] args) {
+
+        VolatileNoAtomic[] arr = new VolatileNoAtomic[100];
+        for (int i = 0; i &lt; 10; i++) {
+            arr[i] = new VolatileNoAtomic();
+        }
+
+        for (int i = 0; i &lt; 10; i++) {
+            arr[i].start();
+        }
+    }
+}
 </code></pre>
-<p><!-- raw HTML omitted -->}<!-- raw HTML omitted -->
-<!-- raw HTML omitted --><!-- raw HTML omitted --><!-- raw HTML omitted --><!-- raw HTML omitted -->运行最终打印结果是:10000<!-- raw HTML omitted --></p>
-<!-- raw HTML omitted -->
-<p><!-- raw HTML omitted -->import<!-- raw HTML omitted --> java.util.ArrayList<!-- raw HTML omitted -->;<!-- raw HTML omitted -->
-<!-- raw HTML omitted -->import<!-- raw HTML omitted --> java.util.List<!-- raw HTML omitted -->;<!-- raw HTML omitted -->
-<!-- raw HTML omitted -->import<!-- raw HTML omitted --> java.util.concurrent.atomic.AtomicInteger<!-- raw HTML omitted -->;<!-- raw HTML omitted --></p>
-<p><!-- raw HTML omitted -->/**
-<!-- raw HTML omitted --><!-- raw HTML omitted --> * @author xujin
-<!-- raw HTML omitted --><!-- raw HTML omitted --> */<!-- raw HTML omitted -->
-<!-- raw HTML omitted -->public<!-- raw HTML omitted --> <!-- raw HTML omitted -->class<!-- raw HTML omitted --> <!-- raw HTML omitted -->AtomicUse<!-- raw HTML omitted --> <!-- raw HTML omitted -->{<!-- raw HTML omitted --></p>
-<pre><code>&lt;span style=&quot;color:#66d9ef&quot;&gt;private&lt;/span&gt; &lt;span style=&quot;color:#66d9ef&quot;&gt;static&lt;/span&gt; AtomicInteger count &lt;span style=&quot;color:#f92672&quot;&gt;=&lt;/span&gt; &lt;span style=&quot;color:#66d9ef&quot;&gt;new&lt;/span&gt; AtomicInteger&lt;span style=&quot;color:#f92672&quot;&gt;(&lt;/span&gt;0&lt;span style=&quot;color:#f92672&quot;&gt;);&lt;/span&gt;
+
+<p>运行最终打印结果是:10000</p>
+
+<blockquote>
+<p>小结:volatile关键字只有<code>可见性</code>，没有<code>原子性</code>。要实现原子性建议使用<code>atomic类的系列对象</code>，支持原子性操作。</p>
+</blockquote>
+
+<p>注意atomic类只保证本身方法的原子性，并不保证多次操作的原子性。</p>
+
+<pre><code class="language-java">package org.xujin.multithread.sync007;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.concurrent.atomic.AtomicInteger;
+
+/**
+ * @author xujin
+ */
+public class AtomicUse {
+
+    private static AtomicInteger count = new AtomicInteger(0);
+   // 多个addAndGet在一个方法内是非原子性的，需要加synchronized进行修饰，保证4个addAndGet整体原子性
+    /** synchronized */
+    public synchronized int multiAdd() {
+        try {
+            Thread.sleep(100);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        count.addAndGet(1);
+        count.addAndGet(2);
+        count.addAndGet(3);
+        count.addAndGet(4); // +10,执行到这里相当于加10-&gt;1+2+3+4=10，
+        return count.get();
+    }
+
+    public static void main(String[] args) {
+
+        final AtomicUse au = new AtomicUse();
+
+        List&lt;Thread&gt; ts = new ArrayList&lt;Thread&gt;();
+        for (int i = 0; i &lt; 100; i++) {
+            ts.add(new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    System.out.println(au.multiAdd());
+                }
+            }));
+        }
+
+        for (Thread t : ts) {
+            t.start();
+        }
+
+    }
+}
 </code></pre>
-<p><!-- raw HTML omitted -->// 多个addAndGet在一个方法内是非原子性的，需要加synchronized进行修饰，保证4个addAndGet整体原子性
-<!-- raw HTML omitted --><!-- raw HTML omitted --><!-- raw HTML omitted -->    <!-- raw HTML omitted -->/** synchronized */<!-- raw HTML omitted -->
-<!-- raw HTML omitted -->public<!-- raw HTML omitted --> <!-- raw HTML omitted -->synchronized<!-- raw HTML omitted --> <!-- raw HTML omitted -->int<!-- raw HTML omitted --> <!-- raw HTML omitted -->multiAdd<!-- raw HTML omitted --><!-- raw HTML omitted -->()<!-- raw HTML omitted --> <!-- raw HTML omitted -->{<!-- raw HTML omitted -->
-<!-- raw HTML omitted -->try<!-- raw HTML omitted --> <!-- raw HTML omitted -->{<!-- raw HTML omitted -->
-Thread<!-- raw HTML omitted -->.<!-- raw HTML omitted --><!-- raw HTML omitted -->sleep<!-- raw HTML omitted --><!-- raw HTML omitted -->(<!-- raw HTML omitted -->100<!-- raw HTML omitted -->);<!-- raw HTML omitted -->
-<!-- raw HTML omitted -->}<!-- raw HTML omitted --> <!-- raw HTML omitted -->catch<!-- raw HTML omitted --> <!-- raw HTML omitted -->(<!-- raw HTML omitted -->InterruptedException e<!-- raw HTML omitted -->)<!-- raw HTML omitted --> <!-- raw HTML omitted -->{<!-- raw HTML omitted -->
-e<!-- raw HTML omitted -->.<!-- raw HTML omitted --><!-- raw HTML omitted -->printStackTrace<!-- raw HTML omitted --><!-- raw HTML omitted -->();<!-- raw HTML omitted -->
-<!-- raw HTML omitted -->}<!-- raw HTML omitted -->
-count<!-- raw HTML omitted -->.<!-- raw HTML omitted --><!-- raw HTML omitted -->addAndGet<!-- raw HTML omitted --><!-- raw HTML omitted -->(<!-- raw HTML omitted -->1<!-- raw HTML omitted -->);<!-- raw HTML omitted -->
-count<!-- raw HTML omitted -->.<!-- raw HTML omitted --><!-- raw HTML omitted -->addAndGet<!-- raw HTML omitted --><!-- raw HTML omitted -->(<!-- raw HTML omitted -->2<!-- raw HTML omitted -->);<!-- raw HTML omitted -->
-count<!-- raw HTML omitted -->.<!-- raw HTML omitted --><!-- raw HTML omitted -->addAndGet<!-- raw HTML omitted --><!-- raw HTML omitted -->(<!-- raw HTML omitted -->3<!-- raw HTML omitted -->);<!-- raw HTML omitted -->
-count<!-- raw HTML omitted -->.<!-- raw HTML omitted --><!-- raw HTML omitted -->addAndGet<!-- raw HTML omitted --><!-- raw HTML omitted -->(<!-- raw HTML omitted -->4<!-- raw HTML omitted -->);<!-- raw HTML omitted --> <!-- raw HTML omitted -->// +10,执行到这里相当于加10-&gt;1+2+3+4=10，
-<!-- raw HTML omitted --><!-- raw HTML omitted --><!-- raw HTML omitted -->        <!-- raw HTML omitted -->return<!-- raw HTML omitted --> count<!-- raw HTML omitted -->.<!-- raw HTML omitted --><!-- raw HTML omitted -->get<!-- raw HTML omitted --><!-- raw HTML omitted -->();<!-- raw HTML omitted -->
-<!-- raw HTML omitted -->}<!-- raw HTML omitted --></p>
-<pre><code>&lt;span style=&quot;color:#66d9ef&quot;&gt;public&lt;/span&gt; &lt;span style=&quot;color:#66d9ef&quot;&gt;static&lt;/span&gt; &lt;span style=&quot;color:#66d9ef&quot;&gt;void&lt;/span&gt; &lt;span style=&quot;color:#a6e22e&quot;&gt;main&lt;/span&gt;&lt;span style=&quot;color:#f92672&quot;&gt;(&lt;/span&gt;String&lt;span style=&quot;color:#f92672&quot;&gt;[]&lt;/span&gt; args&lt;span style=&quot;color:#f92672&quot;&gt;)&lt;/span&gt; &lt;span style=&quot;color:#f92672&quot;&gt;{&lt;/span&gt;
-
-    &lt;span style=&quot;color:#66d9ef&quot;&gt;final&lt;/span&gt; AtomicUse au &lt;span style=&quot;color:#f92672&quot;&gt;=&lt;/span&gt; &lt;span style=&quot;color:#66d9ef&quot;&gt;new&lt;/span&gt; AtomicUse&lt;span style=&quot;color:#f92672&quot;&gt;();&lt;/span&gt;
-
-    List&lt;span style=&quot;color:#f92672&quot;&gt;&amp;lt;&lt;/span&gt;Thread&lt;span style=&quot;color:#f92672&quot;&gt;&amp;gt;&lt;/span&gt; ts &lt;span style=&quot;color:#f92672&quot;&gt;=&lt;/span&gt; &lt;span style=&quot;color:#66d9ef&quot;&gt;new&lt;/span&gt; ArrayList&lt;span style=&quot;color:#f92672&quot;&gt;&amp;lt;&lt;/span&gt;Thread&lt;span style=&quot;color:#f92672&quot;&gt;&amp;gt;();&lt;/span&gt;
-    &lt;span style=&quot;color:#66d9ef&quot;&gt;for&lt;/span&gt; &lt;span style=&quot;color:#f92672&quot;&gt;(&lt;/span&gt;&lt;span style=&quot;color:#66d9ef&quot;&gt;int&lt;/span&gt; i &lt;span style=&quot;color:#f92672&quot;&gt;=&lt;/span&gt; 0&lt;span style=&quot;color:#f92672&quot;&gt;;&lt;/span&gt; i &lt;span style=&quot;color:#f92672&quot;&gt;&amp;lt;&lt;/span&gt; 100&lt;span style=&quot;color:#f92672&quot;&gt;;&lt;/span&gt; i&lt;span style=&quot;color:#f92672&quot;&gt;++)&lt;/span&gt; &lt;span style=&quot;color:#f92672&quot;&gt;{&lt;/span&gt;
-        ts&lt;span style=&quot;color:#f92672&quot;&gt;.&lt;/span&gt;&lt;span style=&quot;color:#a6e22e&quot;&gt;add&lt;/span&gt;&lt;span style=&quot;color:#f92672&quot;&gt;(&lt;/span&gt;&lt;span style=&quot;color:#66d9ef&quot;&gt;new&lt;/span&gt; Thread&lt;span style=&quot;color:#f92672&quot;&gt;(&lt;/span&gt;&lt;span style=&quot;color:#66d9ef&quot;&gt;new&lt;/span&gt; Runnable&lt;span style=&quot;color:#f92672&quot;&gt;()&lt;/span&gt; &lt;span style=&quot;color:#f92672&quot;&gt;{&lt;/span&gt;
-            &lt;span style=&quot;color:#a6e22e&quot;&gt;@Override&lt;/span&gt;
-            &lt;span style=&quot;color:#66d9ef&quot;&gt;public&lt;/span&gt; &lt;span style=&quot;color:#66d9ef&quot;&gt;void&lt;/span&gt; &lt;span style=&quot;color:#a6e22e&quot;&gt;run&lt;/span&gt;&lt;span style=&quot;color:#f92672&quot;&gt;()&lt;/span&gt; &lt;span style=&quot;color:#f92672&quot;&gt;{&lt;/span&gt;
-                System&lt;span style=&quot;color:#f92672&quot;&gt;.&lt;/span&gt;&lt;span style=&quot;color:#a6e22e&quot;&gt;out&lt;/span&gt;&lt;span style=&quot;color:#f92672&quot;&gt;.&lt;/span&gt;&lt;span style=&quot;color:#a6e22e&quot;&gt;println&lt;/span&gt;&lt;span style=&quot;color:#f92672&quot;&gt;(&lt;/span&gt;au&lt;span style=&quot;color:#f92672&quot;&gt;.&lt;/span&gt;&lt;span style=&quot;color:#a6e22e&quot;&gt;multiAdd&lt;/span&gt;&lt;span style=&quot;color:#f92672&quot;&gt;());&lt;/span&gt;
-            &lt;span style=&quot;color:#f92672&quot;&gt;}&lt;/span&gt;
-        &lt;span style=&quot;color:#f92672&quot;&gt;}));&lt;/span&gt;
-    &lt;span style=&quot;color:#f92672&quot;&gt;}&lt;/span&gt;
-
-    &lt;span style=&quot;color:#66d9ef&quot;&gt;for&lt;/span&gt; &lt;span style=&quot;color:#f92672&quot;&gt;(&lt;/span&gt;Thread t &lt;span style=&quot;color:#f92672&quot;&gt;:&lt;/span&gt; ts&lt;span style=&quot;color:#f92672&quot;&gt;)&lt;/span&gt; &lt;span style=&quot;color:#f92672&quot;&gt;{&lt;/span&gt;
-        t&lt;span style=&quot;color:#f92672&quot;&gt;.&lt;/span&gt;&lt;span style=&quot;color:#a6e22e&quot;&gt;start&lt;/span&gt;&lt;span style=&quot;color:#f92672&quot;&gt;();&lt;/span&gt;
-    &lt;span style=&quot;color:#f92672&quot;&gt;}&lt;/span&gt;
-
-&lt;span style=&quot;color:#f92672&quot;&gt;}&lt;/span&gt;
-</code></pre>
-<p><!-- raw HTML omitted -->}<!-- raw HTML omitted -->
-<!-- raw HTML omitted --><!-- raw HTML omitted --><!-- raw HTML omitted --></p>
 
 </article>
 
@@ -498,21 +568,22 @@ count<!-- raw HTML omitted -->.<!-- raw HTML omitted --><!-- raw HTML omitted --
 		目录
 	</h2>
   <nav id="TableOfContents">
-  <ul>
-    <li><a href="#1-volatile概念">1. volatile概念</a></li>
-    <li><a href="#2-volatile概念-具有可见性">2 volatile概念-具有可见性</a>
-      <ul>
-        <li><a href="#21-代码示例">2.1 代码示例</a></li>
-        <li><a href="#22---小结">2.2   小结</a></li>
-      </ul>
-    </li>
-    <li><a href="#3volatile-不具有原子性">3.volatile-不具有原子性</a>
-      <ul>
-        <li><a href="#31--示例代码1">3.1  示例代码1</a></li>
-        <li><a href="#32--示例代码2">3.2  示例代码2</a></li>
-      </ul>
-    </li>
-  </ul>
+<ul>
+<li>
+<ul>
+<li><a href="#1-volatile概念">1. volatile概念</a></li>
+<li><a href="#2-volatile概念-具有可见性">2 volatile概念-具有可见性</a>
+<ul>
+<li><a href="#2-1-代码示例">2.1 代码示例</a></li>
+<li><a href="#2-2-小结">2.2   小结</a></li>
+</ul></li>
+<li><a href="#3-volatile-不具有原子性">3.volatile-不具有原子性</a>
+<ul>
+<li><a href="#3-1-示例代码1">3.1  示例代码1</a></li>
+<li><a href="#3-2-示例代码2">3.2  示例代码2</a></li>
+</ul></li>
+</ul></li>
+</ul>
 </nav>
 </div>
 

@@ -10,7 +10,7 @@
 <meta name="viewport" content="width=device-width,minimum-scale=1">
 <meta name="description" content="玹霖志,许进沉思录,许进|Spring Cloud,中间件，基础架构，www.xujin.org,xujin.org,-许进沉思录,Venus&#43;,云首科技有限公司,云计算，大数据，物联网，Software_king的博客,云计算Saas，云计算Paas，云计算Iaas Hadoop，大数据，JavaEE，Java，物联网，Hadoop， NoSQL，MongoDB,Spring, Hibernate,Struts2," />
 
-<meta name="generator" content="Hugo 0.72.0" /><link rel="shortcut icon" href=/img/icon.png type="image/png">
+<meta name="generator" content="Hugo 0.55.6" /><link rel="shortcut icon" href=/img/icon.png type="image/png">
 
 <link href="https://unpkg.com/purecss@1.0.0/build/base-min.css" rel="stylesheet">
 
@@ -521,7 +521,27 @@ if (!doNotTrack) {
 </div>
 
 		<article class="typo">
-	<!-- raw HTML omitted -->
+	<h2 id="1-halo-plugin概述">1. Halo Plugin概述</h2>
+
+<p>Halo Plugin是Halo框架量身打造的maven插件或Gradle插件。</p>
+
+<h2 id="2-halo-plugin">2.Halo Plugin</h2>
+
+<h3 id="2-1-gradle插件">2.1 Gradle插件</h3>
+
+<p><code>halo-reference-plugin</code>是专为Halo框架文档的编写定制的Gradle插件.通过此插件可以生成类似Spring的文档，示例如下图所示.
+<img src="1.png" alt="" /></p>
+
+<p>gralde引入依赖如下所示:</p>
+
+<pre><code class="language-gradle">dependencies {
+    //Provides additional optional and provided dependency configurations for Gradle along with Maven POM generation support
+    classpath(&quot;org.springframework.build.gradle:propdeps-plugin:0.0.7&quot;)
+    classpath(&quot;org.asciidoctor:asciidoctor-gradle-plugin:1.5.0&quot;)
+    classpath(&quot;org.xujin.gradleplugin:halo-reference-plugin:0.0.2-SNAPSHOT&quot;)
+}
+</code></pre>
+
 </article>
 
 <div id="gitalk-container"></div>

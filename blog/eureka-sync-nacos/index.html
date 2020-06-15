@@ -10,7 +10,7 @@
 <meta name="viewport" content="width=device-width,minimum-scale=1">
 <meta name="description" content="玹霖志,许进沉思录,许进|Spring Cloud,中间件，基础架构，www.xujin.org,xujin.org,-许进沉思录,Venus&#43;,云首科技有限公司,云计算，大数据，物联网，Software_king的博客,云计算Saas，云计算Paas，云计算Iaas Hadoop，大数据，JavaEE，Java，物联网，Hadoop， NoSQL，MongoDB,Spring, Hibernate,Struts2," />
 
-<meta name="generator" content="Hugo 0.72.0" /><link rel="shortcut icon" href=/img/icon.png type="image/png">
+<meta name="generator" content="Hugo 0.55.6" /><link rel="shortcut icon" href=/img/icon.png type="image/png">
 
 <link href="https://unpkg.com/purecss@1.0.0/build/base-min.css" rel="stylesheet">
 
@@ -241,7 +241,7 @@ if (!doNotTrack) {
 				
 			</span>
 		
-		<span class="post-word-count">· 字数:2577·阅读时间 6 分钟</span>
+		<span class="post-word-count">· 字数:2581·阅读时间 6 分钟</span>
 		
 		阅读量<span id="busuanzi_value_page_pv"></span>次
 		
@@ -259,15 +259,227 @@ if (!doNotTrack) {
 	});
   </script>
 		<article class="typo">
-	<!-- raw HTML omitted -->
-<p>spring.cloud.nacos.discovery.serverAddr=localhost:8848</p>
-<p>eureka.client.serviceUrl.defaultZone=http://eureka.springcloud.cn/eureka/
+	<h2 id="1-背景">1.背景</h2>
+
+<p>Nacos与Eureka相比，Nacos的优点非常明显，当然首选Nacos作为注册中心。本文主要介绍如何从Eureka无缝平滑迁移到Nacos注册中心，业务方应用改动最小，业务应用改造一次完成迁移。</p>
+
+<h2 id="2-方案设计">2.方案设计</h2>
+
+<h3 id="2-1-业务应用多注册到nacos和eureka">2.1 业务应用多注册到Nacos和Eureka</h3>
+
+<p>Spring Cloud应用默认不支持启动时双向注册，但是阿里商业版上云edas-sc-migration-starter组件支持。可以采用如下的方式引入依赖实现多注册和订阅。</p>
+
+<pre><code class="language-xml">&lt;!-- https://mvnrepository.com/artifact/com.alibaba.edas/edas-sc-migration-starter --&gt;
+&lt;dependency&gt;
+    &lt;groupId&gt;com.alibaba.edas&lt;/groupId&gt;
+    &lt;artifactId&gt;edas-sc-migration-starter&lt;/artifactId&gt;
+    &lt;version&gt;1.0.2&lt;/version&gt;
+&lt;/dependency&gt;
+</code></pre>
+
+<blockquote>
+<p>也就是引入对应的组件，当应用启动的时候同时向Eureka和Nacos实现双向注册。更多的实现细节和使用细节本文将不进行展开。</p>
+</blockquote>
+
+<p><img src="1.png" alt="" />
+如上图所示，如果只把旧应用只改一部分，会出现只有改造的应用能调到新应用。未改造的应用会出现调不到新应用的情况。即，需要如下图所示的方式，旧应用全部升级改造为双注册到注册中心，才可以支持。</p>
+
+<p><img src="2.png" alt="" />
+&gt;但是旧应用无法保证同一时刻全部升级改造为同时注册，因此该方案论证失败。</p>
+
+<h3 id="2-2-nacos-sync方案">2.2 Nacos Sync方案</h3>
+
+<p>Nacos Sync 是一个支持多种注册中心的同步组件，基于 SpringBoot 开发框架，数据层采用 Spring Data JPA，遵循了标准的 JPA 访问规范，支持多种数据源存储，默认使用 Hibernate 实现，更加方便的支持表的自动创建更新。但目前最新版本是如下图所示。
+<img src="nacos-syn1.jpg" alt="" /></p>
+
+<blockquote>
+<p>跟Nacos Sync项目的负责人沟通过，目前也支持Nacos与Eureka之间双向同步，至于怎么用优缺点怎么样本文将不进行展开。</p>
+</blockquote>
+
+<h3 id="2-3-注册中心服务端双向同步">2.3 注册中心服务端双向同步</h3>
+
+<h4 id="2-3-1-方案设计">2.3.1 方案设计</h4>
+
+<p>设计思路是注册中心服务端进行双向同步，做到微服务端完全无侵入，可以随业务迭代逐步完成升级和迁移。改造Eureka Server，Eureka Server引入同步组件实现Nacos和Eureka之间实现双向同步，如下图所示：</p>
+
+<p><img src="3.png" alt="" /></p>
+
+<h4 id="2-3-2-迁移步骤">2.3.2 迁移步骤</h4>
+
+<p>迁移步骤如下:</p>
+
+<ul>
+<li><p>1.部署Nacos Server集群用于服务注册与发现</p></li>
+
+<li><p>2.在线动态扩容Eureka Server，替换其中的1-2两台Eureka Server。</p></li>
+
+<li><p>3.逐渐改造旧应用，只需将新旧应用注册到Nacos上</p></li>
+
+<li><p>4.等旧应用全部改造完毕，下线Eureka Server即可。</p></li>
+</ul>
+
+<p>这样方案的优点，如下:</p>
+
+<ul>
+<li><p>1.新应用直接注册到Nacos上，不需要同时注册到Eureka和Nacos上</p></li>
+
+<li><p>2.旧应用直接改造(引入相关starter即可)注册到Nacos上即可，不需要同时注册到Nacos和Eureka上</p></li>
+
+<li><p>3.迁移成本很低，旧应用只需改造一次(所谓的改造即引入新的Starter，修改配置)，等全部旧应用迁移完毕，直接下线Eureka Server。</p></li>
+</ul>
+
+<h2 id="3-迁移落地">3.迁移落地</h2>
+
+<h3 id="3-1-组件开发">3.1 组件开发</h3>
+
+<p>开发一个Spring Boot Starter,加入到Eureka Server或Nacos Server中可以实现双向注册。</p>
+
+<h3 id="3-2-spring-cloud-nacos组件介绍">3.2 spring-cloud-nacos组件介绍</h3>
+
+<ul>
+<li><p>spring-cloud-nacos主要由<code>何鹰和瞿礼</code>贡献，</p></li>
+
+<li><p>Nacos Plus在Nacos上做加法，Nacos client默认是支持安全控制的可以参考阿里云商业版配置中心ACM集成方式  <a href="https://github.com/alibaba/spring-cloud-alibaba/wiki/ACM">https://github.com/alibaba/spring-cloud-alibaba/wiki/ACM</a> 以及 spring cloud alibaba 配置项  <a href="https://github.com/alibaba/spring-cloud-alibaba/blob/master/spring-cloud-alibaba-examples/nacos-example/nacos-config-example/readme-zh.md">https://github.com/alibaba/spring-cloud-alibaba/blob/master/spring-cloud-alibaba-examples/nacos-example/nacos-config-example/readme-zh.md</a> 但是开源的Nacos并不含有安全控制模块，在Nacos plus里我们新增了兼容默认Nacos client的安全控制功能。</p></li>
+</ul>
+
+<blockquote>
+<p>可以查看:<a href="https://github.com/inacos/nacos">https://github.com/inacos/nacos</a></p>
+</blockquote>
+
+<p>核心代码主要是NacosSynchronizer.java和EurekaSynchronizer.java,请自行阅读。
+github地址:<a href="https://github.com/inacos/spring-cloud-nacos">https://github.com/inacos/spring-cloud-nacos</a>
+<img src="sc-nacos-code.jpg" alt="" /></p>
+
+<h2 id="4-实现迁移落地">4.实现迁移落地</h2>
+
+<p>按如下，迁移步骤进行迁移。具体细节在本文省略。
+1.部署Nacos Server集群用于服务注册与发现
+2.在线动态扩容一台Eureka Server
+3.逐渐改造旧应用，只需将新旧应用注册到Nacos上
+4.等旧应用全部改造完毕，下线Eureka Server即可。</p>
+
+<p>下面将在本地进行测试说明，用到的演示说明列表如下所示:</p>
+
+<table>
+<thead>
+<tr>
+<th>服务</th>
+<th>说明</th>
+</tr>
+</thead>
+
+<tbody>
+<tr>
+<td>Eureka注册中心(<a href="http://eureka.springcloud.cn/">http://eureka.springcloud.cn/</a>)</td>
+<td>模拟生产上的Eureka注册中心</td>
+</tr>
+
+<tr>
+<td>本地基于源码方式启动一个Nacos实例</td>
+<td>模拟生产上新建的Nacos</td>
+</tr>
+
+<tr>
+<td>同步服务(本地基于Eureka Server扩展启动的同步服务）</td>
+<td>模拟生产上启动了一个Nacos与Eureka之间双向同步的服务</td>
+</tr>
+
+<tr>
+<td>本地启动一个服务注册到(<a href="http://eureka.springcloud.cn/）">http://eureka.springcloud.cn/）</a></td>
+<td>验证从eureka同步服务到nacos</td>
+</tr>
+
+<tr>
+<td>本地启动一个服务注册到Nacos</td>
+<td>验证从nacos同步服务到Eureka上</td>
+</tr>
+</tbody>
+</table>
+
+<h3 id="4-1-模拟生产上的注册中心">4.1 模拟生产上的注册中心</h3>
+
+<p>Spring Cloud中国社区公网上有个Eureka注册中心，地址为:<a href="http://eureka.springcloud.cn/">http://eureka.springcloud.cn/</a>
+<img src="4.png" alt="" /></p>
+
+<h3 id="4-2-基于源代码方式启动nacos">4.2  基于源代码方式启动Nacos</h3>
+
+<p>基于Nacos的最新Master代码，本地IDEA设置环境变量-Dnacos.standalone=true，启动Nacos，如下所示:</p>
+
+<p><img src="5.png" alt="" /></p>
+
+<p>2.打开浏览器访问 <a href="http://localhost:8848/nacos/index.html,输入用户名和密码(均为nacos)登录。">http://localhost:8848/nacos/index.html,输入用户名和密码(均为nacos)登录。</a>
+<img src="6.png" alt="" /></p>
+
+<h3 id="4-3-启动同步服务测试">4.3  启动同步服务测试</h3>
+
+<h4 id="4-3-1-搭建同步服务">4.3.1 搭建同步服务</h4>
+
+<ol>
+<li>示例工程如spring-cloud-nacos-eureka-proxy-example所示,在一个Eureka Server中引入如下的pom依赖:</li>
+</ol>
+
+<pre><code class="language-java"> &lt;dependencies&gt;
+        &lt;dependency&gt;
+            &lt;groupId&gt;org.springframework.cloud&lt;/groupId&gt;
+            &lt;artifactId&gt;spring-cloud-starter-netflix-eureka-server&lt;/artifactId&gt;
+        &lt;/dependency&gt;
+        &lt;dependency&gt;
+            &lt;groupId&gt;org.springframework.boot&lt;/groupId&gt;
+            &lt;artifactId&gt;spring-boot-starter-actuator&lt;/artifactId&gt;
+        &lt;/dependency&gt;
+          &lt;!-- 引入Nacos与Eureka之间同步的Starter
+        &lt;dependency&gt;
+            &lt;groupId&gt;net.nacos&lt;/groupId&gt;
+            &lt;artifactId&gt;spring-cloud-nacos-eureka-proxy&lt;/artifactId&gt;
+            &lt;version&gt;1.0.0&lt;/version&gt;
+        &lt;/dependency&gt;
+        &lt;dependency&gt;
+            &lt;groupId&gt;com.alibaba.nacos&lt;/groupId&gt;
+            &lt;artifactId&gt;nacos-client&lt;/artifactId&gt;
+            &lt;version&gt;1.1.3&lt;/version&gt;
+        &lt;/dependency&gt;
+    &lt;/dependencies&gt;
+</code></pre>
+
+<ol>
+<li><p>在application.properties配置如下信息</p>
+
+<pre><code>server.port=8761
+spring.application.name=eureka-proxy
+
+spring.cloud.nacos.discovery.serverAddr=localhost:8848
+
+eureka.client.serviceUrl.defaultZone=http://eureka.springcloud.cn/eureka/
 #eureka.client.fetchRegistry=false
 #eureka.client.registerWithEureka=false
-eureka.instance.preferIpAddress=true</p>
-<p>eureka.server.enable-self-preservation=false
-<!-- raw HTML omitted --><!-- raw HTML omitted --><!-- raw HTML omitted -->4.3.2 启动服务<!-- raw HTML omitted --></p>
-<!-- raw HTML omitted -->
+eureka.instance.preferIpAddress=true
+
+eureka.server.enable-self-preservation=false
+</code></pre></li>
+</ol>
+
+<h4 id="4-3-2-启动服务">4.3.2 启动服务</h4>
+
+<p>启动同步服务，访问Nacos页面发现已经把Eureka上面的服务同步到Nacos,如下所示:</p>
+
+<p><img src="7.png" alt="" /></p>
+
+<blockquote>
+<p>说明，因为是从公网Eureka上同步过来的服务列表，部分服务不在本地。因此Naocs将会从服务列表中踢除。但不影响验证功能。</p>
+</blockquote>
+
+<h4 id="4-3-3-验证从eureka同步到nacos">4.3.3 验证从Eureka同步到Nacos</h4>
+
+<p>启动一个moss-sample-2.1.x的服务只注册到 <a href="http://eureka.springcloud.cn/，立即同步到Nacos上，可以自行验证。">http://eureka.springcloud.cn/，立即同步到Nacos上，可以自行验证。</a></p>
+
+<h4 id="4-3-4-验证从nacos同步到eureka">4.3.4 验证从Nacos同步到Eureka</h4>
+
+<p>启动一个服务一个服务只注册到Nacos上，发现立即同步到 <a href="http://eureka.springcloud.cn/上，如下图所示:">http://eureka.springcloud.cn/上，如下图所示:</a>
+<img src="8.png" alt="" /></p>
+
+<h2 id="5-总结">5.总结</h2>
+
+<p>本文从迁移的方案入手，进行论证如何将注册中心从Eureka迁移到Nacos。如何在迁移的过程中有任何疑问，欢迎沟通交流。</p>
 
 </article>
 
@@ -384,30 +596,40 @@ eureka.instance.preferIpAddress=true</p>
 		目录
 	</h2>
   <nav id="TableOfContents">
-  <ul>
-    <li><a href="#1背景">1.背景</a></li>
-    <li><a href="#2方案设计">2.方案设计</a>
-      <ul>
-        <li><a href="#21-业务应用多注册到nacos和eureka">2.1 业务应用多注册到Nacos和Eureka</a></li>
-        <li><a href="#22-nacos-sync方案">2.2 Nacos Sync方案</a></li>
-        <li><a href="#23-注册中心服务端双向同步">2.3 注册中心服务端双向同步</a></li>
-      </ul>
-    </li>
-    <li><a href="#3迁移落地">3.迁移落地</a>
-      <ul>
-        <li><a href="#31-组件开发">3.1 组件开发</a></li>
-        <li><a href="#32-spring-cloud-nacos组件介绍">3.2 spring-cloud-nacos组件介绍</a></li>
-      </ul>
-    </li>
-    <li><a href="#4实现迁移落地">4.实现迁移落地</a>
-      <ul>
-        <li><a href="#41-模拟生产上的注册中心">4.1 模拟生产上的注册中心</a></li>
-        <li><a href="#42--基于源代码方式启动nacos">4.2  基于源代码方式启动Nacos</a></li>
-        <li><a href="#43--启动同步服务测试">4.3  启动同步服务测试</a></li>
-      </ul>
-    </li>
-    <li><a href="#5总结">5.总结</a></li>
-  </ul>
+<ul>
+<li>
+<ul>
+<li><a href="#1-背景">1.背景</a></li>
+<li><a href="#2-方案设计">2.方案设计</a>
+<ul>
+<li><a href="#2-1-业务应用多注册到nacos和eureka">2.1 业务应用多注册到Nacos和Eureka</a></li>
+<li><a href="#2-2-nacos-sync方案">2.2 Nacos Sync方案</a></li>
+<li><a href="#2-3-注册中心服务端双向同步">2.3 注册中心服务端双向同步</a>
+<ul>
+<li><a href="#2-3-1-方案设计">2.3.1 方案设计</a></li>
+<li><a href="#2-3-2-迁移步骤">2.3.2 迁移步骤</a></li>
+</ul></li>
+</ul></li>
+<li><a href="#3-迁移落地">3.迁移落地</a>
+<ul>
+<li><a href="#3-1-组件开发">3.1 组件开发</a></li>
+<li><a href="#3-2-spring-cloud-nacos组件介绍">3.2 spring-cloud-nacos组件介绍</a></li>
+</ul></li>
+<li><a href="#4-实现迁移落地">4.实现迁移落地</a>
+<ul>
+<li><a href="#4-1-模拟生产上的注册中心">4.1 模拟生产上的注册中心</a></li>
+<li><a href="#4-2-基于源代码方式启动nacos">4.2  基于源代码方式启动Nacos</a></li>
+<li><a href="#4-3-启动同步服务测试">4.3  启动同步服务测试</a>
+<ul>
+<li><a href="#4-3-1-搭建同步服务">4.3.1 搭建同步服务</a></li>
+<li><a href="#4-3-2-启动服务">4.3.2 启动服务</a></li>
+<li><a href="#4-3-3-验证从eureka同步到nacos">4.3.3 验证从Eureka同步到Nacos</a></li>
+<li><a href="#4-3-4-验证从nacos同步到eureka">4.3.4 验证从Nacos同步到Eureka</a></li>
+</ul></li>
+</ul></li>
+<li><a href="#5-总结">5.总结</a></li>
+</ul></li>
+</ul>
 </nav>
 </div>
 

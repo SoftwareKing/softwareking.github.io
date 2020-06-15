@@ -10,7 +10,7 @@
 <meta name="viewport" content="width=device-width,minimum-scale=1">
 <meta name="description" content="玹霖志,许进沉思录,许进|Spring Cloud,中间件，基础架构，www.xujin.org,xujin.org,-许进沉思录,Venus&#43;,云首科技有限公司,云计算，大数据，物联网，Software_king的博客,云计算Saas，云计算Paas，云计算Iaas Hadoop，大数据，JavaEE，Java，物联网，Hadoop， NoSQL，MongoDB,Spring, Hibernate,Struts2," />
 
-<meta name="generator" content="Hugo 0.72.0" /><link rel="shortcut icon" href=/img/icon.png type="image/png">
+<meta name="generator" content="Hugo 0.55.6" /><link rel="shortcut icon" href=/img/icon.png type="image/png">
 
 <link href="https://unpkg.com/purecss@1.0.0/build/base-min.css" rel="stylesheet">
 
@@ -241,7 +241,7 @@ if (!doNotTrack) {
 				
 			</span>
 		
-		<span class="post-word-count">· 字数:2493·阅读时间 5 分钟</span>
+		<span class="post-word-count">· 字数:2495·阅读时间 5 分钟</span>
 		
 		阅读量<span id="busuanzi_value_page_pv"></span>次
 		
@@ -259,74 +259,306 @@ if (!doNotTrack) {
 	});
   </script>
 		<article class="typo">
-	<!-- raw HTML omitted -->
-<pre><code>&lt;span style=&quot;color:#f92672&quot;&gt;&amp;lt;dependency&amp;gt;&lt;/span&gt;
-    &lt;span style=&quot;color:#f92672&quot;&gt;&amp;lt;groupId&amp;gt;&lt;/span&gt;com.alibaba.nacos&lt;span style=&quot;color:#f92672&quot;&gt;&amp;lt;/groupId&amp;gt;&lt;/span&gt;
-    &lt;span style=&quot;color:#f92672&quot;&gt;&amp;lt;artifactId&amp;gt;&lt;/span&gt;nacos-client&lt;span style=&quot;color:#f92672&quot;&gt;&amp;lt;/artifactId&amp;gt;&lt;/span&gt;
-    &lt;span style=&quot;color:#f92672&quot;&gt;&amp;lt;version&amp;gt;&lt;/span&gt;0.4.0&lt;span style=&quot;color:#f92672&quot;&gt;&amp;lt;/version&amp;gt;&lt;/span&gt;
-&lt;span style=&quot;color:#f92672&quot;&gt;&amp;lt;/dependency&amp;gt;&lt;/span&gt;
+	<h2 id="1-前言">1.前言</h2>
 
-&lt;span style=&quot;color:#f92672&quot;&gt;&amp;lt;dependency&amp;gt;&lt;/span&gt;
-    &lt;span style=&quot;color:#f92672&quot;&gt;&amp;lt;groupId&amp;gt;&lt;/span&gt;org.springframework.boot&lt;span style=&quot;color:#f92672&quot;&gt;&amp;lt;/groupId&amp;gt;&lt;/span&gt;
-    &lt;span style=&quot;color:#f92672&quot;&gt;&amp;lt;artifactId&amp;gt;&lt;/span&gt;spring-boot-starter-webflux&lt;span style=&quot;color:#f92672&quot;&gt;&amp;lt;/artifactId&amp;gt;&lt;/span&gt;
-&lt;span style=&quot;color:#f92672&quot;&gt;&amp;lt;/dependency&amp;gt;&lt;/span&gt;
+<p>网关中有两个重要的概念，那就是路由配置和路由规则，路由配置是指配置某请求路径路由到指定的目的地址。而路由规则是指匹配到路由配置之后，再根据路由规则进行转发处理。
+   Spring Cloud Gateway作为所有请求流量的入口，在实际生产环境中为了保证高可靠和高可用，尽量避免重启,需要实现Spring Cloud Gateway动态路由配置。前面章节介绍了Spring Cloud Gateway提供的两种方法去配置路由规则，但都是在Spring Cloud Gateway启动时候，就将路由配置和规则加载到内存里，无法做到不重启网关就可以动态的对应路由的配置和规则进行增加，修改和删除。本文是基于<a href="http://xujin.org/sc/gw/gw09/">Spring Cloud Gateway的动态路由实现</a>
+基础之上编写，通过Nacos配置服务下发路由配置实现动态路由。</p>
 
-&lt;span style=&quot;color:#f92672&quot;&gt;&amp;lt;dependency&amp;gt;&lt;/span&gt;
-    &lt;span style=&quot;color:#f92672&quot;&gt;&amp;lt;groupId&amp;gt;&lt;/span&gt;org.springframework.boot&lt;span style=&quot;color:#f92672&quot;&gt;&amp;lt;/groupId&amp;gt;&lt;/span&gt;
-    &lt;span style=&quot;color:#f92672&quot;&gt;&amp;lt;artifactId&amp;gt;&lt;/span&gt;spring-boot-starter-actuator&lt;span style=&quot;color:#f92672&quot;&gt;&amp;lt;/artifactId&amp;gt;&lt;/span&gt;
-&lt;span style=&quot;color:#f92672&quot;&gt;&amp;lt;/dependency&amp;gt;&lt;/span&gt;
+<h2 id="2-spring-cloud-gateway简单的动态路由实现">2. Spring Cloud Gateway简单的动态路由实现</h2>
 
-&lt;span style=&quot;color:#f92672&quot;&gt;&amp;lt;dependency&amp;gt;&lt;/span&gt;
-    &lt;span style=&quot;color:#f92672&quot;&gt;&amp;lt;groupId&amp;gt;&lt;/span&gt;com.alibaba&lt;span style=&quot;color:#f92672&quot;&gt;&amp;lt;/groupId&amp;gt;&lt;/span&gt;
-    &lt;span style=&quot;color:#f92672&quot;&gt;&amp;lt;artifactId&amp;gt;&lt;/span&gt;fastjson&lt;span style=&quot;color:#f92672&quot;&gt;&amp;lt;/artifactId&amp;gt;&lt;/span&gt;
-    &lt;span style=&quot;color:#f92672&quot;&gt;&amp;lt;version&amp;gt;&lt;/span&gt;1.2.47&lt;span style=&quot;color:#f92672&quot;&gt;&amp;lt;/version&amp;gt;&lt;/span&gt;
-&lt;span style=&quot;color:#f92672&quot;&gt;&amp;lt;/dependency&amp;gt;&lt;/span&gt;
+<p>Spring Cloud Gateway的官方文档并没有讲如何动态配置，查看 Spring Cloud Gateway的源码，发现<code>在org.springframework.cloud.gateway.actuate.GatewayControllerEndpoint</code>类中提供了动态配置的Rest接口，但是<code>需要开启Gateway的端点</code>，而且提供的功能不是很强大。通过参考和GatewayControllerEndpoint相关的代码，可以自己编码实际动态路由配置。
+下面通过案例的方式去讲解怎么通Nacos实现Spring Cloud Gateway的动态路由。案例工程如spring-cloud-gateway-nacos所示。</p>
+
+<blockquote>
+<p>代码地址:<a href="https://github.com/SpringCloud/spring-cloud-gateway-nacos">https://github.com/SpringCloud/spring-cloud-gateway-nacos</a></p>
+</blockquote>
+
+<h2 id="3-简单动态路由的实现">3. 简单动态路由的实现</h2>
+
+<h3 id="3-1-新建maven工程sc-gateway-server">3.1 新建Maven工程sc-gateway-server</h3>
+
+<p>配置主要的核心依赖如代码清单所示：
+  代码清单: spring-cloud-gateway-nacos/sc-gateway-server/pom.xml</p>
+
+<pre><code class="language-xml">
+ &lt;dependency&gt;
+        &lt;groupId&gt;org.springframework.cloud&lt;/groupId&gt;
+        &lt;artifactId&gt;spring-cloud-starter-gateway&lt;/artifactId&gt;
+    &lt;/dependency&gt;
+
+    &lt;dependency&gt;
+        &lt;groupId&gt;com.alibaba.nacos&lt;/groupId&gt;
+        &lt;artifactId&gt;nacos-client&lt;/artifactId&gt;
+        &lt;version&gt;0.4.0&lt;/version&gt;
+    &lt;/dependency&gt;
+
+    &lt;dependency&gt;
+        &lt;groupId&gt;org.springframework.boot&lt;/groupId&gt;
+        &lt;artifactId&gt;spring-boot-starter-webflux&lt;/artifactId&gt;
+    &lt;/dependency&gt;
+
+    &lt;dependency&gt;
+        &lt;groupId&gt;org.springframework.boot&lt;/groupId&gt;
+        &lt;artifactId&gt;spring-boot-starter-actuator&lt;/artifactId&gt;
+    &lt;/dependency&gt;
+
+    &lt;dependency&gt;
+        &lt;groupId&gt;com.alibaba&lt;/groupId&gt;
+        &lt;artifactId&gt;fastjson&lt;/artifactId&gt;
+        &lt;version&gt;1.2.47&lt;/version&gt;
+    &lt;/dependency&gt;
 </code></pre>
-<p><!-- raw HTML omitted --><!-- raw HTML omitted --><!-- raw HTML omitted --><!-- raw HTML omitted -->3.2 根据Spring Cloud Gateway的路由模型定义数据传输模型<!-- raw HTML omitted --></p>
-<!-- raw HTML omitted -->
-<p><!-- raw HTML omitted --><!-- raw HTML omitted --><!-- raw HTML omitted --><!-- raw HTML omitted -->(2)创建过滤器定义模型<!-- raw HTML omitted --></p>
-<!-- raw HTML omitted -->
-<p><!-- raw HTML omitted --><!-- raw HTML omitted --><!-- raw HTML omitted --><!-- raw HTML omitted -->3.3 编写动态路由实现类<!-- raw HTML omitted --></p>
-<!-- raw HTML omitted -->
-<p><!-- raw HTML omitted --><!-- raw HTML omitted --><!-- raw HTML omitted --><!-- raw HTML omitted -->3.4 编写Nacos监听接收下发的路由配置<!-- raw HTML omitted --></p>
-<!-- raw HTML omitted -->
-<pre><code>&lt;span style=&quot;color:#a6e22e&quot;&gt;@Autowired&lt;/span&gt;
-&lt;span style=&quot;color:#66d9ef&quot;&gt;private&lt;/span&gt; DynamicRouteServiceImpl dynamicRouteService&lt;span style=&quot;color:#f92672&quot;&gt;;&lt;/span&gt;
 
-&lt;span style=&quot;color:#66d9ef&quot;&gt;public&lt;/span&gt; &lt;span style=&quot;color:#a6e22e&quot;&gt;DynamicRouteServiceImplByNacos&lt;/span&gt;&lt;span style=&quot;color:#f92672&quot;&gt;()&lt;/span&gt; &lt;span style=&quot;color:#f92672&quot;&gt;{&lt;/span&gt;
+<h3 id="3-2-根据spring-cloud-gateway的路由模型定义数据传输模型">3.2 根据Spring Cloud Gateway的路由模型定义数据传输模型</h3>
 
-    dynamicRouteByNacosListener&lt;span style=&quot;color:#f92672&quot;&gt;(&lt;/span&gt;&lt;span style=&quot;color:#e6db74&quot;&gt;&amp;#34;sc-gateway&amp;#34;&lt;/span&gt;&lt;span style=&quot;color:#f92672&quot;&gt;,&lt;/span&gt;&lt;span style=&quot;color:#e6db74&quot;&gt;&amp;#34;xujin_test&amp;#34;&lt;/span&gt;&lt;span style=&quot;color:#f92672&quot;&gt;);&lt;/span&gt;
-&lt;span style=&quot;color:#f92672&quot;&gt;}&lt;/span&gt;
+<p>分别创建GatewayRouteDefinition.java, GatewayPredicateDefinition.java, GatewayFilterDefinition.java这三个类。
+(1) 创建路由定义模型</p>
 
-&lt;span style=&quot;color:#75715e&quot;&gt;/**
+<pre><code class="language-java">public class GatewayRouteDefinition {
+    //路由的Id
+    private String id;
+    //路由断言集合配置
+    private List&lt;GatewayPredicateDefinition&gt; predicates = new ArrayList&lt;&gt;();
+    //路由过滤器集合配置
+    private List&lt;GatewayFilterDefinition&gt; filters = new ArrayList&lt;&gt;();
+    //路由规则转发的目标uri
+    private String uri;
+    //路由执行的顺序
+    private int order = 0;
+    //此处省略get和set方法
+}
+
 </code></pre>
-<p><!-- raw HTML omitted --><!-- raw HTML omitted -->     * 监听Nacos Server下发的动态路由配置
-<!-- raw HTML omitted --><!-- raw HTML omitted -->     * @param dataId
-<!-- raw HTML omitted --><!-- raw HTML omitted -->     * @param group
-<!-- raw HTML omitted --><!-- raw HTML omitted -->     */<!-- raw HTML omitted -->
-<!-- raw HTML omitted -->public<!-- raw HTML omitted --> <!-- raw HTML omitted -->void<!-- raw HTML omitted --> <!-- raw HTML omitted -->dynamicRouteByNacosListener<!-- raw HTML omitted --> <!-- raw HTML omitted -->(<!-- raw HTML omitted -->String dataId<!-- raw HTML omitted -->,<!-- raw HTML omitted --> String group<!-- raw HTML omitted -->){<!-- raw HTML omitted -->
-<!-- raw HTML omitted -->try<!-- raw HTML omitted --> <!-- raw HTML omitted -->{<!-- raw HTML omitted -->
-ConfigService configService<!-- raw HTML omitted -->=<!-- raw HTML omitted -->NacosFactory<!-- raw HTML omitted -->.<!-- raw HTML omitted --><!-- raw HTML omitted -->createConfigService<!-- raw HTML omitted --><!-- raw HTML omitted -->(<!-- raw HTML omitted --><!-- raw HTML omitted -->&quot;127.0.0.1:8848&quot;<!-- raw HTML omitted --><!-- raw HTML omitted -->);<!-- raw HTML omitted -->
-String content <!-- raw HTML omitted -->=<!-- raw HTML omitted --> configService<!-- raw HTML omitted -->.<!-- raw HTML omitted --><!-- raw HTML omitted -->getConfig<!-- raw HTML omitted --><!-- raw HTML omitted -->(<!-- raw HTML omitted -->dataId<!-- raw HTML omitted -->,<!-- raw HTML omitted --> group<!-- raw HTML omitted -->,<!-- raw HTML omitted --> 5000<!-- raw HTML omitted -->);<!-- raw HTML omitted -->
-System<!-- raw HTML omitted -->.<!-- raw HTML omitted --><!-- raw HTML omitted -->out<!-- raw HTML omitted --><!-- raw HTML omitted -->.<!-- raw HTML omitted --><!-- raw HTML omitted -->println<!-- raw HTML omitted --><!-- raw HTML omitted -->(<!-- raw HTML omitted -->content<!-- raw HTML omitted -->);<!-- raw HTML omitted -->
-configService<!-- raw HTML omitted -->.<!-- raw HTML omitted --><!-- raw HTML omitted -->addListener<!-- raw HTML omitted --><!-- raw HTML omitted -->(<!-- raw HTML omitted -->dataId<!-- raw HTML omitted -->,<!-- raw HTML omitted --> group<!-- raw HTML omitted -->,<!-- raw HTML omitted --> <!-- raw HTML omitted -->new<!-- raw HTML omitted --> Listener<!-- raw HTML omitted -->()<!-- raw HTML omitted -->  <!-- raw HTML omitted -->{<!-- raw HTML omitted -->
-<!-- raw HTML omitted -->@Override<!-- raw HTML omitted -->
-<!-- raw HTML omitted -->public<!-- raw HTML omitted --> <!-- raw HTML omitted -->void<!-- raw HTML omitted --> <!-- raw HTML omitted -->receiveConfigInfo<!-- raw HTML omitted --><!-- raw HTML omitted -->(<!-- raw HTML omitted -->String configInfo<!-- raw HTML omitted -->)<!-- raw HTML omitted --> <!-- raw HTML omitted -->{<!-- raw HTML omitted -->
-RouteDefinition definition<!-- raw HTML omitted -->=<!-- raw HTML omitted --> JSON<!-- raw HTML omitted -->.<!-- raw HTML omitted --><!-- raw HTML omitted -->parseObject<!-- raw HTML omitted --><!-- raw HTML omitted -->(<!-- raw HTML omitted -->configInfo<!-- raw HTML omitted -->,<!-- raw HTML omitted -->RouteDefinition<!-- raw HTML omitted -->.<!-- raw HTML omitted --><!-- raw HTML omitted -->class<!-- raw HTML omitted --><!-- raw HTML omitted -->);<!-- raw HTML omitted -->
-dynamicRouteService<!-- raw HTML omitted -->.<!-- raw HTML omitted --><!-- raw HTML omitted -->update<!-- raw HTML omitted --><!-- raw HTML omitted -->(<!-- raw HTML omitted -->definition<!-- raw HTML omitted -->);<!-- raw HTML omitted -->
-<!-- raw HTML omitted -->}<!-- raw HTML omitted -->
-<!-- raw HTML omitted -->@Override<!-- raw HTML omitted -->
-<!-- raw HTML omitted -->public<!-- raw HTML omitted --> Executor <!-- raw HTML omitted -->getExecutor<!-- raw HTML omitted --><!-- raw HTML omitted -->()<!-- raw HTML omitted --> <!-- raw HTML omitted -->{<!-- raw HTML omitted -->
-<!-- raw HTML omitted -->return<!-- raw HTML omitted --> <!-- raw HTML omitted -->null<!-- raw HTML omitted --><!-- raw HTML omitted -->;<!-- raw HTML omitted -->
-<!-- raw HTML omitted -->}<!-- raw HTML omitted -->
-<!-- raw HTML omitted -->});<!-- raw HTML omitted -->
-<!-- raw HTML omitted -->}<!-- raw HTML omitted --> <!-- raw HTML omitted -->catch<!-- raw HTML omitted --> <!-- raw HTML omitted -->(<!-- raw HTML omitted -->NacosException e<!-- raw HTML omitted -->)<!-- raw HTML omitted --> <!-- raw HTML omitted -->{<!-- raw HTML omitted -->
-<!-- raw HTML omitted -->//todo 提醒:异常自行处理此处省略
-<!-- raw HTML omitted --><!-- raw HTML omitted --><!-- raw HTML omitted -->        <!-- raw HTML omitted -->}<!-- raw HTML omitted -->
-<!-- raw HTML omitted -->}<!-- raw HTML omitted --></p>
-<p><!-- raw HTML omitted -->}<!-- raw HTML omitted -->
-<!-- raw HTML omitted --><!-- raw HTML omitted --><!-- raw HTML omitted --><!-- raw HTML omitted -->3.4.2 两种方式创建ConfigService<!-- raw HTML omitted --></p>
-<!-- raw HTML omitted -->
+
+<p>(2)创建过滤器定义模型</p>
+
+<pre><code class="language-java">public class GatewayFilterDefinition {
+    //Filter Name
+    private String name;
+    //对应的路由规则
+    private Map&lt;String, String&gt; args = new LinkedHashMap&lt;&gt;();
+    //此处省略Get和Set方法
+}
+</code></pre>
+
+<p>(3)创建路由断言定义模型</p>
+
+<pre><code class="language-java">public class GatewayPredicateDefinition {
+    //断言对应的Name
+    private String name;
+    //配置的断言规则
+    private Map&lt;String, String&gt; args = new LinkedHashMap&lt;&gt;();
+    //此处省略Get和Set方法
+}
+
+</code></pre>
+
+<h3 id="3-3-编写动态路由实现类">3.3 编写动态路由实现类</h3>
+
+<p>编写DynamicRouteServiceImpl并实现ApplicationEventPublisherAware接口，代码如下所示</p>
+
+<pre><code class="language-Java">@Service
+public class DynamicRouteServiceImpl implements ApplicationEventPublisherAware {
+    @Autowired
+    private RouteDefinitionWriter routeDefinitionWriter;
+    private ApplicationEventPublisher publisher;
+    //增加路由
+    public String add(RouteDefinition definition) {
+        routeDefinitionWriter.save(Mono.just(definition)).subscribe();
+        this.publisher.publishEvent(new RefreshRoutesEvent(this));
+        return &quot;success&quot;;
+    }
+    //更新路由
+    public String update(RouteDefinition definition) {
+        try {
+            this.routeDefinitionWriter.delete(Mono.just(definition.getId()));
+        } catch (Exception e) {
+            return &quot;update fail,not find route  routeId: &quot;+definition.getId();
+        }
+        try {
+            routeDefinitionWriter.save(Mono.just(definition)).subscribe();
+            this.publisher.publishEvent(new RefreshRoutesEvent(this));
+            return &quot;success&quot;;
+        } catch (Exception e) {
+            return &quot;update route  fail&quot;;
+        }
+    }
+    //删除路由
+    public Mono&lt;ResponseEntity&lt;Object&gt;&gt; delete(String id) {
+        return this.routeDefinitionWriter.delete(Mono.just(id))
+                .then(Mono.defer(() -&gt; Mono.just(ResponseEntity.ok().build())))
+                .onErrorResume(t -&gt; t instanceof NotFoundException, t -&gt; Mono.just(ResponseEntity.notFound().build()));
+    }
+    @Override
+    public void setApplicationEventPublisher(ApplicationEventPublisher applicationEventPublisher) {
+        this.publisher = applicationEventPublisher;
+    }
+}
+
+</code></pre>
+
+<h3 id="3-4-编写nacos监听接收下发的路由配置">3.4 编写Nacos监听接收下发的路由配置</h3>
+
+<h3 id="3-4-1-使用nacos监听下发的配置">3.4.1 使用Nacos监听下发的配置</h3>
+
+<p>监听Nacos Config Server下发配置的代码如下所示：</p>
+
+<pre><code class="language-java">@Component
+public class DynamicRouteServiceImplByNacos {
+
+    @Autowired
+    private DynamicRouteServiceImpl dynamicRouteService;
+
+    public DynamicRouteServiceImplByNacos() {
+
+        dynamicRouteByNacosListener(&quot;sc-gateway&quot;,&quot;xujin_test&quot;);
+    }
+
+    /**
+     * 监听Nacos Server下发的动态路由配置
+     * @param dataId
+     * @param group
+     */
+    public void dynamicRouteByNacosListener (String dataId, String group){
+        try {
+            ConfigService configService=NacosFactory.createConfigService(&quot;127.0.0.1:8848&quot;);
+            String content = configService.getConfig(dataId, group, 5000);
+            System.out.println(content);
+            configService.addListener(dataId, group, new Listener()  {
+                @Override
+                public void receiveConfigInfo(String configInfo) {
+                    RouteDefinition definition= JSON.parseObject(configInfo,RouteDefinition.class);
+                    dynamicRouteService.update(definition);
+                }
+                @Override
+                public Executor getExecutor() {
+                    return null;
+                }
+            });
+        } catch (NacosException e) {
+            //todo 提醒:异常自行处理此处省略
+        }
+    }
+
+}
+</code></pre>
+
+<h4 id="3-4-2-两种方式创建configservice">3.4.2 两种方式创建ConfigService</h4>
+
+<p>使用两种方式创建com.alibaba.nacos.api.config.ConfigService</p>
+
+<ul>
+<li>1.构建Properties创建</li>
+</ul>
+
+<p>使用createConfigService(Properties properties)，代码如下所示:</p>
+
+<pre><code class="language-java">Properties properties = new Properties();
+            properties.put(&quot;nacos.server-addr&quot;, &quot;&quot;);
+            properties.put(PropertyKeyConst.SERVER_ADDR, &quot;127.0.0.1:8848&quot;);
+            ConfigService configService=NacosFactory.createConfigService(properties);
+</code></pre>
+
+<blockquote>
+<p>注意:PropertyKeyConst是com.alibaba.nacos.api.PropertyKeyConst</p>
+</blockquote>
+
+<ul>
+<li>2.只传递Nacos Config Server的地址</li>
+</ul>
+
+<pre><code class="language-java"> ConfigService configService=NacosFactory.createConfigService(&quot;127.0.0.1:8848&quot;);
+</code></pre>
+
+<h2 id="4-使用nacos下发配置">4. 使用Nacos下发配置</h2>
+
+<h3 id="4-1-nacos概述">4.1 Nacos概述</h3>
+
+<p>Naocs由阿里开源，Nacos 致力于帮助您发现、配置和管理微服务。Nacos 提供了一组简单易用的特性集，帮助您快速实现动态服务发现、服务配置、服务元数据及流量管理。
+   Nacos 帮助您更敏捷和容易地构建、交付和管理微服务平台。 Nacos 是构建以“服务”为中心的现代应用架构 (例如微服务范式、云原生范式) 的服务基础设施。github地址:<a href="https://github.com/alibaba/nacos">https://github.com/alibaba/nacos</a>
+   &gt; 更多Nacos的介绍，请访问官方网站:<a href="https://nacos.io/">https://nacos.io/</a></p>
+
+<h3 id="4-2-在ide中启动-nacos">4.2 在IDE中启动 Nacos</h3>
+
+<p>访问<a href="https://github.com/alibaba/nacos">https://github.com/alibaba/nacos</a> ,使用Git克隆Nacos代码，直接导入到IDEA中，如下所示设置启动参数，直接启动。</p>
+
+<p><img src="nacos0.jpg" alt="" /></p>
+
+<blockquote>
+<p>从IDE中启动Nacos是我比较推荐的方式，因为可以随时Debug Nacos任何代码，其它启动方式请参考官网。</p>
+</blockquote>
+
+<h2 id="5-测试">5.测试</h2>
+
+<h3 id="5-1-nacos中下发spring-cloud-gateway的路由配置">5.1  Nacos中下发Spring Cloud Gateway的路由配置</h3>
+
+<ul>
+<li>1.打开浏览器访问URL:<a href="http://localhost:8848/nacos/index.html">http://localhost:8848/nacos/index.html</a> ,Nacos的管控平台如下所示:</li>
+</ul>
+
+<p><img src="nacos1.jpg" alt="" /></p>
+
+<ul>
+<li>2.在Nacos的配置列表点击<code>+</code>按钮，下发Spring Cloud Gateway的路由配置，如下所示:</li>
+</ul>
+
+<p><img src="nacos2.jpg" alt="" /></p>
+
+<hr />
+
+<p>用于测试的示例数据，如下所示:</p>
+
+<pre><code class="language-json">{
+    &quot;filters&quot;: [],
+    &quot;id&quot;: &quot;jd_route&quot;,
+    &quot;order&quot;: 0,
+    &quot;predicates&quot;: [{
+        &quot;args&quot;: {
+            &quot;pattern&quot;: &quot;/jd&quot;
+        },
+        &quot;name&quot;: &quot;Path&quot;
+    }],
+    &quot;uri&quot;: &quot;http://www.jd.com&quot;
+}
+</code></pre>
+
+<p><img src="nacos3.jpg" alt="" /></p>
+
+<p><img src="nacos4.jpg" alt="" /></p>
+
+<h3 id="5-2-启动sc-gateway-server">5.2 启动sc-gateway-server</h3>
+
+<ul>
+<li>1.Debug启动sc-gateway-server,调试截图如下所示:</li>
+</ul>
+
+<p><img src="nacos5.jpg" alt="" />
+* 2.通过Spring Cloud gateway的端点，查看路由信息</p>
+
+<p><img src="nacos6.jpg" alt="" /></p>
+
+<ul>
+<li>3.通过访问<a href="http://localhost:8080/jd">http://localhost:8080/jd</a> ,可以转发到京东商城主页</li>
+</ul>
+
+<h3 id="5-3-更新路由配置">5.3 更新路由配置</h3>
+
+<ul>
+<li>1.通过Nacos下发配置，修改Spring Cloud Gateway的动态路由规则</li>
+</ul>
+
+<p><img src="nacos7.jpg" alt="" /></p>
+
+<ul>
+<li>2.查看访问Spring Cloud gateway的端点配置，可以看到动态路由修改如下:</li>
+</ul>
+
+<p><img src="nacos8.jpg" alt="" /></p>
+
+<ul>
+<li>3.通过访问<a href="http://localhost:8080/jd">http://localhost:8080/jd</a> ,可以转发到百度相关页面</li>
+</ul>
 
 </article>
 
@@ -443,32 +675,35 @@ dynamicRouteService<!-- raw HTML omitted -->.<!-- raw HTML omitted --><!-- raw H
 		目录
 	</h2>
   <nav id="TableOfContents">
-  <ul>
-    <li><a href="#1前言">1.前言</a></li>
-    <li><a href="#2-spring-cloud-gateway简单的动态路由实现">2. Spring Cloud Gateway简单的动态路由实现</a></li>
-    <li><a href="#3-简单动态路由的实现">3. 简单动态路由的实现</a>
-      <ul>
-        <li><a href="#31-新建maven工程sc-gateway-server">3.1 新建Maven工程sc-gateway-server</a></li>
-        <li><a href="#32-根据spring-cloud-gateway的路由模型定义数据传输模型">3.2 根据Spring Cloud Gateway的路由模型定义数据传输模型</a></li>
-        <li><a href="#33-编写动态路由实现类">3.3 编写动态路由实现类</a></li>
-        <li><a href="#34-编写nacos监听接收下发的路由配置">3.4 编写Nacos监听接收下发的路由配置</a></li>
-        <li><a href="#341-使用nacos监听下发的配置">3.4.1 使用Nacos监听下发的配置</a></li>
-      </ul>
-    </li>
-    <li><a href="#4-使用nacos下发配置">4. 使用Nacos下发配置</a>
-      <ul>
-        <li><a href="#41-nacos概述">4.1 Nacos概述</a></li>
-        <li><a href="#42-在ide中启动-nacos">4.2 在IDE中启动 Nacos</a></li>
-      </ul>
-    </li>
-    <li><a href="#5测试">5.测试</a>
-      <ul>
-        <li><a href="#51--nacos中下发spring-cloud-gateway的路由配置">5.1  Nacos中下发Spring Cloud Gateway的路由配置</a></li>
-        <li><a href="#52-启动sc-gateway-server">5.2 启动sc-gateway-server</a></li>
-        <li><a href="#53-更新路由配置">5.3 更新路由配置</a></li>
-      </ul>
-    </li>
-  </ul>
+<ul>
+<li>
+<ul>
+<li><a href="#1-前言">1.前言</a></li>
+<li><a href="#2-spring-cloud-gateway简单的动态路由实现">2. Spring Cloud Gateway简单的动态路由实现</a></li>
+<li><a href="#3-简单动态路由的实现">3. 简单动态路由的实现</a>
+<ul>
+<li><a href="#3-1-新建maven工程sc-gateway-server">3.1 新建Maven工程sc-gateway-server</a></li>
+<li><a href="#3-2-根据spring-cloud-gateway的路由模型定义数据传输模型">3.2 根据Spring Cloud Gateway的路由模型定义数据传输模型</a></li>
+<li><a href="#3-3-编写动态路由实现类">3.3 编写动态路由实现类</a></li>
+<li><a href="#3-4-编写nacos监听接收下发的路由配置">3.4 编写Nacos监听接收下发的路由配置</a></li>
+<li><a href="#3-4-1-使用nacos监听下发的配置">3.4.1 使用Nacos监听下发的配置</a>
+<ul>
+<li><a href="#3-4-2-两种方式创建configservice">3.4.2 两种方式创建ConfigService</a></li>
+</ul></li>
+</ul></li>
+<li><a href="#4-使用nacos下发配置">4. 使用Nacos下发配置</a>
+<ul>
+<li><a href="#4-1-nacos概述">4.1 Nacos概述</a></li>
+<li><a href="#4-2-在ide中启动-nacos">4.2 在IDE中启动 Nacos</a></li>
+</ul></li>
+<li><a href="#5-测试">5.测试</a>
+<ul>
+<li><a href="#5-1-nacos中下发spring-cloud-gateway的路由配置">5.1  Nacos中下发Spring Cloud Gateway的路由配置</a></li>
+<li><a href="#5-2-启动sc-gateway-server">5.2 启动sc-gateway-server</a></li>
+<li><a href="#5-3-更新路由配置">5.3 更新路由配置</a></li>
+</ul></li>
+</ul></li>
+</ul>
 </nav>
 </div>
 
@@ -517,15 +752,15 @@ dynamicRouteService<!-- raw HTML omitted -->.<!-- raw HTML omitted --><!-- raw H
 	
 	<ul class="ss-aside-related">
 		
-			<li><a href="/blog/scg-06/">Spring Cloud Gateway的Before路由断言工厂</a></li>
-		
-			<li><a href="/blog/scg-dmy-route/">Spring Cloud Gateway的动态路由的简单实现方式</a></li>
-		
-			<li><a href="/blog/scg-02/">Spring Cloud Gateway的权重路由</a></li>
+			<li><a href="/blog/scg-03/">Spring Cloud Gateway中的GatewayFilter和GlobalFilter</a></li>
 		
 			<li><a href="/blog/scg-05/">Spring Cloud Gateway基于服务发现的默认路由规则</a></li>
 		
-			<li><a href="/blog/scg-03/">Spring Cloud Gateway中的GatewayFilter和GlobalFilter</a></li>
+			<li><a href="/blog/scg-dmy-route/">Spring Cloud Gateway的动态路由的简单实现方式</a></li>
+		
+			<li><a href="/blog/scg-06/">Spring Cloud Gateway的Before路由断言工厂</a></li>
+		
+			<li><a href="/blog/scg-02/">Spring Cloud Gateway的权重路由</a></li>
 		
 	</ul>
 	

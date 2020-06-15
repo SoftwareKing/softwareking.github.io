@@ -10,7 +10,7 @@
 <meta name="viewport" content="width=device-width,minimum-scale=1">
 <meta name="description" content="玹霖志,许进沉思录,许进|Spring Cloud,中间件，基础架构，www.xujin.org,xujin.org,-许进沉思录,Venus&#43;,云首科技有限公司,云计算，大数据，物联网，Software_king的博客,云计算Saas，云计算Paas，云计算Iaas Hadoop，大数据，JavaEE，Java，物联网，Hadoop， NoSQL，MongoDB,Spring, Hibernate,Struts2," />
 
-<meta name="generator" content="Hugo 0.72.0" /><link rel="shortcut icon" href=/img/icon.png type="image/png">
+<meta name="generator" content="Hugo 0.55.6" /><link rel="shortcut icon" href=/img/icon.png type="image/png">
 
 <link href="https://unpkg.com/purecss@1.0.0/build/base-min.css" rel="stylesheet">
 
@@ -241,7 +241,7 @@ if (!doNotTrack) {
 				
 			</span>
 		
-		<span class="post-word-count">· 字数:2149·阅读时间 5 分钟</span>
+		<span class="post-word-count">· 字数:2160·阅读时间 5 分钟</span>
 		
 		阅读量<span id="busuanzi_value_page_pv"></span>次
 		
@@ -259,22 +259,222 @@ if (!doNotTrack) {
 	});
   </script>
 		<article class="typo">
-	<!-- raw HTML omitted -->
-<p><!-- raw HTML omitted -->server<!-- raw HTML omitted -->:
-<!-- raw HTML omitted -->port<!-- raw HTML omitted -->: <!-- raw HTML omitted -->9000<!-- raw HTML omitted -->
-<!-- raw HTML omitted -->eureka<!-- raw HTML omitted -->:
-<!-- raw HTML omitted -->client<!-- raw HTML omitted -->:
-<!-- raw HTML omitted -->service-url<!-- raw HTML omitted -->:
-<!-- raw HTML omitted -->defaultZone<!-- raw HTML omitted -->: http://localhost:<!-- raw HTML omitted -->8761<!-- raw HTML omitted -->/eureka/</p>
-<p><!-- raw HTML omitted -->logging<!-- raw HTML omitted -->:
-<!-- raw HTML omitted -->level<!-- raw HTML omitted -->:
-<!-- raw HTML omitted -->org.springframework.cloud.gateway<!-- raw HTML omitted -->: debug
-<!-- raw HTML omitted --><!-- raw HTML omitted --><!-- raw HTML omitted --><!-- raw HTML omitted -->配置说明：<!-- raw HTML omitted --></p>
-<!-- raw HTML omitted -->
-<p><!-- raw HTML omitted --><!-- raw HTML omitted --><!-- raw HTML omitted --><!-- raw HTML omitted -->从上面的log，看到返回了 404 错误，进一步可以看到 Spring Cloud Gateway 已经为我们的 provider 和 consumer 自动创建了对应的路由转发规则，但是这里的 pattern/regexp 里都是大写的，下面换成大写的测试一下。<!-- raw HTML omitted --></p>
-<!-- raw HTML omitted -->
-<p><!-- raw HTML omitted --><!-- raw HTML omitted --><!-- raw HTML omitted --><!-- raw HTML omitted -->可以看出，Spring Cloud Gateway 自动的为我们的 consumer 创建了一个路由，类似于下边这样<!-- raw HTML omitted --></p>
-<!-- raw HTML omitted -->
+	<p><strong>摘要</strong>:本篇文章主要介绍了Spring Cloud Gateway的基于服务发现的默认路由规则，从中可以看出Gateway的路由规则:<a href="http://Gateway_HOST:Gateway_PORT/大写的serviceId/*">http://Gateway_HOST:Gateway_PORT/大写的serviceId/*</a> 和 zuul的默认路由规则<a href="http://ZUUL_HOST:ZUUL_PORT/微服务在Eureka上的serviceId/*差不多。">http://ZUUL_HOST:ZUUL_PORT/微服务在Eureka上的serviceId/*差不多。</a></p>
+
+<h2 id="1-spring-gateway概述">1.Spring Gateway概述</h2>
+
+<h3 id="1-1-什么是spring-cloud-gateway">1.1 什么是Spring Cloud Gateway</h3>
+
+<p><code>Spring Cloud Gateway</code>是Spring官方基于Spring 5.0，Spring Boot 2.0和Project Reactor等技术开发的网关，Spring Cloud Gateway旨在为微服务架构提供一种简单而有效的统一的API路由管理方式。Spring Cloud Gateway作为Spring Cloud生态系中的网关，目标是替代Netflix ZUUL，其不仅提供统一的路由方式，并且基于Filter链的方式提供了网关基本的功能，例如：安全，监控/埋点，和限流等。</p>
+
+<p><img src="1.jpg" alt="" /></p>
+
+<h3 id="1-2-spring-cloud-gateway的功能">1.2 Spring Cloud Gateway的功能</h3>
+
+<p>Spring Cloud Gateway 的特征：
+* 基于 Spring Framework 5，Project Reactor 和 Spring Boot 2.0
+动态路由
+* Predicates 和 Filters 作用于特定路由
+* 集成 Hystrix 断路器
+* 集成 Spring Cloud DiscoveryClient
+* 易于编写的 Predicates 和 Filters
+* 限流
+* 路径重写</p>
+
+<h2 id="2-spring-cloud-gateway的工程流程">2. Spring Cloud Gateway的工程流程</h2>
+
+<p><img src="2.jpg" alt="" /></p>
+
+<p>客户端向 Spring Cloud Gateway 发出请求。然后在 Gateway Handler Mapping 中找到与请求相匹配的路由，将其发送到 Gateway Web Handler。Handler 再通过指定的过滤器链来将请求发送到我们实际的服务执行业务逻辑，然后返回。
+过滤器之间用虚线分开是因为过滤器可能会在发送代理请求之前（“pre”）或之后（“post”）执行业务逻辑。</p>
+
+<h3 id="2-1-pre和post两种类型的过滤器">2.1 Pre和POST两种类型的过滤器</h3>
+
+<h2 id="3-基于服务发现的默认路由规则">3.基于服务发现的默认路由规则</h2>
+
+<h3 id="3-1-zuul和gateway的默认路由规则">3.1 zuul和gateway的默认路由规则</h3>
+
+<h4 id="3-1-1-zuul的默认路由规则">3.1.1 zuul的默认路由规则</h4>
+
+<p>说明默认情况下，Zuul会代理所有注册到Eureka Server的微服务，并且Zuul的路由规则如下：
+   <a href="http://ZUUL_HOST:ZUUL_PORT/微服务在Eureka上的serviceId/**">http://ZUUL_HOST:ZUUL_PORT/微服务在Eureka上的serviceId/**</a> 会被转发到serviceId对应的微服务。
+   <a href="http://localhost:8040/sc-zuul-first-provider/sc/order/2">http://localhost:8040/sc-zuul-first-provider/sc/order/2</a></p>
+
+<h4 id="3-1-2-gateway的默认路由规则">3.1.2 gateway的默认路由规则</h4>
+
+<p>下面的案例中会演示：<a href="http://localhost:9000/SC-CONSUMER/hello/xujin">http://localhost:9000/SC-CONSUMER/hello/xujin</a>
+&gt;<a href="http://Gateway_HOST:Gateway_PORT/大写的serviceId/**，其中微服务应用名默认大写访问。">http://Gateway_HOST:Gateway_PORT/大写的serviceId/**，其中微服务应用名默认大写访问。</a></p>
+
+<h3 id="3-2-案例示例代码">3.2  案例示例代码</h3>
+
+<p><a href="https://github.com/SoftwareKing/sc-gateway/tree/master/ch1">https://github.com/SoftwareKing/sc-gateway/tree/master/ch1</a></p>
+
+<p><img src="3.jpeg" alt="" /></p>
+
+<table>
+<thead>
+<tr>
+<th>模块</th>
+<th>说明</th>
+<th>端口</th>
+</tr>
+</thead>
+
+<tbody>
+<tr>
+<td>ch1-sc-consumer</td>
+<td>服务消费者</td>
+<td>8000</td>
+</tr>
+
+<tr>
+<td>ch1-sc-eureka</td>
+<td>Eureka Server注册中心</td>
+<td>8761</td>
+</tr>
+
+<tr>
+<td>ch1-sc-gateway</td>
+<td>Spring Cloud Gateway Sever</td>
+<td>9000</td>
+</tr>
+
+<tr>
+<td>ch1-sc-provider</td>
+<td>服务提供者</td>
+<td>8001</td>
+</tr>
+</tbody>
+</table>
+
+<h4 id="3-2-1-ch1-sc-gateway工程说明">3.2.1 ch1-sc-gateway工程说明</h4>
+
+<h4 id="3-2-1-1-maven依赖">3.2.1.1  Maven依赖</h4>
+
+<p>Spring Cloud Gateway sever主要的maven依赖如下所示</p>
+
+<pre><code class="language-xml">&lt;dependencies&gt;
+        &lt;dependency&gt;
+            &lt;groupId&gt;org.springframework.cloud&lt;/groupId&gt;
+            &lt;artifactId&gt;spring-cloud-starter-gateway&lt;/artifactId&gt;
+        &lt;/dependency&gt;
+        &lt;dependency&gt;
+            &lt;groupId&gt;org.springframework.cloud&lt;/groupId&gt;
+            &lt;artifactId&gt;spring-cloud-starter-netflix-eureka-client&lt;/artifactId&gt;
+        &lt;/dependency&gt;
+    &lt;/dependencies&gt;
+</code></pre>
+
+<h4 id="3-2-1-2-yml文件配置">3.2.1.2 yml文件配置</h4>
+
+<pre><code class="language-yml">spring:
+  application:
+    name: sc-gateway-server
+  cloud:
+    gateway:
+      discovery:
+        locator:
+          enabled: true
+
+server:
+  port: 9000
+eureka:
+  client:
+    service-url:
+      defaultZone: http://localhost:8761/eureka/
+
+logging:
+  level:
+    org.springframework.cloud.gateway: debug
+</code></pre>
+
+<p>配置说明：</p>
+
+<blockquote>
+<p>spring.cloud.gateway.discovery.locator.enabled：是否与服务发现组件进行结合，通过 serviceId 转发到具体的服务实例。默认为false，设为true便开启通过服务中心的自动根据 serviceId 创建路由的功能。</p>
+</blockquote>
+
+<hr />
+
+<blockquote>
+<p>修改spring cloud gateway server监听的端口为9000</p>
+</blockquote>
+
+<hr />
+
+<blockquote>
+<p>eureka.client.service-url.defaultZone: <a href="http://localhost:8761/eureka/,指定注册中心的地址，Spring">http://localhost:8761/eureka/,指定注册中心的地址，Spring</a> Cloud Gateway从注册中心获取已经注册的服务列表。</p>
+</blockquote>
+
+<hr />
+
+<blockquote>
+<p>logging.level.org.springframework.cloud.gateway: debug,开启spring-Cloud-gateway的日志级别为debug，方便debug调试。</p>
+</blockquote>
+
+<h3 id="3-3-启动测试">3.3 启动测试</h3>
+
+<h4 id="3-3-1-错误的路由规则访问">3.3.1 错误的路由规则访问</h4>
+
+<p>访问Spring Cloud Gateway对应的server，当访问<a href="http://localhost:9000/sc-consumer/hello/xujin的时候，报错如下所示，正确的Spring">http://localhost:9000/sc-consumer/hello/xujin的时候，报错如下所示，正确的Spring</a> Cloud Gateway的默认路由规则:<code>http://Gateway_HOST:Gateway_PORT/大写的serviceId/**</code></p>
+
+<p><img src="4.jpeg" alt="" /></p>
+
+<pre><code class="language-shell">2018-05-18 01:10:49.742 DEBUG 6462 --- [ctor-http-nio-5] o.s.c.g.r.RouteDefinitionRouteLocator    : RouteDefinition CompositeDiscoveryClient_SC-CONSUMER applying {pattern=/SC-CONSUMER/**} to Path
+2018-05-18 01:10:49.743 DEBUG 6462 --- [ctor-http-nio-5] o.s.c.g.r.RouteDefinitionRouteLocator    : RouteDefinition CompositeDiscoveryClient_SC-CONSUMER applying filter {regexp=/SC-CONSUMER/(?&lt;remaining&gt;.*), replacement=/${remaining}} to RewritePath
+2018-05-18 01:10:49.743 DEBUG 6462 --- [ctor-http-nio-5] o.s.c.g.r.RouteDefinitionRouteLocator    : RouteDefinition matched: CompositeDiscoveryClient_SC-CONSUMER
+2018-05-18 01:10:49.744 DEBUG 6462 --- [ctor-http-nio-5] o.s.c.g.r.RouteDefinitionRouteLocator    : RouteDefinition CompositeDiscoveryClient_SC-PRODUCER applying {pattern=/SC-PRODUCER/**} to Path
+2018-05-18 01:10:49.744 DEBUG 6462 --- [ctor-http-nio-5] o.s.c.g.r.RouteDefinitionRouteLocator    : RouteDefinition CompositeDiscoveryClient_SC-PRODUCER applying filter {regexp=/SC-PRODUCER/(?&lt;remaining&gt;.*), replacement=/${remaining}} to RewritePath
+2018-05-18 01:10:49.745 DEBUG 6462 --- [ctor-http-nio-5] o.s.c.g.r.RouteDefinitionRouteLocator    : RouteDefinition matched: CompositeDiscoveryClient_SC-PRODUCER
+2018-05-18 01:10:49.745 DEBUG 6462 --- [ctor-http-nio-5] o.s.c.g.r.RouteDefinitionRouteLocator    : RouteDefinition CompositeDiscoveryClient_SC-GATEWAY-SERVER applying {pattern=/SC-GATEWAY-SERVER/**} to Path
+2018-05-18 01:10:49.747 DEBUG 6462 --- [ctor-http-nio-5] o.s.c.g.r.RouteDefinitionRouteLocator    : RouteDefinition CompositeDiscoveryClient_SC-GATEWAY-SERVER applying filter {regexp=/SC-GATEWAY-SERVER/(?&lt;remaining&gt;.*), replacement=/${remaining}} to RewritePath
+2018-05-18 01:10:49.748 DEBUG 6462 --- [ctor-http-nio-5] o.s.c.g.r.RouteDefinitionRouteLocator    : RouteDefinition matched: CompositeDiscoveryClient_SC-GATEWAY-SERVER
+2018-05-18 01:10:49.748 DEBUG 6462 --- [ctor-http-nio-5] o.s.c.g.h.RoutePredicateHandlerMapping   : Route matched: CompositeDiscoveryClient_SC-CONSUMER
+2018-05-18 01:10:49.749 DEBUG 6462 --- [ctor-http-nio-5] o.s.c.g.h.RoutePredicateHandlerMapping   : Mapping [Exchange: GET http://localhost:9000/SC-CONSUMER/hello/xujin] to Route{id='CompositeDiscoveryClient_SC-CONSUMER', uri=lb://SC-CONSUMER, order=0, predicate=org.springframework.cloud.gateway.handler.predicate.PathRoutePredicateFactory$$Lambda$707/751096818@7f4c6373, gatewayFilters=[OrderedGatewayFilter{delegate=org.springframework.cloud.gateway.filter.factory.RewritePathGatewayFilterFactory$$Lambda$709/672603106@293895d2, order=1}]}
+2018-05-18 01:10:49.749 DEBUG 6462 --- [ctor-http-nio-5] o.s.c.g.handler.FilteringWebHandler      : Sorted gatewayFilterFactories: [OrderedGatewayFilter{delegate=GatewayFilterAdapter{delegate=org.springframework.cloud.gateway.filter.NettyWriteResponseFilter@5e85c21b}, order=-1}, OrderedGatewayFilter{delegate=org.springframework.cloud.gateway.filter.factory.RewritePathGatewayFilterFactory$$Lambda$709/672603106@293895d2, order=1}, OrderedGatewayFilter{delegate=GatewayFilterAdapter{delegate=org.springframework.cloud.gateway.filter.RouteToRequestUrlFilter@38e83838}, order=10000}, OrderedGatewayFilter{delegate=GatewayFilterAdapter{delegate=org.springframework.cloud.gateway.filter.LoadBalancerClientFilter@6ef2f7ad}, order=10100}, OrderedGatewayFilter{delegate=GatewayFilterAdapter{delegate=org.springframework.cloud.gateway.filter.AdaptCachedBodyGlobalFilter@41def031}, order=2147483637}, OrderedGatewayFilter{delegate=GatewayFilterAdapter{delegate=org.springframework.cloud.gateway.filter.WebsocketRoutingFilter@4966bab1}, order=2147483646}, OrderedGatewayFilter{delegate=GatewayFilterAdapter{delegate=org.springframework.cloud.gateway.filter.NettyRoutingFilter@22d477c2}, order=2147483647}, OrderedGatewayFilter{delegate=GatewayFilterAdapter{delegate=org.springframework.cloud.gateway.filter.ForwardRoutingFilter@39832280}, order=2147483647}]
+
+</code></pre>
+
+<p>从上面的log，看到返回了 404 错误，进一步可以看到 Spring Cloud Gateway 已经为我们的 provider 和 consumer 自动创建了对应的路由转发规则，但是这里的 pattern/regexp 里都是大写的，下面换成大写的测试一下。</p>
+
+<h4 id="3-3-2-gateway正确的路由规则测试">3.3.2 Gateway正确的路由规则测试</h4>
+
+<p>访问正确的<a href="http://localhost:9000/SC-CONSUMER/hello/xujin，可以成功访问。">http://localhost:9000/SC-CONSUMER/hello/xujin，可以成功访问。</a></p>
+
+<p><img src="5.jpeg" alt="" /></p>
+
+<p><img src="6.jpeg" alt="" /></p>
+
+<pre><code class="language-shell">2018-05-22 09:04:21.204 DEBUG 1677 --- [ctor-http-nio-2] o.s.c.g.r.RouteDefinitionRouteLocator    : RouteDefinition CompositeDiscoveryClient_SC-CONSUMER applying {pattern=/SC-CONSUMER/**} to Path
+2018-05-22 09:04:21.205 DEBUG 1677 --- [ctor-http-nio-2] o.s.c.g.r.RouteDefinitionRouteLocator    : RouteDefinition CompositeDiscoveryClient_SC-CONSUMER applying filter {regexp=/SC-CONSUMER/(?&lt;remaining&gt;.*), replacement=/${remaining}} to RewritePath
+2018-05-22 09:04:21.205 DEBUG 1677 --- [ctor-http-nio-2] o.s.c.g.r.RouteDefinitionRouteLocator    : RouteDefinition matched: CompositeDiscoveryClient_SC-CONSUMER
+2018-05-22 09:04:21.206 DEBUG 1677 --- [ctor-http-nio-2] o.s.c.g.r.RouteDefinitionRouteLocator    : RouteDefinition CompositeDiscoveryClient_SC-PRODUCER applying {pattern=/SC-PRODUCER/**} to Path
+2018-05-22 09:04:21.207 DEBUG 1677 --- [ctor-http-nio-2] o.s.c.g.r.RouteDefinitionRouteLocator    : RouteDefinition CompositeDiscoveryClient_SC-PRODUCER applying filter {regexp=/SC-PRODUCER/(?&lt;remaining&gt;.*), replacement=/${remaining}} to RewritePath
+2018-05-22 09:04:21.207 DEBUG 1677 --- [ctor-http-nio-2] o.s.c.g.r.RouteDefinitionRouteLocator    : RouteDefinition matched: CompositeDiscoveryClient_SC-PRODUCER
+2018-05-22 09:04:21.208 DEBUG 1677 --- [ctor-http-nio-2] o.s.c.g.r.RouteDefinitionRouteLocator    : RouteDefinition CompositeDiscoveryClient_SC-GATEWAY-SERVER applying {pattern=/SC-GATEWAY-SERVER/**} to Path
+2018-05-22 09:04:21.208 DEBUG 1677 --- [ctor-http-nio-2] o.s.c.g.r.RouteDefinitionRouteLocator    : RouteDefinition CompositeDiscoveryClient_SC-GATEWAY-SERVER applying filter {regexp=/SC-GATEWAY-SERVER/(?&lt;remaining&gt;.*), replacement=/${remaining}} to RewritePath
+2018-05-22 09:04:21.209 DEBUG 1677 --- [ctor-http-nio-2] o.s.c.g.r.RouteDefinitionRouteLocator    : RouteDefinition matched: CompositeDiscoveryClient_SC-GATEWAY-SERVER
+2018-05-22 09:04:21.209 DEBUG 1677 --- [ctor-http-nio-2] o.s.c.g.h.RoutePredicateHandlerMapping   : Route matched: CompositeDiscoveryClient_SC-CONSUMER
+2018-05-22 09:04:21.209 DEBUG 1677 --- [ctor-http-nio-2] o.s.c.g.h.RoutePredicateHandlerMapping   : Mapping [Exchange: GET http://localhost:9000/SC-CONSUMER/hello/xujin] to Route{id='CompositeDiscoveryClient_SC-CONSUMER', uri=lb://SC-CONSUMER, order=0, predicate=org.springframework.cloud.gateway.handler.predicate.PathRoutePredicateFactory$$Lambda$706/57023854@24f1a91e, gatewayFilters=[OrderedGatewayFilter{delegate=org.springframework.cloud.gateway.filter.factory.RewritePathGatewayFilterFactory$$Lambda$708/2036079541@cbb7393, order=1}]}
+2018-05-22 09:04:21.209 DEBUG 1677 --- [ctor-http-nio-2] o.s.c.g.handler.FilteringWebHandler      : Sorted gatewayFilterFactories: [OrderedGatewayFilter{delegate=GatewayFilterAdapter{delegate=org.springframework.cloud.gateway.filter.NettyWriteResponseFilter@29a98d9f}, order=-1}, OrderedGatewayFilter{delegate=org.springframework.cloud.gateway.filter.factory.RewritePathGatewayFilterFactory$$Lambda$708/2036079541@cbb7393, order=1}, OrderedGatewayFilter{delegate=GatewayFilterAdapter{delegate=org.springframework.cloud.gateway.filter.RouteToRequestUrlFilter@544e8149}, order=10000}, OrderedGatewayFilter{delegate=GatewayFilterAdapter{delegate=org.springframework.cloud.gateway.filter.LoadBalancerClientFilter@55d58825}, order=10100}, OrderedGatewayFilter{delegate=GatewayFilterAdapter{delegate=org.springframework.cloud.gateway.filter.AdaptCachedBodyGlobalFilter@2da3b078}, order=2147483637}, OrderedGatewayFilter{delegate=GatewayFilterAdapter{delegate=org.springframework.cloud.gateway.filter.WebsocketRoutingFilter@1a96d94c}, order=2147483646}, OrderedGatewayFilter{delegate=GatewayFilterAdapter{delegate=org.springframework.cloud.gateway.filter.NettyRoutingFilter@19a64eae}, order=2147483647}, OrderedGatewayFilter{delegate=GatewayFilterAdapter{delegate=org.springframework.cloud.gateway.filter.ForwardRoutingFilter@7fb66650}, order=2147483647}]
+
+</code></pre>
+
+<p>可以看出，Spring Cloud Gateway 自动的为我们的 consumer 创建了一个路由，类似于下边这样</p>
+
+<pre><code class="language-yml">routes:
+    - id: CompositeDiscoveryClient_SC-CONSUMER
+      uri: lb://SC-CONSUMER
+      order: 0
+      predicates:
+          - Path=/SC-CONSUMER/**
+      filters:
+          - RewritePath=/SC-CONSUMER/(?&lt;segment&gt;.*), /$\{segment}
+</code></pre>
+
+<blockquote>
+<p>所以从zuul迁移到gateway的时候，服务路由规则中的微服务应用Id默认从小写变为大写。</p>
+</blockquote>
 
 </article>
 
@@ -391,26 +591,39 @@ if (!doNotTrack) {
 		目录
 	</h2>
   <nav id="TableOfContents">
-  <ul>
-    <li><a href="#1spring-gateway概述">1.Spring Gateway概述</a>
-      <ul>
-        <li><a href="#11-什么是spring-cloud-gateway">1.1 什么是Spring Cloud Gateway</a></li>
-        <li><a href="#12-spring-cloud-gateway的功能">1.2 Spring Cloud Gateway的功能</a></li>
-      </ul>
-    </li>
-    <li><a href="#2-spring-cloud-gateway的工程流程">2. Spring Cloud Gateway的工程流程</a>
-      <ul>
-        <li><a href="#21-pre和post两种类型的过滤器">2.1 Pre和POST两种类型的过滤器</a></li>
-      </ul>
-    </li>
-    <li><a href="#3基于服务发现的默认路由规则">3.基于服务发现的默认路由规则</a>
-      <ul>
-        <li><a href="#31-zuul和gateway的默认路由规则">3.1 zuul和gateway的默认路由规则</a></li>
-        <li><a href="#32--案例示例代码">3.2  案例示例代码</a></li>
-        <li><a href="#33-启动测试">3.3 启动测试</a></li>
-      </ul>
-    </li>
-  </ul>
+<ul>
+<li>
+<ul>
+<li><a href="#1-spring-gateway概述">1.Spring Gateway概述</a>
+<ul>
+<li><a href="#1-1-什么是spring-cloud-gateway">1.1 什么是Spring Cloud Gateway</a></li>
+<li><a href="#1-2-spring-cloud-gateway的功能">1.2 Spring Cloud Gateway的功能</a></li>
+</ul></li>
+<li><a href="#2-spring-cloud-gateway的工程流程">2. Spring Cloud Gateway的工程流程</a>
+<ul>
+<li><a href="#2-1-pre和post两种类型的过滤器">2.1 Pre和POST两种类型的过滤器</a></li>
+</ul></li>
+<li><a href="#3-基于服务发现的默认路由规则">3.基于服务发现的默认路由规则</a>
+<ul>
+<li><a href="#3-1-zuul和gateway的默认路由规则">3.1 zuul和gateway的默认路由规则</a>
+<ul>
+<li><a href="#3-1-1-zuul的默认路由规则">3.1.1 zuul的默认路由规则</a></li>
+<li><a href="#3-1-2-gateway的默认路由规则">3.1.2 gateway的默认路由规则</a></li>
+</ul></li>
+<li><a href="#3-2-案例示例代码">3.2  案例示例代码</a>
+<ul>
+<li><a href="#3-2-1-ch1-sc-gateway工程说明">3.2.1 ch1-sc-gateway工程说明</a></li>
+<li><a href="#3-2-1-1-maven依赖">3.2.1.1  Maven依赖</a></li>
+<li><a href="#3-2-1-2-yml文件配置">3.2.1.2 yml文件配置</a></li>
+</ul></li>
+<li><a href="#3-3-启动测试">3.3 启动测试</a>
+<ul>
+<li><a href="#3-3-1-错误的路由规则访问">3.3.1 错误的路由规则访问</a></li>
+<li><a href="#3-3-2-gateway正确的路由规则测试">3.3.2 Gateway正确的路由规则测试</a></li>
+</ul></li>
+</ul></li>
+</ul></li>
+</ul>
 </nav>
 </div>
 
@@ -459,15 +672,15 @@ if (!doNotTrack) {
 	
 	<ul class="ss-aside-related">
 		
-			<li><a href="/blog/scg-dmy-route/">Spring Cloud Gateway的动态路由的简单实现方式</a></li>
-		
-			<li><a href="/blog/scg-02/">Spring Cloud Gateway的权重路由</a></li>
-		
-			<li><a href="/blog/scg-nacos-01/">使用Nacos实现Spring Cloud Gateway的动态路由</a></li>
-		
 			<li><a href="/blog/scg-03/">Spring Cloud Gateway中的GatewayFilter和GlobalFilter</a></li>
 		
 			<li><a href="/blog/scg-06/">Spring Cloud Gateway的Before路由断言工厂</a></li>
+		
+			<li><a href="/blog/scg-nacos-01/">使用Nacos实现Spring Cloud Gateway的动态路由</a></li>
+		
+			<li><a href="/blog/scg-02/">Spring Cloud Gateway的权重路由</a></li>
+		
+			<li><a href="/blog/scg-dmy-route/">Spring Cloud Gateway的动态路由的简单实现方式</a></li>
 		
 	</ul>
 	

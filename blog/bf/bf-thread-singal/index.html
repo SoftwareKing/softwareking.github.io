@@ -10,7 +10,7 @@
 <meta name="viewport" content="width=device-width,minimum-scale=1">
 <meta name="description" content="玹霖志,许进沉思录,许进|Spring Cloud,中间件，基础架构，www.xujin.org,xujin.org,-许进沉思录,Venus&#43;,云首科技有限公司,云计算，大数据，物联网，Software_king的博客,云计算Saas，云计算Paas，云计算Iaas Hadoop，大数据，JavaEE，Java，物联网，Hadoop， NoSQL，MongoDB,Spring, Hibernate,Struts2," />
 
-<meta name="generator" content="Hugo 0.72.0" /><link rel="shortcut icon" href=/img/icon.png type="image/png">
+<meta name="generator" content="Hugo 0.55.6" /><link rel="shortcut icon" href=/img/icon.png type="image/png">
 
 <link href="https://unpkg.com/purecss@1.0.0/build/base-min.css" rel="stylesheet">
 
@@ -243,7 +243,7 @@ if (!doNotTrack) {
 				
 			</span>
 		
-		<span class="post-word-count">· 字数:2890·阅读时间 6 分钟</span>
+		<span class="post-word-count">· 字数:2940·阅读时间 6 分钟</span>
 		
 		阅读量<span id="busuanzi_value_page_pv"></span>次
 		
@@ -261,325 +261,424 @@ if (!doNotTrack) {
 	});
   </script>
 		<article class="typo">
-	<!-- raw HTML omitted -->
-<p><!-- raw HTML omitted -->/**
-<!-- raw HTML omitted --><!-- raw HTML omitted --> *
-<!-- raw HTML omitted --><!-- raw HTML omitted --> * @author xujin
-<!-- raw HTML omitted --><!-- raw HTML omitted --> *
-<!-- raw HTML omitted --><!-- raw HTML omitted --> */<!-- raw HTML omitted -->
-<!-- raw HTML omitted -->public<!-- raw HTML omitted --> <!-- raw HTML omitted -->class<!-- raw HTML omitted --> <!-- raw HTML omitted -->ListAdd1<!-- raw HTML omitted --> <!-- raw HTML omitted -->{<!-- raw HTML omitted --></p>
-<pre><code>&lt;span style=&quot;color:#66d9ef&quot;&gt;private&lt;/span&gt; &lt;span style=&quot;color:#66d9ef&quot;&gt;volatile&lt;/span&gt; &lt;span style=&quot;color:#66d9ef&quot;&gt;static&lt;/span&gt; List&lt;span style=&quot;color:#f92672&quot;&gt;&amp;lt;&lt;/span&gt;String&lt;span style=&quot;color:#f92672&quot;&gt;&amp;gt;&lt;/span&gt; list &lt;span style=&quot;color:#f92672&quot;&gt;=&lt;/span&gt; &lt;span style=&quot;color:#66d9ef&quot;&gt;new&lt;/span&gt; ArrayList&lt;span style=&quot;color:#f92672&quot;&gt;();&lt;/span&gt;
+	<h2 id="1-线程间通信概念">1. 线程间通信概念</h2>
 
-&lt;span style=&quot;color:#66d9ef&quot;&gt;public&lt;/span&gt; &lt;span style=&quot;color:#66d9ef&quot;&gt;void&lt;/span&gt; &lt;span style=&quot;color:#a6e22e&quot;&gt;add&lt;/span&gt;&lt;span style=&quot;color:#f92672&quot;&gt;()&lt;/span&gt; &lt;span style=&quot;color:#f92672&quot;&gt;{&lt;/span&gt;
-    list&lt;span style=&quot;color:#f92672&quot;&gt;.&lt;/span&gt;&lt;span style=&quot;color:#a6e22e&quot;&gt;add&lt;/span&gt;&lt;span style=&quot;color:#f92672&quot;&gt;(&lt;/span&gt;&lt;span style=&quot;color:#e6db74&quot;&gt;&amp;#34;test....&amp;#34;&lt;/span&gt;&lt;span style=&quot;color:#f92672&quot;&gt;);&lt;/span&gt;
-&lt;span style=&quot;color:#f92672&quot;&gt;}&lt;/span&gt;
+<p>线程是操作系统中独立的个体，但这些个体如果不经过特殊的处理就不能成为一个整体，线程间的通信就成为整体的必用方式之一。当线程存在通信指挥，系统间的交互会更加强大，在提高CPU利用率的同时还会使开发人员对线程任务在处理的过程中进行有效的把控与监督。</p>
 
-&lt;span style=&quot;color:#66d9ef&quot;&gt;public&lt;/span&gt; &lt;span style=&quot;color:#66d9ef&quot;&gt;int&lt;/span&gt; &lt;span style=&quot;color:#a6e22e&quot;&gt;size&lt;/span&gt;&lt;span style=&quot;color:#f92672&quot;&gt;()&lt;/span&gt; &lt;span style=&quot;color:#f92672&quot;&gt;{&lt;/span&gt;
-    &lt;span style=&quot;color:#66d9ef&quot;&gt;return&lt;/span&gt; list&lt;span style=&quot;color:#f92672&quot;&gt;.&lt;/span&gt;&lt;span style=&quot;color:#a6e22e&quot;&gt;size&lt;/span&gt;&lt;span style=&quot;color:#f92672&quot;&gt;();&lt;/span&gt;
-&lt;span style=&quot;color:#f92672&quot;&gt;}&lt;/span&gt;
+<h2 id="2-wait-notify实现线程通信">2. wait/notify实现线程通信</h2>
 
-&lt;span style=&quot;color:#66d9ef&quot;&gt;public&lt;/span&gt; &lt;span style=&quot;color:#66d9ef&quot;&gt;static&lt;/span&gt; &lt;span style=&quot;color:#66d9ef&quot;&gt;void&lt;/span&gt; &lt;span style=&quot;color:#a6e22e&quot;&gt;main&lt;/span&gt;&lt;span style=&quot;color:#f92672&quot;&gt;(&lt;/span&gt;String&lt;span style=&quot;color:#f92672&quot;&gt;[]&lt;/span&gt; args&lt;span style=&quot;color:#f92672&quot;&gt;)&lt;/span&gt; &lt;span style=&quot;color:#f92672&quot;&gt;{&lt;/span&gt;
+<p>使用wait/notify方法实现线程间的通信。注意这两个方法都是Object的类方法，换句话说Java为所有的对象提供了这个两个方法。
+ 1.<code>wait和notify</code>必须配合<code>synchronized</code>关键字使用
+ 2.<code>wait</code>方法<code>释放锁</code>，<code>notify</code>方法<code>不释放锁</code>。</p>
 
-    &lt;span style=&quot;color:#66d9ef&quot;&gt;final&lt;/span&gt; ListAdd1 list1 &lt;span style=&quot;color:#f92672&quot;&gt;=&lt;/span&gt; &lt;span style=&quot;color:#66d9ef&quot;&gt;new&lt;/span&gt; ListAdd1&lt;span style=&quot;color:#f92672&quot;&gt;();&lt;/span&gt;
+<h3 id="2-1最原始线程间通信代码">2.1最原始线程间通信代码</h3>
 
-    Thread t1 &lt;span style=&quot;color:#f92672&quot;&gt;=&lt;/span&gt; &lt;span style=&quot;color:#66d9ef&quot;&gt;new&lt;/span&gt; Thread&lt;span style=&quot;color:#f92672&quot;&gt;(&lt;/span&gt;&lt;span style=&quot;color:#66d9ef&quot;&gt;new&lt;/span&gt; Runnable&lt;span style=&quot;color:#f92672&quot;&gt;()&lt;/span&gt; &lt;span style=&quot;color:#f92672&quot;&gt;{&lt;/span&gt;
-        &lt;span style=&quot;color:#a6e22e&quot;&gt;@Override&lt;/span&gt;
-        &lt;span style=&quot;color:#66d9ef&quot;&gt;public&lt;/span&gt; &lt;span style=&quot;color:#66d9ef&quot;&gt;void&lt;/span&gt; &lt;span style=&quot;color:#a6e22e&quot;&gt;run&lt;/span&gt;&lt;span style=&quot;color:#f92672&quot;&gt;()&lt;/span&gt; &lt;span style=&quot;color:#f92672&quot;&gt;{&lt;/span&gt;
-            &lt;span style=&quot;color:#66d9ef&quot;&gt;try&lt;/span&gt; &lt;span style=&quot;color:#f92672&quot;&gt;{&lt;/span&gt;
-                &lt;span style=&quot;color:#66d9ef&quot;&gt;for&lt;/span&gt; &lt;span style=&quot;color:#f92672&quot;&gt;(&lt;/span&gt;&lt;span style=&quot;color:#66d9ef&quot;&gt;int&lt;/span&gt; i &lt;span style=&quot;color:#f92672&quot;&gt;=&lt;/span&gt; 0&lt;span style=&quot;color:#f92672&quot;&gt;;&lt;/span&gt; i &lt;span style=&quot;color:#f92672&quot;&gt;&amp;lt;&lt;/span&gt; 10&lt;span style=&quot;color:#f92672&quot;&gt;;&lt;/span&gt; i&lt;span style=&quot;color:#f92672&quot;&gt;++)&lt;/span&gt; &lt;span style=&quot;color:#f92672&quot;&gt;{&lt;/span&gt;
-                    list1&lt;span style=&quot;color:#f92672&quot;&gt;.&lt;/span&gt;&lt;span style=&quot;color:#a6e22e&quot;&gt;add&lt;/span&gt;&lt;span style=&quot;color:#f92672&quot;&gt;();&lt;/span&gt;
-                    System&lt;span style=&quot;color:#f92672&quot;&gt;.&lt;/span&gt;&lt;span style=&quot;color:#a6e22e&quot;&gt;out&lt;/span&gt;
-                            &lt;span style=&quot;color:#f92672&quot;&gt;.&lt;/span&gt;&lt;span style=&quot;color:#a6e22e&quot;&gt;println&lt;/span&gt;&lt;span style=&quot;color:#f92672&quot;&gt;(&lt;/span&gt;&lt;span style=&quot;color:#e6db74&quot;&gt;&amp;#34;当前线程：&amp;#34;&lt;/span&gt; &lt;span style=&quot;color:#f92672&quot;&gt;+&lt;/span&gt; Thread&lt;span style=&quot;color:#f92672&quot;&gt;.&lt;/span&gt;&lt;span style=&quot;color:#a6e22e&quot;&gt;currentThread&lt;/span&gt;&lt;span style=&quot;color:#f92672&quot;&gt;().&lt;/span&gt;&lt;span style=&quot;color:#a6e22e&quot;&gt;getName&lt;/span&gt;&lt;span style=&quot;color:#f92672&quot;&gt;()&lt;/span&gt; &lt;span style=&quot;color:#f92672&quot;&gt;+&lt;/span&gt; &lt;span style=&quot;color:#e6db74&quot;&gt;&amp;#34;添加了一个元素..&amp;#34;&lt;/span&gt;&lt;span style=&quot;color:#f92672&quot;&gt;);&lt;/span&gt;
-                    Thread&lt;span style=&quot;color:#f92672&quot;&gt;.&lt;/span&gt;&lt;span style=&quot;color:#a6e22e&quot;&gt;sleep&lt;/span&gt;&lt;span style=&quot;color:#f92672&quot;&gt;(&lt;/span&gt;500&lt;span style=&quot;color:#f92672&quot;&gt;);&lt;/span&gt;
-                &lt;span style=&quot;color:#f92672&quot;&gt;}&lt;/span&gt;
-            &lt;span style=&quot;color:#f92672&quot;&gt;}&lt;/span&gt; &lt;span style=&quot;color:#66d9ef&quot;&gt;catch&lt;/span&gt; &lt;span style=&quot;color:#f92672&quot;&gt;(&lt;/span&gt;InterruptedException e&lt;span style=&quot;color:#f92672&quot;&gt;)&lt;/span&gt; &lt;span style=&quot;color:#f92672&quot;&gt;{&lt;/span&gt;
-                e&lt;span style=&quot;color:#f92672&quot;&gt;.&lt;/span&gt;&lt;span style=&quot;color:#a6e22e&quot;&gt;printStackTrace&lt;/span&gt;&lt;span style=&quot;color:#f92672&quot;&gt;();&lt;/span&gt;
-            &lt;span style=&quot;color:#f92672&quot;&gt;}&lt;/span&gt;
-        &lt;span style=&quot;color:#f92672&quot;&gt;}&lt;/span&gt;
-    &lt;span style=&quot;color:#f92672&quot;&gt;},&lt;/span&gt; &lt;span style=&quot;color:#e6db74&quot;&gt;&amp;#34;t1&amp;#34;&lt;/span&gt;&lt;span style=&quot;color:#f92672&quot;&gt;);&lt;/span&gt;
+<p>如下面代码所示，t1,t2两个线程，t1线程一直循环add，t2线程一直循环，当t1线程把list的size变为5的时候，t2线程抛出异常停止。</p>
 
-    Thread t2 &lt;span style=&quot;color:#f92672&quot;&gt;=&lt;/span&gt; &lt;span style=&quot;color:#66d9ef&quot;&gt;new&lt;/span&gt; Thread&lt;span style=&quot;color:#f92672&quot;&gt;(&lt;/span&gt;&lt;span style=&quot;color:#66d9ef&quot;&gt;new&lt;/span&gt; Runnable&lt;span style=&quot;color:#f92672&quot;&gt;()&lt;/span&gt; &lt;span style=&quot;color:#f92672&quot;&gt;{&lt;/span&gt;
-        &lt;span style=&quot;color:#a6e22e&quot;&gt;@Override&lt;/span&gt;
-        &lt;span style=&quot;color:#66d9ef&quot;&gt;public&lt;/span&gt; &lt;span style=&quot;color:#66d9ef&quot;&gt;void&lt;/span&gt; &lt;span style=&quot;color:#a6e22e&quot;&gt;run&lt;/span&gt;&lt;span style=&quot;color:#f92672&quot;&gt;()&lt;/span&gt; &lt;span style=&quot;color:#f92672&quot;&gt;{&lt;/span&gt;
-            &lt;span style=&quot;color:#66d9ef&quot;&gt;while&lt;/span&gt; &lt;span style=&quot;color:#f92672&quot;&gt;(&lt;/span&gt;&lt;span style=&quot;color:#66d9ef&quot;&gt;true&lt;/span&gt;&lt;span style=&quot;color:#f92672&quot;&gt;)&lt;/span&gt; &lt;span style=&quot;color:#f92672&quot;&gt;{&lt;/span&gt;
-                &lt;span style=&quot;color:#66d9ef&quot;&gt;if&lt;/span&gt; &lt;span style=&quot;color:#f92672&quot;&gt;(&lt;/span&gt;list1&lt;span style=&quot;color:#f92672&quot;&gt;.&lt;/span&gt;&lt;span style=&quot;color:#a6e22e&quot;&gt;size&lt;/span&gt;&lt;span style=&quot;color:#f92672&quot;&gt;()&lt;/span&gt; &lt;span style=&quot;color:#f92672&quot;&gt;==&lt;/span&gt; 5&lt;span style=&quot;color:#f92672&quot;&gt;)&lt;/span&gt; &lt;span style=&quot;color:#f92672&quot;&gt;{&lt;/span&gt;
-                    System&lt;span style=&quot;color:#f92672&quot;&gt;.&lt;/span&gt;&lt;span style=&quot;color:#a6e22e&quot;&gt;out&lt;/span&gt;&lt;span style=&quot;color:#f92672&quot;&gt;.&lt;/span&gt;&lt;span style=&quot;color:#a6e22e&quot;&gt;println&lt;/span&gt;&lt;span style=&quot;color:#f92672&quot;&gt;(&lt;/span&gt;&lt;span style=&quot;color:#e6db74&quot;&gt;&amp;#34;当前线程收到通知：&amp;#34;&lt;/span&gt; &lt;span style=&quot;color:#f92672&quot;&gt;+&lt;/span&gt; Thread&lt;span style=&quot;color:#f92672&quot;&gt;.&lt;/span&gt;&lt;span style=&quot;color:#a6e22e&quot;&gt;currentThread&lt;/span&gt;&lt;span style=&quot;color:#f92672&quot;&gt;().&lt;/span&gt;&lt;span style=&quot;color:#a6e22e&quot;&gt;getName&lt;/span&gt;&lt;span style=&quot;color:#f92672&quot;&gt;()&lt;/span&gt;
-                            &lt;span style=&quot;color:#f92672&quot;&gt;+&lt;/span&gt; &lt;span style=&quot;color:#e6db74&quot;&gt;&amp;#34; list size = 5 线程停止..&amp;#34;&lt;/span&gt;&lt;span style=&quot;color:#f92672&quot;&gt;);&lt;/span&gt;
-                    &lt;span style=&quot;color:#66d9ef&quot;&gt;throw&lt;/span&gt; &lt;span style=&quot;color:#66d9ef&quot;&gt;new&lt;/span&gt; RuntimeException&lt;span style=&quot;color:#f92672&quot;&gt;();&lt;/span&gt;
-                &lt;span style=&quot;color:#f92672&quot;&gt;}&lt;/span&gt;
-            &lt;span style=&quot;color:#f92672&quot;&gt;}&lt;/span&gt;
-        &lt;span style=&quot;color:#f92672&quot;&gt;}&lt;/span&gt;
-    &lt;span style=&quot;color:#f92672&quot;&gt;},&lt;/span&gt; &lt;span style=&quot;color:#e6db74&quot;&gt;&amp;#34;t2&amp;#34;&lt;/span&gt;&lt;span style=&quot;color:#f92672&quot;&gt;);&lt;/span&gt;
+<pre><code class="language-Java">import java.util.ArrayList;
+import java.util.List;
 
-    t1&lt;span style=&quot;color:#f92672&quot;&gt;.&lt;/span&gt;&lt;span style=&quot;color:#a6e22e&quot;&gt;start&lt;/span&gt;&lt;span style=&quot;color:#f92672&quot;&gt;();&lt;/span&gt;
-    t2&lt;span style=&quot;color:#f92672&quot;&gt;.&lt;/span&gt;&lt;span style=&quot;color:#a6e22e&quot;&gt;start&lt;/span&gt;&lt;span style=&quot;color:#f92672&quot;&gt;();&lt;/span&gt;
-&lt;span style=&quot;color:#f92672&quot;&gt;}&lt;/span&gt;
+/**
+ * 
+ * @author xujin
+ *
+ */
+public class ListAdd1 {
+
+    private volatile static List&lt;String&gt; list = new ArrayList();
+
+    public void add() {
+        list.add(&quot;test....&quot;);
+    }
+
+    public int size() {
+        return list.size();
+    }
+
+    public static void main(String[] args) {
+
+        final ListAdd1 list1 = new ListAdd1();
+
+        Thread t1 = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    for (int i = 0; i &lt; 10; i++) {
+                        list1.add();
+                        System.out
+                                .println(&quot;当前线程：&quot; + Thread.currentThread().getName() + &quot;添加了一个元素..&quot;);
+                        Thread.sleep(500);
+                    }
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
+        }, &quot;t1&quot;);
+
+        Thread t2 = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                while (true) {
+                    if (list1.size() == 5) {
+                        System.out.println(&quot;当前线程收到通知：&quot; + Thread.currentThread().getName()
+                                + &quot; list size = 5 线程停止..&quot;);
+                        throw new RuntimeException();
+                    }
+                }
+            }
+        }, &quot;t2&quot;);
+
+        t1.start();
+        t2.start();
+    }
+
+}
 </code></pre>
-<p><!-- raw HTML omitted -->}<!-- raw HTML omitted -->
-<!-- raw HTML omitted --><!-- raw HTML omitted --><!-- raw HTML omitted --><!-- raw HTML omitted -->2.2  <!-- raw HTML omitted -->wait和notify<!-- raw HTML omitted -->实现线程间通信代码<!-- raw HTML omitted --></p>
-<!-- raw HTML omitted -->
-<p><!-- raw HTML omitted -->/**
-<!-- raw HTML omitted --><!-- raw HTML omitted --> * @author xujin
-<!-- raw HTML omitted --><!-- raw HTML omitted --> *
-<!-- raw HTML omitted --><!-- raw HTML omitted --> */<!-- raw HTML omitted -->
-<!-- raw HTML omitted -->public<!-- raw HTML omitted --> <!-- raw HTML omitted -->class<!-- raw HTML omitted --> <!-- raw HTML omitted -->ListAdd2<!-- raw HTML omitted --> <!-- raw HTML omitted -->{<!-- raw HTML omitted -->
-<!-- raw HTML omitted -->private<!-- raw HTML omitted --> <!-- raw HTML omitted -->volatile<!-- raw HTML omitted --> <!-- raw HTML omitted -->static<!-- raw HTML omitted --> List list <!-- raw HTML omitted -->=<!-- raw HTML omitted --> <!-- raw HTML omitted -->new<!-- raw HTML omitted --> ArrayList<!-- raw HTML omitted -->();<!-- raw HTML omitted --></p>
-<pre><code>&lt;span style=&quot;color:#66d9ef&quot;&gt;public&lt;/span&gt; &lt;span style=&quot;color:#66d9ef&quot;&gt;void&lt;/span&gt; &lt;span style=&quot;color:#a6e22e&quot;&gt;add&lt;/span&gt;&lt;span style=&quot;color:#f92672&quot;&gt;()&lt;/span&gt; &lt;span style=&quot;color:#f92672&quot;&gt;{&lt;/span&gt;
-    list&lt;span style=&quot;color:#f92672&quot;&gt;.&lt;/span&gt;&lt;span style=&quot;color:#a6e22e&quot;&gt;add&lt;/span&gt;&lt;span style=&quot;color:#f92672&quot;&gt;(&lt;/span&gt;&lt;span style=&quot;color:#e6db74&quot;&gt;&amp;#34;test.......&amp;#34;&lt;/span&gt;&lt;span style=&quot;color:#f92672&quot;&gt;);&lt;/span&gt;
-&lt;span style=&quot;color:#f92672&quot;&gt;}&lt;/span&gt;
 
-&lt;span style=&quot;color:#66d9ef&quot;&gt;public&lt;/span&gt; &lt;span style=&quot;color:#66d9ef&quot;&gt;int&lt;/span&gt; &lt;span style=&quot;color:#a6e22e&quot;&gt;size&lt;/span&gt;&lt;span style=&quot;color:#f92672&quot;&gt;()&lt;/span&gt; &lt;span style=&quot;color:#f92672&quot;&gt;{&lt;/span&gt;
-    &lt;span style=&quot;color:#66d9ef&quot;&gt;return&lt;/span&gt; list&lt;span style=&quot;color:#f92672&quot;&gt;.&lt;/span&gt;&lt;span style=&quot;color:#a6e22e&quot;&gt;size&lt;/span&gt;&lt;span style=&quot;color:#f92672&quot;&gt;();&lt;/span&gt;
-&lt;span style=&quot;color:#f92672&quot;&gt;}&lt;/span&gt;
+<h3 id="2-2-wait和notify-实现线程间通信代码">2.2  <code>wait和notify</code>实现线程间通信代码</h3>
 
-&lt;span style=&quot;color:#66d9ef&quot;&gt;public&lt;/span&gt; &lt;span style=&quot;color:#66d9ef&quot;&gt;static&lt;/span&gt; &lt;span style=&quot;color:#66d9ef&quot;&gt;void&lt;/span&gt; &lt;span style=&quot;color:#a6e22e&quot;&gt;main&lt;/span&gt;&lt;span style=&quot;color:#f92672&quot;&gt;(&lt;/span&gt;String&lt;span style=&quot;color:#f92672&quot;&gt;[]&lt;/span&gt; args&lt;span style=&quot;color:#f92672&quot;&gt;)&lt;/span&gt; &lt;span style=&quot;color:#f92672&quot;&gt;{&lt;/span&gt;
+<pre><code class="language-java">import java.util.ArrayList;
+import java.util.List;
 
-    &lt;span style=&quot;color:#66d9ef&quot;&gt;final&lt;/span&gt; ListAdd2 list2 &lt;span style=&quot;color:#f92672&quot;&gt;=&lt;/span&gt; &lt;span style=&quot;color:#66d9ef&quot;&gt;new&lt;/span&gt; ListAdd2&lt;span style=&quot;color:#f92672&quot;&gt;();&lt;/span&gt;
-    &lt;span style=&quot;color:#66d9ef&quot;&gt;final&lt;/span&gt; Object lock &lt;span style=&quot;color:#f92672&quot;&gt;=&lt;/span&gt; &lt;span style=&quot;color:#66d9ef&quot;&gt;new&lt;/span&gt; Object&lt;span style=&quot;color:#f92672&quot;&gt;();&lt;/span&gt;
-    Thread t1 &lt;span style=&quot;color:#f92672&quot;&gt;=&lt;/span&gt; &lt;span style=&quot;color:#66d9ef&quot;&gt;new&lt;/span&gt; Thread&lt;span style=&quot;color:#f92672&quot;&gt;(&lt;/span&gt;&lt;span style=&quot;color:#66d9ef&quot;&gt;new&lt;/span&gt; Runnable&lt;span style=&quot;color:#f92672&quot;&gt;()&lt;/span&gt; &lt;span style=&quot;color:#f92672&quot;&gt;{&lt;/span&gt;
-        &lt;span style=&quot;color:#a6e22e&quot;&gt;@Override&lt;/span&gt;
-        &lt;span style=&quot;color:#66d9ef&quot;&gt;public&lt;/span&gt; &lt;span style=&quot;color:#66d9ef&quot;&gt;void&lt;/span&gt; &lt;span style=&quot;color:#a6e22e&quot;&gt;run&lt;/span&gt;&lt;span style=&quot;color:#f92672&quot;&gt;()&lt;/span&gt; &lt;span style=&quot;color:#f92672&quot;&gt;{&lt;/span&gt;
-            &lt;span style=&quot;color:#66d9ef&quot;&gt;try&lt;/span&gt; &lt;span style=&quot;color:#f92672&quot;&gt;{&lt;/span&gt;
-                &lt;span style=&quot;color:#66d9ef&quot;&gt;synchronized&lt;/span&gt; &lt;span style=&quot;color:#f92672&quot;&gt;(&lt;/span&gt;lock&lt;span style=&quot;color:#f92672&quot;&gt;)&lt;/span&gt; &lt;span style=&quot;color:#f92672&quot;&gt;{&lt;/span&gt;
-                    System&lt;span style=&quot;color:#f92672&quot;&gt;.&lt;/span&gt;&lt;span style=&quot;color:#a6e22e&quot;&gt;out&lt;/span&gt;&lt;span style=&quot;color:#f92672&quot;&gt;.&lt;/span&gt;&lt;span style=&quot;color:#a6e22e&quot;&gt;println&lt;/span&gt;&lt;span style=&quot;color:#f92672&quot;&gt;(&lt;/span&gt;&lt;span style=&quot;color:#e6db74&quot;&gt;&amp;#34;t1启动..&amp;#34;&lt;/span&gt;&lt;span style=&quot;color:#f92672&quot;&gt;);&lt;/span&gt;
-                    &lt;span style=&quot;color:#66d9ef&quot;&gt;for&lt;/span&gt; &lt;span style=&quot;color:#f92672&quot;&gt;(&lt;/span&gt;&lt;span style=&quot;color:#66d9ef&quot;&gt;int&lt;/span&gt; i &lt;span style=&quot;color:#f92672&quot;&gt;=&lt;/span&gt; 0&lt;span style=&quot;color:#f92672&quot;&gt;;&lt;/span&gt; i &lt;span style=&quot;color:#f92672&quot;&gt;&amp;lt;&lt;/span&gt; 10&lt;span style=&quot;color:#f92672&quot;&gt;;&lt;/span&gt; i&lt;span style=&quot;color:#f92672&quot;&gt;++)&lt;/span&gt; &lt;span style=&quot;color:#f92672&quot;&gt;{&lt;/span&gt;
-                        list2&lt;span style=&quot;color:#f92672&quot;&gt;.&lt;/span&gt;&lt;span style=&quot;color:#a6e22e&quot;&gt;add&lt;/span&gt;&lt;span style=&quot;color:#f92672&quot;&gt;();&lt;/span&gt;
-                        System&lt;span style=&quot;color:#f92672&quot;&gt;.&lt;/span&gt;&lt;span style=&quot;color:#a6e22e&quot;&gt;out&lt;/span&gt;&lt;span style=&quot;color:#f92672&quot;&gt;.&lt;/span&gt;&lt;span style=&quot;color:#a6e22e&quot;&gt;println&lt;/span&gt;&lt;span style=&quot;color:#f92672&quot;&gt;(&lt;/span&gt;
-                                &lt;span style=&quot;color:#e6db74&quot;&gt;&amp;#34;当前线程：&amp;#34;&lt;/span&gt; &lt;span style=&quot;color:#f92672&quot;&gt;+&lt;/span&gt; Thread&lt;span style=&quot;color:#f92672&quot;&gt;.&lt;/span&gt;&lt;span style=&quot;color:#a6e22e&quot;&gt;currentThread&lt;/span&gt;&lt;span style=&quot;color:#f92672&quot;&gt;().&lt;/span&gt;&lt;span style=&quot;color:#a6e22e&quot;&gt;getName&lt;/span&gt;&lt;span style=&quot;color:#f92672&quot;&gt;()&lt;/span&gt; &lt;span style=&quot;color:#f92672&quot;&gt;+&lt;/span&gt; &lt;span style=&quot;color:#e6db74&quot;&gt;&amp;#34;添加了一个元素..&amp;#34;&lt;/span&gt;&lt;span style=&quot;color:#f92672&quot;&gt;);&lt;/span&gt;
-                        Thread&lt;span style=&quot;color:#f92672&quot;&gt;.&lt;/span&gt;&lt;span style=&quot;color:#a6e22e&quot;&gt;sleep&lt;/span&gt;&lt;span style=&quot;color:#f92672&quot;&gt;(&lt;/span&gt;500&lt;span style=&quot;color:#f92672&quot;&gt;);&lt;/span&gt;
-                        &lt;span style=&quot;color:#66d9ef&quot;&gt;if&lt;/span&gt; &lt;span style=&quot;color:#f92672&quot;&gt;(&lt;/span&gt;list2&lt;span style=&quot;color:#f92672&quot;&gt;.&lt;/span&gt;&lt;span style=&quot;color:#a6e22e&quot;&gt;size&lt;/span&gt;&lt;span style=&quot;color:#f92672&quot;&gt;()&lt;/span&gt; &lt;span style=&quot;color:#f92672&quot;&gt;==&lt;/span&gt; 5&lt;span style=&quot;color:#f92672&quot;&gt;)&lt;/span&gt; &lt;span style=&quot;color:#f92672&quot;&gt;{&lt;/span&gt;
-                            System&lt;span style=&quot;color:#f92672&quot;&gt;.&lt;/span&gt;&lt;span style=&quot;color:#a6e22e&quot;&gt;out&lt;/span&gt;&lt;span style=&quot;color:#f92672&quot;&gt;.&lt;/span&gt;&lt;span style=&quot;color:#a6e22e&quot;&gt;println&lt;/span&gt;&lt;span style=&quot;color:#f92672&quot;&gt;(&lt;/span&gt;&lt;span style=&quot;color:#e6db74&quot;&gt;&amp;#34;已经发出通知..&amp;#34;&lt;/span&gt;&lt;span style=&quot;color:#f92672&quot;&gt;);&lt;/span&gt;
-                            lock&lt;span style=&quot;color:#f92672&quot;&gt;.&lt;/span&gt;&lt;span style=&quot;color:#a6e22e&quot;&gt;notify&lt;/span&gt;&lt;span style=&quot;color:#f92672&quot;&gt;();&lt;/span&gt;
-                        &lt;span style=&quot;color:#f92672&quot;&gt;}&lt;/span&gt;
-                    &lt;span style=&quot;color:#f92672&quot;&gt;}&lt;/span&gt;
-                &lt;span style=&quot;color:#f92672&quot;&gt;}&lt;/span&gt;
-            &lt;span style=&quot;color:#f92672&quot;&gt;}&lt;/span&gt; &lt;span style=&quot;color:#66d9ef&quot;&gt;catch&lt;/span&gt; &lt;span style=&quot;color:#f92672&quot;&gt;(&lt;/span&gt;InterruptedException e&lt;span style=&quot;color:#f92672&quot;&gt;)&lt;/span&gt; &lt;span style=&quot;color:#f92672&quot;&gt;{&lt;/span&gt;
-                e&lt;span style=&quot;color:#f92672&quot;&gt;.&lt;/span&gt;&lt;span style=&quot;color:#a6e22e&quot;&gt;printStackTrace&lt;/span&gt;&lt;span style=&quot;color:#f92672&quot;&gt;();&lt;/span&gt;
-            &lt;span style=&quot;color:#f92672&quot;&gt;}&lt;/span&gt;
+/**
+ * @author xujin
+ *
+ */
+public class ListAdd2 {
+    private volatile static List list = new ArrayList();
 
-        &lt;span style=&quot;color:#f92672&quot;&gt;}&lt;/span&gt;
-    &lt;span style=&quot;color:#f92672&quot;&gt;},&lt;/span&gt; &lt;span style=&quot;color:#e6db74&quot;&gt;&amp;#34;t1&amp;#34;&lt;/span&gt;&lt;span style=&quot;color:#f92672&quot;&gt;);&lt;/span&gt;
+    public void add() {
+        list.add(&quot;test.......&quot;);
+    }
 
-    Thread t2 &lt;span style=&quot;color:#f92672&quot;&gt;=&lt;/span&gt; &lt;span style=&quot;color:#66d9ef&quot;&gt;new&lt;/span&gt; Thread&lt;span style=&quot;color:#f92672&quot;&gt;(&lt;/span&gt;&lt;span style=&quot;color:#66d9ef&quot;&gt;new&lt;/span&gt; Runnable&lt;span style=&quot;color:#f92672&quot;&gt;()&lt;/span&gt; &lt;span style=&quot;color:#f92672&quot;&gt;{&lt;/span&gt;
-        &lt;span style=&quot;color:#a6e22e&quot;&gt;@Override&lt;/span&gt;
-        &lt;span style=&quot;color:#66d9ef&quot;&gt;public&lt;/span&gt; &lt;span style=&quot;color:#66d9ef&quot;&gt;void&lt;/span&gt; &lt;span style=&quot;color:#a6e22e&quot;&gt;run&lt;/span&gt;&lt;span style=&quot;color:#f92672&quot;&gt;()&lt;/span&gt; &lt;span style=&quot;color:#f92672&quot;&gt;{&lt;/span&gt;
-            &lt;span style=&quot;color:#66d9ef&quot;&gt;synchronized&lt;/span&gt; &lt;span style=&quot;color:#f92672&quot;&gt;(&lt;/span&gt;lock&lt;span style=&quot;color:#f92672&quot;&gt;)&lt;/span&gt; &lt;span style=&quot;color:#f92672&quot;&gt;{&lt;/span&gt;
-                System&lt;span style=&quot;color:#f92672&quot;&gt;.&lt;/span&gt;&lt;span style=&quot;color:#a6e22e&quot;&gt;out&lt;/span&gt;&lt;span style=&quot;color:#f92672&quot;&gt;.&lt;/span&gt;&lt;span style=&quot;color:#a6e22e&quot;&gt;println&lt;/span&gt;&lt;span style=&quot;color:#f92672&quot;&gt;(&lt;/span&gt;&lt;span style=&quot;color:#e6db74&quot;&gt;&amp;#34;t2启动..&amp;#34;&lt;/span&gt;&lt;span style=&quot;color:#f92672&quot;&gt;);&lt;/span&gt;
-                &lt;span style=&quot;color:#66d9ef&quot;&gt;if&lt;/span&gt; &lt;span style=&quot;color:#f92672&quot;&gt;(&lt;/span&gt;list2&lt;span style=&quot;color:#f92672&quot;&gt;.&lt;/span&gt;&lt;span style=&quot;color:#a6e22e&quot;&gt;size&lt;/span&gt;&lt;span style=&quot;color:#f92672&quot;&gt;()&lt;/span&gt; &lt;span style=&quot;color:#f92672&quot;&gt;!=&lt;/span&gt; 5&lt;span style=&quot;color:#f92672&quot;&gt;)&lt;/span&gt; &lt;span style=&quot;color:#f92672&quot;&gt;{&lt;/span&gt;
-                    &lt;span style=&quot;color:#66d9ef&quot;&gt;try&lt;/span&gt; &lt;span style=&quot;color:#f92672&quot;&gt;{&lt;/span&gt;
-                        &lt;span style=&quot;color:#75715e&quot;&gt;//t2线程，拿到了锁，但是size不等于5,所以lock.wait(),释放了锁，然后t1得到t2释放的锁。
+    public int size() {
+        return list.size();
+    }
+
+    public static void main(String[] args) {
+
+        final ListAdd2 list2 = new ListAdd2();
+        final Object lock = new Object();
+        Thread t1 = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    synchronized (lock) {
+                        System.out.println(&quot;t1启动..&quot;);
+                        for (int i = 0; i &lt; 10; i++) {
+                            list2.add();
+                            System.out.println(
+                                    &quot;当前线程：&quot; + Thread.currentThread().getName() + &quot;添加了一个元素..&quot;);
+                            Thread.sleep(500);
+                            if (list2.size() == 5) {
+                                System.out.println(&quot;已经发出通知..&quot;);
+                                lock.notify();
+                            }
+                        }
+                    }
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+
+            }
+        }, &quot;t1&quot;);
+
+        Thread t2 = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                synchronized (lock) {
+                    System.out.println(&quot;t2启动..&quot;);
+                    if (list2.size() != 5) {
+                        try {
+                            //t2线程，拿到了锁，但是size不等于5,所以lock.wait(),释放了锁，然后t1得到t2释放的锁。
+                            System.out.println(&quot;size() != 5,t2 wait释放锁！..&quot;);
+                            lock.wait();
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                    System.out.println(&quot;当前线程：&quot; + Thread.currentThread().getName() + &quot;收到通知线程停止..&quot;);
+                    throw new RuntimeException();
+                }
+            }
+        }, &quot;t2&quot;);
+        t1.start();
+        t2.start();
+    }
+
+}
 </code></pre>
-<p><!-- raw HTML omitted --><!-- raw HTML omitted --><!-- raw HTML omitted -->                            System<!-- raw HTML omitted -->.<!-- raw HTML omitted --><!-- raw HTML omitted -->out<!-- raw HTML omitted --><!-- raw HTML omitted -->.<!-- raw HTML omitted --><!-- raw HTML omitted -->println<!-- raw HTML omitted --><!-- raw HTML omitted -->(<!-- raw HTML omitted --><!-- raw HTML omitted -->&quot;size() != 5,t2 wait释放锁！..&quot;<!-- raw HTML omitted --><!-- raw HTML omitted -->);<!-- raw HTML omitted -->
-lock<!-- raw HTML omitted -->.<!-- raw HTML omitted --><!-- raw HTML omitted -->wait<!-- raw HTML omitted --><!-- raw HTML omitted -->();<!-- raw HTML omitted -->
-<!-- raw HTML omitted -->}<!-- raw HTML omitted --> <!-- raw HTML omitted -->catch<!-- raw HTML omitted --> <!-- raw HTML omitted -->(<!-- raw HTML omitted -->InterruptedException e<!-- raw HTML omitted -->)<!-- raw HTML omitted --> <!-- raw HTML omitted -->{<!-- raw HTML omitted -->
-e<!-- raw HTML omitted -->.<!-- raw HTML omitted --><!-- raw HTML omitted -->printStackTrace<!-- raw HTML omitted --><!-- raw HTML omitted -->();<!-- raw HTML omitted -->
-<!-- raw HTML omitted -->}<!-- raw HTML omitted -->
-<!-- raw HTML omitted -->}<!-- raw HTML omitted -->
-System<!-- raw HTML omitted -->.<!-- raw HTML omitted --><!-- raw HTML omitted -->out<!-- raw HTML omitted --><!-- raw HTML omitted -->.<!-- raw HTML omitted --><!-- raw HTML omitted -->println<!-- raw HTML omitted --><!-- raw HTML omitted -->(<!-- raw HTML omitted --><!-- raw HTML omitted -->&quot;当前线程：&quot;<!-- raw HTML omitted --> <!-- raw HTML omitted -->+<!-- raw HTML omitted --> Thread<!-- raw HTML omitted -->.<!-- raw HTML omitted --><!-- raw HTML omitted -->currentThread<!-- raw HTML omitted --><!-- raw HTML omitted -->().<!-- raw HTML omitted --><!-- raw HTML omitted -->getName<!-- raw HTML omitted --><!-- raw HTML omitted -->()<!-- raw HTML omitted --> <!-- raw HTML omitted -->+<!-- raw HTML omitted --> <!-- raw HTML omitted -->&quot;收到通知线程停止..&quot;<!-- raw HTML omitted --><!-- raw HTML omitted -->);<!-- raw HTML omitted -->
-<!-- raw HTML omitted -->throw<!-- raw HTML omitted --> <!-- raw HTML omitted -->new<!-- raw HTML omitted --> RuntimeException<!-- raw HTML omitted -->();<!-- raw HTML omitted -->
-<!-- raw HTML omitted -->}<!-- raw HTML omitted -->
-<!-- raw HTML omitted -->}<!-- raw HTML omitted -->
-<!-- raw HTML omitted -->},<!-- raw HTML omitted --> <!-- raw HTML omitted -->&quot;t2&quot;<!-- raw HTML omitted --><!-- raw HTML omitted -->);<!-- raw HTML omitted -->
-t1<!-- raw HTML omitted -->.<!-- raw HTML omitted --><!-- raw HTML omitted -->start<!-- raw HTML omitted --><!-- raw HTML omitted -->();<!-- raw HTML omitted -->
-t2<!-- raw HTML omitted -->.<!-- raw HTML omitted --><!-- raw HTML omitted -->start<!-- raw HTML omitted --><!-- raw HTML omitted -->();<!-- raw HTML omitted -->
-<!-- raw HTML omitted -->}<!-- raw HTML omitted --></p>
-<p><!-- raw HTML omitted -->}<!-- raw HTML omitted -->
-<!-- raw HTML omitted --><!-- raw HTML omitted --><!-- raw HTML omitted --><!-- raw HTML omitted -->运行结果分析如下:
-<!-- raw HTML omitted --><!-- raw HTML omitted --></p>
-<!-- raw HTML omitted -->
-<p><!-- raw HTML omitted -->/**
-<!-- raw HTML omitted --><!-- raw HTML omitted --> * @author xujin
-<!-- raw HTML omitted --><!-- raw HTML omitted --> *
-<!-- raw HTML omitted --><!-- raw HTML omitted --> */<!-- raw HTML omitted -->
-<!-- raw HTML omitted -->public<!-- raw HTML omitted --> <!-- raw HTML omitted -->class<!-- raw HTML omitted --> <!-- raw HTML omitted -->ListAdd3<!-- raw HTML omitted --> <!-- raw HTML omitted -->{<!-- raw HTML omitted -->
-<!-- raw HTML omitted -->private<!-- raw HTML omitted --> <!-- raw HTML omitted -->volatile<!-- raw HTML omitted --> <!-- raw HTML omitted -->static<!-- raw HTML omitted --> List list <!-- raw HTML omitted -->=<!-- raw HTML omitted --> <!-- raw HTML omitted -->new<!-- raw HTML omitted --> ArrayList<!-- raw HTML omitted -->();<!-- raw HTML omitted --></p>
-<pre><code>&lt;span style=&quot;color:#66d9ef&quot;&gt;public&lt;/span&gt; &lt;span style=&quot;color:#66d9ef&quot;&gt;void&lt;/span&gt; &lt;span style=&quot;color:#a6e22e&quot;&gt;add&lt;/span&gt;&lt;span style=&quot;color:#f92672&quot;&gt;()&lt;/span&gt; &lt;span style=&quot;color:#f92672&quot;&gt;{&lt;/span&gt;
-    list&lt;span style=&quot;color:#f92672&quot;&gt;.&lt;/span&gt;&lt;span style=&quot;color:#a6e22e&quot;&gt;add&lt;/span&gt;&lt;span style=&quot;color:#f92672&quot;&gt;(&lt;/span&gt;&lt;span style=&quot;color:#e6db74&quot;&gt;&amp;#34;test.......&amp;#34;&lt;/span&gt;&lt;span style=&quot;color:#f92672&quot;&gt;);&lt;/span&gt;
-&lt;span style=&quot;color:#f92672&quot;&gt;}&lt;/span&gt;
 
-&lt;span style=&quot;color:#66d9ef&quot;&gt;public&lt;/span&gt; &lt;span style=&quot;color:#66d9ef&quot;&gt;int&lt;/span&gt; &lt;span style=&quot;color:#a6e22e&quot;&gt;size&lt;/span&gt;&lt;span style=&quot;color:#f92672&quot;&gt;()&lt;/span&gt; &lt;span style=&quot;color:#f92672&quot;&gt;{&lt;/span&gt;
-    &lt;span style=&quot;color:#66d9ef&quot;&gt;return&lt;/span&gt; list&lt;span style=&quot;color:#f92672&quot;&gt;.&lt;/span&gt;&lt;span style=&quot;color:#a6e22e&quot;&gt;size&lt;/span&gt;&lt;span style=&quot;color:#f92672&quot;&gt;();&lt;/span&gt;
-&lt;span style=&quot;color:#f92672&quot;&gt;}&lt;/span&gt;
+<p>运行结果分析如下:
+<img src="/images/bf/tx1.png" alt="" /></p>
 
-&lt;span style=&quot;color:#66d9ef&quot;&gt;public&lt;/span&gt; &lt;span style=&quot;color:#66d9ef&quot;&gt;static&lt;/span&gt; &lt;span style=&quot;color:#66d9ef&quot;&gt;void&lt;/span&gt; &lt;span style=&quot;color:#a6e22e&quot;&gt;main&lt;/span&gt;&lt;span style=&quot;color:#f92672&quot;&gt;(&lt;/span&gt;String&lt;span style=&quot;color:#f92672&quot;&gt;[]&lt;/span&gt; args&lt;span style=&quot;color:#f92672&quot;&gt;)&lt;/span&gt; &lt;span style=&quot;color:#f92672&quot;&gt;{&lt;/span&gt;
-
-    &lt;span style=&quot;color:#66d9ef&quot;&gt;final&lt;/span&gt; ListAdd3 list2 &lt;span style=&quot;color:#f92672&quot;&gt;=&lt;/span&gt; &lt;span style=&quot;color:#66d9ef&quot;&gt;new&lt;/span&gt; ListAdd3&lt;span style=&quot;color:#f92672&quot;&gt;();&lt;/span&gt;
-    &lt;span style=&quot;color:#75715e&quot;&gt;// final Object lock = new Object();
-</code></pre>
-<p><!-- raw HTML omitted --><!-- raw HTML omitted --><!-- raw HTML omitted -->		<!-- raw HTML omitted -->final<!-- raw HTML omitted --> CountDownLatch countDownLatch <!-- raw HTML omitted -->=<!-- raw HTML omitted --> <!-- raw HTML omitted -->new<!-- raw HTML omitted --> CountDownLatch<!-- raw HTML omitted -->(<!-- raw HTML omitted -->1<!-- raw HTML omitted -->);<!-- raw HTML omitted -->
-Thread t1 <!-- raw HTML omitted -->=<!-- raw HTML omitted --> <!-- raw HTML omitted -->new<!-- raw HTML omitted --> Thread<!-- raw HTML omitted -->(<!-- raw HTML omitted --><!-- raw HTML omitted -->new<!-- raw HTML omitted --> Runnable<!-- raw HTML omitted -->()<!-- raw HTML omitted --> <!-- raw HTML omitted -->{<!-- raw HTML omitted -->
-<!-- raw HTML omitted -->@Override<!-- raw HTML omitted -->
-<!-- raw HTML omitted -->public<!-- raw HTML omitted --> <!-- raw HTML omitted -->void<!-- raw HTML omitted --> <!-- raw HTML omitted -->run<!-- raw HTML omitted --><!-- raw HTML omitted -->()<!-- raw HTML omitted --> <!-- raw HTML omitted -->{<!-- raw HTML omitted -->
-<!-- raw HTML omitted -->try<!-- raw HTML omitted --> <!-- raw HTML omitted -->{<!-- raw HTML omitted -->
-<!-- raw HTML omitted -->// synchronized (lock) {
-<!-- raw HTML omitted --><!-- raw HTML omitted --><!-- raw HTML omitted -->					System<!-- raw HTML omitted -->.<!-- raw HTML omitted --><!-- raw HTML omitted -->out<!-- raw HTML omitted --><!-- raw HTML omitted -->.<!-- raw HTML omitted --><!-- raw HTML omitted -->println<!-- raw HTML omitted --><!-- raw HTML omitted -->(<!-- raw HTML omitted --><!-- raw HTML omitted -->&quot;t1启动..&quot;<!-- raw HTML omitted --><!-- raw HTML omitted -->);<!-- raw HTML omitted -->
-<!-- raw HTML omitted -->for<!-- raw HTML omitted --> <!-- raw HTML omitted -->(<!-- raw HTML omitted --><!-- raw HTML omitted -->int<!-- raw HTML omitted --> i <!-- raw HTML omitted -->=<!-- raw HTML omitted --> 0<!-- raw HTML omitted -->;<!-- raw HTML omitted --> i <!-- raw HTML omitted -->&lt;<!-- raw HTML omitted --> 10<!-- raw HTML omitted -->;<!-- raw HTML omitted --> i<!-- raw HTML omitted -->++)<!-- raw HTML omitted --> <!-- raw HTML omitted -->{<!-- raw HTML omitted -->
-list2<!-- raw HTML omitted -->.<!-- raw HTML omitted --><!-- raw HTML omitted -->add<!-- raw HTML omitted --><!-- raw HTML omitted -->();<!-- raw HTML omitted -->
-System<!-- raw HTML omitted -->.<!-- raw HTML omitted --><!-- raw HTML omitted -->out<!-- raw HTML omitted --><!-- raw HTML omitted -->.<!-- raw HTML omitted --><!-- raw HTML omitted -->println<!-- raw HTML omitted --><!-- raw HTML omitted -->(<!-- raw HTML omitted -->
-<!-- raw HTML omitted -->&quot;当前线程：&quot;<!-- raw HTML omitted --> <!-- raw HTML omitted -->+<!-- raw HTML omitted --> Thread<!-- raw HTML omitted -->.<!-- raw HTML omitted --><!-- raw HTML omitted -->currentThread<!-- raw HTML omitted --><!-- raw HTML omitted -->().<!-- raw HTML omitted --><!-- raw HTML omitted -->getName<!-- raw HTML omitted --><!-- raw HTML omitted -->()<!-- raw HTML omitted --> <!-- raw HTML omitted -->+<!-- raw HTML omitted --> <!-- raw HTML omitted -->&quot;添加了一个元素..&quot;<!-- raw HTML omitted --><!-- raw HTML omitted -->);<!-- raw HTML omitted -->
-Thread<!-- raw HTML omitted -->.<!-- raw HTML omitted --><!-- raw HTML omitted -->sleep<!-- raw HTML omitted --><!-- raw HTML omitted -->(<!-- raw HTML omitted -->500<!-- raw HTML omitted -->);<!-- raw HTML omitted -->
-<!-- raw HTML omitted -->if<!-- raw HTML omitted --> <!-- raw HTML omitted -->(<!-- raw HTML omitted -->list2<!-- raw HTML omitted -->.<!-- raw HTML omitted --><!-- raw HTML omitted -->size<!-- raw HTML omitted --><!-- raw HTML omitted -->()<!-- raw HTML omitted --> <!-- raw HTML omitted -->==<!-- raw HTML omitted --> 5<!-- raw HTML omitted -->)<!-- raw HTML omitted --> <!-- raw HTML omitted -->{<!-- raw HTML omitted -->
-System<!-- raw HTML omitted -->.<!-- raw HTML omitted --><!-- raw HTML omitted -->out<!-- raw HTML omitted --><!-- raw HTML omitted -->.<!-- raw HTML omitted --><!-- raw HTML omitted -->println<!-- raw HTML omitted --><!-- raw HTML omitted -->(<!-- raw HTML omitted --><!-- raw HTML omitted -->&quot;已经发出通知..&quot;<!-- raw HTML omitted --><!-- raw HTML omitted -->);<!-- raw HTML omitted -->
-<!-- raw HTML omitted -->// lock.notify();
-<!-- raw HTML omitted --><!-- raw HTML omitted --><!-- raw HTML omitted -->							countDownLatch<!-- raw HTML omitted -->.<!-- raw HTML omitted --><!-- raw HTML omitted -->countDown<!-- raw HTML omitted --><!-- raw HTML omitted -->();<!-- raw HTML omitted -->
-<!-- raw HTML omitted -->}<!-- raw HTML omitted -->
-<!-- raw HTML omitted -->}<!-- raw HTML omitted -->
-<!-- raw HTML omitted -->// }
-<!-- raw HTML omitted --><!-- raw HTML omitted --><!-- raw HTML omitted -->				<!-- raw HTML omitted -->}<!-- raw HTML omitted -->
-<!-- raw HTML omitted -->catch<!-- raw HTML omitted --> <!-- raw HTML omitted -->(<!-- raw HTML omitted -->InterruptedException e<!-- raw HTML omitted -->)<!-- raw HTML omitted --> <!-- raw HTML omitted -->{<!-- raw HTML omitted -->
-e<!-- raw HTML omitted -->.<!-- raw HTML omitted --><!-- raw HTML omitted -->printStackTrace<!-- raw HTML omitted --><!-- raw HTML omitted -->();<!-- raw HTML omitted -->
-<!-- raw HTML omitted -->}<!-- raw HTML omitted --></p>
-<pre><code>        &lt;span style=&quot;color:#f92672&quot;&gt;}&lt;/span&gt;
-    &lt;span style=&quot;color:#f92672&quot;&gt;},&lt;/span&gt; &lt;span style=&quot;color:#e6db74&quot;&gt;&amp;#34;t1&amp;#34;&lt;/span&gt;&lt;span style=&quot;color:#f92672&quot;&gt;);&lt;/span&gt;
-
-    Thread t2 &lt;span style=&quot;color:#f92672&quot;&gt;=&lt;/span&gt; &lt;span style=&quot;color:#66d9ef&quot;&gt;new&lt;/span&gt; Thread&lt;span style=&quot;color:#f92672&quot;&gt;(&lt;/span&gt;&lt;span style=&quot;color:#66d9ef&quot;&gt;new&lt;/span&gt; Runnable&lt;span style=&quot;color:#f92672&quot;&gt;()&lt;/span&gt; &lt;span style=&quot;color:#f92672&quot;&gt;{&lt;/span&gt;
-        &lt;span style=&quot;color:#a6e22e&quot;&gt;@Override&lt;/span&gt;
-        &lt;span style=&quot;color:#66d9ef&quot;&gt;public&lt;/span&gt; &lt;span style=&quot;color:#66d9ef&quot;&gt;void&lt;/span&gt; &lt;span style=&quot;color:#a6e22e&quot;&gt;run&lt;/span&gt;&lt;span style=&quot;color:#f92672&quot;&gt;()&lt;/span&gt; &lt;span style=&quot;color:#f92672&quot;&gt;{&lt;/span&gt;
-            &lt;span style=&quot;color:#75715e&quot;&gt;// synchronized (lock) {
-</code></pre>
-<p><!-- raw HTML omitted --><!-- raw HTML omitted --><!-- raw HTML omitted -->				System<!-- raw HTML omitted -->.<!-- raw HTML omitted --><!-- raw HTML omitted -->out<!-- raw HTML omitted --><!-- raw HTML omitted -->.<!-- raw HTML omitted --><!-- raw HTML omitted -->println<!-- raw HTML omitted --><!-- raw HTML omitted -->(<!-- raw HTML omitted --><!-- raw HTML omitted -->&quot;t2启动..&quot;<!-- raw HTML omitted --><!-- raw HTML omitted -->);<!-- raw HTML omitted -->
-<!-- raw HTML omitted -->if<!-- raw HTML omitted --> <!-- raw HTML omitted -->(<!-- raw HTML omitted -->list2<!-- raw HTML omitted -->.<!-- raw HTML omitted --><!-- raw HTML omitted -->size<!-- raw HTML omitted --><!-- raw HTML omitted -->()<!-- raw HTML omitted --> <!-- raw HTML omitted -->!=<!-- raw HTML omitted --> 5<!-- raw HTML omitted -->)<!-- raw HTML omitted --> <!-- raw HTML omitted -->{<!-- raw HTML omitted -->
-<!-- raw HTML omitted -->try<!-- raw HTML omitted --> <!-- raw HTML omitted -->{<!-- raw HTML omitted -->
-<!-- raw HTML omitted -->// lock.wait();
-<!-- raw HTML omitted --><!-- raw HTML omitted --><!-- raw HTML omitted -->						countDownLatch<!-- raw HTML omitted -->.<!-- raw HTML omitted --><!-- raw HTML omitted -->await<!-- raw HTML omitted --><!-- raw HTML omitted -->();<!-- raw HTML omitted -->
-<!-- raw HTML omitted -->}<!-- raw HTML omitted -->
-<!-- raw HTML omitted -->catch<!-- raw HTML omitted --> <!-- raw HTML omitted -->(<!-- raw HTML omitted -->InterruptedException e<!-- raw HTML omitted -->)<!-- raw HTML omitted --> <!-- raw HTML omitted -->{<!-- raw HTML omitted -->
-e<!-- raw HTML omitted -->.<!-- raw HTML omitted --><!-- raw HTML omitted -->printStackTrace<!-- raw HTML omitted --><!-- raw HTML omitted -->();<!-- raw HTML omitted -->
-<!-- raw HTML omitted -->}<!-- raw HTML omitted -->
-<!-- raw HTML omitted -->}<!-- raw HTML omitted -->
-System<!-- raw HTML omitted -->.<!-- raw HTML omitted --><!-- raw HTML omitted -->out<!-- raw HTML omitted --><!-- raw HTML omitted -->.<!-- raw HTML omitted --><!-- raw HTML omitted -->println<!-- raw HTML omitted --><!-- raw HTML omitted -->(<!-- raw HTML omitted -->
-<!-- raw HTML omitted -->&quot;当前线程：&quot;<!-- raw HTML omitted --> <!-- raw HTML omitted -->+<!-- raw HTML omitted --> Thread<!-- raw HTML omitted -->.<!-- raw HTML omitted --><!-- raw HTML omitted -->currentThread<!-- raw HTML omitted --><!-- raw HTML omitted -->().<!-- raw HTML omitted --><!-- raw HTML omitted -->getName<!-- raw HTML omitted --><!-- raw HTML omitted -->()<!-- raw HTML omitted --> <!-- raw HTML omitted -->+<!-- raw HTML omitted --> <!-- raw HTML omitted -->&quot;收到通知线程停止..&quot;<!-- raw HTML omitted --><!-- raw HTML omitted -->);<!-- raw HTML omitted -->
-<!-- raw HTML omitted -->throw<!-- raw HTML omitted --> <!-- raw HTML omitted -->new<!-- raw HTML omitted --> RuntimeException<!-- raw HTML omitted -->();<!-- raw HTML omitted -->
-<!-- raw HTML omitted -->}<!-- raw HTML omitted -->
-<!-- raw HTML omitted -->// }
-<!-- raw HTML omitted --><!-- raw HTML omitted --><!-- raw HTML omitted -->		<!-- raw HTML omitted -->},<!-- raw HTML omitted --> <!-- raw HTML omitted -->&quot;t2&quot;<!-- raw HTML omitted --><!-- raw HTML omitted -->);<!-- raw HTML omitted -->
-t2<!-- raw HTML omitted -->.<!-- raw HTML omitted --><!-- raw HTML omitted -->start<!-- raw HTML omitted --><!-- raw HTML omitted -->();<!-- raw HTML omitted -->
-t1<!-- raw HTML omitted -->.<!-- raw HTML omitted --><!-- raw HTML omitted -->start<!-- raw HTML omitted --><!-- raw HTML omitted -->();<!-- raw HTML omitted --></p>
-<pre><code>&lt;span style=&quot;color:#f92672&quot;&gt;}&lt;/span&gt;
-</code></pre>
-<p><!-- raw HTML omitted -->}<!-- raw HTML omitted -->
-<!-- raw HTML omitted --><!-- raw HTML omitted --><!-- raw HTML omitted --><!-- raw HTML omitted --></p>
-<!-- raw HTML omitted -->
-<p><!-- raw HTML omitted -->/**
-<!-- raw HTML omitted --><!-- raw HTML omitted --> * 使用wait/notify模拟Queue
-<!-- raw HTML omitted --><!-- raw HTML omitted --> * @author xujin
-<!-- raw HTML omitted --><!-- raw HTML omitted --> *
-<!-- raw HTML omitted --><!-- raw HTML omitted --> */<!-- raw HTML omitted -->
-<!-- raw HTML omitted -->public<!-- raw HTML omitted --> <!-- raw HTML omitted -->class<!-- raw HTML omitted --> <!-- raw HTML omitted -->ImitateQueue<!-- raw HTML omitted --> <!-- raw HTML omitted -->{<!-- raw HTML omitted --></p>
-<pre><code>&lt;span style=&quot;color:#75715e&quot;&gt;// 承载元素的集合
-</code></pre>
-<p><!-- raw HTML omitted --><!-- raw HTML omitted --><!-- raw HTML omitted -->	<!-- raw HTML omitted -->private<!-- raw HTML omitted --> <!-- raw HTML omitted -->final<!-- raw HTML omitted --> LinkedList<!-- raw HTML omitted -->&lt;<!-- raw HTML omitted -->Object<!-- raw HTML omitted -->&gt;<!-- raw HTML omitted --> list <!-- raw HTML omitted -->=<!-- raw HTML omitted --> <!-- raw HTML omitted -->new<!-- raw HTML omitted --> LinkedList<!-- raw HTML omitted -->&lt;<!-- raw HTML omitted -->Object<!-- raw HTML omitted -->&gt;();<!-- raw HTML omitted --></p>
-<pre><code>&lt;span style=&quot;color:#75715e&quot;&gt;// 计数器进行计数
-</code></pre>
-<p><!-- raw HTML omitted --><!-- raw HTML omitted --><!-- raw HTML omitted -->	<!-- raw HTML omitted -->private<!-- raw HTML omitted --> <!-- raw HTML omitted -->final<!-- raw HTML omitted --> AtomicInteger count <!-- raw HTML omitted -->=<!-- raw HTML omitted --> <!-- raw HTML omitted -->new<!-- raw HTML omitted --> AtomicInteger<!-- raw HTML omitted -->(<!-- raw HTML omitted -->0<!-- raw HTML omitted -->);<!-- raw HTML omitted --></p>
-<pre><code>&lt;span style=&quot;color:#75715e&quot;&gt;// 制定元素的上限和下限
-</code></pre>
-<p><!-- raw HTML omitted --><!-- raw HTML omitted --><!-- raw HTML omitted -->	<!-- raw HTML omitted -->private<!-- raw HTML omitted --> <!-- raw HTML omitted -->final<!-- raw HTML omitted --> <!-- raw HTML omitted -->int<!-- raw HTML omitted --> maxSize<!-- raw HTML omitted -->;<!-- raw HTML omitted -->
-<!-- raw HTML omitted -->private<!-- raw HTML omitted --> <!-- raw HTML omitted -->final<!-- raw HTML omitted --> <!-- raw HTML omitted -->int<!-- raw HTML omitted --> minSize <!-- raw HTML omitted -->=<!-- raw HTML omitted --> 0<!-- raw HTML omitted -->;<!-- raw HTML omitted --></p>
-<pre><code>&lt;span style=&quot;color:#75715e&quot;&gt;// 初始化一个对象用于加锁
-</code></pre>
-<p><!-- raw HTML omitted --><!-- raw HTML omitted --><!-- raw HTML omitted -->	<!-- raw HTML omitted -->private<!-- raw HTML omitted --> <!-- raw HTML omitted -->final<!-- raw HTML omitted --> Object lock <!-- raw HTML omitted -->=<!-- raw HTML omitted --> <!-- raw HTML omitted -->new<!-- raw HTML omitted --> Object<!-- raw HTML omitted -->();<!-- raw HTML omitted --></p>
-<pre><code>&lt;span style=&quot;color:#66d9ef&quot;&gt;public&lt;/span&gt; &lt;span style=&quot;color:#a6e22e&quot;&gt;ImitateQueue&lt;/span&gt;&lt;span style=&quot;color:#f92672&quot;&gt;(&lt;/span&gt;&lt;span style=&quot;color:#66d9ef&quot;&gt;int&lt;/span&gt; maxSize&lt;span style=&quot;color:#f92672&quot;&gt;)&lt;/span&gt; &lt;span style=&quot;color:#f92672&quot;&gt;{&lt;/span&gt;
-    &lt;span style=&quot;color:#66d9ef&quot;&gt;this&lt;/span&gt;&lt;span style=&quot;color:#f92672&quot;&gt;.&lt;/span&gt;&lt;span style=&quot;color:#a6e22e&quot;&gt;maxSize&lt;/span&gt; &lt;span style=&quot;color:#f92672&quot;&gt;=&lt;/span&gt; maxSize&lt;span style=&quot;color:#f92672&quot;&gt;;&lt;/span&gt;
-&lt;span style=&quot;color:#f92672&quot;&gt;}&lt;/span&gt;
-
-&lt;span style=&quot;color:#75715e&quot;&gt;// 把一个对象aobject加到BlockingQueue里，如果BlockQueue没有空间，则调用此方法的线程被阻断，直到BlockingQueue里面有空间再继续增加
-</code></pre>
-<p><!-- raw HTML omitted --><!-- raw HTML omitted --><!-- raw HTML omitted -->	<!-- raw HTML omitted -->public<!-- raw HTML omitted --> <!-- raw HTML omitted -->void<!-- raw HTML omitted --> <!-- raw HTML omitted -->put<!-- raw HTML omitted --><!-- raw HTML omitted -->(<!-- raw HTML omitted -->Object obj<!-- raw HTML omitted -->)<!-- raw HTML omitted --> <!-- raw HTML omitted -->{<!-- raw HTML omitted -->
-<!-- raw HTML omitted -->synchronized<!-- raw HTML omitted --> <!-- raw HTML omitted -->(<!-- raw HTML omitted -->lock<!-- raw HTML omitted -->)<!-- raw HTML omitted --> <!-- raw HTML omitted -->{<!-- raw HTML omitted -->
-<!-- raw HTML omitted -->while<!-- raw HTML omitted --> <!-- raw HTML omitted -->(<!-- raw HTML omitted -->count<!-- raw HTML omitted -->.<!-- raw HTML omitted --><!-- raw HTML omitted -->get<!-- raw HTML omitted --><!-- raw HTML omitted -->()<!-- raw HTML omitted --> <!-- raw HTML omitted -->==<!-- raw HTML omitted --> maxSize<!-- raw HTML omitted -->)<!-- raw HTML omitted --> <!-- raw HTML omitted -->{<!-- raw HTML omitted -->
-<!-- raw HTML omitted -->try<!-- raw HTML omitted --> <!-- raw HTML omitted -->{<!-- raw HTML omitted -->
-<!-- raw HTML omitted -->// 当队列中数据塞满，线程等待
-<!-- raw HTML omitted --><!-- raw HTML omitted --><!-- raw HTML omitted -->					lock<!-- raw HTML omitted -->.<!-- raw HTML omitted --><!-- raw HTML omitted -->wait<!-- raw HTML omitted --><!-- raw HTML omitted -->();<!-- raw HTML omitted -->
-<!-- raw HTML omitted -->}<!-- raw HTML omitted -->
-<!-- raw HTML omitted -->catch<!-- raw HTML omitted --> <!-- raw HTML omitted -->(<!-- raw HTML omitted -->InterruptedException e<!-- raw HTML omitted -->)<!-- raw HTML omitted --> <!-- raw HTML omitted -->{<!-- raw HTML omitted -->
-e<!-- raw HTML omitted -->.<!-- raw HTML omitted --><!-- raw HTML omitted -->printStackTrace<!-- raw HTML omitted --><!-- raw HTML omitted -->();<!-- raw HTML omitted -->
-<!-- raw HTML omitted -->}<!-- raw HTML omitted -->
-<!-- raw HTML omitted -->}<!-- raw HTML omitted -->
-list<!-- raw HTML omitted -->.<!-- raw HTML omitted --><!-- raw HTML omitted -->add<!-- raw HTML omitted --><!-- raw HTML omitted -->(<!-- raw HTML omitted -->obj<!-- raw HTML omitted -->);<!-- raw HTML omitted -->
-<!-- raw HTML omitted -->// 计数器自增
-<!-- raw HTML omitted --><!-- raw HTML omitted --><!-- raw HTML omitted -->			count<!-- raw HTML omitted -->.<!-- raw HTML omitted --><!-- raw HTML omitted -->getAndIncrement<!-- raw HTML omitted --><!-- raw HTML omitted -->();<!-- raw HTML omitted -->
-System<!-- raw HTML omitted -->.<!-- raw HTML omitted --><!-- raw HTML omitted -->out<!-- raw HTML omitted --><!-- raw HTML omitted -->.<!-- raw HTML omitted --><!-- raw HTML omitted -->println<!-- raw HTML omitted --><!-- raw HTML omitted -->(<!-- raw HTML omitted --><!-- raw HTML omitted -->&quot; 元素 &quot;<!-- raw HTML omitted --> <!-- raw HTML omitted -->+<!-- raw HTML omitted --> obj <!-- raw HTML omitted -->+<!-- raw HTML omitted --> <!-- raw HTML omitted -->&quot; 被添加 &quot;<!-- raw HTML omitted --><!-- raw HTML omitted -->);<!-- raw HTML omitted -->
-<!-- raw HTML omitted -->// 唤醒之前等待阻塞的take方法线程取数据
-<!-- raw HTML omitted --><!-- raw HTML omitted --><!-- raw HTML omitted -->			lock<!-- raw HTML omitted -->.<!-- raw HTML omitted --><!-- raw HTML omitted -->notify<!-- raw HTML omitted --><!-- raw HTML omitted -->();<!-- raw HTML omitted --></p>
-<pre><code>    &lt;span style=&quot;color:#f92672&quot;&gt;}&lt;/span&gt;
-&lt;span style=&quot;color:#f92672&quot;&gt;}&lt;/span&gt;
-
-&lt;span style=&quot;color:#75715e&quot;&gt;// 取走BlockingQueue里排在首位的对象，若BlockingQueue为空，阻断进入等待状态，直到BlockingQueue有新的数据被加入
-</code></pre>
-<p><!-- raw HTML omitted --><!-- raw HTML omitted --><!-- raw HTML omitted -->	<!-- raw HTML omitted -->public<!-- raw HTML omitted --> Object <!-- raw HTML omitted -->take<!-- raw HTML omitted --><!-- raw HTML omitted -->()<!-- raw HTML omitted --> <!-- raw HTML omitted -->{<!-- raw HTML omitted -->
-Object temp <!-- raw HTML omitted -->=<!-- raw HTML omitted --> <!-- raw HTML omitted -->null<!-- raw HTML omitted --><!-- raw HTML omitted -->;<!-- raw HTML omitted -->
-<!-- raw HTML omitted -->synchronized<!-- raw HTML omitted --> <!-- raw HTML omitted -->(<!-- raw HTML omitted -->lock<!-- raw HTML omitted -->)<!-- raw HTML omitted --> <!-- raw HTML omitted -->{<!-- raw HTML omitted -->
-<!-- raw HTML omitted -->while<!-- raw HTML omitted --> <!-- raw HTML omitted -->(<!-- raw HTML omitted -->count<!-- raw HTML omitted -->.<!-- raw HTML omitted --><!-- raw HTML omitted -->get<!-- raw HTML omitted --><!-- raw HTML omitted -->()<!-- raw HTML omitted --> <!-- raw HTML omitted -->==<!-- raw HTML omitted --> minSize<!-- raw HTML omitted -->)<!-- raw HTML omitted --> <!-- raw HTML omitted -->{<!-- raw HTML omitted -->
-<!-- raw HTML omitted -->try<!-- raw HTML omitted --> <!-- raw HTML omitted -->{<!-- raw HTML omitted -->
-<!-- raw HTML omitted -->// 当队列中的元素，取完，该线程等待
-<!-- raw HTML omitted --><!-- raw HTML omitted --><!-- raw HTML omitted -->					lock<!-- raw HTML omitted -->.<!-- raw HTML omitted --><!-- raw HTML omitted -->wait<!-- raw HTML omitted --><!-- raw HTML omitted -->();<!-- raw HTML omitted -->
-<!-- raw HTML omitted -->}<!-- raw HTML omitted -->
-<!-- raw HTML omitted -->catch<!-- raw HTML omitted --> <!-- raw HTML omitted -->(<!-- raw HTML omitted -->InterruptedException e<!-- raw HTML omitted -->)<!-- raw HTML omitted --> <!-- raw HTML omitted -->{<!-- raw HTML omitted -->
-e<!-- raw HTML omitted -->.<!-- raw HTML omitted --><!-- raw HTML omitted -->printStackTrace<!-- raw HTML omitted --><!-- raw HTML omitted -->();<!-- raw HTML omitted -->
-<!-- raw HTML omitted -->}<!-- raw HTML omitted -->
-<!-- raw HTML omitted -->}<!-- raw HTML omitted -->
-<!-- raw HTML omitted -->// 计数器递减
-<!-- raw HTML omitted --><!-- raw HTML omitted --><!-- raw HTML omitted -->			count<!-- raw HTML omitted -->.<!-- raw HTML omitted --><!-- raw HTML omitted -->getAndDecrement<!-- raw HTML omitted --><!-- raw HTML omitted -->();<!-- raw HTML omitted -->
-<!-- raw HTML omitted -->// 取出元素
-<!-- raw HTML omitted --><!-- raw HTML omitted --><!-- raw HTML omitted -->			temp <!-- raw HTML omitted -->=<!-- raw HTML omitted --> list<!-- raw HTML omitted -->.<!-- raw HTML omitted --><!-- raw HTML omitted -->removeFirst<!-- raw HTML omitted --><!-- raw HTML omitted -->();<!-- raw HTML omitted -->
-System<!-- raw HTML omitted -->.<!-- raw HTML omitted --><!-- raw HTML omitted -->out<!-- raw HTML omitted --><!-- raw HTML omitted -->.<!-- raw HTML omitted --><!-- raw HTML omitted -->println<!-- raw HTML omitted --><!-- raw HTML omitted -->(<!-- raw HTML omitted --><!-- raw HTML omitted -->&quot; 元素 &quot;<!-- raw HTML omitted --> <!-- raw HTML omitted -->+<!-- raw HTML omitted --> temp <!-- raw HTML omitted -->+<!-- raw HTML omitted --> <!-- raw HTML omitted -->&quot; 被消费 &quot;<!-- raw HTML omitted --><!-- raw HTML omitted -->);<!-- raw HTML omitted -->
-<!-- raw HTML omitted -->// 唤醒之前阻塞的put方法把元素放进去
-<!-- raw HTML omitted --><!-- raw HTML omitted --><!-- raw HTML omitted -->			lock<!-- raw HTML omitted -->.<!-- raw HTML omitted --><!-- raw HTML omitted -->notify<!-- raw HTML omitted --><!-- raw HTML omitted -->();<!-- raw HTML omitted -->
-<!-- raw HTML omitted -->}<!-- raw HTML omitted -->
-<!-- raw HTML omitted -->return<!-- raw HTML omitted --> temp<!-- raw HTML omitted -->;<!-- raw HTML omitted -->
-<!-- raw HTML omitted -->}<!-- raw HTML omitted --></p>
-<pre><code>&lt;span style=&quot;color:#66d9ef&quot;&gt;public&lt;/span&gt; &lt;span style=&quot;color:#66d9ef&quot;&gt;int&lt;/span&gt; &lt;span style=&quot;color:#a6e22e&quot;&gt;size&lt;/span&gt;&lt;span style=&quot;color:#f92672&quot;&gt;()&lt;/span&gt; &lt;span style=&quot;color:#f92672&quot;&gt;{&lt;/span&gt;
-    &lt;span style=&quot;color:#66d9ef&quot;&gt;return&lt;/span&gt; count&lt;span style=&quot;color:#f92672&quot;&gt;.&lt;/span&gt;&lt;span style=&quot;color:#a6e22e&quot;&gt;get&lt;/span&gt;&lt;span style=&quot;color:#f92672&quot;&gt;();&lt;/span&gt;
-&lt;span style=&quot;color:#f92672&quot;&gt;}&lt;/span&gt;
-
-&lt;span style=&quot;color:#66d9ef&quot;&gt;public&lt;/span&gt; &lt;span style=&quot;color:#66d9ef&quot;&gt;static&lt;/span&gt; &lt;span style=&quot;color:#66d9ef&quot;&gt;void&lt;/span&gt; &lt;span style=&quot;color:#a6e22e&quot;&gt;main&lt;/span&gt;&lt;span style=&quot;color:#f92672&quot;&gt;(&lt;/span&gt;String&lt;span style=&quot;color:#f92672&quot;&gt;[]&lt;/span&gt; args&lt;span style=&quot;color:#f92672&quot;&gt;)&lt;/span&gt; &lt;span style=&quot;color:#66d9ef&quot;&gt;throws&lt;/span&gt; Exception &lt;span style=&quot;color:#f92672&quot;&gt;{&lt;/span&gt;
-
-    &lt;span style=&quot;color:#66d9ef&quot;&gt;final&lt;/span&gt; ImitateQueue m &lt;span style=&quot;color:#f92672&quot;&gt;=&lt;/span&gt; &lt;span style=&quot;color:#66d9ef&quot;&gt;new&lt;/span&gt; ImitateQueue&lt;span style=&quot;color:#f92672&quot;&gt;(&lt;/span&gt;5&lt;span style=&quot;color:#f92672&quot;&gt;);&lt;/span&gt;
-    m&lt;span style=&quot;color:#f92672&quot;&gt;.&lt;/span&gt;&lt;span style=&quot;color:#a6e22e&quot;&gt;put&lt;/span&gt;&lt;span style=&quot;color:#f92672&quot;&gt;(&lt;/span&gt;&lt;span style=&quot;color:#e6db74&quot;&gt;&amp;#34;a&amp;#34;&lt;/span&gt;&lt;span style=&quot;color:#f92672&quot;&gt;);&lt;/span&gt;
-    m&lt;span style=&quot;color:#f92672&quot;&gt;.&lt;/span&gt;&lt;span style=&quot;color:#a6e22e&quot;&gt;put&lt;/span&gt;&lt;span style=&quot;color:#f92672&quot;&gt;(&lt;/span&gt;&lt;span style=&quot;color:#e6db74&quot;&gt;&amp;#34;b&amp;#34;&lt;/span&gt;&lt;span style=&quot;color:#f92672&quot;&gt;);&lt;/span&gt;
-    m&lt;span style=&quot;color:#f92672&quot;&gt;.&lt;/span&gt;&lt;span style=&quot;color:#a6e22e&quot;&gt;put&lt;/span&gt;&lt;span style=&quot;color:#f92672&quot;&gt;(&lt;/span&gt;&lt;span style=&quot;color:#e6db74&quot;&gt;&amp;#34;c&amp;#34;&lt;/span&gt;&lt;span style=&quot;color:#f92672&quot;&gt;);&lt;/span&gt;
-    m&lt;span style=&quot;color:#f92672&quot;&gt;.&lt;/span&gt;&lt;span style=&quot;color:#a6e22e&quot;&gt;put&lt;/span&gt;&lt;span style=&quot;color:#f92672&quot;&gt;(&lt;/span&gt;&lt;span style=&quot;color:#e6db74&quot;&gt;&amp;#34;d&amp;#34;&lt;/span&gt;&lt;span style=&quot;color:#f92672&quot;&gt;);&lt;/span&gt;
-    m&lt;span style=&quot;color:#f92672&quot;&gt;.&lt;/span&gt;&lt;span style=&quot;color:#a6e22e&quot;&gt;put&lt;/span&gt;&lt;span style=&quot;color:#f92672&quot;&gt;(&lt;/span&gt;&lt;span style=&quot;color:#e6db74&quot;&gt;&amp;#34;e&amp;#34;&lt;/span&gt;&lt;span style=&quot;color:#f92672&quot;&gt;);&lt;/span&gt;
-    System&lt;span style=&quot;color:#f92672&quot;&gt;.&lt;/span&gt;&lt;span style=&quot;color:#a6e22e&quot;&gt;out&lt;/span&gt;&lt;span style=&quot;color:#f92672&quot;&gt;.&lt;/span&gt;&lt;span style=&quot;color:#a6e22e&quot;&gt;println&lt;/span&gt;&lt;span style=&quot;color:#f92672&quot;&gt;(&lt;/span&gt;&lt;span style=&quot;color:#e6db74&quot;&gt;&amp;#34;当前元素个数：&amp;#34;&lt;/span&gt; &lt;span style=&quot;color:#f92672&quot;&gt;+&lt;/span&gt; m&lt;span style=&quot;color:#f92672&quot;&gt;.&lt;/span&gt;&lt;span style=&quot;color:#a6e22e&quot;&gt;size&lt;/span&gt;&lt;span style=&quot;color:#f92672&quot;&gt;());&lt;/span&gt;
-    Thread t1 &lt;span style=&quot;color:#f92672&quot;&gt;=&lt;/span&gt; &lt;span style=&quot;color:#66d9ef&quot;&gt;new&lt;/span&gt; Thread&lt;span style=&quot;color:#f92672&quot;&gt;(&lt;/span&gt;&lt;span style=&quot;color:#66d9ef&quot;&gt;new&lt;/span&gt; Runnable&lt;span style=&quot;color:#f92672&quot;&gt;()&lt;/span&gt; &lt;span style=&quot;color:#f92672&quot;&gt;{&lt;/span&gt;
-        &lt;span style=&quot;color:#a6e22e&quot;&gt;@Override&lt;/span&gt;
-        &lt;span style=&quot;color:#66d9ef&quot;&gt;public&lt;/span&gt; &lt;span style=&quot;color:#66d9ef&quot;&gt;void&lt;/span&gt; &lt;span style=&quot;color:#a6e22e&quot;&gt;run&lt;/span&gt;&lt;span style=&quot;color:#f92672&quot;&gt;()&lt;/span&gt; &lt;span style=&quot;color:#f92672&quot;&gt;{&lt;/span&gt;
-            m&lt;span style=&quot;color:#f92672&quot;&gt;.&lt;/span&gt;&lt;span style=&quot;color:#a6e22e&quot;&gt;put&lt;/span&gt;&lt;span style=&quot;color:#f92672&quot;&gt;(&lt;/span&gt;&lt;span style=&quot;color:#e6db74&quot;&gt;&amp;#34;h&amp;#34;&lt;/span&gt;&lt;span style=&quot;color:#f92672&quot;&gt;);&lt;/span&gt;
-            m&lt;span style=&quot;color:#f92672&quot;&gt;.&lt;/span&gt;&lt;span style=&quot;color:#a6e22e&quot;&gt;put&lt;/span&gt;&lt;span style=&quot;color:#f92672&quot;&gt;(&lt;/span&gt;&lt;span style=&quot;color:#e6db74&quot;&gt;&amp;#34;i&amp;#34;&lt;/span&gt;&lt;span style=&quot;color:#f92672&quot;&gt;);&lt;/span&gt;
-        &lt;span style=&quot;color:#f92672&quot;&gt;}&lt;/span&gt;
-    &lt;span style=&quot;color:#f92672&quot;&gt;},&lt;/span&gt; &lt;span style=&quot;color:#e6db74&quot;&gt;&amp;#34;t1&amp;#34;&lt;/span&gt;&lt;span style=&quot;color:#f92672&quot;&gt;);&lt;/span&gt;
-
-    t1&lt;span style=&quot;color:#f92672&quot;&gt;.&lt;/span&gt;&lt;span style=&quot;color:#a6e22e&quot;&gt;start&lt;/span&gt;&lt;span style=&quot;color:#f92672&quot;&gt;();&lt;/span&gt;
-
-    Thread t2 &lt;span style=&quot;color:#f92672&quot;&gt;=&lt;/span&gt; &lt;span style=&quot;color:#66d9ef&quot;&gt;new&lt;/span&gt; Thread&lt;span style=&quot;color:#f92672&quot;&gt;(&lt;/span&gt;&lt;span style=&quot;color:#66d9ef&quot;&gt;new&lt;/span&gt; Runnable&lt;span style=&quot;color:#f92672&quot;&gt;()&lt;/span&gt; &lt;span style=&quot;color:#f92672&quot;&gt;{&lt;/span&gt;
-        &lt;span style=&quot;color:#a6e22e&quot;&gt;@Override&lt;/span&gt;
-        &lt;span style=&quot;color:#66d9ef&quot;&gt;public&lt;/span&gt; &lt;span style=&quot;color:#66d9ef&quot;&gt;void&lt;/span&gt; &lt;span style=&quot;color:#a6e22e&quot;&gt;run&lt;/span&gt;&lt;span style=&quot;color:#f92672&quot;&gt;()&lt;/span&gt; &lt;span style=&quot;color:#f92672&quot;&gt;{&lt;/span&gt;
-            &lt;span style=&quot;color:#66d9ef&quot;&gt;try&lt;/span&gt; &lt;span style=&quot;color:#f92672&quot;&gt;{&lt;/span&gt;
-                Object t1 &lt;span style=&quot;color:#f92672&quot;&gt;=&lt;/span&gt; m&lt;span style=&quot;color:#f92672&quot;&gt;.&lt;/span&gt;&lt;span style=&quot;color:#a6e22e&quot;&gt;take&lt;/span&gt;&lt;span style=&quot;color:#f92672&quot;&gt;();&lt;/span&gt;
-                System&lt;span style=&quot;color:#f92672&quot;&gt;.&lt;/span&gt;&lt;span style=&quot;color:#a6e22e&quot;&gt;out&lt;/span&gt;&lt;span style=&quot;color:#f92672&quot;&gt;.&lt;/span&gt;&lt;span style=&quot;color:#a6e22e&quot;&gt;println&lt;/span&gt;&lt;span style=&quot;color:#f92672&quot;&gt;(&lt;/span&gt;&lt;span style=&quot;color:#e6db74&quot;&gt;&amp;#34;被取走的元素为：&amp;#34;&lt;/span&gt; &lt;span style=&quot;color:#f92672&quot;&gt;+&lt;/span&gt; t1&lt;span style=&quot;color:#f92672&quot;&gt;);&lt;/span&gt;
-                Thread&lt;span style=&quot;color:#f92672&quot;&gt;.&lt;/span&gt;&lt;span style=&quot;color:#a6e22e&quot;&gt;sleep&lt;/span&gt;&lt;span style=&quot;color:#f92672&quot;&gt;(&lt;/span&gt;1000&lt;span style=&quot;color:#f92672&quot;&gt;);&lt;/span&gt;
-                Object t2 &lt;span style=&quot;color:#f92672&quot;&gt;=&lt;/span&gt; m&lt;span style=&quot;color:#f92672&quot;&gt;.&lt;/span&gt;&lt;span style=&quot;color:#a6e22e&quot;&gt;take&lt;/span&gt;&lt;span style=&quot;color:#f92672&quot;&gt;();&lt;/span&gt;
-                System&lt;span style=&quot;color:#f92672&quot;&gt;.&lt;/span&gt;&lt;span style=&quot;color:#a6e22e&quot;&gt;out&lt;/span&gt;&lt;span style=&quot;color:#f92672&quot;&gt;.&lt;/span&gt;&lt;span style=&quot;color:#a6e22e&quot;&gt;println&lt;/span&gt;&lt;span style=&quot;color:#f92672&quot;&gt;(&lt;/span&gt;&lt;span style=&quot;color:#e6db74&quot;&gt;&amp;#34;被取走的元素为：&amp;#34;&lt;/span&gt; &lt;span style=&quot;color:#f92672&quot;&gt;+&lt;/span&gt; t2&lt;span style=&quot;color:#f92672&quot;&gt;);&lt;/span&gt;
-            &lt;span style=&quot;color:#f92672&quot;&gt;}&lt;/span&gt;
-            &lt;span style=&quot;color:#66d9ef&quot;&gt;catch&lt;/span&gt; &lt;span style=&quot;color:#f92672&quot;&gt;(&lt;/span&gt;InterruptedException e&lt;span style=&quot;color:#f92672&quot;&gt;)&lt;/span&gt; &lt;span style=&quot;color:#f92672&quot;&gt;{&lt;/span&gt;
-                e&lt;span style=&quot;color:#f92672&quot;&gt;.&lt;/span&gt;&lt;span style=&quot;color:#a6e22e&quot;&gt;printStackTrace&lt;/span&gt;&lt;span style=&quot;color:#f92672&quot;&gt;();&lt;/span&gt;
-            &lt;span style=&quot;color:#f92672&quot;&gt;}&lt;/span&gt;
-        &lt;span style=&quot;color:#f92672&quot;&gt;}&lt;/span&gt;
-    &lt;span style=&quot;color:#f92672&quot;&gt;},&lt;/span&gt; &lt;span style=&quot;color:#e6db74&quot;&gt;&amp;#34;t2&amp;#34;&lt;/span&gt;&lt;span style=&quot;color:#f92672&quot;&gt;);&lt;/span&gt;
-
-    &lt;span style=&quot;color:#75715e&quot;&gt;// 休眠2秒钟
-</code></pre>
-<p><!-- raw HTML omitted --><!-- raw HTML omitted --><!-- raw HTML omitted -->		TimeUnit<!-- raw HTML omitted -->.<!-- raw HTML omitted --><!-- raw HTML omitted -->SECONDS<!-- raw HTML omitted --><!-- raw HTML omitted -->.<!-- raw HTML omitted --><!-- raw HTML omitted -->sleep<!-- raw HTML omitted --><!-- raw HTML omitted -->(<!-- raw HTML omitted -->2<!-- raw HTML omitted -->);<!-- raw HTML omitted -->
-t2<!-- raw HTML omitted -->.<!-- raw HTML omitted --><!-- raw HTML omitted -->start<!-- raw HTML omitted --><!-- raw HTML omitted -->();<!-- raw HTML omitted --></p>
-<pre><code>&lt;span style=&quot;color:#f92672&quot;&gt;}&lt;/span&gt;
-</code></pre>
-<p><!-- raw HTML omitted -->}<!-- raw HTML omitted -->
-<!-- raw HTML omitted --><!-- raw HTML omitted --><!-- raw HTML omitted --><!-- raw HTML omitted -->程序运行结果如下<!-- raw HTML omitted --></p>
-<!-- raw HTML omitted -->
-<!-- raw HTML omitted -->
 <blockquote>
+<p>通过上面的运行结果分析，可以看出线程间的通信，因为持有锁的问题，使用wait、notify线程间通信，没法做到实时通信。</p>
 </blockquote>
+
+<h3 id="2-3-使用java-util-concurrent下的countdownlatch实现实时通信">2.3  使用java.util.concurrent下的CountDownLatch实现实时通信</h3>
+
+<p>示例代码，如下所示：</p>
+
+<pre><code class="language-java">import java.util.ArrayList;
+import java.util.List;
+import java.util.concurrent.CountDownLatch;
+
+/**
+ * @author xujin
+ *
+ */
+public class ListAdd3 {
+    private volatile static List list = new ArrayList();
+
+    public void add() {
+        list.add(&quot;test.......&quot;);
+    }
+
+    public int size() {
+        return list.size();
+    }
+
+    public static void main(String[] args) {
+
+        final ListAdd3 list2 = new ListAdd3();
+        // final Object lock = new Object();
+        final CountDownLatch countDownLatch = new CountDownLatch(1);
+        Thread t1 = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    // synchronized (lock) {
+                    System.out.println(&quot;t1启动..&quot;);
+                    for (int i = 0; i &lt; 10; i++) {
+                        list2.add();
+                        System.out.println(
+                                &quot;当前线程：&quot; + Thread.currentThread().getName() + &quot;添加了一个元素..&quot;);
+                        Thread.sleep(500);
+                        if (list2.size() == 5) {
+                            System.out.println(&quot;已经发出通知..&quot;);
+                            // lock.notify();
+                            countDownLatch.countDown();
+                        }
+                    }
+                    // }
+                }
+                catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+
+            }
+        }, &quot;t1&quot;);
+
+        Thread t2 = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                // synchronized (lock) {
+                System.out.println(&quot;t2启动..&quot;);
+                if (list2.size() != 5) {
+                    try {
+                        // lock.wait();
+                        countDownLatch.await();
+                    }
+                    catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                }
+                System.out.println(
+                        &quot;当前线程：&quot; + Thread.currentThread().getName() + &quot;收到通知线程停止..&quot;);
+                throw new RuntimeException();
+            }
+            // }
+        }, &quot;t2&quot;);
+        t2.start();
+        t1.start();
+
+    }
+
+}
+</code></pre>
+
+<blockquote>
+<p>countDownLatch.countDown();相当于lock.notify()；countDownLatch.await()相当于lock.wait();</p>
+</blockquote>
+
+<p>如果final CountDownLatch countDownLatch = new CountDownLatch(2);需要countDownLatch.countDown()两次如下所示。</p>
+
+<pre><code class="language-java">final ListAdd3 list2 = new ListAdd3();
+        // final Object lock = new Object();
+        final CountDownLatch countDownLatch = new CountDownLatch(2);
+        Thread t1 = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    // synchronized (lock) {
+                    System.out.println(&quot;t1启动..&quot;);
+                    for (int i = 0; i &lt; 10; i++) {
+                        list2.add();
+                        System.out.println(
+                                &quot;当前线程：&quot; + Thread.currentThread().getName() + &quot;添加了一个元素..&quot;);
+                        Thread.sleep(500);
+                        if (list2.size() == 5) {
+                            System.out.println(&quot;已经发出通知..&quot;);
+                            // lock.notify();
+                            countDownLatch.countDown();
+                            countDownLatch.countDown();
+                        }
+                    }
+                    // }
+                }
+                catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
+        }, &quot;t1&quot;);
+</code></pre>
+
+<h3 id="2-4-使用wait-notify模拟queue">2.4  使用wait/notify模拟Queue</h3>
+
+<p><strong>BlockingQueue</strong>：顾名思义阻塞队列，首先它是一个队列，并且支持阻塞的机制，阻塞的放入和得到数据。我们要实现LinkedBlockingQueue下面两个简单的方法put和get和take。
+   <strong>put(aObject)</strong>:把一个对象aobject加到BlockingQueue里，如果BlockQueue没有空间，则调用此方法的线程被阻断，直到BlockingQueue里面有空间再继续。
+   <strong>take</strong>：取走BlockingQueue里排在首位的对象，若BlockingQueue为空，阻断进入等待状态，直到BlockingQueue有新的数据被加入。
+示例代码如下</p>
+
+<pre><code class="language-java">import java.util.LinkedList;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicInteger;
+
+/**
+ * 使用wait/notify模拟Queue
+ * @author xujin
+ *
+ */
+public class ImitateQueue {
+
+    // 承载元素的集合
+    private final LinkedList&lt;Object&gt; list = new LinkedList&lt;Object&gt;();
+
+    // 计数器进行计数
+    private final AtomicInteger count = new AtomicInteger(0);
+
+    // 制定元素的上限和下限
+    private final int maxSize;
+    private final int minSize = 0;
+
+    // 初始化一个对象用于加锁
+    private final Object lock = new Object();
+
+    public ImitateQueue(int maxSize) {
+        this.maxSize = maxSize;
+    }
+
+    // 把一个对象aobject加到BlockingQueue里，如果BlockQueue没有空间，则调用此方法的线程被阻断，直到BlockingQueue里面有空间再继续增加
+    public void put(Object obj) {
+        synchronized (lock) {
+            while (count.get() == maxSize) {
+                try {
+                    // 当队列中数据塞满，线程等待
+                    lock.wait();
+                }
+                catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
+            list.add(obj);
+            // 计数器自增
+            count.getAndIncrement();
+            System.out.println(&quot; 元素 &quot; + obj + &quot; 被添加 &quot;);
+            // 唤醒之前等待阻塞的take方法线程取数据
+            lock.notify();
+
+        }
+    }
+
+    // 取走BlockingQueue里排在首位的对象，若BlockingQueue为空，阻断进入等待状态，直到BlockingQueue有新的数据被加入
+    public Object take() {
+        Object temp = null;
+        synchronized (lock) {
+            while (count.get() == minSize) {
+                try {
+                    // 当队列中的元素，取完，该线程等待
+                    lock.wait();
+                }
+                catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
+            // 计数器递减
+            count.getAndDecrement();
+            // 取出元素
+            temp = list.removeFirst();
+            System.out.println(&quot; 元素 &quot; + temp + &quot; 被消费 &quot;);
+            // 唤醒之前阻塞的put方法把元素放进去
+            lock.notify();
+        }
+        return temp;
+    }
+
+    public int size() {
+        return count.get();
+    }
+
+    public static void main(String[] args) throws Exception {
+
+        final ImitateQueue m = new ImitateQueue(5);
+        m.put(&quot;a&quot;);
+        m.put(&quot;b&quot;);
+        m.put(&quot;c&quot;);
+        m.put(&quot;d&quot;);
+        m.put(&quot;e&quot;);
+        System.out.println(&quot;当前元素个数：&quot; + m.size());
+        Thread t1 = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                m.put(&quot;h&quot;);
+                m.put(&quot;i&quot;);
+            }
+        }, &quot;t1&quot;);
+
+        t1.start();
+
+        Thread t2 = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    Object t1 = m.take();
+                    System.out.println(&quot;被取走的元素为：&quot; + t1);
+                    Thread.sleep(1000);
+                    Object t2 = m.take();
+                    System.out.println(&quot;被取走的元素为：&quot; + t2);
+                }
+                catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
+        }, &quot;t2&quot;);
+
+        // 休眠2秒钟
+        TimeUnit.SECONDS.sleep(2);
+        t2.start();
+
+    }
+
+}
+</code></pre>
+
+<p>程序运行结果如下</p>
+
+<pre><code> 元素 a 被添加 
+ 元素 b 被添加 
+ 元素 c 被添加 
+ 元素 d 被添加 
+ 元素 e 被添加 
+当前元素个数：5
+ 元素 a 被消费 
+被取走的元素为：a
+ 元素 h 被添加 
+ 元素 b 被消费 
+被取走的元素为：b
+ 元素 i 被添加 
+
+</code></pre>
 
 </article>
 
@@ -696,17 +795,19 @@ t2<!-- raw HTML omitted -->.<!-- raw HTML omitted --><!-- raw HTML omitted -->st
 		目录
 	</h2>
   <nav id="TableOfContents">
-  <ul>
-    <li><a href="#1-线程间通信概念">1. 线程间通信概念</a></li>
-    <li><a href="#2-waitnotify实现线程通信">2. wait/notify实现线程通信</a>
-      <ul>
-        <li><a href="#21最原始线程间通信代码">2.1最原始线程间通信代码</a></li>
-        <li><a href="#22--wait和notify实现线程间通信代码">2.2  <code>wait和notify</code>实现线程间通信代码</a></li>
-        <li><a href="#23--使用javautilconcurrent下的countdownlatch实现实时通信">2.3  使用java.util.concurrent下的CountDownLatch实现实时通信</a></li>
-        <li><a href="#24--使用waitnotify模拟queue">2.4  使用wait/notify模拟Queue</a></li>
-      </ul>
-    </li>
-  </ul>
+<ul>
+<li>
+<ul>
+<li><a href="#1-线程间通信概念">1. 线程间通信概念</a></li>
+<li><a href="#2-wait-notify实现线程通信">2. wait/notify实现线程通信</a>
+<ul>
+<li><a href="#2-1最原始线程间通信代码">2.1最原始线程间通信代码</a></li>
+<li><a href="#2-2-wait和notify-实现线程间通信代码">2.2  <code>wait和notify</code>实现线程间通信代码</a></li>
+<li><a href="#2-3-使用java-util-concurrent下的countdownlatch实现实时通信">2.3  使用java.util.concurrent下的CountDownLatch实现实时通信</a></li>
+<li><a href="#2-4-使用wait-notify模拟queue">2.4  使用wait/notify模拟Queue</a></li>
+</ul></li>
+</ul></li>
+</ul>
 </nav>
 </div>
 

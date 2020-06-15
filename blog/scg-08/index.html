@@ -10,7 +10,7 @@
 <meta name="viewport" content="width=device-width,minimum-scale=1">
 <meta name="description" content="玹霖志,许进沉思录,许进|Spring Cloud,中间件，基础架构，www.xujin.org,xujin.org,-许进沉思录,Venus&#43;,云首科技有限公司,云计算，大数据，物联网，Software_king的博客,云计算Saas，云计算Paas，云计算Iaas Hadoop，大数据，JavaEE，Java，物联网，Hadoop， NoSQL，MongoDB,Spring, Hibernate,Struts2," />
 
-<meta name="generator" content="Hugo 0.72.0" /><link rel="shortcut icon" href=/img/icon.png type="image/png">
+<meta name="generator" content="Hugo 0.55.6" /><link rel="shortcut icon" href=/img/icon.png type="image/png">
 
 <link href="https://unpkg.com/purecss@1.0.0/build/base-min.css" rel="stylesheet">
 
@@ -259,85 +259,145 @@ if (!doNotTrack) {
 	});
   </script>
 		<article class="typo">
-	<!-- raw HTML omitted -->
-<pre><code>    NettyDataBufferFactory bufferFactory &lt;span style=&quot;color:#f92672&quot;&gt;=&lt;/span&gt; &lt;span style=&quot;color:#66d9ef&quot;&gt;new&lt;/span&gt; NettyDataBufferFactory&lt;span style=&quot;color:#f92672&quot;&gt;(&lt;/span&gt;response&lt;span style=&quot;color:#f92672&quot;&gt;.&lt;/span&gt;&lt;span style=&quot;color:#a6e22e&quot;&gt;alloc&lt;/span&gt;&lt;span style=&quot;color:#f92672&quot;&gt;());&lt;/span&gt;
-    ServerHttpRequest adaptedRequest&lt;span style=&quot;color:#f92672&quot;&gt;;&lt;/span&gt;
-    ServerHttpResponse adaptedResponse&lt;span style=&quot;color:#f92672&quot;&gt;;&lt;/span&gt;
-    &lt;span style=&quot;color:#66d9ef&quot;&gt;try&lt;/span&gt; &lt;span style=&quot;color:#f92672&quot;&gt;{&lt;/span&gt;
-        adaptedRequest &lt;span style=&quot;color:#f92672&quot;&gt;=&lt;/span&gt; &lt;span style=&quot;color:#66d9ef&quot;&gt;new&lt;/span&gt; ReactorServerHttpRequest&lt;span style=&quot;color:#f92672&quot;&gt;(&lt;/span&gt;request&lt;span style=&quot;color:#f92672&quot;&gt;,&lt;/span&gt; bufferFactory&lt;span style=&quot;color:#f92672&quot;&gt;);&lt;/span&gt;
-        adaptedResponse &lt;span style=&quot;color:#f92672&quot;&gt;=&lt;/span&gt; &lt;span style=&quot;color:#66d9ef&quot;&gt;new&lt;/span&gt; ReactorServerHttpResponse&lt;span style=&quot;color:#f92672&quot;&gt;(&lt;/span&gt;response&lt;span style=&quot;color:#f92672&quot;&gt;,&lt;/span&gt; bufferFactory&lt;span style=&quot;color:#f92672&quot;&gt;);&lt;/span&gt;
-    &lt;span style=&quot;color:#f92672&quot;&gt;}&lt;/span&gt;
-    &lt;span style=&quot;color:#66d9ef&quot;&gt;catch&lt;/span&gt; &lt;span style=&quot;color:#f92672&quot;&gt;(&lt;/span&gt;URISyntaxException ex&lt;span style=&quot;color:#f92672&quot;&gt;)&lt;/span&gt; &lt;span style=&quot;color:#f92672&quot;&gt;{&lt;/span&gt;
-        logger&lt;span style=&quot;color:#f92672&quot;&gt;.&lt;/span&gt;&lt;span style=&quot;color:#a6e22e&quot;&gt;error&lt;/span&gt;&lt;span style=&quot;color:#f92672&quot;&gt;(&lt;/span&gt;&lt;span style=&quot;color:#e6db74&quot;&gt;&amp;#34;Invalid URL &amp;#34;&lt;/span&gt; &lt;span style=&quot;color:#f92672&quot;&gt;+&lt;/span&gt; ex&lt;span style=&quot;color:#f92672&quot;&gt;.&lt;/span&gt;&lt;span style=&quot;color:#a6e22e&quot;&gt;getMessage&lt;/span&gt;&lt;span style=&quot;color:#f92672&quot;&gt;(),&lt;/span&gt; ex&lt;span style=&quot;color:#f92672&quot;&gt;);&lt;/span&gt;
-        response&lt;span style=&quot;color:#f92672&quot;&gt;.&lt;/span&gt;&lt;span style=&quot;color:#a6e22e&quot;&gt;status&lt;/span&gt;&lt;span style=&quot;color:#f92672&quot;&gt;(&lt;/span&gt;HttpResponseStatus&lt;span style=&quot;color:#f92672&quot;&gt;.&lt;/span&gt;&lt;span style=&quot;color:#a6e22e&quot;&gt;BAD_REQUEST&lt;/span&gt;&lt;span style=&quot;color:#f92672&quot;&gt;);&lt;/span&gt;
-        &lt;span style=&quot;color:#66d9ef&quot;&gt;return&lt;/span&gt; Mono&lt;span style=&quot;color:#f92672&quot;&gt;.&lt;/span&gt;&lt;span style=&quot;color:#a6e22e&quot;&gt;empty&lt;/span&gt;&lt;span style=&quot;color:#f92672&quot;&gt;();&lt;/span&gt;
-    &lt;span style=&quot;color:#f92672&quot;&gt;}&lt;/span&gt;
+	<h2 id="1-spring-gateway概述">1.Spring Gateway概述</h2>
 
-    &lt;span style=&quot;color:#66d9ef&quot;&gt;if&lt;/span&gt; &lt;span style=&quot;color:#f92672&quot;&gt;(&lt;/span&gt;adaptedRequest&lt;span style=&quot;color:#f92672&quot;&gt;.&lt;/span&gt;&lt;span style=&quot;color:#a6e22e&quot;&gt;getMethod&lt;/span&gt;&lt;span style=&quot;color:#f92672&quot;&gt;()&lt;/span&gt; &lt;span style=&quot;color:#f92672&quot;&gt;==&lt;/span&gt; HttpMethod&lt;span style=&quot;color:#f92672&quot;&gt;.&lt;/span&gt;&lt;span style=&quot;color:#a6e22e&quot;&gt;HEAD&lt;/span&gt;&lt;span style=&quot;color:#f92672&quot;&gt;)&lt;/span&gt; &lt;span style=&quot;color:#f92672&quot;&gt;{&lt;/span&gt;
-        adaptedResponse &lt;span style=&quot;color:#f92672&quot;&gt;=&lt;/span&gt; &lt;span style=&quot;color:#66d9ef&quot;&gt;new&lt;/span&gt; HttpHeadResponseDecorator&lt;span style=&quot;color:#f92672&quot;&gt;(&lt;/span&gt;adaptedResponse&lt;span style=&quot;color:#f92672&quot;&gt;);&lt;/span&gt;
-    &lt;span style=&quot;color:#f92672&quot;&gt;}&lt;/span&gt;
+<p><code>Spring Cloud Gateway</code>是Spring官方基于Spring 5.0，Spring Boot 2.0和Project Reactor等技术开发的网关，Spring Cloud Gateway旨在为微服务架构提供一种简单而有效的统一的API路由管理方式。Spring Cloud Gateway作为Spring Cloud生态系中的网关，目标是替代Netflix ZUUL，其不仅提供统一的路由方式，并且基于Filter链的方式提供了网关基本的功能，例如：安全，监控/埋点，和限流等。</p>
 
-    &lt;span style=&quot;color:#66d9ef&quot;&gt;return&lt;/span&gt; &lt;span style=&quot;color:#66d9ef&quot;&gt;this&lt;/span&gt;&lt;span style=&quot;color:#f92672&quot;&gt;.&lt;/span&gt;&lt;span style=&quot;color:#a6e22e&quot;&gt;httpHandler&lt;/span&gt;&lt;span style=&quot;color:#f92672&quot;&gt;.&lt;/span&gt;&lt;span style=&quot;color:#a6e22e&quot;&gt;handle&lt;/span&gt;&lt;span style=&quot;color:#f92672&quot;&gt;(&lt;/span&gt;adaptedRequest&lt;span style=&quot;color:#f92672&quot;&gt;,&lt;/span&gt; adaptedResponse&lt;span style=&quot;color:#f92672&quot;&gt;)&lt;/span&gt;
-            &lt;span style=&quot;color:#f92672&quot;&gt;.&lt;/span&gt;&lt;span style=&quot;color:#a6e22e&quot;&gt;doOnError&lt;/span&gt;&lt;span style=&quot;color:#f92672&quot;&gt;(&lt;/span&gt;ex &lt;span style=&quot;color:#f92672&quot;&gt;-&amp;gt;&lt;/span&gt; logger&lt;span style=&quot;color:#f92672&quot;&gt;.&lt;/span&gt;&lt;span style=&quot;color:#a6e22e&quot;&gt;error&lt;/span&gt;&lt;span style=&quot;color:#f92672&quot;&gt;(&lt;/span&gt;&lt;span style=&quot;color:#e6db74&quot;&gt;&amp;#34;Handling completed with error&amp;#34;&lt;/span&gt;&lt;span style=&quot;color:#f92672&quot;&gt;,&lt;/span&gt; ex&lt;span style=&quot;color:#f92672&quot;&gt;))&lt;/span&gt;
-            &lt;span style=&quot;color:#f92672&quot;&gt;.&lt;/span&gt;&lt;span style=&quot;color:#a6e22e&quot;&gt;doOnSuccess&lt;/span&gt;&lt;span style=&quot;color:#f92672&quot;&gt;(&lt;/span&gt;aVoid &lt;span style=&quot;color:#f92672&quot;&gt;-&amp;gt;&lt;/span&gt; logger&lt;span style=&quot;color:#f92672&quot;&gt;.&lt;/span&gt;&lt;span style=&quot;color:#a6e22e&quot;&gt;debug&lt;/span&gt;&lt;span style=&quot;color:#f92672&quot;&gt;(&lt;/span&gt;&lt;span style=&quot;color:#e6db74&quot;&gt;&amp;#34;Handling completed with success&amp;#34;&lt;/span&gt;&lt;span style=&quot;color:#f92672&quot;&gt;));&lt;/span&gt;
-&lt;span style=&quot;color:#f92672&quot;&gt;}&lt;/span&gt;
+<h2 id="2-spring-cloud-gateway请求入口分析">2. Spring Cloud gateway请求入口分析</h2>
+
+<p>不管是Zuul，还是Spring Cloud Gateway还是基于Netty的自研网关，都会把请求进来的Request，或者返回的Response进行包装，转换提取为网关运行的上下文信息，而在Spring Cloud gateway中网关的上下文为ServerWebExchange。</p>
+
+<h3 id="2-1-入口httpserverrequest和httpserverresponse转换">2.1 入口HttpServerRequest和HttpServerResponse转换</h3>
+
+<p>Spring Cloud Gateway的请求入口，org.springframework.http.server.reactive.ReactorHttpHandlerAdapter#apply方法</p>
+
+<pre><code class="language-java">@Override
+    public Mono&lt;Void&gt; apply(HttpServerRequest request, HttpServerResponse response) {
+
+        NettyDataBufferFactory bufferFactory = new NettyDataBufferFactory(response.alloc());
+        ServerHttpRequest adaptedRequest;
+        ServerHttpResponse adaptedResponse;
+        try {
+            adaptedRequest = new ReactorServerHttpRequest(request, bufferFactory);
+            adaptedResponse = new ReactorServerHttpResponse(response, bufferFactory);
+        }
+        catch (URISyntaxException ex) {
+            logger.error(&quot;Invalid URL &quot; + ex.getMessage(), ex);
+            response.status(HttpResponseStatus.BAD_REQUEST);
+            return Mono.empty();
+        }
+
+        if (adaptedRequest.getMethod() == HttpMethod.HEAD) {
+            adaptedResponse = new HttpHeadResponseDecorator(adaptedResponse);
+        }
+
+        return this.httpHandler.handle(adaptedRequest, adaptedResponse)
+                .doOnError(ex -&gt; logger.error(&quot;Handling completed with error&quot;, ex))
+                .doOnSuccess(aVoid -&gt; logger.debug(&quot;Handling completed with success&quot;));
+    }
+
 </code></pre>
-<p><!-- raw HTML omitted --><!-- raw HTML omitted --><!-- raw HTML omitted --><!-- raw HTML omitted --></p>
-<!-- raw HTML omitted -->
-<pre><code>List&lt;span style=&quot;color:#f92672&quot;&gt;&amp;lt;&lt;/span&gt;GatewayFilter&lt;span style=&quot;color:#f92672&quot;&gt;&amp;gt;&lt;/span&gt; combined &lt;span style=&quot;color:#f92672&quot;&gt;=&lt;/span&gt; &lt;span style=&quot;color:#66d9ef&quot;&gt;new&lt;/span&gt; ArrayList&lt;span style=&quot;color:#f92672&quot;&gt;&amp;lt;&amp;gt;(&lt;/span&gt;&lt;span style=&quot;color:#66d9ef&quot;&gt;this&lt;/span&gt;&lt;span style=&quot;color:#f92672&quot;&gt;.&lt;/span&gt;&lt;span style=&quot;color:#a6e22e&quot;&gt;globalFilters&lt;/span&gt;&lt;span style=&quot;color:#f92672&quot;&gt;);&lt;/span&gt;
-combined&lt;span style=&quot;color:#f92672&quot;&gt;.&lt;/span&gt;&lt;span style=&quot;color:#a6e22e&quot;&gt;addAll&lt;/span&gt;&lt;span style=&quot;color:#f92672&quot;&gt;(&lt;/span&gt;gatewayFilters&lt;span style=&quot;color:#f92672&quot;&gt;);&lt;/span&gt;
-&lt;span style=&quot;color:#75715e&quot;&gt;//TODO: needed or cached?
+
+<blockquote>
+<p>PS，代码来源于spring-web-5.0.4.RELEASE.jar
+此方法为Spring Cloud Gateway的请求入口方法，该方法的作用就是把接收到的HttpServerRequest或者最终需要返回的HttpServerResponse，包装转换为ReactorServerHttpRequest和ReactorServerHttpResponse。</p>
+</blockquote>
+
+<h3 id="2-2-构造spring-cloud-gateway的上下文serverwebexchange">2.2 构造Spring Cloud gateway的上下文ServerWebExchange</h3>
+
+<p>在org.springframework.web.server.adapter.HttpWebHandlerAdapter的182行，代码如下所示:</p>
+
+<pre><code class="language-java">@Override
+    public Mono&lt;Void&gt; handle(ServerHttpRequest request, ServerHttpResponse response) {
+        ServerWebExchange exchange = createExchange(request, response);
+        return getDelegate().handle(exchange)
+                .onErrorResume(ex -&gt; handleFailure(request, response, ex))
+                .then(Mono.defer(response::setComplete));
+    }
 </code></pre>
-<p><!-- raw HTML omitted --><!-- raw HTML omitted --><!-- raw HTML omitted -->    AnnotationAwareOrderComparator<!-- raw HTML omitted -->.<!-- raw HTML omitted --><!-- raw HTML omitted -->sort<!-- raw HTML omitted --><!-- raw HTML omitted -->(<!-- raw HTML omitted -->combined<!-- raw HTML omitted -->);<!-- raw HTML omitted --></p>
-<pre><code>logger&lt;span style=&quot;color:#f92672&quot;&gt;.&lt;/span&gt;&lt;span style=&quot;color:#a6e22e&quot;&gt;debug&lt;/span&gt;&lt;span style=&quot;color:#f92672&quot;&gt;(&lt;/span&gt;&lt;span style=&quot;color:#e6db74&quot;&gt;&amp;#34;Sorted gatewayFilterFactories: &amp;#34;&lt;/span&gt;&lt;span style=&quot;color:#f92672&quot;&gt;+&lt;/span&gt; combined&lt;span style=&quot;color:#f92672&quot;&gt;);&lt;/span&gt;
-&lt;span style=&quot;color:#66d9ef&quot;&gt;return&lt;/span&gt; &lt;span style=&quot;color:#66d9ef&quot;&gt;new&lt;/span&gt; DefaultGatewayFilterChain&lt;span style=&quot;color:#f92672&quot;&gt;(&lt;/span&gt;combined&lt;span style=&quot;color:#f92672&quot;&gt;).&lt;/span&gt;&lt;span style=&quot;color:#a6e22e&quot;&gt;filter&lt;/span&gt;&lt;span style=&quot;color:#f92672&quot;&gt;(&lt;/span&gt;exchange&lt;span style=&quot;color:#f92672&quot;&gt;);&lt;/span&gt;
+
+<blockquote>
+<p>createExchange()将ServerHttpRequest ServerHttpResponse构建网关上下文ServerWebExchange。</p>
+</blockquote>
+
+<hr />
+
+<blockquote>
+<p>PS:其中org.springframework.web.server.handler.WebHandlerDecorator.getDelegate()通过委托的方式获取一系列需要处理的WebHandler.</p>
+</blockquote>
+
+<h3 id="2-3-进入filter链">2.3 进入Filter链</h3>
+
+<p>org.springframework.cloud.gateway.handler.FilteringWebHandler#handle方法，即77行，代码如下所示</p>
+
+<pre><code class="language-java">@Override
+public Mono&lt;Void&gt; handle(ServerWebExchange exchange) {
+    Route route = exchange.getRequiredAttribute(GATEWAY_ROUTE_ATTR);
+    List&lt;GatewayFilter&gt; gatewayFilters = route.getFilters();
+
+    List&lt;GatewayFilter&gt; combined = new ArrayList&lt;&gt;(this.globalFilters);
+    combined.addAll(gatewayFilters);
+    //TODO: needed or cached?
+    AnnotationAwareOrderComparator.sort(combined);
+
+    logger.debug(&quot;Sorted gatewayFilterFactories: &quot;+ combined);
+    return new DefaultGatewayFilterChain(combined).filter(exchange);
+}
+
 </code></pre>
-<p><!-- raw HTML omitted -->}<!-- raw HTML omitted --></p>
-<p><!-- raw HTML omitted --><!-- raw HTML omitted --><!-- raw HTML omitted --><!-- raw HTML omitted -->2.4 执行Filter链<!-- raw HTML omitted --></p>
-<!-- raw HTML omitted -->
-<pre><code>    &lt;span style=&quot;color:#66d9ef&quot;&gt;private&lt;/span&gt; &lt;span style=&quot;color:#66d9ef&quot;&gt;int&lt;/span&gt; index&lt;span style=&quot;color:#f92672&quot;&gt;;&lt;/span&gt;
-    &lt;span style=&quot;color:#66d9ef&quot;&gt;private&lt;/span&gt; &lt;span style=&quot;color:#66d9ef&quot;&gt;final&lt;/span&gt; List&lt;span style=&quot;color:#f92672&quot;&gt;&amp;lt;&lt;/span&gt;GatewayFilter&lt;span style=&quot;color:#f92672&quot;&gt;&amp;gt;&lt;/span&gt; filters&lt;span style=&quot;color:#f92672&quot;&gt;;&lt;/span&gt;
 
-    &lt;span style=&quot;color:#66d9ef&quot;&gt;public&lt;/span&gt; &lt;span style=&quot;color:#a6e22e&quot;&gt;DefaultGatewayFilterChain&lt;/span&gt;&lt;span style=&quot;color:#f92672&quot;&gt;(&lt;/span&gt;List&lt;span style=&quot;color:#f92672&quot;&gt;&amp;lt;&lt;/span&gt;GatewayFilter&lt;span style=&quot;color:#f92672&quot;&gt;&amp;gt;&lt;/span&gt; filters&lt;span style=&quot;color:#f92672&quot;&gt;)&lt;/span&gt; &lt;span style=&quot;color:#f92672&quot;&gt;{&lt;/span&gt;
-        &lt;span style=&quot;color:#66d9ef&quot;&gt;this&lt;/span&gt;&lt;span style=&quot;color:#f92672&quot;&gt;.&lt;/span&gt;&lt;span style=&quot;color:#a6e22e&quot;&gt;filters&lt;/span&gt; &lt;span style=&quot;color:#f92672&quot;&gt;=&lt;/span&gt; filters&lt;span style=&quot;color:#f92672&quot;&gt;;&lt;/span&gt;
-    &lt;span style=&quot;color:#f92672&quot;&gt;}&lt;/span&gt;
+<h3 id="2-4-执行filter链">2.4 执行Filter链</h3>
 
-    &lt;span style=&quot;color:#a6e22e&quot;&gt;@Override&lt;/span&gt;
-    &lt;span style=&quot;color:#66d9ef&quot;&gt;public&lt;/span&gt; Mono&lt;span style=&quot;color:#f92672&quot;&gt;&amp;lt;&lt;/span&gt;Void&lt;span style=&quot;color:#f92672&quot;&gt;&amp;gt;&lt;/span&gt; &lt;span style=&quot;color:#a6e22e&quot;&gt;filter&lt;/span&gt;&lt;span style=&quot;color:#f92672&quot;&gt;(&lt;/span&gt;ServerWebExchange exchange&lt;span style=&quot;color:#f92672&quot;&gt;)&lt;/span&gt; &lt;span style=&quot;color:#f92672&quot;&gt;{&lt;/span&gt;
-        &lt;span style=&quot;color:#66d9ef&quot;&gt;if&lt;/span&gt; &lt;span style=&quot;color:#f92672&quot;&gt;(&lt;/span&gt;&lt;span style=&quot;color:#66d9ef&quot;&gt;this&lt;/span&gt;&lt;span style=&quot;color:#f92672&quot;&gt;.&lt;/span&gt;&lt;span style=&quot;color:#a6e22e&quot;&gt;index&lt;/span&gt; &lt;span style=&quot;color:#f92672&quot;&gt;&amp;lt;&lt;/span&gt; filters&lt;span style=&quot;color:#f92672&quot;&gt;.&lt;/span&gt;&lt;span style=&quot;color:#a6e22e&quot;&gt;size&lt;/span&gt;&lt;span style=&quot;color:#f92672&quot;&gt;())&lt;/span&gt; &lt;span style=&quot;color:#f92672&quot;&gt;{&lt;/span&gt;
-            GatewayFilter filter &lt;span style=&quot;color:#f92672&quot;&gt;=&lt;/span&gt; filters&lt;span style=&quot;color:#f92672&quot;&gt;.&lt;/span&gt;&lt;span style=&quot;color:#a6e22e&quot;&gt;get&lt;/span&gt;&lt;span style=&quot;color:#f92672&quot;&gt;(&lt;/span&gt;&lt;span style=&quot;color:#66d9ef&quot;&gt;this&lt;/span&gt;&lt;span style=&quot;color:#f92672&quot;&gt;.&lt;/span&gt;&lt;span style=&quot;color:#a6e22e&quot;&gt;index&lt;/span&gt;&lt;span style=&quot;color:#f92672&quot;&gt;++);&lt;/span&gt;
-            &lt;span style=&quot;color:#66d9ef&quot;&gt;return&lt;/span&gt; filter&lt;span style=&quot;color:#f92672&quot;&gt;.&lt;/span&gt;&lt;span style=&quot;color:#a6e22e&quot;&gt;filter&lt;/span&gt;&lt;span style=&quot;color:#f92672&quot;&gt;(&lt;/span&gt;exchange&lt;span style=&quot;color:#f92672&quot;&gt;,&lt;/span&gt; &lt;span style=&quot;color:#66d9ef&quot;&gt;this&lt;/span&gt;&lt;span style=&quot;color:#f92672&quot;&gt;);&lt;/span&gt;
-        &lt;span style=&quot;color:#f92672&quot;&gt;}&lt;/span&gt;
-        &lt;span style=&quot;color:#66d9ef&quot;&gt;else&lt;/span&gt; &lt;span style=&quot;color:#f92672&quot;&gt;{&lt;/span&gt;
-            &lt;span style=&quot;color:#66d9ef&quot;&gt;return&lt;/span&gt; Mono&lt;span style=&quot;color:#f92672&quot;&gt;.&lt;/span&gt;&lt;span style=&quot;color:#a6e22e&quot;&gt;empty&lt;/span&gt;&lt;span style=&quot;color:#f92672&quot;&gt;();&lt;/span&gt; &lt;span style=&quot;color:#75715e&quot;&gt;// complete
+<pre><code class="language-java">private static class DefaultGatewayFilterChain implements GatewayFilterChain {
+
+        private int index;
+        private final List&lt;GatewayFilter&gt; filters;
+
+        public DefaultGatewayFilterChain(List&lt;GatewayFilter&gt; filters) {
+            this.filters = filters;
+        }
+
+        @Override
+        public Mono&lt;Void&gt; filter(ServerWebExchange exchange) {
+            if (this.index &lt; filters.size()) {
+                GatewayFilter filter = filters.get(this.index++);
+                return filter.filter(exchange, this);
+            }
+            else {
+                return Mono.empty(); // complete
+            }
+        }
+    }
 </code></pre>
-<p><!-- raw HTML omitted --><!-- raw HTML omitted --><!-- raw HTML omitted -->			<!-- raw HTML omitted -->}<!-- raw HTML omitted -->
-<!-- raw HTML omitted -->}<!-- raw HTML omitted -->
-<!-- raw HTML omitted -->}<!-- raw HTML omitted -->
-<!-- raw HTML omitted --><!-- raw HTML omitted --><!-- raw HTML omitted --><!-- raw HTML omitted -->2.5 Gateway Filter委托为Gloable Filter执行<!-- raw HTML omitted --></p>
-<!-- raw HTML omitted -->
-<pre><code>    &lt;span style=&quot;color:#66d9ef&quot;&gt;private&lt;/span&gt; &lt;span style=&quot;color:#66d9ef&quot;&gt;final&lt;/span&gt; GlobalFilter delegate&lt;span style=&quot;color:#f92672&quot;&gt;;&lt;/span&gt;
 
-    &lt;span style=&quot;color:#66d9ef&quot;&gt;public&lt;/span&gt; &lt;span style=&quot;color:#a6e22e&quot;&gt;GatewayFilterAdapter&lt;/span&gt;&lt;span style=&quot;color:#f92672&quot;&gt;(&lt;/span&gt;GlobalFilter delegate&lt;span style=&quot;color:#f92672&quot;&gt;)&lt;/span&gt; &lt;span style=&quot;color:#f92672&quot;&gt;{&lt;/span&gt;
-        &lt;span style=&quot;color:#66d9ef&quot;&gt;this&lt;/span&gt;&lt;span style=&quot;color:#f92672&quot;&gt;.&lt;/span&gt;&lt;span style=&quot;color:#a6e22e&quot;&gt;delegate&lt;/span&gt; &lt;span style=&quot;color:#f92672&quot;&gt;=&lt;/span&gt; delegate&lt;span style=&quot;color:#f92672&quot;&gt;;&lt;/span&gt;
-    &lt;span style=&quot;color:#f92672&quot;&gt;}&lt;/span&gt;
+<h3 id="2-5-gateway-filter委托为gloable-filter执行">2.5 Gateway Filter委托为Gloable Filter执行</h3>
 
-    &lt;span style=&quot;color:#a6e22e&quot;&gt;@Override&lt;/span&gt;
-    &lt;span style=&quot;color:#66d9ef&quot;&gt;public&lt;/span&gt; Mono&lt;span style=&quot;color:#f92672&quot;&gt;&amp;lt;&lt;/span&gt;Void&lt;span style=&quot;color:#f92672&quot;&gt;&amp;gt;&lt;/span&gt; &lt;span style=&quot;color:#a6e22e&quot;&gt;filter&lt;/span&gt;&lt;span style=&quot;color:#f92672&quot;&gt;(&lt;/span&gt;ServerWebExchange exchange&lt;span style=&quot;color:#f92672&quot;&gt;,&lt;/span&gt; GatewayFilterChain chain&lt;span style=&quot;color:#f92672&quot;&gt;)&lt;/span&gt; &lt;span style=&quot;color:#f92672&quot;&gt;{&lt;/span&gt;
-        &lt;span style=&quot;color:#66d9ef&quot;&gt;return&lt;/span&gt; &lt;span style=&quot;color:#66d9ef&quot;&gt;this&lt;/span&gt;&lt;span style=&quot;color:#f92672&quot;&gt;.&lt;/span&gt;&lt;span style=&quot;color:#a6e22e&quot;&gt;delegate&lt;/span&gt;&lt;span style=&quot;color:#f92672&quot;&gt;.&lt;/span&gt;&lt;span style=&quot;color:#a6e22e&quot;&gt;filter&lt;/span&gt;&lt;span style=&quot;color:#f92672&quot;&gt;(&lt;/span&gt;exchange&lt;span style=&quot;color:#f92672&quot;&gt;,&lt;/span&gt; chain&lt;span style=&quot;color:#f92672&quot;&gt;);&lt;/span&gt;
-    &lt;span style=&quot;color:#f92672&quot;&gt;}&lt;/span&gt;
+<pre><code class="language-java">private static class GatewayFilterAdapter implements GatewayFilter {
 
-    &lt;span style=&quot;color:#a6e22e&quot;&gt;@Override&lt;/span&gt;
-    &lt;span style=&quot;color:#66d9ef&quot;&gt;public&lt;/span&gt; String &lt;span style=&quot;color:#a6e22e&quot;&gt;toString&lt;/span&gt;&lt;span style=&quot;color:#f92672&quot;&gt;()&lt;/span&gt; &lt;span style=&quot;color:#f92672&quot;&gt;{&lt;/span&gt;
-        &lt;span style=&quot;color:#66d9ef&quot;&gt;final&lt;/span&gt; StringBuilder sb &lt;span style=&quot;color:#f92672&quot;&gt;=&lt;/span&gt; &lt;span style=&quot;color:#66d9ef&quot;&gt;new&lt;/span&gt; StringBuilder&lt;span style=&quot;color:#f92672&quot;&gt;(&lt;/span&gt;&lt;span style=&quot;color:#e6db74&quot;&gt;&amp;#34;GatewayFilterAdapter{&amp;#34;&lt;/span&gt;&lt;span style=&quot;color:#f92672&quot;&gt;);&lt;/span&gt;
-        sb&lt;span style=&quot;color:#f92672&quot;&gt;.&lt;/span&gt;&lt;span style=&quot;color:#a6e22e&quot;&gt;append&lt;/span&gt;&lt;span style=&quot;color:#f92672&quot;&gt;(&lt;/span&gt;&lt;span style=&quot;color:#e6db74&quot;&gt;&amp;#34;delegate=&amp;#34;&lt;/span&gt;&lt;span style=&quot;color:#f92672&quot;&gt;).&lt;/span&gt;&lt;span style=&quot;color:#a6e22e&quot;&gt;append&lt;/span&gt;&lt;span style=&quot;color:#f92672&quot;&gt;(&lt;/span&gt;delegate&lt;span style=&quot;color:#f92672&quot;&gt;);&lt;/span&gt;
-        sb&lt;span style=&quot;color:#f92672&quot;&gt;.&lt;/span&gt;&lt;span style=&quot;color:#a6e22e&quot;&gt;append&lt;/span&gt;&lt;span style=&quot;color:#f92672&quot;&gt;(&lt;/span&gt;&lt;span style=&quot;color:#e6db74&quot;&gt;&amp;#39;}&amp;#39;&lt;/span&gt;&lt;span style=&quot;color:#f92672&quot;&gt;);&lt;/span&gt;
-        &lt;span style=&quot;color:#66d9ef&quot;&gt;return&lt;/span&gt; sb&lt;span style=&quot;color:#f92672&quot;&gt;.&lt;/span&gt;&lt;span style=&quot;color:#a6e22e&quot;&gt;toString&lt;/span&gt;&lt;span style=&quot;color:#f92672&quot;&gt;();&lt;/span&gt;
-    &lt;span style=&quot;color:#f92672&quot;&gt;}&lt;/span&gt;
-&lt;span style=&quot;color:#f92672&quot;&gt;}&lt;/span&gt;
+        private final GlobalFilter delegate;
+
+        public GatewayFilterAdapter(GlobalFilter delegate) {
+            this.delegate = delegate;
+        }
+
+        @Override
+        public Mono&lt;Void&gt; filter(ServerWebExchange exchange, GatewayFilterChain chain) {
+            return this.delegate.filter(exchange, chain);
+        }
+
+        @Override
+        public String toString() {
+            final StringBuilder sb = new StringBuilder(&quot;GatewayFilterAdapter{&quot;);
+            sb.append(&quot;delegate=&quot;).append(delegate);
+            sb.append('}');
+            return sb.toString();
+        }
+    }
 </code></pre>
-<p><!-- raw HTML omitted --><!-- raw HTML omitted --><!-- raw HTML omitted --><!-- raw HTML omitted -->2.6 预告待续<!-- raw HTML omitted --></p>
-<!-- raw HTML omitted -->
+
+<h3 id="2-6-预告待续">2.6 预告待续</h3>
+
+<p>在之后的文章中，将会揭秘Spring Cloud Gateway的架构设计，Filter链设计，以及启动装在流程等。</p>
 
 </article>
 
@@ -454,19 +514,21 @@ combined&lt;span style=&quot;color:#f92672&quot;&gt;.&lt;/span&gt;&lt;span style
 		目录
 	</h2>
   <nav id="TableOfContents">
-  <ul>
-    <li><a href="#1spring-gateway概述">1.Spring Gateway概述</a></li>
-    <li><a href="#2-spring-cloud-gateway请求入口分析">2. Spring Cloud gateway请求入口分析</a>
-      <ul>
-        <li><a href="#21-入口httpserverrequest和httpserverresponse转换">2.1 入口HttpServerRequest和HttpServerResponse转换</a></li>
-        <li><a href="#22-构造spring-cloud-gateway的上下文serverwebexchange">2.2 构造Spring Cloud gateway的上下文ServerWebExchange</a></li>
-        <li><a href="#23-进入filter链">2.3 进入Filter链</a></li>
-        <li><a href="#24-执行filter链">2.4 执行Filter链</a></li>
-        <li><a href="#25-gateway-filter委托为gloable-filter执行">2.5 Gateway Filter委托为Gloable Filter执行</a></li>
-        <li><a href="#26-预告待续">2.6 预告待续</a></li>
-      </ul>
-    </li>
-  </ul>
+<ul>
+<li>
+<ul>
+<li><a href="#1-spring-gateway概述">1.Spring Gateway概述</a></li>
+<li><a href="#2-spring-cloud-gateway请求入口分析">2. Spring Cloud gateway请求入口分析</a>
+<ul>
+<li><a href="#2-1-入口httpserverrequest和httpserverresponse转换">2.1 入口HttpServerRequest和HttpServerResponse转换</a></li>
+<li><a href="#2-2-构造spring-cloud-gateway的上下文serverwebexchange">2.2 构造Spring Cloud gateway的上下文ServerWebExchange</a></li>
+<li><a href="#2-3-进入filter链">2.3 进入Filter链</a></li>
+<li><a href="#2-4-执行filter链">2.4 执行Filter链</a></li>
+<li><a href="#2-5-gateway-filter委托为gloable-filter执行">2.5 Gateway Filter委托为Gloable Filter执行</a></li>
+<li><a href="#2-6-预告待续">2.6 预告待续</a></li>
+</ul></li>
+</ul></li>
+</ul>
 </nav>
 </div>
 

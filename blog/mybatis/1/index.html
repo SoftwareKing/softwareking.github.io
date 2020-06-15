@@ -10,7 +10,7 @@
 <meta name="viewport" content="width=device-width,minimum-scale=1">
 <meta name="description" content="玹霖志,许进沉思录,许进|Spring Cloud,中间件，基础架构，www.xujin.org,xujin.org,-许进沉思录,Venus&#43;,云首科技有限公司,云计算，大数据，物联网，Software_king的博客,云计算Saas，云计算Paas，云计算Iaas Hadoop，大数据，JavaEE，Java，物联网，Hadoop， NoSQL，MongoDB,Spring, Hibernate,Struts2," />
 
-<meta name="generator" content="Hugo 0.72.0" /><link rel="shortcut icon" href=/img/icon.png type="image/png">
+<meta name="generator" content="Hugo 0.55.6" /><link rel="shortcut icon" href=/img/icon.png type="image/png">
 
 <link href="https://unpkg.com/purecss@1.0.0/build/base-min.css" rel="stylesheet">
 
@@ -243,7 +243,7 @@ if (!doNotTrack) {
 				
 			</span>
 		
-		<span class="post-word-count">· 字数:1168·阅读时间 3 分钟</span>
+		<span class="post-word-count">· 字数:1176·阅读时间 3 分钟</span>
 		
 		阅读量<span id="busuanzi_value_page_pv"></span>次
 		
@@ -253,7 +253,7 @@ if (!doNotTrack) {
     var typed = new Typed('#postTitle', {
 		strings: [
         '  ',
-		"Mybatis代码生成\u002b分页\u002bMapper继承扩展",
+		"Mybatis代码生成\x2b分页\x2bMapper继承扩展",
       ],
       cursorChar: "|",
       typeSpeed: 70,
@@ -261,87 +261,241 @@ if (!doNotTrack) {
 	});
   </script>
 		<article class="typo">
-	<!-- raw HTML omitted -->
-<pre><code>    &lt;span style=&quot;color:#75715e&quot;&gt;&amp;lt;!-- 要生成的那些表(更改tableName 和domainObjectName 就可以了) --&amp;gt;&lt;/span&gt;  
-    &lt;span style=&quot;color:#f92672&quot;&gt;&amp;lt;table&lt;/span&gt; &lt;span style=&quot;color:#a6e22e&quot;&gt;schema=&lt;/span&gt;&lt;span style=&quot;color:#e6db74&quot;&gt;&amp;#34;janus_admin&amp;#34;&lt;/span&gt; &lt;span style=&quot;color:#a6e22e&quot;&gt;tableName=&lt;/span&gt;&lt;span style=&quot;color:#e6db74&quot;&gt;&amp;#34;cluster&amp;#34;&lt;/span&gt; &lt;span style=&quot;color:#a6e22e&quot;&gt;domainObjectName=&lt;/span&gt;&lt;span style=&quot;color:#e6db74&quot;&gt;&amp;#34;Cluster&amp;#34;&lt;/span&gt; &lt;span style=&quot;color:#a6e22e&quot;&gt;enableCountByExample=&lt;/span&gt;&lt;span style=&quot;color:#e6db74&quot;&gt;&amp;#34;false&amp;#34;&lt;/span&gt; &lt;span style=&quot;color:#a6e22e&quot;&gt;enableUpdateByExample=&lt;/span&gt;&lt;span style=&quot;color:#e6db74&quot;&gt;&amp;#34;false&amp;#34;&lt;/span&gt;  
-        &lt;span style=&quot;color:#a6e22e&quot;&gt;enableDeleteByExample=&lt;/span&gt;&lt;span style=&quot;color:#e6db74&quot;&gt;&amp;#34;false&amp;#34;&lt;/span&gt; &lt;span style=&quot;color:#a6e22e&quot;&gt;enableSelectByExample=&lt;/span&gt;&lt;span style=&quot;color:#e6db74&quot;&gt;&amp;#34;false&amp;#34;&lt;/span&gt; &lt;span style=&quot;color:#a6e22e&quot;&gt;selectByExampleQueryId=&lt;/span&gt;&lt;span style=&quot;color:#e6db74&quot;&gt;&amp;#34;false&amp;#34;&lt;/span&gt;&lt;span style=&quot;color:#f92672&quot;&gt;&amp;gt;&lt;/span&gt;  
-    &lt;span style=&quot;color:#f92672&quot;&gt;&amp;lt;/table&amp;gt;&lt;/span&gt;  
-    
-     &lt;span style=&quot;color:#f92672&quot;&gt;&amp;lt;table&lt;/span&gt; &lt;span style=&quot;color:#a6e22e&quot;&gt;schema=&lt;/span&gt;&lt;span style=&quot;color:#e6db74&quot;&gt;&amp;#34;janus_admin&amp;#34;&lt;/span&gt; &lt;span style=&quot;color:#a6e22e&quot;&gt;tableName=&lt;/span&gt;&lt;span style=&quot;color:#e6db74&quot;&gt;&amp;#34;route_info&amp;#34;&lt;/span&gt; &lt;span style=&quot;color:#a6e22e&quot;&gt;domainObjectName=&lt;/span&gt;&lt;span style=&quot;color:#e6db74&quot;&gt;&amp;#34;RouteInfo&amp;#34;&lt;/span&gt; &lt;span style=&quot;color:#a6e22e&quot;&gt;enableCountByExample=&lt;/span&gt;&lt;span style=&quot;color:#e6db74&quot;&gt;&amp;#34;false&amp;#34;&lt;/span&gt; &lt;span style=&quot;color:#a6e22e&quot;&gt;enableUpdateByExample=&lt;/span&gt;&lt;span style=&quot;color:#e6db74&quot;&gt;&amp;#34;false&amp;#34;&lt;/span&gt;  
-        &lt;span style=&quot;color:#a6e22e&quot;&gt;enableDeleteByExample=&lt;/span&gt;&lt;span style=&quot;color:#e6db74&quot;&gt;&amp;#34;false&amp;#34;&lt;/span&gt; &lt;span style=&quot;color:#a6e22e&quot;&gt;enableSelectByExample=&lt;/span&gt;&lt;span style=&quot;color:#e6db74&quot;&gt;&amp;#34;false&amp;#34;&lt;/span&gt; &lt;span style=&quot;color:#a6e22e&quot;&gt;selectByExampleQueryId=&lt;/span&gt;&lt;span style=&quot;color:#e6db74&quot;&gt;&amp;#34;false&amp;#34;&lt;/span&gt;&lt;span style=&quot;color:#f92672&quot;&gt;&amp;gt;&lt;/span&gt;  
-    &lt;span style=&quot;color:#f92672&quot;&gt;&amp;lt;/table&amp;gt;&lt;/span&gt;
-    &lt;span style=&quot;color:#75715e&quot;&gt;&amp;lt;!-- 
+	<h2 id="1-mybatis-gennerator">1. mybatis-gennerator</h2>
+
+<h3 id="1-1-mybatis-gennerator自动生成代码">1.1 mybatis-gennerator自动生成代码</h3>
+
+<h4 id="1-1-1-mybatis-gennerator的安装">1.1.1 mybatis-gennerator的安装</h4>
+
+<p>Mybatis-Generator的下载地址:<a href="https://github.com/mybatis/generator/releases">https://github.com/mybatis/generator/releases</a></p>
+
+<ol>
+<li>在Eclipse安装mybatis-gennerator插件。</li>
+</ol>
+
+<blockquote>
+<p><a href="https://marketplace.eclipse.org/content/mybatis-generator">https://marketplace.eclipse.org/content/mybatis-generator</a></p>
+</blockquote>
+
+<!-- more -->
+
+<p>2.在项目中安装Maven插件</p>
+
+<pre><code class="language-xml">&lt;build&gt; 
+  &lt;finalName&gt;janus-admin&lt;/finalName&gt;  
+  &lt;pluginManagement&gt; 
+    &lt;plugins&gt; 
+      &lt;plugin&gt; 
+        &lt;groupId&gt;org.apache.maven.plugins&lt;/groupId&gt;  
+        &lt;artifactId&gt;maven-compiler-plugin&lt;/artifactId&gt;  
+        &lt;configuration&gt; 
+          &lt;source&gt;1.8&lt;/source&gt;  
+          &lt;target&gt;1.8&lt;/target&gt; 
+        &lt;/configuration&gt;  
+        &lt;version&gt;3.3&lt;/version&gt; 
+      &lt;/plugin&gt;  
+      &lt;plugin&gt; 
+        &lt;groupId&gt;org.mybatis.generator&lt;/groupId&gt;  
+        &lt;artifactId&gt;mybatis-generator-maven-plugin&lt;/artifactId&gt;  
+        &lt;version&gt;1.3.2&lt;/version&gt;  
+        &lt;dependencies&gt; 
+          &lt;dependency&gt; 
+            &lt;groupId&gt;mysql&lt;/groupId&gt;  
+            &lt;artifactId&gt;mysql-connector-java&lt;/artifactId&gt;  
+            &lt;version&gt;6.0.6&lt;/version&gt; 
+          &lt;/dependency&gt; 
+        &lt;/dependencies&gt;  
+        &lt;configuration&gt; 
+          &lt;!--配置文件的路径 --&gt;  
+          &lt;configurationFile&gt;${basedir}/generatorConfig.xml&lt;/configurationFile&gt;  
+          &lt;overwrite&gt;true&lt;/overwrite&gt; 
+        &lt;/configuration&gt; 
+      &lt;/plugin&gt; 
+    &lt;/plugins&gt; 
+  &lt;/pluginManagement&gt; 
+&lt;/build&gt;
 </code></pre>
-<p><!-- raw HTML omitted --><!-- raw HTML omitted -->           或者使用 tableName=&quot;%&quot;通配全部生成
-<!-- raw HTML omitted --><!-- raw HTML omitted -->         &lt;table tableName=&quot;%&quot; enableCountByExample=&quot;false&quot; enableUpdateByExample=&quot;false&quot;<br>
-<!-- raw HTML omitted --><!-- raw HTML omitted -->            enableDeleteByExample=&quot;false&quot; enableSelectByExample=&quot;false&quot; selectByExampleQueryId=&quot;false&quot;&gt;
-<!-- raw HTML omitted --><!-- raw HTML omitted -->            &lt;!&ndash;mysql 配置&ndash;&gt;<!-- raw HTML omitted -->
-<!-- raw HTML omitted -->&lt;generatedKey<!-- raw HTML omitted --> <!-- raw HTML omitted -->column=<!-- raw HTML omitted --><!-- raw HTML omitted -->&quot;id&quot;<!-- raw HTML omitted --> <!-- raw HTML omitted -->sqlStatement=<!-- raw HTML omitted --><!-- raw HTML omitted -->&quot;Mysql&quot;<!-- raw HTML omitted --> <!-- raw HTML omitted -->identity=<!-- raw HTML omitted --><!-- raw HTML omitted -->&quot;true&quot;<!-- raw HTML omitted --><!-- raw HTML omitted -->/&gt;<!-- raw HTML omitted -->
-<!-- raw HTML omitted -->&lt;!&ndash;oracle 配置&ndash;&gt;<!-- raw HTML omitted -->
-<!-- raw HTML omitted -->&lt;!&ndash;&lt;generatedKey column=&quot;id&quot; sqlStatement=&quot;select SEQ_{1}.nextval from dual&quot; identity=&quot;false&quot; type=&quot;pre&quot;/&gt;&ndash;&gt;<!-- raw HTML omitted -->
-<!-- raw HTML omitted -->&lt;/table&gt;<!-- raw HTML omitted --><br>
-&ndash;&gt;
-<!-- raw HTML omitted -->&lt;/context&gt;<!-- raw HTML omitted --><br>
-<!-- raw HTML omitted -->&lt;/generatorConfiguration&gt;<!-- raw HTML omitted --><br>
-<!-- raw HTML omitted --><!-- raw HTML omitted --><!-- raw HTML omitted --><!-- raw HTML omitted -->二.Mybatis分页插件<!-- raw HTML omitted --></p>
-<!-- raw HTML omitted -->
-<pre><code>&lt;span style=&quot;color:#66d9ef&quot;&gt;public&lt;/span&gt; List&lt;span style=&quot;color:#f92672&quot;&gt;&amp;lt;&lt;/span&gt;RouteInfo&lt;span style=&quot;color:#f92672&quot;&gt;&amp;gt;&lt;/span&gt; &lt;span style=&quot;color:#a6e22e&quot;&gt;selectAll&lt;/span&gt;&lt;span style=&quot;color:#f92672&quot;&gt;();&lt;/span&gt;
 
-&lt;span style=&quot;color:#75715e&quot;&gt;/**
+<p>使用命令:mybatis-generator:generate生成</p>
+
+<blockquote>
+<p>推荐安装IDE插件的方式或者Maven插件的方式，生成的代码直接刷新工程即可</p>
+</blockquote>
+
+<p>generatorConfig.xml示例</p>
+
+<pre><code class="language-xml">&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot; ?&gt;  
+&lt;!DOCTYPE generatorConfiguration PUBLIC &quot;-//mybatis.org//DTD MyBatis Generator Configuration 1.0//EN&quot; &quot;http://mybatis.org/dtd/mybatis-generator-config_1_0.dtd&quot; &gt;  
+&lt;generatorConfiguration&gt;  
+    &lt;!-- 数据库驱动包位置 --&gt;  
+    &lt;classPathEntry  
+        location=&quot;D:\develop\apache-maven-3.5.0\res\mysql\mysql-connector-java\5.1.35\mysql-connector-java-5.1.35.jar&quot; /&gt;  
+    &lt;context id=&quot;context1&quot;&gt;  
+        &lt;commentGenerator&gt;  
+            &lt;!-- 是否去除自动生成的注释 true：是 ： false:否 --&gt;  
+            &lt;property name=&quot;suppressAllComments&quot; value=&quot;true&quot;/&gt;  
+        &lt;/commentGenerator&gt;  
+        &lt;!-- 数据库链接URL、用户名、密码 --&gt;  
+        &lt;jdbcConnection driverClass=&quot;com.mysql.jdbc.Driver&quot;  
+            connectionURL=&quot;jdbc:mysql://主机:3306/数据库&quot; userId=&quot;用户名&quot; password=&quot;密码&quot; /&gt;  
+        &lt;!-- 生成模型的包名和位置 --&gt;  
+        &lt;javaModelGenerator targetPackage=&quot;org.xujin.janus.admin.entity&quot; targetProject=&quot;janus-admin/src/main/java&quot; /&gt;  
+        &lt;!-- 生成的映射文件报名和位置 --&gt;  
+        &lt;sqlMapGenerator targetPackage=&quot;mapper&quot; targetProject=&quot;janus-admin/src/main/resources&quot; /&gt;  
+        &lt;!-- 生成DAO的包名和位置 --&gt;  
+        &lt;javaClientGenerator targetPackage=&quot;org.xujin.janus.admin.mapper&quot; targetProject=&quot;janus-admin/src/main/java&quot; type=&quot;XMLMAPPER&quot; /&gt;  
+        
+        &lt;!-- 要生成的那些表(更改tableName 和domainObjectName 就可以了) --&gt;  
+        &lt;table schema=&quot;janus_admin&quot; tableName=&quot;cluster&quot; domainObjectName=&quot;Cluster&quot; enableCountByExample=&quot;false&quot; enableUpdateByExample=&quot;false&quot;  
+            enableDeleteByExample=&quot;false&quot; enableSelectByExample=&quot;false&quot; selectByExampleQueryId=&quot;false&quot;&gt;  
+        &lt;/table&gt;  
+        
+         &lt;table schema=&quot;janus_admin&quot; tableName=&quot;route_info&quot; domainObjectName=&quot;RouteInfo&quot; enableCountByExample=&quot;false&quot; enableUpdateByExample=&quot;false&quot;  
+            enableDeleteByExample=&quot;false&quot; enableSelectByExample=&quot;false&quot; selectByExampleQueryId=&quot;false&quot;&gt;  
+        &lt;/table&gt;
+        &lt;!-- 
+           或者使用 tableName=&quot;%&quot;通配全部生成
+         &lt;table tableName=&quot;%&quot; enableCountByExample=&quot;false&quot; enableUpdateByExample=&quot;false&quot;  
+            enableDeleteByExample=&quot;false&quot; enableSelectByExample=&quot;false&quot; selectByExampleQueryId=&quot;false&quot;&gt;
+            &lt;!--mysql 配置--&gt;
+            &lt;generatedKey column=&quot;id&quot; sqlStatement=&quot;Mysql&quot; identity=&quot;true&quot;/&gt;
+            &lt;!--oracle 配置--&gt;
+            &lt;!--&lt;generatedKey column=&quot;id&quot; sqlStatement=&quot;select SEQ_{1}.nextval from dual&quot; identity=&quot;false&quot; type=&quot;pre&quot;/&gt;--&gt;
+       &lt;/table&gt;  
+       --&gt;
+    &lt;/context&gt;  
+&lt;/generatorConfiguration&gt;  
 </code></pre>
-<p><!-- raw HTML omitted --><!-- raw HTML omitted -->	 * 分页查询数据
-<!-- raw HTML omitted --><!-- raw HTML omitted -->	 * @return
-<!-- raw HTML omitted --><!-- raw HTML omitted -->	 */<!-- raw HTML omitted -->
-Page<!-- raw HTML omitted -->&lt;<!-- raw HTML omitted -->RouteInfo<!-- raw HTML omitted -->&gt;<!-- raw HTML omitted --> <!-- raw HTML omitted -->findByPage<!-- raw HTML omitted --><!-- raw HTML omitted -->();<!-- raw HTML omitted --></p>
-<p><!-- raw HTML omitted -->}<!-- raw HTML omitted --></p>
-<p><!-- raw HTML omitted --><!-- raw HTML omitted --><!-- raw HTML omitted --><!-- raw HTML omitted -->业务层使用代码示li<!-- raw HTML omitted --></p>
-<!-- raw HTML omitted -->
-<pre><code>&lt;span style=&quot;color:#66d9ef&quot;&gt;int&lt;/span&gt; &lt;span style=&quot;color:#a6e22e&quot;&gt;insert&lt;/span&gt;&lt;span style=&quot;color:#f92672&quot;&gt;(&lt;/span&gt;RouteInfo record&lt;span style=&quot;color:#f92672&quot;&gt;);&lt;/span&gt;
 
-&lt;span style=&quot;color:#66d9ef&quot;&gt;int&lt;/span&gt; &lt;span style=&quot;color:#a6e22e&quot;&gt;insertSelective&lt;/span&gt;&lt;span style=&quot;color:#f92672&quot;&gt;(&lt;/span&gt;RouteInfo record&lt;span style=&quot;color:#f92672&quot;&gt;);&lt;/span&gt;
+<h2 id="二-mybatis分页插件">二.Mybatis分页插件</h2>
 
-RouteInfo &lt;span style=&quot;color:#a6e22e&quot;&gt;selectByPrimaryKey&lt;/span&gt;&lt;span style=&quot;color:#f92672&quot;&gt;(&lt;/span&gt;Long id&lt;span style=&quot;color:#f92672&quot;&gt;);&lt;/span&gt;
+<h3 id="2-1-引入maven依赖">2.1 引入maven依赖</h3>
 
-&lt;span style=&quot;color:#66d9ef&quot;&gt;int&lt;/span&gt; &lt;span style=&quot;color:#a6e22e&quot;&gt;updateByPrimaryKeySelective&lt;/span&gt;&lt;span style=&quot;color:#f92672&quot;&gt;(&lt;/span&gt;RouteInfo record&lt;span style=&quot;color:#f92672&quot;&gt;);&lt;/span&gt;
-
-&lt;span style=&quot;color:#66d9ef&quot;&gt;int&lt;/span&gt; &lt;span style=&quot;color:#a6e22e&quot;&gt;updateByPrimaryKey&lt;/span&gt;&lt;span style=&quot;color:#f92672&quot;&gt;(&lt;/span&gt;RouteInfo record&lt;span style=&quot;color:#f92672&quot;&gt;);&lt;/span&gt;
+<pre><code class="language-xml">&lt;dependency&gt;
+    &lt;groupId&gt;com.github.pagehelper&lt;/groupId&gt;
+    &lt;artifactId&gt;pagehelper-spring-boot-starter&lt;/artifactId&gt;
+    &lt;version&gt;1.1.3&lt;/version&gt;
+&lt;/dependency&gt;
 </code></pre>
-<p><!-- raw HTML omitted -->}<!-- raw HTML omitted --></p>
-<p><!-- raw HTML omitted --><!-- raw HTML omitted --><!-- raw HTML omitted --><!-- raw HTML omitted -->2.自动生成的Mapper文件<!-- raw HTML omitted --></p>
-<!-- raw HTML omitted -->
-<p><!-- raw HTML omitted -->&lt;/resultMap&gt;<!-- raw HTML omitted -->
-<!-- raw HTML omitted -->&lt;!&ndash; 其余省略 &ndash;&gt;<!-- raw HTML omitted -->
-<!-- raw HTML omitted -->&lt;/mapper&gt;<!-- raw HTML omitted -->
-<!-- raw HTML omitted --><!-- raw HTML omitted --><!-- raw HTML omitted --><!-- raw HTML omitted -->3.继承RouteInfoMapper扩展的接口<!-- raw HTML omitted --></p>
-<!-- raw HTML omitted -->
-<pre><code>&lt;span style=&quot;color:#66d9ef&quot;&gt;public&lt;/span&gt; List&lt;span style=&quot;color:#f92672&quot;&gt;&amp;lt;&lt;/span&gt;RouteInfo&lt;span style=&quot;color:#f92672&quot;&gt;&amp;gt;&lt;/span&gt; &lt;span style=&quot;color:#a6e22e&quot;&gt;selectAll&lt;/span&gt;&lt;span style=&quot;color:#f92672&quot;&gt;();&lt;/span&gt;
 
-&lt;span style=&quot;color:#75715e&quot;&gt;/**
-</code></pre>
-<p><!-- raw HTML omitted --><!-- raw HTML omitted -->	 * 分页查询数据
-<!-- raw HTML omitted --><!-- raw HTML omitted -->	 * @return
-<!-- raw HTML omitted --><!-- raw HTML omitted -->	 */<!-- raw HTML omitted -->
-Page<!-- raw HTML omitted -->&lt;<!-- raw HTML omitted -->RouteInfo<!-- raw HTML omitted -->&gt;<!-- raw HTML omitted --> <!-- raw HTML omitted -->findByPage<!-- raw HTML omitted --><!-- raw HTML omitted -->();<!-- raw HTML omitted --></p>
-<p><!-- raw HTML omitted -->}<!-- raw HTML omitted -->
-<!-- raw HTML omitted --><!-- raw HTML omitted --><!-- raw HTML omitted --><!-- raw HTML omitted -->4.扩展的Mapper文件<!-- raw HTML omitted --></p>
-<!-- raw HTML omitted -->
-<p><!-- raw HTML omitted -->&lt;/resultMap&gt;<!-- raw HTML omitted -->
-<!-- raw HTML omitted -->&lt;!&ndash; 其余省略 &ndash;&gt;<!-- raw HTML omitted -->
-<!-- raw HTML omitted -->&lt;/mapper&gt;<!-- raw HTML omitted -->
-<!-- raw HTML omitted --><!-- raw HTML omitted --><!-- raw HTML omitted --><!-- raw HTML omitted -->5.Service层依赖注入ExRouteInfoMapper使用<!-- raw HTML omitted --></p>
-<!-- raw HTML omitted -->
-<pre><code>&lt;span style=&quot;color:#a6e22e&quot;&gt;@Autowired&lt;/span&gt;
-&lt;span style=&quot;color:#66d9ef&quot;&gt;private&lt;/span&gt; ExRouteInfoMapper routeMapper&lt;span style=&quot;color:#f92672&quot;&gt;;&lt;/span&gt;
+<h4 id="2-2-使用pagehelper">2.2 使用pagehelper</h4>
 
-&lt;span style=&quot;color:#a6e22e&quot;&gt;@Override&lt;/span&gt;
-&lt;span style=&quot;color:#a6e22e&quot;&gt;@Transactional&lt;/span&gt;
-&lt;span style=&quot;color:#66d9ef&quot;&gt;public&lt;/span&gt; &lt;span style=&quot;color:#66d9ef&quot;&gt;void&lt;/span&gt; &lt;span style=&quot;color:#a6e22e&quot;&gt;insert&lt;/span&gt;&lt;span style=&quot;color:#f92672&quot;&gt;(&lt;/span&gt;RouteInfoModel routeInfoModel&lt;span style=&quot;color:#f92672&quot;&gt;)&lt;/span&gt; &lt;span style=&quot;color:#f92672&quot;&gt;{&lt;/span&gt;
-    RouteInfo RouteInfo &lt;span style=&quot;color:#f92672&quot;&gt;=&lt;/span&gt; BeanMapper&lt;span style=&quot;color:#f92672&quot;&gt;.&lt;/span&gt;&lt;span style=&quot;color:#a6e22e&quot;&gt;map&lt;/span&gt;&lt;span style=&quot;color:#f92672&quot;&gt;(&lt;/span&gt;routeInfoModel&lt;span style=&quot;color:#f92672&quot;&gt;,&lt;/span&gt; RouteInfo&lt;span style=&quot;color:#f92672&quot;&gt;.&lt;/span&gt;&lt;span style=&quot;color:#a6e22e&quot;&gt;class&lt;/span&gt;&lt;span style=&quot;color:#f92672&quot;&gt;);&lt;/span&gt;
-    routeMapper&lt;span style=&quot;color:#f92672&quot;&gt;.&lt;/span&gt;&lt;span style=&quot;color:#a6e22e&quot;&gt;insert&lt;/span&gt;&lt;span style=&quot;color:#f92672&quot;&gt;(&lt;/span&gt;RouteInfo&lt;span style=&quot;color:#f92672&quot;&gt;);&lt;/span&gt;
-&lt;span style=&quot;color:#f92672&quot;&gt;}&lt;/span&gt;
+<pre><code class="language-java">public interface ExRouteInfoMapper extends RouteInfoMapper {
+
+    public List&lt;RouteInfo&gt; selectAll();
+
+    /**
+     * 分页查询数据
+     * @return
+     */
+    Page&lt;RouteInfo&gt; findByPage();
+
+}
+
 </code></pre>
-<p><!-- raw HTML omitted -->}<!-- raw HTML omitted --></p>
-<p><!-- raw HTML omitted --><!-- raw HTML omitted --><!-- raw HTML omitted --></p>
+
+<p>业务层使用代码示li</p>
+
+<pre><code class="language-java">@Override
+public PageInfo&lt;RouteInfo&gt; findByPage(int pageNo, int pageSize) {
+    PageHelper.startPage(pageNo, pageSize);
+    Page&lt;RouteInfo&gt; pagelist = routeMapper.findByPage();
+    PageInfo&lt;RouteInfo&gt; pageInfo = new PageInfo&lt;&gt;(pagelist);
+    return pageInfo;
+}
+</code></pre>
+
+<h2 id="三-mybatis的mapper继承">三.Mybatis的Mapper继承</h2>
+
+<h3 id="3-1-为什么使用mapper继承">3.1 为什么使用Mapper继承</h3>
+
+<p>使用mybatis-gennerator自动生成代码，每次自动生成代码都会覆盖之前的Mapper文件，为了将自定义的Mapper和接口与生成的Mapper与接口分开，使用继承方式处理。</p>
+
+<h3 id="3-2-代码示例处理">3.2 代码示例处理</h3>
+
+<p>1.mybatis-gennerator自动生成的Mapper接口</p>
+
+<pre><code class="language-java">public interface RouteInfoMapper {
+    int deleteByPrimaryKey(Long id);
+
+    int insert(RouteInfo record);
+
+    int insertSelective(RouteInfo record);
+
+    RouteInfo selectByPrimaryKey(Long id);
+
+    int updateByPrimaryKeySelective(RouteInfo record);
+
+    int updateByPrimaryKey(RouteInfo record);
+}
+
+</code></pre>
+
+<p>2.自动生成的Mapper文件</p>
+
+<pre><code class="language-xml">&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;
+&lt;!DOCTYPE mapper PUBLIC &quot;-//mybatis.org//DTD Mapper 3.0//EN&quot; &quot;http://mybatis.org/dtd/mybatis-3-mapper.dtd&quot;&gt;
+&lt;mapper namespace=&quot;org.xujin.janus.admin.mapper.RouteInfoMapper&quot;&gt;
+  &lt;resultMap id=&quot;BaseResultMap&quot; type=&quot;org.xujin.janus.admin.entity.RouteInfo&quot;&gt;
+    &lt;id column=&quot;id&quot; jdbcType=&quot;BIGINT&quot; property=&quot;id&quot; /&gt;
+    &lt;result column=&quot;domain_id&quot; jdbcType=&quot;INTEGER&quot; property=&quot;domainId&quot; /&gt;
+    &lt;result column=&quot;type&quot; jdbcType=&quot;VARCHAR&quot; property=&quot;type&quot; /&gt;
+    &lt;result column=&quot;name&quot; jdbcType=&quot;VARCHAR&quot; property=&quot;name&quot; /&gt;
+   
+  &lt;/resultMap&gt;
+  &lt;!-- 其余省略 --&gt;
+&lt;/mapper&gt;
+</code></pre>
+
+<p>3.继承RouteInfoMapper扩展的接口</p>
+
+<pre><code class="language-java">public interface ExRouteInfoMapper extends RouteInfoMapper {
+
+    public List&lt;RouteInfo&gt; selectAll();
+
+    /**
+     * 分页查询数据
+     * @return
+     */
+    Page&lt;RouteInfo&gt; findByPage();
+
+}
+</code></pre>
+
+<p>4.扩展的Mapper文件</p>
+
+<pre><code class="language-xml">&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;
+&lt;!DOCTYPE mapper PUBLIC &quot;-//mybatis.org//DTD Mapper 3.0//EN&quot; &quot;http://mybatis.org/dtd/mybatis-3-mapper.dtd&quot;&gt;
+&lt;mapper namespace=&quot;org.xujin.janus.admin.mapper.ex.ExRouteInfoMapper&quot;&gt;
+  &lt;resultMap id=&quot;BaseResultMap&quot; type=&quot;org.xujin.janus.admin.entity.RouteInfo&quot;&gt;
+    &lt;id column=&quot;id&quot; jdbcType=&quot;BIGINT&quot; property=&quot;id&quot; /&gt;
+    &lt;result column=&quot;domain_id&quot; jdbcType=&quot;INTEGER&quot; property=&quot;domainId&quot; /&gt;
+    &lt;result column=&quot;type&quot; jdbcType=&quot;VARCHAR&quot; property=&quot;type&quot; /&gt;
+    &lt;result column=&quot;name&quot; jdbcType=&quot;VARCHAR&quot; property=&quot;name&quot; /&gt;
+   
+  &lt;/resultMap&gt;
+  &lt;!-- 其余省略 --&gt;
+&lt;/mapper&gt;
+</code></pre>
+
+<p>5.Service层依赖注入ExRouteInfoMapper使用</p>
+
+<pre><code class="language-java">@Service
+@Transactional(readOnly = true)
+public class RouteInfoServiceImpl implements RouteInfoService {
+
+    @Autowired
+    private ExRouteInfoMapper routeMapper;
+
+    @Override
+    @Transactional
+    public void insert(RouteInfoModel routeInfoModel) {
+        RouteInfo RouteInfo = BeanMapper.map(routeInfoModel, RouteInfo.class);
+        routeMapper.insert(RouteInfo);
+    }
+}
+
+</code></pre>
 
 </article>
 
@@ -458,24 +612,30 @@ Page<!-- raw HTML omitted -->&lt;<!-- raw HTML omitted -->RouteInfo<!-- raw HTML
 		目录
 	</h2>
   <nav id="TableOfContents">
-  <ul>
-    <li><a href="#1-mybatis-gennerator">1. mybatis-gennerator</a>
-      <ul>
-        <li><a href="#11-mybatis-gennerator自动生成代码">1.1 mybatis-gennerator自动生成代码</a></li>
-      </ul>
-    </li>
-    <li><a href="#二mybatis分页插件">二.Mybatis分页插件</a>
-      <ul>
-        <li><a href="#21-引入maven依赖">2.1 引入maven依赖</a></li>
-      </ul>
-    </li>
-    <li><a href="#三mybatis的mapper继承">三.Mybatis的Mapper继承</a>
-      <ul>
-        <li><a href="#31-为什么使用mapper继承">3.1 为什么使用Mapper继承</a></li>
-        <li><a href="#32-代码示例处理">3.2 代码示例处理</a></li>
-      </ul>
-    </li>
-  </ul>
+<ul>
+<li>
+<ul>
+<li><a href="#1-mybatis-gennerator">1. mybatis-gennerator</a>
+<ul>
+<li><a href="#1-1-mybatis-gennerator自动生成代码">1.1 mybatis-gennerator自动生成代码</a>
+<ul>
+<li><a href="#1-1-1-mybatis-gennerator的安装">1.1.1 mybatis-gennerator的安装</a></li>
+</ul></li>
+</ul></li>
+<li><a href="#二-mybatis分页插件">二.Mybatis分页插件</a>
+<ul>
+<li><a href="#2-1-引入maven依赖">2.1 引入maven依赖</a>
+<ul>
+<li><a href="#2-2-使用pagehelper">2.2 使用pagehelper</a></li>
+</ul></li>
+</ul></li>
+<li><a href="#三-mybatis的mapper继承">三.Mybatis的Mapper继承</a>
+<ul>
+<li><a href="#3-1-为什么使用mapper继承">3.1 为什么使用Mapper继承</a></li>
+<li><a href="#3-2-代码示例处理">3.2 代码示例处理</a></li>
+</ul></li>
+</ul></li>
+</ul>
 </nav>
 </div>
 

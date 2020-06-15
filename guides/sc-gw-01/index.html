@@ -10,7 +10,7 @@
 <meta name="viewport" content="width=device-width,minimum-scale=1">
 <meta name="description" content="玹霖志,许进沉思录,许进|Spring Cloud,中间件，基础架构，www.xujin.org,xujin.org,-许进沉思录,Venus&#43;,云首科技有限公司,云计算，大数据，物联网，Software_king的博客,云计算Saas，云计算Paas，云计算Iaas Hadoop，大数据，JavaEE，Java，物联网，Hadoop， NoSQL，MongoDB,Spring, Hibernate,Struts2," />
 
-<meta name="generator" content="Hugo 0.72.0" /><link rel="shortcut icon" href=/img/icon.png type="image/png">
+<meta name="generator" content="Hugo 0.55.6" /><link rel="shortcut icon" href=/img/icon.png type="image/png">
 
 <link href="https://unpkg.com/purecss@1.0.0/build/base-min.css" rel="stylesheet">
 
@@ -230,100 +230,153 @@ if (!doNotTrack) {
 	<div class="meta"></div>
 </div>
 		<article class="typo">
-	<!-- raw HTML omitted -->
-<pre><code>&lt;span style=&quot;color:#66d9ef&quot;&gt;private&lt;/span&gt; &lt;span style=&quot;color:#66d9ef&quot;&gt;static&lt;/span&gt; &lt;span style=&quot;color:#66d9ef&quot;&gt;final&lt;/span&gt; Log log &lt;span style=&quot;color:#f92672&quot;&gt;=&lt;/span&gt; LogFactory&lt;span style=&quot;color:#f92672&quot;&gt;.&lt;/span&gt;&lt;span style=&quot;color:#a6e22e&quot;&gt;getLog&lt;/span&gt;&lt;span style=&quot;color:#f92672&quot;&gt;(&lt;/span&gt;WeightRoutePredicateFactory&lt;span style=&quot;color:#f92672&quot;&gt;.&lt;/span&gt;&lt;span style=&quot;color:#a6e22e&quot;&gt;class&lt;/span&gt;&lt;span style=&quot;color:#f92672&quot;&gt;);&lt;/span&gt;
+	<h2 id="1-权重路由">1.权重路由</h2>
 
-&lt;span style=&quot;color:#66d9ef&quot;&gt;public&lt;/span&gt; &lt;span style=&quot;color:#66d9ef&quot;&gt;static&lt;/span&gt; &lt;span style=&quot;color:#66d9ef&quot;&gt;final&lt;/span&gt; String GROUP_KEY &lt;span style=&quot;color:#f92672&quot;&gt;=&lt;/span&gt; WeightConfig&lt;span style=&quot;color:#f92672&quot;&gt;.&lt;/span&gt;&lt;span style=&quot;color:#a6e22e&quot;&gt;CONFIG_PREFIX&lt;/span&gt; &lt;span style=&quot;color:#f92672&quot;&gt;+&lt;/span&gt; &lt;span style=&quot;color:#e6db74&quot;&gt;&amp;#34;.group&amp;#34;&lt;/span&gt;&lt;span style=&quot;color:#f92672&quot;&gt;;&lt;/span&gt;
-&lt;span style=&quot;color:#66d9ef&quot;&gt;public&lt;/span&gt; &lt;span style=&quot;color:#66d9ef&quot;&gt;static&lt;/span&gt; &lt;span style=&quot;color:#66d9ef&quot;&gt;final&lt;/span&gt; String WEIGHT_KEY &lt;span style=&quot;color:#f92672&quot;&gt;=&lt;/span&gt; WeightConfig&lt;span style=&quot;color:#f92672&quot;&gt;.&lt;/span&gt;&lt;span style=&quot;color:#a6e22e&quot;&gt;CONFIG_PREFIX&lt;/span&gt; &lt;span style=&quot;color:#f92672&quot;&gt;+&lt;/span&gt; &lt;span style=&quot;color:#e6db74&quot;&gt;&amp;#34;.weight&amp;#34;&lt;/span&gt;&lt;span style=&quot;color:#f92672&quot;&gt;;&lt;/span&gt;
+<h3 id="1-1-权重路由使用场景">1.1 权重路由使用场景</h3>
 
-&lt;span style=&quot;color:#66d9ef&quot;&gt;private&lt;/span&gt; ApplicationEventPublisher publisher&lt;span style=&quot;color:#f92672&quot;&gt;;&lt;/span&gt;
+<p>在开发或者测试的时候，或者线上发布，线上服务多版本控制的时候，需要对服务提供权重路由，最常见的使用就是，一个服务有两个版本，旧版本V1，新版本v2。在线上灰度的时候，需要通过网关动态实时推送，路由权重信息。比如95%的流量走服务v1版本，5%的流量走服务v2版本。</p>
 
-&lt;span style=&quot;color:#66d9ef&quot;&gt;public&lt;/span&gt; &lt;span style=&quot;color:#a6e22e&quot;&gt;WeightRoutePredicateFactory&lt;/span&gt;&lt;span style=&quot;color:#f92672&quot;&gt;()&lt;/span&gt; &lt;span style=&quot;color:#f92672&quot;&gt;{&lt;/span&gt;
-    &lt;span style=&quot;color:#66d9ef&quot;&gt;super&lt;/span&gt;&lt;span style=&quot;color:#f92672&quot;&gt;(&lt;/span&gt;WeightConfig&lt;span style=&quot;color:#f92672&quot;&gt;.&lt;/span&gt;&lt;span style=&quot;color:#a6e22e&quot;&gt;class&lt;/span&gt;&lt;span style=&quot;color:#f92672&quot;&gt;);&lt;/span&gt;
-&lt;span style=&quot;color:#f92672&quot;&gt;}&lt;/span&gt;
+<p><img src="1.jpg" alt="" /></p>
 
-&lt;span style=&quot;color:#a6e22e&quot;&gt;@Override&lt;/span&gt;
-&lt;span style=&quot;color:#66d9ef&quot;&gt;public&lt;/span&gt; &lt;span style=&quot;color:#66d9ef&quot;&gt;void&lt;/span&gt; &lt;span style=&quot;color:#a6e22e&quot;&gt;setApplicationEventPublisher&lt;/span&gt;&lt;span style=&quot;color:#f92672&quot;&gt;(&lt;/span&gt;ApplicationEventPublisher publisher&lt;span style=&quot;color:#f92672&quot;&gt;)&lt;/span&gt; &lt;span style=&quot;color:#f92672&quot;&gt;{&lt;/span&gt;
-    &lt;span style=&quot;color:#66d9ef&quot;&gt;this&lt;/span&gt;&lt;span style=&quot;color:#f92672&quot;&gt;.&lt;/span&gt;&lt;span style=&quot;color:#a6e22e&quot;&gt;publisher&lt;/span&gt; &lt;span style=&quot;color:#f92672&quot;&gt;=&lt;/span&gt; publisher&lt;span style=&quot;color:#f92672&quot;&gt;;&lt;/span&gt;
-&lt;span style=&quot;color:#f92672&quot;&gt;}&lt;/span&gt;
+<blockquote>
+<p>issue: The Spring Cloud Gateway issue of Allow Rolling Deployments <a href="https://github.com/spring-cloud/spring-cloud-gateway/issues/67">https://github.com/spring-cloud/spring-cloud-gateway/issues/67</a></p>
+</blockquote>
 
-&lt;span style=&quot;color:#a6e22e&quot;&gt;@Override&lt;/span&gt;
-&lt;span style=&quot;color:#66d9ef&quot;&gt;public&lt;/span&gt; List&lt;span style=&quot;color:#f92672&quot;&gt;&amp;lt;&lt;/span&gt;String&lt;span style=&quot;color:#f92672&quot;&gt;&amp;gt;&lt;/span&gt; &lt;span style=&quot;color:#a6e22e&quot;&gt;shortcutFieldOrder&lt;/span&gt;&lt;span style=&quot;color:#f92672&quot;&gt;()&lt;/span&gt; &lt;span style=&quot;color:#f92672&quot;&gt;{&lt;/span&gt;
-    &lt;span style=&quot;color:#66d9ef&quot;&gt;return&lt;/span&gt; Arrays&lt;span style=&quot;color:#f92672&quot;&gt;.&lt;/span&gt;&lt;span style=&quot;color:#a6e22e&quot;&gt;asList&lt;/span&gt;&lt;span style=&quot;color:#f92672&quot;&gt;(&lt;/span&gt;GROUP_KEY&lt;span style=&quot;color:#f92672&quot;&gt;,&lt;/span&gt; WEIGHT_KEY&lt;span style=&quot;color:#f92672&quot;&gt;);&lt;/span&gt;
-&lt;span style=&quot;color:#f92672&quot;&gt;}&lt;/span&gt;
+<h3 id="1-2-spring-cloud-gateway权重路由原理">1.2 Spring Cloud Gateway权重路由原理</h3>
 
-&lt;span style=&quot;color:#a6e22e&quot;&gt;@Override&lt;/span&gt;
-&lt;span style=&quot;color:#66d9ef&quot;&gt;public&lt;/span&gt; String &lt;span style=&quot;color:#a6e22e&quot;&gt;shortcutFieldPrefix&lt;/span&gt;&lt;span style=&quot;color:#f92672&quot;&gt;()&lt;/span&gt; &lt;span style=&quot;color:#f92672&quot;&gt;{&lt;/span&gt;
-        &lt;span style=&quot;color:#66d9ef&quot;&gt;return&lt;/span&gt; WeightConfig&lt;span style=&quot;color:#f92672&quot;&gt;.&lt;/span&gt;&lt;span style=&quot;color:#a6e22e&quot;&gt;CONFIG_PREFIX&lt;/span&gt;&lt;span style=&quot;color:#f92672&quot;&gt;;&lt;/span&gt;
-&lt;span style=&quot;color:#f92672&quot;&gt;}&lt;/span&gt;
+<p>Spring Cloud Gateway中提供了<code>org.springframework.cloud.gateway.handler.predicate.WeightRoutePredicateFactory</code>去实现根据分组设置权重进行路由，因此使用起来相对比较简单，有兴趣的可以debug阅读源码。</p>
 
-&lt;span style=&quot;color:#a6e22e&quot;&gt;@Override&lt;/span&gt;
-&lt;span style=&quot;color:#66d9ef&quot;&gt;public&lt;/span&gt; &lt;span style=&quot;color:#66d9ef&quot;&gt;void&lt;/span&gt; &lt;span style=&quot;color:#a6e22e&quot;&gt;beforeApply&lt;/span&gt;&lt;span style=&quot;color:#f92672&quot;&gt;(&lt;/span&gt;WeightConfig config&lt;span style=&quot;color:#f92672&quot;&gt;)&lt;/span&gt; &lt;span style=&quot;color:#f92672&quot;&gt;{&lt;/span&gt;
-    &lt;span style=&quot;color:#66d9ef&quot;&gt;if&lt;/span&gt; &lt;span style=&quot;color:#f92672&quot;&gt;(&lt;/span&gt;publisher &lt;span style=&quot;color:#f92672&quot;&gt;!=&lt;/span&gt; &lt;span style=&quot;color:#66d9ef&quot;&gt;null&lt;/span&gt;&lt;span style=&quot;color:#f92672&quot;&gt;)&lt;/span&gt; &lt;span style=&quot;color:#f92672&quot;&gt;{&lt;/span&gt;
-        publisher&lt;span style=&quot;color:#f92672&quot;&gt;.&lt;/span&gt;&lt;span style=&quot;color:#a6e22e&quot;&gt;publishEvent&lt;/span&gt;&lt;span style=&quot;color:#f92672&quot;&gt;(&lt;/span&gt;&lt;span style=&quot;color:#66d9ef&quot;&gt;new&lt;/span&gt; WeightDefinedEvent&lt;span style=&quot;color:#f92672&quot;&gt;(&lt;/span&gt;&lt;span style=&quot;color:#66d9ef&quot;&gt;this&lt;/span&gt;&lt;span style=&quot;color:#f92672&quot;&gt;,&lt;/span&gt; config&lt;span style=&quot;color:#f92672&quot;&gt;));&lt;/span&gt;
-    &lt;span style=&quot;color:#f92672&quot;&gt;}&lt;/span&gt;
-&lt;span style=&quot;color:#f92672&quot;&gt;}&lt;/span&gt;
+<pre><code class="language-java">public class WeightRoutePredicateFactory extends AbstractRoutePredicateFactory&lt;WeightConfig&gt; implements ApplicationEventPublisherAware {
 
-&lt;span style=&quot;color:#a6e22e&quot;&gt;@Override&lt;/span&gt;
-&lt;span style=&quot;color:#66d9ef&quot;&gt;public&lt;/span&gt; Predicate&lt;span style=&quot;color:#f92672&quot;&gt;&amp;lt;&lt;/span&gt;ServerWebExchange&lt;span style=&quot;color:#f92672&quot;&gt;&amp;gt;&lt;/span&gt; &lt;span style=&quot;color:#a6e22e&quot;&gt;apply&lt;/span&gt;&lt;span style=&quot;color:#f92672&quot;&gt;(&lt;/span&gt;WeightConfig config&lt;span style=&quot;color:#f92672&quot;&gt;)&lt;/span&gt; &lt;span style=&quot;color:#f92672&quot;&gt;{&lt;/span&gt;
-    &lt;span style=&quot;color:#66d9ef&quot;&gt;return&lt;/span&gt; exchange &lt;span style=&quot;color:#f92672&quot;&gt;-&amp;gt;&lt;/span&gt; &lt;span style=&quot;color:#f92672&quot;&gt;{&lt;/span&gt;
-        Map&lt;span style=&quot;color:#f92672&quot;&gt;&amp;lt;&lt;/span&gt;String&lt;span style=&quot;color:#f92672&quot;&gt;,&lt;/span&gt; String&lt;span style=&quot;color:#f92672&quot;&gt;&amp;gt;&lt;/span&gt; weights &lt;span style=&quot;color:#f92672&quot;&gt;=&lt;/span&gt; exchange&lt;span style=&quot;color:#f92672&quot;&gt;.&lt;/span&gt;&lt;span style=&quot;color:#a6e22e&quot;&gt;getAttributeOrDefault&lt;/span&gt;&lt;span style=&quot;color:#f92672&quot;&gt;(&lt;/span&gt;WEIGHT_ATTR&lt;span style=&quot;color:#f92672&quot;&gt;,&lt;/span&gt;
-                Collections&lt;span style=&quot;color:#f92672&quot;&gt;.&lt;/span&gt;&lt;span style=&quot;color:#a6e22e&quot;&gt;emptyMap&lt;/span&gt;&lt;span style=&quot;color:#f92672&quot;&gt;());&lt;/span&gt;
+    private static final Log log = LogFactory.getLog(WeightRoutePredicateFactory.class);
 
-        String routeId &lt;span style=&quot;color:#f92672&quot;&gt;=&lt;/span&gt; exchange&lt;span style=&quot;color:#f92672&quot;&gt;.&lt;/span&gt;&lt;span style=&quot;color:#a6e22e&quot;&gt;getAttribute&lt;/span&gt;&lt;span style=&quot;color:#f92672&quot;&gt;(&lt;/span&gt;GATEWAY_PREDICATE_ROUTE_ATTR&lt;span style=&quot;color:#f92672&quot;&gt;);&lt;/span&gt;
+    public static final String GROUP_KEY = WeightConfig.CONFIG_PREFIX + &quot;.group&quot;;
+    public static final String WEIGHT_KEY = WeightConfig.CONFIG_PREFIX + &quot;.weight&quot;;
 
-        &lt;span style=&quot;color:#75715e&quot;&gt;// all calculations and comparison against random num happened in
+    private ApplicationEventPublisher publisher;
+
+    public WeightRoutePredicateFactory() {
+        super(WeightConfig.class);
+    }
+
+    @Override
+    public void setApplicationEventPublisher(ApplicationEventPublisher publisher) {
+        this.publisher = publisher;
+    }
+
+    @Override
+    public List&lt;String&gt; shortcutFieldOrder() {
+        return Arrays.asList(GROUP_KEY, WEIGHT_KEY);
+    }
+
+    @Override
+    public String shortcutFieldPrefix() {
+            return WeightConfig.CONFIG_PREFIX;
+    }
+
+    @Override
+    public void beforeApply(WeightConfig config) {
+        if (publisher != null) {
+            publisher.publishEvent(new WeightDefinedEvent(this, config));
+        }
+    }
+
+    @Override
+    public Predicate&lt;ServerWebExchange&gt; apply(WeightConfig config) {
+        return exchange -&gt; {
+            Map&lt;String, String&gt; weights = exchange.getAttributeOrDefault(WEIGHT_ATTR,
+                    Collections.emptyMap());
+
+            String routeId = exchange.getAttribute(GATEWAY_PREDICATE_ROUTE_ATTR);
+
+            // all calculations and comparison against random num happened in
+            // WeightCalculatorWebFilter
+            String group = config.getGroup();
+            if (weights.containsKey(group)) {
+
+                String chosenRoute = weights.get(group);
+                if (log.isTraceEnabled()) {
+                    log.trace(&quot;in group weight: &quot;+ group + &quot;, current route: &quot; + routeId +&quot;, chosen route: &quot; + chosenRoute);
+                }
+
+                return routeId.equals(chosenRoute);
+            }
+
+            return false;
+        };
+    }
+}
+
 </code></pre>
-<p><!-- raw HTML omitted --><!-- raw HTML omitted --><!-- raw HTML omitted -->            <!-- raw HTML omitted -->// WeightCalculatorWebFilter
-<!-- raw HTML omitted --><!-- raw HTML omitted --><!-- raw HTML omitted -->            String group <!-- raw HTML omitted -->=<!-- raw HTML omitted --> config<!-- raw HTML omitted -->.<!-- raw HTML omitted --><!-- raw HTML omitted -->getGroup<!-- raw HTML omitted --><!-- raw HTML omitted -->();<!-- raw HTML omitted -->
-<!-- raw HTML omitted -->if<!-- raw HTML omitted --> <!-- raw HTML omitted -->(<!-- raw HTML omitted -->weights<!-- raw HTML omitted -->.<!-- raw HTML omitted --><!-- raw HTML omitted -->containsKey<!-- raw HTML omitted --><!-- raw HTML omitted -->(<!-- raw HTML omitted -->group<!-- raw HTML omitted -->))<!-- raw HTML omitted --> <!-- raw HTML omitted -->{<!-- raw HTML omitted --></p>
-<pre><code>            String chosenRoute &lt;span style=&quot;color:#f92672&quot;&gt;=&lt;/span&gt; weights&lt;span style=&quot;color:#f92672&quot;&gt;.&lt;/span&gt;&lt;span style=&quot;color:#a6e22e&quot;&gt;get&lt;/span&gt;&lt;span style=&quot;color:#f92672&quot;&gt;(&lt;/span&gt;group&lt;span style=&quot;color:#f92672&quot;&gt;);&lt;/span&gt;
-            &lt;span style=&quot;color:#66d9ef&quot;&gt;if&lt;/span&gt; &lt;span style=&quot;color:#f92672&quot;&gt;(&lt;/span&gt;log&lt;span style=&quot;color:#f92672&quot;&gt;.&lt;/span&gt;&lt;span style=&quot;color:#a6e22e&quot;&gt;isTraceEnabled&lt;/span&gt;&lt;span style=&quot;color:#f92672&quot;&gt;())&lt;/span&gt; &lt;span style=&quot;color:#f92672&quot;&gt;{&lt;/span&gt;
-                log&lt;span style=&quot;color:#f92672&quot;&gt;.&lt;/span&gt;&lt;span style=&quot;color:#a6e22e&quot;&gt;trace&lt;/span&gt;&lt;span style=&quot;color:#f92672&quot;&gt;(&lt;/span&gt;&lt;span style=&quot;color:#e6db74&quot;&gt;&amp;#34;in group weight: &amp;#34;&lt;/span&gt;&lt;span style=&quot;color:#f92672&quot;&gt;+&lt;/span&gt; group &lt;span style=&quot;color:#f92672&quot;&gt;+&lt;/span&gt; &lt;span style=&quot;color:#e6db74&quot;&gt;&amp;#34;, current route: &amp;#34;&lt;/span&gt; &lt;span style=&quot;color:#f92672&quot;&gt;+&lt;/span&gt; routeId &lt;span style=&quot;color:#f92672&quot;&gt;+&lt;/span&gt;&lt;span style=&quot;color:#e6db74&quot;&gt;&amp;#34;, chosen route: &amp;#34;&lt;/span&gt; &lt;span style=&quot;color:#f92672&quot;&gt;+&lt;/span&gt; chosenRoute&lt;span style=&quot;color:#f92672&quot;&gt;);&lt;/span&gt;
-            &lt;span style=&quot;color:#f92672&quot;&gt;}&lt;/span&gt;
 
-            &lt;span style=&quot;color:#66d9ef&quot;&gt;return&lt;/span&gt; routeId&lt;span style=&quot;color:#f92672&quot;&gt;.&lt;/span&gt;&lt;span style=&quot;color:#a6e22e&quot;&gt;equals&lt;/span&gt;&lt;span style=&quot;color:#f92672&quot;&gt;(&lt;/span&gt;chosenRoute&lt;span style=&quot;color:#f92672&quot;&gt;);&lt;/span&gt;
-        &lt;span style=&quot;color:#f92672&quot;&gt;}&lt;/span&gt;
+<h2 id="2-spring-cloud-gateway中的权重路由案例">2.Spring Cloud Gateway中的权重路由案例</h2>
 
-        &lt;span style=&quot;color:#66d9ef&quot;&gt;return&lt;/span&gt; &lt;span style=&quot;color:#66d9ef&quot;&gt;false&lt;/span&gt;&lt;span style=&quot;color:#f92672&quot;&gt;;&lt;/span&gt;
-    &lt;span style=&quot;color:#f92672&quot;&gt;};&lt;/span&gt;
-&lt;span style=&quot;color:#f92672&quot;&gt;}&lt;/span&gt;
+<h3 id="2-1-案例代码地址">2.1 案例代码地址</h3>
+
+<p><a href="https://github.com/SoftwareKing/sc-gateway/tree/master/ch4">https://github.com/SoftwareKing/sc-gateway/tree/master/ch4</a></p>
+
+<h3 id="2-2-spring-cloud-gateway-server说明">2.2 Spring Cloud Gateway Server说明</h3>
+
+<p>Spring Cloud Gateway will dispatch 95% of the requests to version 1 and 5% of the traffic to version 2 of a specified service, as shown by the following figure.</p>
+
+<p><img src="2.jpeg" alt="" /></p>
+
+<p>我们通过在Spring Cloud Gateway中会配置不同的权重信息到不同URL上，Spring Cloud Gateway会根据我们配置的路由权重信息，将请求分发到不同的源服务组，权重信息如ch4/ch4-gateway中的application.yml所示，主要配置信息如下。</p>
+
+<pre><code class="language-yml">spring:
+  application:
+    name: ch4-gateway
+  cloud:
+    gateway:
+      routes:
+
+      - id: service1_v1
+        uri: http://localhost:8081/v1
+        predicates:
+        - Path=/test
+        - Weight=service1, 95
+
+      - id: service1_v2
+        uri: http://localhost:8081/v2
+        predicates:
+        - Path=/test
+        - Weight=service1, 5
 </code></pre>
-<p><!-- raw HTML omitted -->}<!-- raw HTML omitted --></p>
-<p><!-- raw HTML omitted --><!-- raw HTML omitted --><!-- raw HTML omitted --><!-- raw HTML omitted -->2.Spring Cloud Gateway中的权重路由案例<!-- raw HTML omitted --></p>
-<!-- raw HTML omitted -->
-<pre><code>  - &lt;span style=&quot;color:#66d9ef&quot;&gt;id&lt;/span&gt;: service1_v1
-    &lt;span style=&quot;color:#66d9ef&quot;&gt;uri&lt;/span&gt;: http://localhost:&lt;span style=&quot;color:#ae81ff&quot;&gt;8081&lt;/span&gt;/v1
-    &lt;span style=&quot;color:#66d9ef&quot;&gt;predicates&lt;/span&gt;:
-    - Path=/test
-    - Weight=service1, &lt;span style=&quot;color:#ae81ff&quot;&gt;95&lt;/span&gt;
 
-  - &lt;span style=&quot;color:#66d9ef&quot;&gt;id&lt;/span&gt;: service1_v2
-    &lt;span style=&quot;color:#66d9ef&quot;&gt;uri&lt;/span&gt;: http://localhost:&lt;span style=&quot;color:#ae81ff&quot;&gt;8081&lt;/span&gt;/v2
-    &lt;span style=&quot;color:#66d9ef&quot;&gt;predicates&lt;/span&gt;:
-    - Path=/test
-    - Weight=service1, &lt;span style=&quot;color:#ae81ff&quot;&gt;5&lt;/span&gt;
-</code></pre>
-<p><!-- raw HTML omitted --><!-- raw HTML omitted --><!-- raw HTML omitted --><!-- raw HTML omitted --></p>
-<!-- raw HTML omitted -->
-<p><!-- raw HTML omitted -->import<!-- raw HTML omitted --> org.springframework.web.bind.annotation.RequestMapping<!-- raw HTML omitted -->;<!-- raw HTML omitted -->
-<!-- raw HTML omitted -->import<!-- raw HTML omitted --> org.springframework.web.bind.annotation.RestController<!-- raw HTML omitted -->;<!-- raw HTML omitted --></p>
-<p><!-- raw HTML omitted -->import<!-- raw HTML omitted --> reactor.core.publisher.Mono<!-- raw HTML omitted -->;<!-- raw HTML omitted --></p>
-<p><!-- raw HTML omitted -->@RestController<!-- raw HTML omitted -->
-<!-- raw HTML omitted -->public<!-- raw HTML omitted --> <!-- raw HTML omitted -->class<!-- raw HTML omitted --> <!-- raw HTML omitted -->ServiceController<!-- raw HTML omitted --> <!-- raw HTML omitted -->{<!-- raw HTML omitted --></p>
-<pre><code>&lt;span style=&quot;color:#a6e22e&quot;&gt;@RequestMapping&lt;/span&gt;&lt;span style=&quot;color:#f92672&quot;&gt;(&lt;/span&gt;value &lt;span style=&quot;color:#f92672&quot;&gt;=&lt;/span&gt; &lt;span style=&quot;color:#e6db74&quot;&gt;&amp;#34;/v1&amp;#34;&lt;/span&gt;&lt;span style=&quot;color:#f92672&quot;&gt;,&lt;/span&gt; produces &lt;span style=&quot;color:#f92672&quot;&gt;=&lt;/span&gt; &lt;span style=&quot;color:#e6db74&quot;&gt;&amp;#34;text/plain;charset=UTF-8&amp;#34;&lt;/span&gt;&lt;span style=&quot;color:#f92672&quot;&gt;)&lt;/span&gt;
-&lt;span style=&quot;color:#66d9ef&quot;&gt;public&lt;/span&gt; Mono&lt;span style=&quot;color:#f92672&quot;&gt;&amp;lt;&lt;/span&gt;String&lt;span style=&quot;color:#f92672&quot;&gt;&amp;gt;&lt;/span&gt; &lt;span style=&quot;color:#a6e22e&quot;&gt;v1&lt;/span&gt;&lt;span style=&quot;color:#f92672&quot;&gt;()&lt;/span&gt; &lt;span style=&quot;color:#f92672&quot;&gt;{&lt;/span&gt;
-    &lt;span style=&quot;color:#66d9ef&quot;&gt;return&lt;/span&gt; Mono&lt;span style=&quot;color:#f92672&quot;&gt;.&lt;/span&gt;&lt;span style=&quot;color:#a6e22e&quot;&gt;just&lt;/span&gt;&lt;span style=&quot;color:#f92672&quot;&gt;(&lt;/span&gt;&lt;span style=&quot;color:#e6db74&quot;&gt;&amp;#34;v1&amp;#34;&lt;/span&gt;&lt;span style=&quot;color:#f92672&quot;&gt;);&lt;/span&gt;
-&lt;span style=&quot;color:#f92672&quot;&gt;}&lt;/span&gt;
+<blockquote>
+<p>Weight=service1, 95，Weight=service1, 5就是路由的权重信息。</p>
+</blockquote>
 
-&lt;span style=&quot;color:#a6e22e&quot;&gt;@RequestMapping&lt;/span&gt;&lt;span style=&quot;color:#f92672&quot;&gt;(&lt;/span&gt;value &lt;span style=&quot;color:#f92672&quot;&gt;=&lt;/span&gt; &lt;span style=&quot;color:#e6db74&quot;&gt;&amp;#34;/v2&amp;#34;&lt;/span&gt;&lt;span style=&quot;color:#f92672&quot;&gt;,&lt;/span&gt; produces &lt;span style=&quot;color:#f92672&quot;&gt;=&lt;/span&gt; &lt;span style=&quot;color:#e6db74&quot;&gt;&amp;#34;text/plain;charset=UTF-8&amp;#34;&lt;/span&gt;&lt;span style=&quot;color:#f92672&quot;&gt;)&lt;/span&gt;
-&lt;span style=&quot;color:#66d9ef&quot;&gt;public&lt;/span&gt; Mono&lt;span style=&quot;color:#f92672&quot;&gt;&amp;lt;&lt;/span&gt;String&lt;span style=&quot;color:#f92672&quot;&gt;&amp;gt;&lt;/span&gt; &lt;span style=&quot;color:#a6e22e&quot;&gt;v2&lt;/span&gt;&lt;span style=&quot;color:#f92672&quot;&gt;()&lt;/span&gt; &lt;span style=&quot;color:#f92672&quot;&gt;{&lt;/span&gt;
-    &lt;span style=&quot;color:#66d9ef&quot;&gt;return&lt;/span&gt; Mono&lt;span style=&quot;color:#f92672&quot;&gt;.&lt;/span&gt;&lt;span style=&quot;color:#a6e22e&quot;&gt;just&lt;/span&gt;&lt;span style=&quot;color:#f92672&quot;&gt;(&lt;/span&gt;&lt;span style=&quot;color:#e6db74&quot;&gt;&amp;#34;v2&amp;#34;&lt;/span&gt;&lt;span style=&quot;color:#f92672&quot;&gt;);&lt;/span&gt;
-&lt;span style=&quot;color:#f92672&quot;&gt;}&lt;/span&gt;
+<h3 id="2-3-源服务">2.3 源服务</h3>
+
+<p>源服务在本案例中源服务如ch4-service-provider所示，主要提提供Gateway Server权重路由对应的后端源服务。因为比较简单因此不做详细说明，主要代码如下所示。</p>
+
+<pre><code class="language-java">package org.xujin.sc.service;
+
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+import reactor.core.publisher.Mono;
+
+@RestController
+public class ServiceController {
+
+    @RequestMapping(value = &quot;/v1&quot;, produces = &quot;text/plain;charset=UTF-8&quot;)
+    public Mono&lt;String&gt; v1() {
+        return Mono.just(&quot;v1&quot;);
+    }
+
+    @RequestMapping(value = &quot;/v2&quot;, produces = &quot;text/plain;charset=UTF-8&quot;)
+    public Mono&lt;String&gt; v2() {
+        return Mono.just(&quot;v2&quot;);
+    }
+}
+
 </code></pre>
-<p><!-- raw HTML omitted -->}<!-- raw HTML omitted --></p>
-<p><!-- raw HTML omitted --><!-- raw HTML omitted --><!-- raw HTML omitted --><!-- raw HTML omitted -->2.4 测试<!-- raw HTML omitted --></p>
-<!-- raw HTML omitted -->
+
+<h3 id="2-4-测试">2.4 测试</h3>
+
+<p>分别启动ch4-gateway，ch4-service-provider进行访问:<a href="http://localhost:8080/test">http://localhost:8080/test</a> 测试,发现会根据所设权重进行路由。</p>
 
 </article>
 
@@ -468,22 +521,23 @@ if (!doNotTrack) {
 		目录
 	</h2>
   <nav id="TableOfContents">
-  <ul>
-    <li><a href="#1权重路由">1.权重路由</a>
-      <ul>
-        <li><a href="#11-权重路由使用场景">1.1 权重路由使用场景</a></li>
-        <li><a href="#12-spring-cloud-gateway权重路由原理">1.2 Spring Cloud Gateway权重路由原理</a></li>
-      </ul>
-    </li>
-    <li><a href="#2spring-cloud-gateway中的权重路由案例">2.Spring Cloud Gateway中的权重路由案例</a>
-      <ul>
-        <li><a href="#21-案例代码地址">2.1 案例代码地址</a></li>
-        <li><a href="#22-spring-cloud-gateway-server说明">2.2 Spring Cloud Gateway Server说明</a></li>
-        <li><a href="#23-源服务">2.3 源服务</a></li>
-        <li><a href="#24-测试">2.4 测试</a></li>
-      </ul>
-    </li>
-  </ul>
+<ul>
+<li>
+<ul>
+<li><a href="#1-权重路由">1.权重路由</a>
+<ul>
+<li><a href="#1-1-权重路由使用场景">1.1 权重路由使用场景</a></li>
+<li><a href="#1-2-spring-cloud-gateway权重路由原理">1.2 Spring Cloud Gateway权重路由原理</a></li>
+</ul></li>
+<li><a href="#2-spring-cloud-gateway中的权重路由案例">2.Spring Cloud Gateway中的权重路由案例</a>
+<ul>
+<li><a href="#2-1-案例代码地址">2.1 案例代码地址</a></li>
+<li><a href="#2-2-spring-cloud-gateway-server说明">2.2 Spring Cloud Gateway Server说明</a></li>
+<li><a href="#2-3-源服务">2.3 源服务</a></li>
+<li><a href="#2-4-测试">2.4 测试</a></li>
+</ul></li>
+</ul></li>
+</ul>
 </nav>
 </div>
 

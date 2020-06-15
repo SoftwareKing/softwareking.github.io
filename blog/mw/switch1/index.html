@@ -10,7 +10,7 @@
 <meta name="viewport" content="width=device-width,minimum-scale=1">
 <meta name="description" content="玹霖志,许进沉思录,许进|Spring Cloud,中间件，基础架构，www.xujin.org,xujin.org,-许进沉思录,Venus&#43;,云首科技有限公司,云计算，大数据，物联网，Software_king的博客,云计算Saas，云计算Paas，云计算Iaas Hadoop，大数据，JavaEE，Java，物联网，Hadoop， NoSQL，MongoDB,Spring, Hibernate,Struts2," />
 
-<meta name="generator" content="Hugo 0.72.0" /><link rel="shortcut icon" href=/img/icon.png type="image/png">
+<meta name="generator" content="Hugo 0.55.6" /><link rel="shortcut icon" href=/img/icon.png type="image/png">
 
 <link href="https://unpkg.com/purecss@1.0.0/build/base-min.css" rel="stylesheet">
 
@@ -243,7 +243,7 @@ if (!doNotTrack) {
 				
 			</span>
 		
-		<span class="post-word-count">· 字数:3992·阅读时间 8 分钟</span>
+		<span class="post-word-count">· 字数:3749·阅读时间 8 分钟</span>
 		
 		阅读量<span id="busuanzi_value_page_pv"></span>次
 		
@@ -261,47 +261,345 @@ if (!doNotTrack) {
 	});
   </script>
 		<article class="typo">
-	<!-- raw HTML omitted -->
-<pre><code>&lt;span style=&quot;color:#a6e22e&quot;&gt;@Switch&lt;/span&gt;&lt;span style=&quot;color:#f92672&quot;&gt;(&lt;/span&gt;groupName&lt;span style=&quot;color:#f92672&quot;&gt;=&lt;/span&gt;&lt;span style=&quot;color:#e6db74&quot;&gt;&amp;#34;whole_Single_Gray&amp;#34;&lt;/span&gt;&lt;span style=&quot;color:#f92672&quot;&gt;,&lt;/span&gt;desc&lt;span style=&quot;color:#f92672&quot;&gt;=&lt;/span&gt;&lt;span style=&quot;color:#e6db74&quot;&gt;&amp;#34;整零灰度开关&amp;#34;&lt;/span&gt; &lt;span style=&quot;color:#f92672&quot;&gt;)&lt;/span&gt;
-&lt;span style=&quot;color:#66d9ef&quot;&gt;public&lt;/span&gt; &lt;span style=&quot;color:#66d9ef&quot;&gt;static&lt;/span&gt;  &lt;span style=&quot;color:#66d9ef&quot;&gt;boolean&lt;/span&gt;  isOpenWholeAndSingleGray&lt;span style=&quot;color:#f92672&quot;&gt;=&lt;/span&gt;&lt;span style=&quot;color:#66d9ef&quot;&gt;true&lt;/span&gt;&lt;span style=&quot;color:#f92672&quot;&gt;;&lt;/span&gt;
+	<h2 id="1-开关中间件">1.开关中间件</h2>
 
-&lt;span style=&quot;color:#a6e22e&quot;&gt;@Switch&lt;/span&gt;&lt;span style=&quot;color:#f92672&quot;&gt;(&lt;/span&gt;groupName&lt;span style=&quot;color:#f92672&quot;&gt;=&lt;/span&gt;&lt;span style=&quot;color:#e6db74&quot;&gt;&amp;#34;whole_Single_Gray&amp;#34;&lt;/span&gt;&lt;span style=&quot;color:#f92672&quot;&gt;,&lt;/span&gt;desc&lt;span style=&quot;color:#f92672&quot;&gt;=&lt;/span&gt;&lt;span style=&quot;color:#e6db74&quot;&gt;&amp;#34;整零灰度列表&amp;#34;&lt;/span&gt;&lt;span style=&quot;color:#f92672&quot;&gt;)&lt;/span&gt;
-&lt;span style=&quot;color:#66d9ef&quot;&gt;public&lt;/span&gt; &lt;span style=&quot;color:#66d9ef&quot;&gt;static&lt;/span&gt; List wholeAndSingleGrayList&lt;span style=&quot;color:#f92672&quot;&gt;;&lt;/span&gt;
+<h3 id="1-1-switch概述">1.1 Switch概述</h3>
+
+<p>switch提供统一的方式来定义开关、统一的控制台和api来对开关进行查询和操控。Switch定义的开关包含丰富的可读性属性，为开关信息的维护和传承提供便利。</p>
+
+<p><img src="1.png" alt="" /></p>
+
+<h3 id="1-2-switch使用的业务场景">1.2 Switch使用的业务场景</h3>
+
+<p>在分布式系统中为什么要使用开关？例如双十一电商平台需要做促销活动，此时订单量暴增，在下单环节，可能需要调用A、B、C三个接口来完成，但是其实A和B是必须的，C只是附加的功能（例如在下单的时候获取用户常用地址，或者发个推送消息之类的），可有可无，在平时系统没有压力，在容量充足的情况下，调用下没问题，但是在特殊节日的大促环节，系统已经满负荷了，这时候其实完全可以不去调用C接口，怎么实现这个呢？改代码重新发布？no，这样不太现实，于是开关诞生了，开发人员只要简单执行一下命令或者点一下页面，就可以关掉对于C接口的调用，在请求高峰过去之后，再把开关恢复回去即可。类似的使用场景还有A/B Test、灰度发布和数据的不停服切换等。</p>
+
+<p>早期这样的业务开关都是由各个部门自行实现和管理。随着业务开关的数量的增多，大量的业务开关信息都分布在不同的系统中，甚至代码中，造成运维的成本越来越高，当开关不使用之后，无法进行统一的下线处理。
+因此需要开发一套统一的标准和规范的业务开关管理的Switch平台。还有其它业务使用场景，如下所示:</p>
+
+<ul>
+<li>业务降级中需要对代码中的static值的修改</li>
+<li>应用不同版本的兼容</li>
+<li>不用时间走不同的优惠服务</li>
+<li>采用业务开关的方式，通过修改程序中的static值实现业务逻辑的切换。</li>
+<li>业务复杂，从面向对象到面向开关编程</li>
+</ul>
+
+<blockquote>
+<p>Q:是否需要支持跨应用的开关推送,某些业务场景需要跨应用推送</p>
+
+<p>A:目前<code>阿里的开关</code>不支持跨应用开关的推送，某个业务场景需要好几个应用一起打开开关。</p>
+</blockquote>
+
+<h3 id="2-2-switch的分类">2.2 Switch的分类:</h3>
+
+<p>我们可以将开关分为三大类，分别是功能开关、降级开关、灰度开关：</p>
+
+<ul>
+<li><p>功能开关：针对某一个功能是否打开，例如在订单下单的时候需要获取下单用户的历史换绑手机号信息，但是由于B系统只是提供了接口定义，实际业务还未开发完成，A系统可以先提前开发并上线，待B系统上线之后，A系统将该功能开关打开。</p></li>
+
+<li><p>降级开关:典型的应用场景是电商做促销的时候，比如双十一电商做促销，用户下单的时候获取用户历史常用地址，因为双十一系统已经达到负荷，为了系统性能，将该业务逻辑降级。或者A系统调用B系统，由于B系统整体宕机，为了不影响A系统继续运行，可以手动将B系统降级等。</p></li>
+
+<li><p>灰度开关:针对某一功能做灰度，例如我们需要针对刷单用户在下单过程中做拦截，为此我们在下单阶段做了一套黑白名单处理，但是我们也无法知晓该套黑白名单的正确率多少，为了避免造成误拦，我们需要对该功能做灰度采样，以便及时调整我们的黑白名单逻辑。通常的灰度策略为 1% 灰度，10%灰度，30%灰度，50%。。。</p></li>
+</ul>
+
+<h3 id="2-3-分布式switch的需求">2.3 分布式Switch的需求</h3>
+
+<p>开关的核心需求主要有以下几点:
+1.  支持开关的分布式化管理</p>
+
+<ul>
+<li><p><code>开关统一管理，发布、更新</code>等操作只需在管控平台上执行一次变更，整个集群生效。</p></li>
+
+<li><p> 当开关值<code>发生变更</code>，<code>订阅该开关的客户端</code>会自动感知发现变更，进而应用内部更新值。</p></li>
+
+<li><p> 支持<code>单台服务器的开关变更</code>
+  </p></li>
+
+<li><p> 具有<code>容灾机制</code>，保证服务的HA（高可用）</p>
+
+<ul>
+<li><p> 管控平台HA
+&gt; 部署两个，通过Ngnix或LVS保证高可用</p></li>
+
+<li><p> 服务集群的高可用,当集群中的一台server不可用了，client发现后可以自动切换到其他server上进行访问
+&gt; 基于Apollo或者Nacos实现
+ </p></li>
+
+<li><p>  客户端具备容灾机制，当开关中心完全不可用，可以在客户端对开关进行操作。
+&gt; 配置中心或管控平台Http接口实现对客户端的操作</p></li>
+</ul></li>
+</ul>
+
+<h3 id="2-4-switch竞品分析">2.4 Switch竞品分析</h3>
+
+<p>目前开关中间件市面上开源可用的产品为0，下面对竞品做简单介绍对比，如下表所示:</p>
+
+<table>
+<thead>
+<tr>
+<th align="center">开关</th>
+<th align="center">数据一致性</th>
+<th align="center">说明</th>
+<th align="center">备注</th>
+</tr>
+</thead>
+
+<tbody>
+<tr>
+<td align="center">点我达</td>
+<td align="center">基于Zk</td>
+<td align="center">依赖ZK，有管控平台</td>
+<td align="center"><a href="http://tech.dianwoda.com/2017/10/30/fen-bu-shi-kai-guan-she-ji-yu-shi-xian/">点我达开关设计</a></td>
+</tr>
+
+<tr>
+<td align="center">阿里</td>
+<td align="center">基于Diamond（即目前开源的Nacos中的Config)</td>
+<td align="center">依赖配置中心Diamond，有管控平台，支持Http API变更开关</td>
+<td align="center"></td>
+</tr>
+</tbody>
+</table>
+
+<h3 id="2-5-switch具备的功能">2.5 Switch具备的功能</h3>
+
+<p>通过对目前市面上开关的竞品分析，下面的功能将是Switch的RoadMap需要实现的功能</p>
+
+<ul class="task-list">
+<li><label><input type="checkbox" checked disabled class="task-list-item"> 支持不同类型的配置项和业务开关的基础推送功能</label></li>
+<li><label><input type="checkbox" checked disabled class="task-list-item"> 支持多种灵活的推送方式</label></li>
+<li><label><input type="checkbox" checked disabled class="task-list-item"> 支持Nacos和Apollo</label></li>
+<li><label><input type="checkbox" checked disabled class="task-list-item"> 线上控制台可以直接推送到内存，正常情况下使用开关控制台推送开关值到内存。</label></li>
+<li><label><input type="checkbox" checked disabled class="task-list-item"> 支持集群推送和单机推送</label></li>
+<li><label><input type="checkbox" checked disabled class="task-list-item"> 线上控制台持久化推送，借助配置中心Naocos或Apollo持久化业务开关。即使在应用重启了，也会生效。</label></li>
+<li><label><input type="checkbox" checked disabled class="task-list-item"> 高可用，如果开关控制台出现异常或挂掉，可以直接通过Nacos或者Apollo自身的控制台来编辑开关值。</label></li>
+<li><label><input type="checkbox" checked disabled class="task-list-item"> Http API推送。若配置中心Nacos或Apollo推送延迟高或者出现异常挂掉。可直接通过Http API接口来才操作开关。</label></li>
+<li><label><input type="checkbox" checked disabled class="task-list-item"> Switch保证业务开关推送的正取性，实时性的同时，提供业务开关的监控功能，
+  能监控集群开关状态，降低开关不一致带来的风险。若有机器的开关值不一致，或者某台机器已经下线，则会提醒相应的操作人员及时调整开关值，保持集群状态一致。
+<br /></label></li>
+</ul>
+
+<h2 id="3-switch设计">3.Switch设计</h2>
+
+<p>Switch的设计将会从Client，管控平台，适配多种配置中心，高可用等几个角度来设计。做到以下几点</p>
+
+<blockquote>
+<p>Switch尽可能使用简单,switch框架提供非常简单的使用方式，对应用方原来的使用侵入小</p>
+
+<p>基于配置中心Nacos或Apollo实现推送，为了保证更可靠需要支持Http API的推送方式</p>
+</blockquote>
+
+<h3 id="3-1-switch的方案设计">3.1 Switch的方案设计</h3>
+
+<p>Switch总体架构，如下图所示:</p>
+
+<p><img src="2.png" alt="" /></p>
+
+<ul>
+<li><p>a. Switch Admin-管理控制台</p>
+
+<p>管理控制台主要用于对分组、应用及开关进行操作，核心功能就是对开关进行控制，包括分布式和单机操作模式
+  </p></li>
+
+<li><p>b. Apollo或Nacos</p></li>
+</ul>
+
+<p>   分布式开关统一注册中心，主要提供变更通知服务，客户端通过订阅开关节点，实时获取开关变更信息，从而同步更新到本地内存
+  
+* c. 开关client</p>
+
+<p>   基于spi机制加载应用内开关组件，并注册到配置中心，并基于netty实现tcp及http通信交互，方便本地及管理控制台调用。
+  </p>
+
+<h3 id="3-2-功能模块设计">3.2 功能模块设计</h3>
+
+<p>Switch的功能模块设计图，如下所示:</p>
+
+<p><img src="3.png" alt="" /></p>
+
+<table>
+<thead>
+<tr>
+<th align="left">模块</th>
+<th align="left">说明</th>
+<th align="left">备注</th>
+</tr>
+</thead>
+
+<tbody>
+<tr>
+<td align="left">switch</td>
+<td align="left">父模块</td>
+<td align="left"></td>
+</tr>
+
+<tr>
+<td align="left">switch-core</td>
+<td align="left">开关的核心模块</td>
+<td align="left">核心逻辑</td>
+</tr>
+
+<tr>
+<td align="left">switch-adpater</td>
+<td align="left">开关底层抽象适配</td>
+<td align="left"></td>
+</tr>
+
+<tr>
+<td align="left">switch-admin</td>
+<td align="left">开关管控平台</td>
+<td align="left">管控平台</td>
+</tr>
+
+<tr>
+<td align="left">switch-adpater-apollo</td>
+<td align="left">开关管控平台适配阿波罗</td>
+<td align="left">通过OpenAPI下发开关</td>
+</tr>
+
+<tr>
+<td align="left">switch-adpater-nacos</td>
+<td align="left">开关管控平台适配阿波罗</td>
+<td align="left">通过OpenAPI下发开关</td>
+</tr>
+
+<tr>
+<td align="left">switch-client</td>
+<td align="left">开关Client的父模块</td>
+<td align="left"></td>
+</tr>
+
+<tr>
+<td align="left">switch-client-adapter</td>
+<td align="left">开关Client的适配器接口</td>
+<td align="left"></td>
+</tr>
+
+<tr>
+<td align="left">switch-client-adapter-apollo</td>
+<td align="left">开关客户端Apollo Starter提供的二方包</td>
+<td align="left"></td>
+</tr>
+
+<tr>
+<td align="left">switch-client-adapter-nacos</td>
+<td align="left">开关客户端Nacos Stater 提供的二方包</td>
+<td align="left"></td>
+</tr>
+</tbody>
+</table>
+
+<h3 id="3-3-switch的客户端设计">3.3 Switch的客户端设计</h3>
+
+<p>Switch开关Client会以Spring Boot Starter的方式嵌入到应用中，采用注解的方式让开发人员非常方便的接入开关平台，示例代码如下:</p>
+
+<pre><code class="language-java">public class AppSwitch {
+
+    @Switch(groupName=&quot;whole_Single_Gray&quot;,desc=&quot;整零灰度开关&quot; )
+    public static  boolean  isOpenWholeAndSingleGray=true;
+
+    @Switch(groupName=&quot;whole_Single_Gray&quot;,desc=&quot;整零灰度列表&quot;)
+    public static List wholeAndSingleGrayList;
+
+}
+
 </code></pre>
-<p><!-- raw HTML omitted -->}<!-- raw HTML omitted --></p>
-<p><!-- raw HTML omitted --><!-- raw HTML omitted --><!-- raw HTML omitted --><!-- raw HTML omitted -->3.3.1  开关命名重复问题<!-- raw HTML omitted --></p>
-<!-- raw HTML omitted -->
-<p><!-- raw HTML omitted -->DROP<!-- raw HTML omitted --> <!-- raw HTML omitted -->TABLE<!-- raw HTML omitted --> <!-- raw HTML omitted -->IF<!-- raw HTML omitted --> <!-- raw HTML omitted -->EXISTS<!-- raw HTML omitted --> <!-- raw HTML omitted --><code>&lt;/span&gt;machine&lt;span style=&quot;color:#f92672&quot;&gt;</code><!-- raw HTML omitted -->;
-<!-- raw HTML omitted -->CREATE<!-- raw HTML omitted --> <!-- raw HTML omitted -->TABLE<!-- raw HTML omitted --> <!-- raw HTML omitted --><code>&lt;/span&gt;machine&lt;span style=&quot;color:#f92672&quot;&gt;</code><!-- raw HTML omitted --> (
-<!-- raw HTML omitted --><code>&lt;/span&gt;id&lt;span style=&quot;color:#f92672&quot;&gt;</code><!-- raw HTML omitted --> bigint(<!-- raw HTML omitted -->20<!-- raw HTML omitted -->) <!-- raw HTML omitted -->NOT<!-- raw HTML omitted --> <!-- raw HTML omitted -->NULL<!-- raw HTML omitted --> AUTO_INCREMENT <!-- raw HTML omitted -->COMMENT<!-- raw HTML omitted --> <!-- raw HTML omitted -->'主键'<!-- raw HTML omitted -->,
-<!-- raw HTML omitted --><code>&lt;/span&gt;host_name&lt;span style=&quot;color:#f92672&quot;&gt;</code><!-- raw HTML omitted --> varchar(<!-- raw HTML omitted -->150<!-- raw HTML omitted -->) <!-- raw HTML omitted -->NOT<!-- raw HTML omitted --> <!-- raw HTML omitted -->NULL<!-- raw HTML omitted --> <!-- raw HTML omitted -->COMMENT<!-- raw HTML omitted --> <!-- raw HTML omitted -->'主机名'<!-- raw HTML omitted -->,
-<!-- raw HTML omitted --><code>&lt;/span&gt;ip&lt;span style=&quot;color:#f92672&quot;&gt;</code><!-- raw HTML omitted --> varchar(<!-- raw HTML omitted -->150<!-- raw HTML omitted -->) <!-- raw HTML omitted -->NOT<!-- raw HTML omitted --> <!-- raw HTML omitted -->NULL<!-- raw HTML omitted --> <!-- raw HTML omitted -->COMMENT<!-- raw HTML omitted --> <!-- raw HTML omitted -->'ip'<!-- raw HTML omitted -->,
-<!-- raw HTML omitted --><code>&lt;/span&gt;switch_id&lt;span style=&quot;color:#f92672&quot;&gt;</code><!-- raw HTML omitted --> bigint(<!-- raw HTML omitted -->20<!-- raw HTML omitted -->) <!-- raw HTML omitted -->NOT<!-- raw HTML omitted --> <!-- raw HTML omitted -->NULL<!-- raw HTML omitted --> <!-- raw HTML omitted -->COMMENT<!-- raw HTML omitted --> <!-- raw HTML omitted -->'开关的Id'<!-- raw HTML omitted -->,
-<!-- raw HTML omitted --><code>&lt;/span&gt;switch_name&lt;span style=&quot;color:#f92672&quot;&gt;</code><!-- raw HTML omitted --> varchar(<!-- raw HTML omitted -->1000<!-- raw HTML omitted -->) <!-- raw HTML omitted -->NOT<!-- raw HTML omitted --> <!-- raw HTML omitted -->NULL<!-- raw HTML omitted --> <!-- raw HTML omitted -->COMMENT<!-- raw HTML omitted --> <!-- raw HTML omitted -->'开关名称'<!-- raw HTML omitted -->,
-<!-- raw HTML omitted --><code>&lt;/span&gt;switch_value&lt;span style=&quot;color:#f92672&quot;&gt;</code><!-- raw HTML omitted --> varchar(<!-- raw HTML omitted -->1000<!-- raw HTML omitted -->) <!-- raw HTML omitted -->NOT<!-- raw HTML omitted --> <!-- raw HTML omitted -->NULL<!-- raw HTML omitted --> <!-- raw HTML omitted -->COMMENT<!-- raw HTML omitted --> <!-- raw HTML omitted -->'开关当前的值'<!-- raw HTML omitted -->,
-<!-- raw HTML omitted --><code>&lt;/span&gt;create_time&lt;span style=&quot;color:#f92672&quot;&gt;</code><!-- raw HTML omitted --> <!-- raw HTML omitted -->timestamp<!-- raw HTML omitted --> <!-- raw HTML omitted -->NOT<!-- raw HTML omitted --> <!-- raw HTML omitted -->NULL<!-- raw HTML omitted --> <!-- raw HTML omitted -->DEFAULT<!-- raw HTML omitted --> <!-- raw HTML omitted -->'1970-01-02 00:00:00'<!-- raw HTML omitted --> <!-- raw HTML omitted -->COMMENT<!-- raw HTML omitted --> <!-- raw HTML omitted -->'创建时间'<!-- raw HTML omitted -->,
-<!-- raw HTML omitted --><code>&lt;/span&gt;update_time&lt;span style=&quot;color:#f92672&quot;&gt;</code><!-- raw HTML omitted --> <!-- raw HTML omitted -->timestamp<!-- raw HTML omitted --> <!-- raw HTML omitted -->NOT<!-- raw HTML omitted --> <!-- raw HTML omitted -->NULL<!-- raw HTML omitted --> <!-- raw HTML omitted -->DEFAULT<!-- raw HTML omitted --> <!-- raw HTML omitted -->CURRENT_TIMESTAMP<!-- raw HTML omitted --> <!-- raw HTML omitted -->ON<!-- raw HTML omitted --> <!-- raw HTML omitted -->UPDATE<!-- raw HTML omitted --> <!-- raw HTML omitted -->CURRENT_TIMESTAMP<!-- raw HTML omitted --> <!-- raw HTML omitted -->COMMENT<!-- raw HTML omitted --> <!-- raw HTML omitted -->'更新时间'<!-- raw HTML omitted -->,
-<!-- raw HTML omitted --><code>&lt;/span&gt;is_deleted&lt;span style=&quot;color:#f92672&quot;&gt;</code><!-- raw HTML omitted --> tinyint(<!-- raw HTML omitted -->4<!-- raw HTML omitted -->) <!-- raw HTML omitted -->NOT<!-- raw HTML omitted --> <!-- raw HTML omitted -->NULL<!-- raw HTML omitted --> <!-- raw HTML omitted -->DEFAULT<!-- raw HTML omitted --> <!-- raw HTML omitted -->'0'<!-- raw HTML omitted --> <!-- raw HTML omitted -->COMMENT<!-- raw HTML omitted --> <!-- raw HTML omitted -->'是否删除 0 否，1 已经删除'<!-- raw HTML omitted -->,
-<!-- raw HTML omitted -->PRIMARY<!-- raw HTML omitted --> <!-- raw HTML omitted -->KEY<!-- raw HTML omitted --> (<!-- raw HTML omitted --><code>&lt;/span&gt;id&lt;span style=&quot;color:#f92672&quot;&gt;</code><!-- raw HTML omitted -->),
-) ENGINE<!-- raw HTML omitted -->=<!-- raw HTML omitted -->InnoDB <!-- raw HTML omitted -->DEFAULT<!-- raw HTML omitted --> CHARSET<!-- raw HTML omitted -->=<!-- raw HTML omitted -->utf8 <!-- raw HTML omitted -->COMMENT<!-- raw HTML omitted --><!-- raw HTML omitted -->=<!-- raw HTML omitted --><!-- raw HTML omitted -->'机器表'<!-- raw HTML omitted -->;</p>
-<p><!-- raw HTML omitted -->DROP<!-- raw HTML omitted --> <!-- raw HTML omitted -->TABLE<!-- raw HTML omitted --> <!-- raw HTML omitted -->IF<!-- raw HTML omitted --> <!-- raw HTML omitted -->EXISTS<!-- raw HTML omitted --> <!-- raw HTML omitted --><code>&lt;/span&gt;push_log&lt;span style=&quot;color:#f92672&quot;&gt;</code><!-- raw HTML omitted -->;
-<!-- raw HTML omitted -->CREATE<!-- raw HTML omitted --> <!-- raw HTML omitted -->TABLE<!-- raw HTML omitted --> <!-- raw HTML omitted --><code>&lt;/span&gt;push_log&lt;span style=&quot;color:#f92672&quot;&gt;</code><!-- raw HTML omitted --> (
-<!-- raw HTML omitted --><code>&lt;/span&gt;id&lt;span style=&quot;color:#f92672&quot;&gt;</code><!-- raw HTML omitted --> bigint(<!-- raw HTML omitted -->20<!-- raw HTML omitted -->) <!-- raw HTML omitted -->NOT<!-- raw HTML omitted --> <!-- raw HTML omitted -->NULL<!-- raw HTML omitted --> AUTO_INCREMENT <!-- raw HTML omitted -->COMMENT<!-- raw HTML omitted --> <!-- raw HTML omitted -->'主键'<!-- raw HTML omitted -->,
-<!-- raw HTML omitted --><code>&lt;/span&gt;switch_id&lt;span style=&quot;color:#f92672&quot;&gt;</code><!-- raw HTML omitted --> bigint(<!-- raw HTML omitted -->20<!-- raw HTML omitted -->) <!-- raw HTML omitted -->NOT<!-- raw HTML omitted --> <!-- raw HTML omitted -->NULL<!-- raw HTML omitted --> <!-- raw HTML omitted -->COMMENT<!-- raw HTML omitted --> <!-- raw HTML omitted -->'开关的Id'<!-- raw HTML omitted -->,
-<!-- raw HTML omitted --><code>&lt;/span&gt;switch_name&lt;span style=&quot;color:#f92672&quot;&gt;</code><!-- raw HTML omitted --> varchar(<!-- raw HTML omitted -->100<!-- raw HTML omitted -->) <!-- raw HTML omitted -->NOT<!-- raw HTML omitted --> <!-- raw HTML omitted -->NULL<!-- raw HTML omitted --> <!-- raw HTML omitted -->COMMENT<!-- raw HTML omitted --> <!-- raw HTML omitted -->'开关名称'<!-- raw HTML omitted -->,
-<!-- raw HTML omitted --><code>&lt;/span&gt;switch_value&lt;span style=&quot;color:#f92672&quot;&gt;</code><!-- raw HTML omitted --> varchar(<!-- raw HTML omitted -->1000<!-- raw HTML omitted -->) <!-- raw HTML omitted -->NOT<!-- raw HTML omitted --> <!-- raw HTML omitted -->NULL<!-- raw HTML omitted --> <!-- raw HTML omitted -->COMMENT<!-- raw HTML omitted --> <!-- raw HTML omitted -->'开关当前的值'<!-- raw HTML omitted -->,
-<!-- raw HTML omitted --><code>&lt;/span&gt;operator_name&lt;span style=&quot;color:#f92672&quot;&gt;</code><!-- raw HTML omitted --> varchar(<!-- raw HTML omitted -->20<!-- raw HTML omitted -->) <!-- raw HTML omitted -->NOT<!-- raw HTML omitted --> <!-- raw HTML omitted -->NULL<!-- raw HTML omitted --> <!-- raw HTML omitted -->COMMENT<!-- raw HTML omitted --> <!-- raw HTML omitted -->'操作人姓名'<!-- raw HTML omitted -->,
-<!-- raw HTML omitted --><code>&lt;/span&gt;host_name_list&lt;span style=&quot;color:#f92672&quot;&gt;</code><!-- raw HTML omitted --> varchar(<!-- raw HTML omitted -->150<!-- raw HTML omitted -->) <!-- raw HTML omitted -->NOT<!-- raw HTML omitted --> <!-- raw HTML omitted -->NULL<!-- raw HTML omitted --> <!-- raw HTML omitted -->COMMENT<!-- raw HTML omitted --> <!-- raw HTML omitted -->'主机名列表'<!-- raw HTML omitted -->,
-<!-- raw HTML omitted --><code>&lt;/span&gt;machine_id_list&lt;span style=&quot;color:#f92672&quot;&gt;</code><!-- raw HTML omitted --> bigint(<!-- raw HTML omitted -->20<!-- raw HTML omitted -->) <!-- raw HTML omitted -->NOT<!-- raw HTML omitted --> <!-- raw HTML omitted -->NULL<!-- raw HTML omitted --> <!-- raw HTML omitted -->COMMENT<!-- raw HTML omitted --> <!-- raw HTML omitted -->'机器id列表'<!-- raw HTML omitted -->,
-<!-- raw HTML omitted --><code>&lt;/span&gt;ip_list&lt;span style=&quot;color:#f92672&quot;&gt;</code><!-- raw HTML omitted --> varchar(<!-- raw HTML omitted -->150<!-- raw HTML omitted -->) <!-- raw HTML omitted -->NOT<!-- raw HTML omitted --> <!-- raw HTML omitted -->NULL<!-- raw HTML omitted --> <!-- raw HTML omitted -->COMMENT<!-- raw HTML omitted --> <!-- raw HTML omitted -->'ip'<!-- raw HTML omitted -->,
-<!-- raw HTML omitted --><code>&lt;/span&gt;status&lt;span style=&quot;color:#f92672&quot;&gt;</code><!-- raw HTML omitted --> tinyint(<!-- raw HTML omitted -->4<!-- raw HTML omitted -->) <!-- raw HTML omitted -->NOT<!-- raw HTML omitted --> <!-- raw HTML omitted -->NULL<!-- raw HTML omitted --> <!-- raw HTML omitted -->COMMENT<!-- raw HTML omitted --> <!-- raw HTML omitted -->'推送 0 成功 1 失败'<!-- raw HTML omitted -->,
-<!-- raw HTML omitted --><code>&lt;/span&gt;create_time&lt;span style=&quot;color:#f92672&quot;&gt;</code><!-- raw HTML omitted --> <!-- raw HTML omitted -->timestamp<!-- raw HTML omitted --> <!-- raw HTML omitted -->NOT<!-- raw HTML omitted --> <!-- raw HTML omitted -->NULL<!-- raw HTML omitted --> <!-- raw HTML omitted -->DEFAULT<!-- raw HTML omitted --> <!-- raw HTML omitted -->'1970-01-02 00:00:00'<!-- raw HTML omitted --> <!-- raw HTML omitted -->COMMENT<!-- raw HTML omitted --> <!-- raw HTML omitted -->'创建时间'<!-- raw HTML omitted -->,
-<!-- raw HTML omitted --><code>&lt;/span&gt;update_time&lt;span style=&quot;color:#f92672&quot;&gt;</code><!-- raw HTML omitted --> <!-- raw HTML omitted -->timestamp<!-- raw HTML omitted --> <!-- raw HTML omitted -->NOT<!-- raw HTML omitted --> <!-- raw HTML omitted -->NULL<!-- raw HTML omitted --> <!-- raw HTML omitted -->DEFAULT<!-- raw HTML omitted --> <!-- raw HTML omitted -->CURRENT_TIMESTAMP<!-- raw HTML omitted --> <!-- raw HTML omitted -->ON<!-- raw HTML omitted --> <!-- raw HTML omitted -->UPDATE<!-- raw HTML omitted --> <!-- raw HTML omitted -->CURRENT_TIMESTAMP<!-- raw HTML omitted --> <!-- raw HTML omitted -->COMMENT<!-- raw HTML omitted --> <!-- raw HTML omitted -->'更新时间'<!-- raw HTML omitted -->,
-<!-- raw HTML omitted --><code>&lt;/span&gt;is_deleted&lt;span style=&quot;color:#f92672&quot;&gt;</code><!-- raw HTML omitted --> tinyint(<!-- raw HTML omitted -->4<!-- raw HTML omitted -->) <!-- raw HTML omitted -->NOT<!-- raw HTML omitted --> <!-- raw HTML omitted -->NULL<!-- raw HTML omitted --> <!-- raw HTML omitted -->DEFAULT<!-- raw HTML omitted --> <!-- raw HTML omitted -->'0'<!-- raw HTML omitted --> <!-- raw HTML omitted -->COMMENT<!-- raw HTML omitted --> <!-- raw HTML omitted -->'是否删除 0 否，1 已经删除'<!-- raw HTML omitted -->,
-<!-- raw HTML omitted -->PRIMARY<!-- raw HTML omitted --> <!-- raw HTML omitted -->KEY<!-- raw HTML omitted --> (<!-- raw HTML omitted --><code>&lt;/span&gt;id&lt;span style=&quot;color:#f92672&quot;&gt;</code><!-- raw HTML omitted -->),
-) ENGINE<!-- raw HTML omitted -->=<!-- raw HTML omitted -->InnoDB <!-- raw HTML omitted -->DEFAULT<!-- raw HTML omitted --> CHARSET<!-- raw HTML omitted -->=<!-- raw HTML omitted -->utf8 <!-- raw HTML omitted -->COMMENT<!-- raw HTML omitted --><!-- raw HTML omitted -->=<!-- raw HTML omitted --><!-- raw HTML omitted -->'开关推送记录'<!-- raw HTML omitted -->;</p>
-<p><!-- raw HTML omitted --><!-- raw HTML omitted --><!-- raw HTML omitted --><!-- raw HTML omitted -->5.开关接入<!-- raw HTML omitted --></p>
-<!-- raw HTML omitted -->
+
+<h4 id="3-3-1-开关命名重复问题">3.3.1  开关命名重复问题</h4>
+
+<p>在设计系统的时候，开关是否要共享给所有系统，还是其中某一个系统，如果共享给所有系统，那么有权限的人对开关命名的时候难免会重复，针对此，一个系统对应一个appid，在一个appid内开关名称不允许有重复，只有该appid的owner才有权限对该appid的下的开关做操作。</p>
+
+<blockquote>
+<p>这里的AppId和配置中心的Appid一一对应</p>
+</blockquote>
+
+<h2 id="4-管控平台设计">4.管控平台设计</h2>
+
+<h3 id="4-1管控平台原型设计">4.1管控平台原型设计</h3>
+
+<h4 id="4-1-1-开关管理">4.1.1 开关管理</h4>
+
+<p>整个应用某个开关推送</p>
+
+<p><img src="4.png" alt="" /></p>
+
+<h4 id="4-1-2-应用管理">4.1.2 应用管理</h4>
+
+<p>对接入开关中间件的应用进行管理</p>
+
+<h4 id="4-1-3-推送记录">4.1.3 推送记录</h4>
+
+<p><img src="5.png" alt="" /></p>
+
+<h4 id="4-1-4-机器管理">4.1.4 机器管理</h4>
+
+<p>接入开关中间件的开关应用实例机器管理</p>
+
+<h4 id="4-1-4-开关权限管理">4.1.4 开关权限管理</h4>
+
+<p>开关的修改变更管理</p>
+
+<h3 id="4-2-表设计">4.2 表设计</h3>
+
+<pre><code class="language-sql">DROP TABLE IF EXISTS `switch`;
+CREATE TABLE `switch` (
+  `id` bigint(20) NOT NULL AUTO_INCREMENT COMMENT '主键',
+  `name` varchar(150) DEFAULT NULL COMMENT '开关名',
+  `app_name` varchar(200) NOT NULL COMMENT 'app的名称',
+  `value` varchar(1000) NOT NULL COMMENT '开关对应的值',
+  `group_name` varchar(128) NOT NULL COMMENT '开关分组名称',
+  `group_code` varchar(128) NOT NULL COMMENT '开关分组code',
+  `is_deleted` tinyint(4) NOT NULL DEFAULT '0' COMMENT '是否删除 0 否，1 已经删除',
+  `create_time` timestamp NOT NULL DEFAULT '1970-01-02 00:00:00' COMMENT '创建时间',
+  `update_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
+  `status` tinyint(4) NOT NULL COMMENT '开关状态(0 注册、1 在线、2.下线 3 失效)',
+  PRIMARY KEY (`id`),
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='开关表';
+
+DROP TABLE IF EXISTS `machine`;
+CREATE TABLE `machine` (
+  `id` bigint(20) NOT NULL AUTO_INCREMENT COMMENT '主键',
+  `host_name` varchar(150) NOT NULL COMMENT '主机名',
+  `ip` varchar(150) NOT NULL COMMENT 'ip',
+  `switch_id` bigint(20) NOT NULL COMMENT '开关的Id',
+  `switch_name` varchar(1000) NOT NULL COMMENT '开关名称',
+  `switch_value` varchar(1000) NOT NULL COMMENT '开关当前的值',
+  `create_time` timestamp NOT NULL DEFAULT '1970-01-02 00:00:00' COMMENT '创建时间',
+  `update_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
+  `is_deleted` tinyint(4) NOT NULL DEFAULT '0' COMMENT '是否删除 0 否，1 已经删除',
+  PRIMARY KEY (`id`),
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='机器表';
+
+DROP TABLE IF EXISTS `push_log`;
+CREATE TABLE `push_log` (
+  `id` bigint(20) NOT NULL AUTO_INCREMENT COMMENT '主键',
+  `switch_id` bigint(20) NOT NULL COMMENT '开关的Id',
+  `switch_name` varchar(100) NOT NULL COMMENT '开关名称',
+  `switch_value` varchar(1000) NOT NULL COMMENT '开关当前的值',
+  `operator_name` varchar(20) NOT NULL COMMENT '操作人姓名',
+  `host_name_list` varchar(150) NOT NULL COMMENT '主机名列表',
+  `machine_id_list` bigint(20) NOT NULL COMMENT '机器id列表',
+  `ip_list` varchar(150) NOT NULL COMMENT 'ip',
+  `status` tinyint(4) NOT NULL COMMENT '推送 0 成功 1 失败',
+  `create_time` timestamp NOT NULL DEFAULT '1970-01-02 00:00:00' COMMENT '创建时间',
+  `update_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
+  `is_deleted` tinyint(4) NOT NULL DEFAULT '0' COMMENT '是否删除 0 否，1 已经删除',
+  PRIMARY KEY (`id`),
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='开关推送记录';
+
+</code></pre>
+
+<h2 id="5-开关接入">5.开关接入</h2>
+
+<p>引入SDK，配置应用名自动注册发现接入</p>
+
+<h3 id="5-1-定义开关">5.1 定义开关</h3>
+
+<p>通过@Switch注解即可定义开关。</p>
+
+<h2 id="6-总结">6 总结</h2>
+
+<p>Switch开关中间件还在设计开发之中，后续会分享更多内容。</p>
 
 </article>
 
@@ -418,37 +716,46 @@ if (!doNotTrack) {
 		目录
 	</h2>
   <nav id="TableOfContents">
-  <ul>
-    <li><a href="#1开关中间件">1.开关中间件</a>
-      <ul>
-        <li><a href="#11-switch概述">1.1 Switch概述</a></li>
-        <li><a href="#12-switch使用的业务场景">1.2 Switch使用的业务场景</a></li>
-        <li><a href="#22-switch的分类">2.2 Switch的分类:</a></li>
-        <li><a href="#23-分布式switch的需求">2.3 分布式Switch的需求</a></li>
-        <li><a href="#24-switch竞品分析">2.4 Switch竞品分析</a></li>
-        <li><a href="#25-switch具备的功能">2.5 Switch具备的功能</a></li>
-      </ul>
-    </li>
-    <li><a href="#3switch设计">3.Switch设计</a>
-      <ul>
-        <li><a href="#31-switch的方案设计">3.1 Switch的方案设计</a></li>
-        <li><a href="#32-功能模块设计">3.2 功能模块设计</a></li>
-        <li><a href="#33-switch的客户端设计">3.3 Switch的客户端设计</a></li>
-      </ul>
-    </li>
-    <li><a href="#4管控平台设计">4.管控平台设计</a>
-      <ul>
-        <li><a href="#41管控平台原型设计">4.1管控平台原型设计</a></li>
-        <li><a href="#42-表设计">4.2 表设计</a></li>
-      </ul>
-    </li>
-    <li><a href="#5开关接入">5.开关接入</a>
-      <ul>
-        <li><a href="#51-定义开关">5.1 定义开关</a></li>
-      </ul>
-    </li>
-    <li><a href="#6-总结">6 总结</a></li>
-  </ul>
+<ul>
+<li>
+<ul>
+<li><a href="#1-开关中间件">1.开关中间件</a>
+<ul>
+<li><a href="#1-1-switch概述">1.1 Switch概述</a></li>
+<li><a href="#1-2-switch使用的业务场景">1.2 Switch使用的业务场景</a></li>
+<li><a href="#2-2-switch的分类">2.2 Switch的分类:</a></li>
+<li><a href="#2-3-分布式switch的需求">2.3 分布式Switch的需求</a></li>
+<li><a href="#2-4-switch竞品分析">2.4 Switch竞品分析</a></li>
+<li><a href="#2-5-switch具备的功能">2.5 Switch具备的功能</a></li>
+</ul></li>
+<li><a href="#3-switch设计">3.Switch设计</a>
+<ul>
+<li><a href="#3-1-switch的方案设计">3.1 Switch的方案设计</a></li>
+<li><a href="#3-2-功能模块设计">3.2 功能模块设计</a></li>
+<li><a href="#3-3-switch的客户端设计">3.3 Switch的客户端设计</a>
+<ul>
+<li><a href="#3-3-1-开关命名重复问题">3.3.1  开关命名重复问题</a></li>
+</ul></li>
+</ul></li>
+<li><a href="#4-管控平台设计">4.管控平台设计</a>
+<ul>
+<li><a href="#4-1管控平台原型设计">4.1管控平台原型设计</a>
+<ul>
+<li><a href="#4-1-1-开关管理">4.1.1 开关管理</a></li>
+<li><a href="#4-1-2-应用管理">4.1.2 应用管理</a></li>
+<li><a href="#4-1-3-推送记录">4.1.3 推送记录</a></li>
+<li><a href="#4-1-4-机器管理">4.1.4 机器管理</a></li>
+<li><a href="#4-1-4-开关权限管理">4.1.4 开关权限管理</a></li>
+</ul></li>
+<li><a href="#4-2-表设计">4.2 表设计</a></li>
+</ul></li>
+<li><a href="#5-开关接入">5.开关接入</a>
+<ul>
+<li><a href="#5-1-定义开关">5.1 定义开关</a></li>
+</ul></li>
+<li><a href="#6-总结">6 总结</a></li>
+</ul></li>
+</ul>
 </nav>
 </div>
 

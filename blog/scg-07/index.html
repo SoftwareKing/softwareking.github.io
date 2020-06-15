@@ -10,7 +10,7 @@
 <meta name="viewport" content="width=device-width,minimum-scale=1">
 <meta name="description" content="玹霖志,许进沉思录,许进|Spring Cloud,中间件，基础架构，www.xujin.org,xujin.org,-许进沉思录,Venus&#43;,云首科技有限公司,云计算，大数据，物联网，Software_king的博客,云计算Saas，云计算Paas，云计算Iaas Hadoop，大数据，JavaEE，Java，物联网，Hadoop， NoSQL，MongoDB,Spring, Hibernate,Struts2," />
 
-<meta name="generator" content="Hugo 0.72.0" /><link rel="shortcut icon" href=/img/icon.png type="image/png">
+<meta name="generator" content="Hugo 0.55.6" /><link rel="shortcut icon" href=/img/icon.png type="image/png">
 
 <link href="https://unpkg.com/purecss@1.0.0/build/base-min.css" rel="stylesheet">
 
@@ -259,118 +259,171 @@ if (!doNotTrack) {
 	});
   </script>
 		<article class="typo">
-	<!-- raw HTML omitted -->
-<pre><code>&lt;span style=&quot;color:#f92672&quot;&gt;&amp;lt;dependencyManagement&amp;gt;&lt;/span&gt;
-    &lt;span style=&quot;color:#f92672&quot;&gt;&amp;lt;dependencies&amp;gt;&lt;/span&gt;
-        &lt;span style=&quot;color:#f92672&quot;&gt;&amp;lt;dependency&amp;gt;&lt;/span&gt;
-            &lt;span style=&quot;color:#f92672&quot;&gt;&amp;lt;groupId&amp;gt;&lt;/span&gt;org.springframework.cloud&lt;span style=&quot;color:#f92672&quot;&gt;&amp;lt;/groupId&amp;gt;&lt;/span&gt;
-            &lt;span style=&quot;color:#f92672&quot;&gt;&amp;lt;artifactId&amp;gt;&lt;/span&gt;spring-cloud-dependencies&lt;span style=&quot;color:#f92672&quot;&gt;&amp;lt;/artifactId&amp;gt;&lt;/span&gt;
-            &lt;span style=&quot;color:#f92672&quot;&gt;&amp;lt;version&amp;gt;&lt;/span&gt;${spring-cloud.version}&lt;span style=&quot;color:#f92672&quot;&gt;&amp;lt;/version&amp;gt;&lt;/span&gt;
-            &lt;span style=&quot;color:#f92672&quot;&gt;&amp;lt;type&amp;gt;&lt;/span&gt;pom&lt;span style=&quot;color:#f92672&quot;&gt;&amp;lt;/type&amp;gt;&lt;/span&gt;
-            &lt;span style=&quot;color:#f92672&quot;&gt;&amp;lt;scope&amp;gt;&lt;/span&gt;import&lt;span style=&quot;color:#f92672&quot;&gt;&amp;lt;/scope&amp;gt;&lt;/span&gt;
-        &lt;span style=&quot;color:#f92672&quot;&gt;&amp;lt;/dependency&amp;gt;&lt;/span&gt;
-    &lt;span style=&quot;color:#f92672&quot;&gt;&amp;lt;/dependencies&amp;gt;&lt;/span&gt;
-&lt;span style=&quot;color:#f92672&quot;&gt;&amp;lt;/dependencyManagement&amp;gt;&lt;/span&gt;
+	<p><strong>摘要</strong>:本篇文章主要介绍了Spring Cloud Gateway核心概念和After路由断言，因为比较简单所以就<code>抛砖引玉，旨在帮助大家快速入门Spring Cloud Gateway</code>，欢迎大家<code>加我微信Software_King</code>，进入Spring Cloud中国社区微信群交流。</p>
 
-&lt;span style=&quot;color:#f92672&quot;&gt;&amp;lt;dependencies&amp;gt;&lt;/span&gt;
-    &lt;span style=&quot;color:#f92672&quot;&gt;&amp;lt;dependency&amp;gt;&lt;/span&gt;
-        &lt;span style=&quot;color:#f92672&quot;&gt;&amp;lt;groupId&amp;gt;&lt;/span&gt;org.springframework.boot&lt;span style=&quot;color:#f92672&quot;&gt;&amp;lt;/groupId&amp;gt;&lt;/span&gt;
-        &lt;span style=&quot;color:#f92672&quot;&gt;&amp;lt;artifactId&amp;gt;&lt;/span&gt;spring-boot-starter-actuator&lt;span style=&quot;color:#f92672&quot;&gt;&amp;lt;/artifactId&amp;gt;&lt;/span&gt;
-    &lt;span style=&quot;color:#f92672&quot;&gt;&amp;lt;/dependency&amp;gt;&lt;/span&gt;
-    &lt;span style=&quot;color:#f92672&quot;&gt;&amp;lt;dependency&amp;gt;&lt;/span&gt;
-        &lt;span style=&quot;color:#f92672&quot;&gt;&amp;lt;groupId&amp;gt;&lt;/span&gt;org.springframework.cloud&lt;span style=&quot;color:#f92672&quot;&gt;&amp;lt;/groupId&amp;gt;&lt;/span&gt;
-        &lt;span style=&quot;color:#f92672&quot;&gt;&amp;lt;artifactId&amp;gt;&lt;/span&gt;spring-cloud-starter-gateway&lt;span style=&quot;color:#f92672&quot;&gt;&amp;lt;/artifactId&amp;gt;&lt;/span&gt;
-    &lt;span style=&quot;color:#f92672&quot;&gt;&amp;lt;/dependency&amp;gt;&lt;/span&gt;
+<h2 id="1-spring-cloud-gateway核心概念">1.Spring Cloud Gateway核心概念</h2>
 
-    &lt;span style=&quot;color:#f92672&quot;&gt;&amp;lt;dependency&amp;gt;&lt;/span&gt;
-        &lt;span style=&quot;color:#f92672&quot;&gt;&amp;lt;groupId&amp;gt;&lt;/span&gt;org.springframework.boot&lt;span style=&quot;color:#f92672&quot;&gt;&amp;lt;/groupId&amp;gt;&lt;/span&gt;
-        &lt;span style=&quot;color:#f92672&quot;&gt;&amp;lt;artifactId&amp;gt;&lt;/span&gt;spring-boot-devtools&lt;span style=&quot;color:#f92672&quot;&gt;&amp;lt;/artifactId&amp;gt;&lt;/span&gt;
-        &lt;span style=&quot;color:#f92672&quot;&gt;&amp;lt;scope&amp;gt;&lt;/span&gt;runtime&lt;span style=&quot;color:#f92672&quot;&gt;&amp;lt;/scope&amp;gt;&lt;/span&gt;
-    &lt;span style=&quot;color:#f92672&quot;&gt;&amp;lt;/dependency&amp;gt;&lt;/span&gt;
+<p>网关简单的说就是提供一个对外统一的API入口和出口，统管企业对外的所有API出口。一般来说，网关对外暴露的URL或者接口信息，我们统称之为路由信息。如果研发过网关中间件，或者使用或了解过ZUUL的，网关的核心肯定是Filter以及Filter Chain(Filter责任链)。Spring Cloud Gateway也具有路由信息和Filter。下面介绍一下Spring Cloud gateway中最重要的几个概念:</p>
 
-    &lt;span style=&quot;color:#f92672&quot;&gt;&amp;lt;dependency&amp;gt;&lt;/span&gt;
-        &lt;span style=&quot;color:#f92672&quot;&gt;&amp;lt;groupId&amp;gt;&lt;/span&gt;org.springframework.boot&lt;span style=&quot;color:#f92672&quot;&gt;&amp;lt;/groupId&amp;gt;&lt;/span&gt;
-        &lt;span style=&quot;color:#f92672&quot;&gt;&amp;lt;artifactId&amp;gt;&lt;/span&gt;spring-boot-starter-test&lt;span style=&quot;color:#f92672&quot;&gt;&amp;lt;/artifactId&amp;gt;&lt;/span&gt;
-        &lt;span style=&quot;color:#f92672&quot;&gt;&amp;lt;scope&amp;gt;&lt;/span&gt;test&lt;span style=&quot;color:#f92672&quot;&gt;&amp;lt;/scope&amp;gt;&lt;/span&gt;
-    &lt;span style=&quot;color:#f92672&quot;&gt;&amp;lt;/dependency&amp;gt;&lt;/span&gt;
+<ul>
+<li><code>路由(route)</code>:路由是网关最基础的部分，路由信息由一个ID、一个目的url、一组断言工厂和一组Filter组成。如果路由断言工厂为真，则说明请求的Url和配置的路由匹配。</li>
+<li><code>断言(Predicate)</code>: java 8中的断言函数。Spring Cloud Gateway中的断言函数输入类型是Spring 5.0框架中的ServerWebExchange。Spring Cloud Gateway中的断言函数允许开发者去定义匹配来自于http request中的任何信息，比如请求头和参数等。</li>
+<li><code>过滤器(filter)</code>:一个标准的Spring webFilter。Spring Cloud Gateway中的Filter分为两种类型的Filter，分别是Gateway Filter和Global Filter.网关 Filter实例是由Spring 框架中的网关Filter的特殊工厂构造。request在转发到目前服务之前，response在返回到调用端之前都可以被修改或者自定义。</li>
+</ul>
 
-    &lt;span style=&quot;color:#f92672&quot;&gt;&amp;lt;dependency&amp;gt;&lt;/span&gt;
-        &lt;span style=&quot;color:#f92672&quot;&gt;&amp;lt;groupId&amp;gt;&lt;/span&gt;org.springframework.boot&lt;span style=&quot;color:#f92672&quot;&gt;&amp;lt;/groupId&amp;gt;&lt;/span&gt;
-        &lt;span style=&quot;color:#f92672&quot;&gt;&amp;lt;artifactId&amp;gt;&lt;/span&gt;spring-boot-starter-webflux&lt;span style=&quot;color:#f92672&quot;&gt;&amp;lt;/artifactId&amp;gt;&lt;/span&gt;
-    &lt;span style=&quot;color:#f92672&quot;&gt;&amp;lt;/dependency&amp;gt;&lt;/span&gt;
+<h2 id="2-什么是after路由断言">2.什么是After路由断言</h2>
 
-&lt;span style=&quot;color:#f92672&quot;&gt;&amp;lt;/dependencies&amp;gt;&lt;/span&gt;
-&lt;span style=&quot;color:#f92672&quot;&gt;&amp;lt;build&amp;gt;&lt;/span&gt;
-    &lt;span style=&quot;color:#f92672&quot;&gt;&amp;lt;plugins&amp;gt;&lt;/span&gt;
-        &lt;span style=&quot;color:#f92672&quot;&gt;&amp;lt;plugin&amp;gt;&lt;/span&gt;
-            &lt;span style=&quot;color:#f92672&quot;&gt;&amp;lt;groupId&amp;gt;&lt;/span&gt;org.springframework.boot&lt;span style=&quot;color:#f92672&quot;&gt;&amp;lt;/groupId&amp;gt;&lt;/span&gt;
-            &lt;span style=&quot;color:#f92672&quot;&gt;&amp;lt;artifactId&amp;gt;&lt;/span&gt;spring-boot-maven-plugin&lt;span style=&quot;color:#f92672&quot;&gt;&amp;lt;/artifactId&amp;gt;&lt;/span&gt;
-        &lt;span style=&quot;color:#f92672&quot;&gt;&amp;lt;/plugin&amp;gt;&lt;/span&gt;
-    &lt;span style=&quot;color:#f92672&quot;&gt;&amp;lt;/plugins&amp;gt;&lt;/span&gt;
-&lt;span style=&quot;color:#f92672&quot;&gt;&amp;lt;/build&amp;gt;&lt;/span&gt;
+<p>After Route Predicate Factory带有一个UTC时间格式的时间参数，当请求进来的当前时间在路由断言工厂之后会成功匹配，否则不能成功匹配。</p>
 
-&lt;span style=&quot;color:#f92672&quot;&gt;&amp;lt;repositories&amp;gt;&lt;/span&gt;
-    &lt;span style=&quot;color:#f92672&quot;&gt;&amp;lt;repository&amp;gt;&lt;/span&gt;
-        &lt;span style=&quot;color:#f92672&quot;&gt;&amp;lt;id&amp;gt;&lt;/span&gt;spring-snapshots&lt;span style=&quot;color:#f92672&quot;&gt;&amp;lt;/id&amp;gt;&lt;/span&gt;
-        &lt;span style=&quot;color:#f92672&quot;&gt;&amp;lt;name&amp;gt;&lt;/span&gt;Spring Snapshots&lt;span style=&quot;color:#f92672&quot;&gt;&amp;lt;/name&amp;gt;&lt;/span&gt;
-        &lt;span style=&quot;color:#f92672&quot;&gt;&amp;lt;url&amp;gt;&lt;/span&gt;https://repo.spring.io/snapshot&lt;span style=&quot;color:#f92672&quot;&gt;&amp;lt;/url&amp;gt;&lt;/span&gt;
-        &lt;span style=&quot;color:#f92672&quot;&gt;&amp;lt;snapshots&amp;gt;&lt;/span&gt;
-            &lt;span style=&quot;color:#f92672&quot;&gt;&amp;lt;enabled&amp;gt;&lt;/span&gt;true&lt;span style=&quot;color:#f92672&quot;&gt;&amp;lt;/enabled&amp;gt;&lt;/span&gt;
-        &lt;span style=&quot;color:#f92672&quot;&gt;&amp;lt;/snapshots&amp;gt;&lt;/span&gt;
-    &lt;span style=&quot;color:#f92672&quot;&gt;&amp;lt;/repository&amp;gt;&lt;/span&gt;
-    &lt;span style=&quot;color:#f92672&quot;&gt;&amp;lt;repository&amp;gt;&lt;/span&gt;
-        &lt;span style=&quot;color:#f92672&quot;&gt;&amp;lt;id&amp;gt;&lt;/span&gt;spring-milestones&lt;span style=&quot;color:#f92672&quot;&gt;&amp;lt;/id&amp;gt;&lt;/span&gt;
-        &lt;span style=&quot;color:#f92672&quot;&gt;&amp;lt;name&amp;gt;&lt;/span&gt;Spring Milestones&lt;span style=&quot;color:#f92672&quot;&gt;&amp;lt;/name&amp;gt;&lt;/span&gt;
-        &lt;span style=&quot;color:#f92672&quot;&gt;&amp;lt;url&amp;gt;&lt;/span&gt;https://repo.spring.io/milestone&lt;span style=&quot;color:#f92672&quot;&gt;&amp;lt;/url&amp;gt;&lt;/span&gt;
-        &lt;span style=&quot;color:#f92672&quot;&gt;&amp;lt;snapshots&amp;gt;&lt;/span&gt;
-            &lt;span style=&quot;color:#f92672&quot;&gt;&amp;lt;enabled&amp;gt;&lt;/span&gt;false&lt;span style=&quot;color:#f92672&quot;&gt;&amp;lt;/enabled&amp;gt;&lt;/span&gt;
-        &lt;span style=&quot;color:#f92672&quot;&gt;&amp;lt;/snapshots&amp;gt;&lt;/span&gt;
-    &lt;span style=&quot;color:#f92672&quot;&gt;&amp;lt;/repository&amp;gt;&lt;/span&gt;
-&lt;span style=&quot;color:#f92672&quot;&gt;&amp;lt;/repositories&amp;gt;&lt;/span&gt;
+<h2 id="3-after路由断言工厂的案例">3.After路由断言工厂的案例</h2>
 
-&lt;span style=&quot;color:#f92672&quot;&gt;&amp;lt;pluginRepositories&amp;gt;&lt;/span&gt;
-    &lt;span style=&quot;color:#f92672&quot;&gt;&amp;lt;pluginRepository&amp;gt;&lt;/span&gt;
-        &lt;span style=&quot;color:#f92672&quot;&gt;&amp;lt;id&amp;gt;&lt;/span&gt;spring-snapshots&lt;span style=&quot;color:#f92672&quot;&gt;&amp;lt;/id&amp;gt;&lt;/span&gt;
-        &lt;span style=&quot;color:#f92672&quot;&gt;&amp;lt;name&amp;gt;&lt;/span&gt;Spring Snapshots&lt;span style=&quot;color:#f92672&quot;&gt;&amp;lt;/name&amp;gt;&lt;/span&gt;
-        &lt;span style=&quot;color:#f92672&quot;&gt;&amp;lt;url&amp;gt;&lt;/span&gt;https://repo.spring.io/snapshot&lt;span style=&quot;color:#f92672&quot;&gt;&amp;lt;/url&amp;gt;&lt;/span&gt;
-        &lt;span style=&quot;color:#f92672&quot;&gt;&amp;lt;snapshots&amp;gt;&lt;/span&gt;
-            &lt;span style=&quot;color:#f92672&quot;&gt;&amp;lt;enabled&amp;gt;&lt;/span&gt;true&lt;span style=&quot;color:#f92672&quot;&gt;&amp;lt;/enabled&amp;gt;&lt;/span&gt;
-        &lt;span style=&quot;color:#f92672&quot;&gt;&amp;lt;/snapshots&amp;gt;&lt;/span&gt;
-    &lt;span style=&quot;color:#f92672&quot;&gt;&amp;lt;/pluginRepository&amp;gt;&lt;/span&gt;
-    &lt;span style=&quot;color:#f92672&quot;&gt;&amp;lt;pluginRepository&amp;gt;&lt;/span&gt;
-        &lt;span style=&quot;color:#f92672&quot;&gt;&amp;lt;id&amp;gt;&lt;/span&gt;spring-milestones&lt;span style=&quot;color:#f92672&quot;&gt;&amp;lt;/id&amp;gt;&lt;/span&gt;
-        &lt;span style=&quot;color:#f92672&quot;&gt;&amp;lt;name&amp;gt;&lt;/span&gt;Spring Milestones&lt;span style=&quot;color:#f92672&quot;&gt;&amp;lt;/name&amp;gt;&lt;/span&gt;
-        &lt;span style=&quot;color:#f92672&quot;&gt;&amp;lt;url&amp;gt;&lt;/span&gt;https://repo.spring.io/milestone&lt;span style=&quot;color:#f92672&quot;&gt;&amp;lt;/url&amp;gt;&lt;/span&gt;
-        &lt;span style=&quot;color:#f92672&quot;&gt;&amp;lt;snapshots&amp;gt;&lt;/span&gt;
-            &lt;span style=&quot;color:#f92672&quot;&gt;&amp;lt;enabled&amp;gt;&lt;/span&gt;false&lt;span style=&quot;color:#f92672&quot;&gt;&amp;lt;/enabled&amp;gt;&lt;/span&gt;
-        &lt;span style=&quot;color:#f92672&quot;&gt;&amp;lt;/snapshots&amp;gt;&lt;/span&gt;
-    &lt;span style=&quot;color:#f92672&quot;&gt;&amp;lt;/pluginRepository&amp;gt;&lt;/span&gt;
-&lt;span style=&quot;color:#f92672&quot;&gt;&amp;lt;/pluginRepositories&amp;gt;&lt;/span&gt;
+<h3 id="3-1-引入pom依赖">3.1 引入pom依赖</h3>
+
+<p>pom.xml依赖配置如下所示:</p>
+
+<pre><code class="language-xml">&lt;properties&gt;
+        &lt;spring-cloud.version&gt;Finchley.M9&lt;/spring-cloud.version&gt;
+    &lt;/properties&gt;
+
+    &lt;dependencyManagement&gt;
+        &lt;dependencies&gt;
+            &lt;dependency&gt;
+                &lt;groupId&gt;org.springframework.cloud&lt;/groupId&gt;
+                &lt;artifactId&gt;spring-cloud-dependencies&lt;/artifactId&gt;
+                &lt;version&gt;${spring-cloud.version}&lt;/version&gt;
+                &lt;type&gt;pom&lt;/type&gt;
+                &lt;scope&gt;import&lt;/scope&gt;
+            &lt;/dependency&gt;
+        &lt;/dependencies&gt;
+    &lt;/dependencyManagement&gt;
+
+    &lt;dependencies&gt;
+        &lt;dependency&gt;
+            &lt;groupId&gt;org.springframework.boot&lt;/groupId&gt;
+            &lt;artifactId&gt;spring-boot-starter-actuator&lt;/artifactId&gt;
+        &lt;/dependency&gt;
+        &lt;dependency&gt;
+            &lt;groupId&gt;org.springframework.cloud&lt;/groupId&gt;
+            &lt;artifactId&gt;spring-cloud-starter-gateway&lt;/artifactId&gt;
+        &lt;/dependency&gt;
+
+        &lt;dependency&gt;
+            &lt;groupId&gt;org.springframework.boot&lt;/groupId&gt;
+            &lt;artifactId&gt;spring-boot-devtools&lt;/artifactId&gt;
+            &lt;scope&gt;runtime&lt;/scope&gt;
+        &lt;/dependency&gt;
+
+        &lt;dependency&gt;
+            &lt;groupId&gt;org.springframework.boot&lt;/groupId&gt;
+            &lt;artifactId&gt;spring-boot-starter-test&lt;/artifactId&gt;
+            &lt;scope&gt;test&lt;/scope&gt;
+        &lt;/dependency&gt;
+
+        &lt;dependency&gt;
+            &lt;groupId&gt;org.springframework.boot&lt;/groupId&gt;
+            &lt;artifactId&gt;spring-boot-starter-webflux&lt;/artifactId&gt;
+        &lt;/dependency&gt;
+
+    &lt;/dependencies&gt;
+    &lt;build&gt;
+        &lt;plugins&gt;
+            &lt;plugin&gt;
+                &lt;groupId&gt;org.springframework.boot&lt;/groupId&gt;
+                &lt;artifactId&gt;spring-boot-maven-plugin&lt;/artifactId&gt;
+            &lt;/plugin&gt;
+        &lt;/plugins&gt;
+    &lt;/build&gt;
+
+    &lt;repositories&gt;
+        &lt;repository&gt;
+            &lt;id&gt;spring-snapshots&lt;/id&gt;
+            &lt;name&gt;Spring Snapshots&lt;/name&gt;
+            &lt;url&gt;https://repo.spring.io/snapshot&lt;/url&gt;
+            &lt;snapshots&gt;
+                &lt;enabled&gt;true&lt;/enabled&gt;
+            &lt;/snapshots&gt;
+        &lt;/repository&gt;
+        &lt;repository&gt;
+            &lt;id&gt;spring-milestones&lt;/id&gt;
+            &lt;name&gt;Spring Milestones&lt;/name&gt;
+            &lt;url&gt;https://repo.spring.io/milestone&lt;/url&gt;
+            &lt;snapshots&gt;
+                &lt;enabled&gt;false&lt;/enabled&gt;
+            &lt;/snapshots&gt;
+        &lt;/repository&gt;
+    &lt;/repositories&gt;
+
+    &lt;pluginRepositories&gt;
+        &lt;pluginRepository&gt;
+            &lt;id&gt;spring-snapshots&lt;/id&gt;
+            &lt;name&gt;Spring Snapshots&lt;/name&gt;
+            &lt;url&gt;https://repo.spring.io/snapshot&lt;/url&gt;
+            &lt;snapshots&gt;
+                &lt;enabled&gt;true&lt;/enabled&gt;
+            &lt;/snapshots&gt;
+        &lt;/pluginRepository&gt;
+        &lt;pluginRepository&gt;
+            &lt;id&gt;spring-milestones&lt;/id&gt;
+            &lt;name&gt;Spring Milestones&lt;/name&gt;
+            &lt;url&gt;https://repo.spring.io/milestone&lt;/url&gt;
+            &lt;snapshots&gt;
+                &lt;enabled&gt;false&lt;/enabled&gt;
+            &lt;/snapshots&gt;
+        &lt;/pluginRepository&gt;
+    &lt;/pluginRepositories&gt;
+
 </code></pre>
-<p><!-- raw HTML omitted --><!-- raw HTML omitted --><!-- raw HTML omitted --><!-- raw HTML omitted -->3.2  application.yml文件配置:<!-- raw HTML omitted --></p>
-<!-- raw HTML omitted -->
-<p><!-- raw HTML omitted -->spring<!-- raw HTML omitted -->:
-<!-- raw HTML omitted -->cloud<!-- raw HTML omitted -->:
-<!-- raw HTML omitted -->gateway<!-- raw HTML omitted -->:
-<!-- raw HTML omitted -->routes<!-- raw HTML omitted -->:
-- <!-- raw HTML omitted -->id<!-- raw HTML omitted -->: after_route
-<!-- raw HTML omitted -->uri<!-- raw HTML omitted -->: <a href="http://xujin.org">http://xujin.org</a>
-<!-- raw HTML omitted -->predicates<!-- raw HTML omitted -->:
-- After=<!-- raw HTML omitted -->2018-03-18T17:32:58.129<!-- raw HTML omitted --><!-- raw HTML omitted -->+08<!-- raw HTML omitted -->:<!-- raw HTML omitted -->00<!-- raw HTML omitted -->[Asia/Shanghai]</p>
-<p><!-- raw HTML omitted -->logging<!-- raw HTML omitted -->:
-<!-- raw HTML omitted -->level<!-- raw HTML omitted -->:
-<!-- raw HTML omitted -->org.springframework.cloud.gateway<!-- raw HTML omitted -->: TRACE
-<!-- raw HTML omitted -->org.springframework.http.server.reactive<!-- raw HTML omitted -->: DEBUG
-<!-- raw HTML omitted -->org.springframework.web.reactive<!-- raw HTML omitted -->: DEBUG
-<!-- raw HTML omitted -->reactor.ipc.netty<!-- raw HTML omitted -->: DEBUG</p>
-<p><!-- raw HTML omitted -->management.endpoints.web.exposure.include<!-- raw HTML omitted -->: <!-- raw HTML omitted -->'*'<!-- raw HTML omitted --></p>
-<p><!-- raw HTML omitted --><!-- raw HTML omitted --><!-- raw HTML omitted --><!-- raw HTML omitted --></p>
-<!-- raw HTML omitted -->
-<pre><code>            &lt;span style=&quot;color:#f92672&quot;&gt;.&lt;/span&gt;&lt;span style=&quot;color:#a6e22e&quot;&gt;build&lt;/span&gt;&lt;span style=&quot;color:#f92672&quot;&gt;();&lt;/span&gt;
-&lt;span style=&quot;color:#f92672&quot;&gt;}&lt;/span&gt;
+
+<h3 id="3-2-application-yml文件配置">3.2  application.yml文件配置:</h3>
+
+<pre><code class="language-yml">server:
+  port: 8081
+
+spring:
+  cloud:
+    gateway:
+      routes:
+      - id: after_route
+        uri: http://xujin.org
+        predicates:
+        - After=2018-03-18T17:32:58.129+08:00[Asia/Shanghai]
+
+
+logging:
+  level:
+    org.springframework.cloud.gateway: TRACE
+    org.springframework.http.server.reactive: DEBUG
+    org.springframework.web.reactive: DEBUG
+    reactor.ipc.netty: DEBUG
+
+management.endpoints.web.exposure.include: '*'
+
 </code></pre>
-<p><!-- raw HTML omitted --><!-- raw HTML omitted --><!-- raw HTML omitted --><!-- raw HTML omitted --></p>
-<!-- raw HTML omitted -->
+
+<blockquote>
+<p>Spring Cloud Gateway提供两种方式去配置After路由断言工厂，这里介绍的是yml文件的配置方式。</p>
+</blockquote>
+
+<h3 id="3-3-等价的-bean配置">3.3 等价的@Bean配置</h3>
+
+<pre><code class="language-java">@Bean
+public RouteLocator customRouteLocator(RouteLocatorBuilder builder) {
+        ZonedDateTime minusTime = LocalDateTime.now().minusDays(1).atZone(ZoneId.systemDefault());
+        return builder.routes()
+                .route(&quot;after_route&quot;, r -&gt; r.after(minusTime)
+                        .uri(&quot;http://xujin.org&quot;))
+
+                .build();
+    }
+</code></pre>
+
+<blockquote>
+<p>Spring Cloud Gateway提供两种方式去配置After路由断言工厂，这里介绍的是@Bean的配置方式。不管通过yml文件配置或者通过@Bean的方式配置是等价的。</p>
+</blockquote>
+
+<h3 id="3-4-测试如下">3.4 测试如下:</h3>
+
+<p>访问<a href="http://localhost:8081/成功转发到http://xujin.org">http://localhost:8081/成功转发到http://xujin.org</a></p>
 
 </article>
 
@@ -487,18 +540,20 @@ if (!doNotTrack) {
 		目录
 	</h2>
   <nav id="TableOfContents">
-  <ul>
-    <li><a href="#1spring-cloud-gateway核心概念">1.Spring Cloud Gateway核心概念</a></li>
-    <li><a href="#2什么是after路由断言">2.什么是After路由断言</a></li>
-    <li><a href="#3after路由断言工厂的案例">3.After路由断言工厂的案例</a>
-      <ul>
-        <li><a href="#31-引入pom依赖">3.1 引入pom依赖</a></li>
-        <li><a href="#32--applicationyml文件配置">3.2  application.yml文件配置:</a></li>
-        <li><a href="#33-等价的bean配置">3.3 等价的@Bean配置</a></li>
-        <li><a href="#34-测试如下">3.4 测试如下:</a></li>
-      </ul>
-    </li>
-  </ul>
+<ul>
+<li>
+<ul>
+<li><a href="#1-spring-cloud-gateway核心概念">1.Spring Cloud Gateway核心概念</a></li>
+<li><a href="#2-什么是after路由断言">2.什么是After路由断言</a></li>
+<li><a href="#3-after路由断言工厂的案例">3.After路由断言工厂的案例</a>
+<ul>
+<li><a href="#3-1-引入pom依赖">3.1 引入pom依赖</a></li>
+<li><a href="#3-2-application-yml文件配置">3.2  application.yml文件配置:</a></li>
+<li><a href="#3-3-等价的-bean配置">3.3 等价的@Bean配置</a></li>
+<li><a href="#3-4-测试如下">3.4 测试如下:</a></li>
+</ul></li>
+</ul></li>
+</ul>
 </nav>
 </div>
 

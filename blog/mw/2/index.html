@@ -10,7 +10,7 @@
 <meta name="viewport" content="width=device-width,minimum-scale=1">
 <meta name="description" content="玹霖志,许进沉思录,许进|Spring Cloud,中间件，基础架构，www.xujin.org,xujin.org,-许进沉思录,Venus&#43;,云首科技有限公司,云计算，大数据，物联网，Software_king的博客,云计算Saas，云计算Paas，云计算Iaas Hadoop，大数据，JavaEE，Java，物联网，Hadoop， NoSQL，MongoDB,Spring, Hibernate,Struts2," />
 
-<meta name="generator" content="Hugo 0.72.0" /><link rel="shortcut icon" href=/img/icon.png type="image/png">
+<meta name="generator" content="Hugo 0.55.6" /><link rel="shortcut icon" href=/img/icon.png type="image/png">
 
 <link href="https://unpkg.com/purecss@1.0.0/build/base-min.css" rel="stylesheet">
 
@@ -259,7 +259,126 @@ if (!doNotTrack) {
 	});
   </script>
 		<article class="typo">
-	<!-- raw HTML omitted -->
+	<h2 id="1-基础架构职责">1.基础架构职责</h2>
+
+<ul>
+<li>设计和开发新一代的基础组件，为重构项目提供技术平台</li>
+<li>设计和构建统一的应用开发框架，提高应用开发效率和质量</li>
+<li>建立统一的应用构建标准，为实现对应用的管理，监控和治理的自动化建立基础</li>
+<li>评估和引进各种国外先进技术，提高公司平台的技术水准</li>
+<li>建立公司的开源项目，对内部开发的含金量高的项目实现开源，以提高公司的知名度</li>
+</ul>
+
+<p><img src="infra.png" width="60%" alt="基础架构职责" data-action="zoom"></p>
+
+<p>这些技术解决方案包括：</p>
+
+<ul>
+<li>统一的服务化框架体系</li>
+</ul>
+
+<p>服务化是IT技术架构升级改造的核心内容，提供统一的完整的服务化框架体系尤为重要，该体系为构建“分布式服务架构”提供了技术平台，它涵盖了构建和管理一个服务的整个生命周期所需的各种框架和工具。</p>
+
+<ul>
+<li>移动客户端和服务端中间层框架</li>
+</ul>
+
+<p>随着越来越多的用户使用移动App购物，快速研发不同的移动App十分重要，因此构建统一的移动客户端和服务端中间层框架就十分有意义，它不仅能加快移动App的研发，也为提高移动App的产品质量提供了保障。</p>
+
+<ul>
+<li>系统集成组件—消息总线</li>
+</ul>
+
+<p>随着互联网应用平台包含各种各样的应用，各应用之间需要保持不同形式的信息交换，有些是同步的，有些是异步的，系统集成组件—消息总线则提供了一组组件以满足应用之间异步通讯之需要。</p>
+
+<p>服务的授权，监控和治理
+随着系统变得越来越大，越来越复杂，服务数目越来越多，如何对该庞大的系统进行有效的管理，安全的管控以及服务质量的监控就非常重要，因此需要有一整套的工具确保监控，授权和服务的治理。</p>
+
+<h2 id="2-中间件整理">2. 中间件整理</h2>
+
+<table>
+<thead>
+<tr>
+<th>名称</th>
+<th>分类</th>
+<th>是否推荐</th>
+<th>备注</th>
+</tr>
+</thead>
+
+<tbody>
+<tr>
+<td>Halo</td>
+<td>中台应用框架</td>
+<td>Y</td>
+<td>基于DDD+CQRS+扩展点+应用内部流程编排一套的中台落地解决方案</td>
+</tr>
+
+<tr>
+<td><a href="http://dubbo.apache.org/">Dubbo</a></td>
+<td>RPC框架</td>
+<td>Y</td>
+<td></td>
+</tr>
+
+<tr>
+<td><a href="https://github.com/ctripcorp/apollo">Apollo</a></td>
+<td>配置中心</td>
+<td>Y</td>
+<td></td>
+</tr>
+
+<tr>
+<td>Janus</td>
+<td>网关</td>
+<td>Y</td>
+<td></td>
+</tr>
+
+<tr>
+<td><a href="https://github.com/alibaba/nacos">Nacos</a></td>
+<td>注册中心</td>
+<td>Y</td>
+<td></td>
+</tr>
+
+<tr>
+<td><a href="https://github.com/didi/DDMQ">DDMq</a></td>
+<td>消息中间件</td>
+<td></td>
+<td>kafka与Rocketmq的代理</td>
+</tr>
+
+<tr>
+<td><a href="https://github.com/qunarcorp/bistoury">Bistoury</a></td>
+<td>线上问题诊断工具</td>
+<td>Y</td>
+<td>Bistoury是去哪儿网的java应用生产问题诊断工具，提供了一站式的问题诊断方案</td>
+</tr>
+
+<tr>
+<td><a href="https://github.com/alibaba/nacos">Nacos</a></td>
+<td>配置中心</td>
+<td>Y</td>
+<td></td>
+</tr>
+
+<tr>
+<td><a href="https://github.com/ppdaicorp/das">DAS</a></td>
+<td>数据库中间件</td>
+<td>Y</td>
+<td>拍拍贷DAS是拍拍贷自研的数据库访问框架。</td>
+</tr>
+
+<tr>
+<td><a href="https://github.com/ppdaicorp/pmq">pmq</a></td>
+<td>消息中间件</td>
+<td></td>
+<td>PMQ是拍拍贷研发一款分布式消息队列，能够保证消息的不丢失，具有部署和运维简单的特性。</td>
+</tr>
+</tbody>
+</table>
+
 </article>
 
 <div id="gitalk-container"></div>
@@ -375,10 +494,13 @@ if (!doNotTrack) {
 		目录
 	</h2>
   <nav id="TableOfContents">
-  <ul>
-    <li><a href="#1基础架构职责">1.基础架构职责</a></li>
-    <li><a href="#2-中间件整理">2. 中间件整理</a></li>
-  </ul>
+<ul>
+<li>
+<ul>
+<li><a href="#1-基础架构职责">1.基础架构职责</a></li>
+<li><a href="#2-中间件整理">2. 中间件整理</a></li>
+</ul></li>
+</ul>
 </nav>
 </div>
 

@@ -10,7 +10,7 @@
 <meta name="viewport" content="width=device-width,minimum-scale=1">
 <meta name="description" content="玹霖志,许进沉思录,许进|Spring Cloud,中间件，基础架构，www.xujin.org,xujin.org,-许进沉思录,Venus&#43;,云首科技有限公司,云计算，大数据，物联网，Software_king的博客,云计算Saas，云计算Paas，云计算Iaas Hadoop，大数据，JavaEE，Java，物联网，Hadoop， NoSQL，MongoDB,Spring, Hibernate,Struts2," />
 
-<meta name="generator" content="Hugo 0.72.0" /><link rel="shortcut icon" href=/img/icon.png type="image/png">
+<meta name="generator" content="Hugo 0.55.6" /><link rel="shortcut icon" href=/img/icon.png type="image/png">
 
 <link href="https://unpkg.com/purecss@1.0.0/build/base-min.css" rel="stylesheet">
 
@@ -241,7 +241,7 @@ if (!doNotTrack) {
 				
 			</span>
 		
-		<span class="post-word-count">· 字数:476·阅读时间 1 分钟</span>
+		<span class="post-word-count">· 字数:478·阅读时间 1 分钟</span>
 		
 		阅读量<span id="busuanzi_value_page_pv"></span>次
 		
@@ -251,7 +251,7 @@ if (!doNotTrack) {
     var typed = new Typed('#postTitle', {
 		strings: [
         '  ',
-		"Spring Boot中自定义注解\u002bAOP实现主备库切换",
+		"Spring Boot中自定义注解\x2bAOP实现主备库切换",
       ],
       cursorChar: "|",
       typeSpeed: 70,
@@ -259,105 +259,138 @@ if (!doNotTrack) {
 	});
   </script>
 		<article class="typo">
-	<!-- raw HTML omitted -->
-<p><!-- raw HTML omitted -->@Retention<!-- raw HTML omitted --><!-- raw HTML omitted -->(<!-- raw HTML omitted -->RetentionPolicy<!-- raw HTML omitted -->.<!-- raw HTML omitted --><!-- raw HTML omitted -->RUNTIME<!-- raw HTML omitted --><!-- raw HTML omitted -->)<!-- raw HTML omitted -->
-<!-- raw HTML omitted -->@Target<!-- raw HTML omitted --><!-- raw HTML omitted -->(<!-- raw HTML omitted -->ElementType<!-- raw HTML omitted -->.<!-- raw HTML omitted --><!-- raw HTML omitted -->METHOD<!-- raw HTML omitted --><!-- raw HTML omitted -->)<!-- raw HTML omitted -->
-<!-- raw HTML omitted -->public<!-- raw HTML omitted --> <!-- raw HTML omitted -->@interface<!-- raw HTML omitted --> SwitchDataBase <!-- raw HTML omitted -->{<!-- raw HTML omitted -->
-<!-- raw HTML omitted -->boolean<!-- raw HTML omitted --> <!-- raw HTML omitted -->switch2Backup<!-- raw HTML omitted --><!-- raw HTML omitted -->()<!-- raw HTML omitted --> <!-- raw HTML omitted -->default<!-- raw HTML omitted --> <!-- raw HTML omitted -->false<!-- raw HTML omitted --><!-- raw HTML omitted -->;<!-- raw HTML omitted -->
-<!-- raw HTML omitted -->}<!-- raw HTML omitted -->
-<!-- raw HTML omitted --><!-- raw HTML omitted --><!-- raw HTML omitted --><!-- raw HTML omitted -->1.2  实现方法拦截器对自定义注解处理<!-- raw HTML omitted --></p>
-<!-- raw HTML omitted -->
-<p><!-- raw HTML omitted -->import<!-- raw HTML omitted --> org.aopalliance.intercept.MethodInterceptor<!-- raw HTML omitted -->;<!-- raw HTML omitted -->
-<!-- raw HTML omitted -->import<!-- raw HTML omitted --> org.aopalliance.intercept.MethodInvocation<!-- raw HTML omitted -->;<!-- raw HTML omitted -->
-<!-- raw HTML omitted -->import<!-- raw HTML omitted --> org.slf4j.Logger<!-- raw HTML omitted -->;<!-- raw HTML omitted -->
-<!-- raw HTML omitted -->import<!-- raw HTML omitted --> org.slf4j.LoggerFactory<!-- raw HTML omitted -->;<!-- raw HTML omitted -->
-<!-- raw HTML omitted -->import<!-- raw HTML omitted --> org.springframework.stereotype.Component<!-- raw HTML omitted -->;<!-- raw HTML omitted --></p>
-<p><!-- raw HTML omitted -->/**
-<!-- raw HTML omitted --><!-- raw HTML omitted --> * 处理走备库逻辑的注解
-<!-- raw HTML omitted --><!-- raw HTML omitted --> */<!-- raw HTML omitted -->
-<!-- raw HTML omitted -->@Component<!-- raw HTML omitted -->
-<!-- raw HTML omitted -->public<!-- raw HTML omitted --> <!-- raw HTML omitted -->class<!-- raw HTML omitted --> <!-- raw HTML omitted -->SwitchDataBaseInterceptor<!-- raw HTML omitted --> <!-- raw HTML omitted -->implements<!-- raw HTML omitted --> MethodInterceptor <!-- raw HTML omitted -->{<!-- raw HTML omitted --></p>
-<pre><code>&lt;span style=&quot;color:#66d9ef&quot;&gt;private&lt;/span&gt; &lt;span style=&quot;color:#66d9ef&quot;&gt;final&lt;/span&gt; Logger log &lt;span style=&quot;color:#f92672&quot;&gt;=&lt;/span&gt; LoggerFactory&lt;span style=&quot;color:#f92672&quot;&gt;.&lt;/span&gt;&lt;span style=&quot;color:#a6e22e&quot;&gt;getLogger&lt;/span&gt;&lt;span style=&quot;color:#f92672&quot;&gt;(&lt;/span&gt;SwitchDataBaseInterceptor&lt;span style=&quot;color:#f92672&quot;&gt;.&lt;/span&gt;&lt;span style=&quot;color:#a6e22e&quot;&gt;class&lt;/span&gt;&lt;span style=&quot;color:#f92672&quot;&gt;);&lt;/span&gt;
+	<h2 id="1-通过aop-自定义注解实现主库到备库的切换">1.通过AOP 自定义注解实现主库到备库的切换</h2>
 
-&lt;span style=&quot;color:#a6e22e&quot;&gt;@Override&lt;/span&gt;
-&lt;span style=&quot;color:#66d9ef&quot;&gt;public&lt;/span&gt; Object &lt;span style=&quot;color:#a6e22e&quot;&gt;invoke&lt;/span&gt;&lt;span style=&quot;color:#f92672&quot;&gt;(&lt;/span&gt;MethodInvocation invocation&lt;span style=&quot;color:#f92672&quot;&gt;)&lt;/span&gt; &lt;span style=&quot;color:#66d9ef&quot;&gt;throws&lt;/span&gt; Throwable &lt;span style=&quot;color:#f92672&quot;&gt;{&lt;/span&gt;
-    Method method &lt;span style=&quot;color:#f92672&quot;&gt;=&lt;/span&gt; invocation&lt;span style=&quot;color:#f92672&quot;&gt;.&lt;/span&gt;&lt;span style=&quot;color:#a6e22e&quot;&gt;getMethod&lt;/span&gt;&lt;span style=&quot;color:#f92672&quot;&gt;();&lt;/span&gt;
-    SwitchDataBase annotation &lt;span style=&quot;color:#f92672&quot;&gt;=&lt;/span&gt; getAnnotation&lt;span style=&quot;color:#f92672&quot;&gt;(&lt;/span&gt;method&lt;span style=&quot;color:#f92672&quot;&gt;);&lt;/span&gt;
-    &lt;span style=&quot;color:#66d9ef&quot;&gt;if&lt;/span&gt; &lt;span style=&quot;color:#f92672&quot;&gt;(&lt;/span&gt;annotation &lt;span style=&quot;color:#f92672&quot;&gt;==&lt;/span&gt; &lt;span style=&quot;color:#66d9ef&quot;&gt;null&lt;/span&gt;&lt;span style=&quot;color:#f92672&quot;&gt;)&lt;/span&gt; &lt;span style=&quot;color:#f92672&quot;&gt;{&lt;/span&gt;
-        &lt;span style=&quot;color:#66d9ef&quot;&gt;return&lt;/span&gt; invocation&lt;span style=&quot;color:#f92672&quot;&gt;.&lt;/span&gt;&lt;span style=&quot;color:#a6e22e&quot;&gt;proceed&lt;/span&gt;&lt;span style=&quot;color:#f92672&quot;&gt;();&lt;/span&gt;
-    &lt;span style=&quot;color:#f92672&quot;&gt;}&lt;/span&gt;
-    Object val &lt;span style=&quot;color:#f92672&quot;&gt;=&lt;/span&gt; &lt;span style=&quot;color:#66d9ef&quot;&gt;null&lt;/span&gt;&lt;span style=&quot;color:#f92672&quot;&gt;;&lt;/span&gt;
-    &lt;span style=&quot;color:#66d9ef&quot;&gt;if&lt;/span&gt;&lt;span style=&quot;color:#f92672&quot;&gt;(!&lt;/span&gt;ThreadLocalMap&lt;span style=&quot;color:#f92672&quot;&gt;.&lt;/span&gt;&lt;span style=&quot;color:#a6e22e&quot;&gt;containsKey&lt;/span&gt;&lt;span style=&quot;color:#f92672&quot;&gt;(&lt;/span&gt;GroupDataSourceRouteHelper&lt;span style=&quot;color:#f92672&quot;&gt;.&lt;/span&gt;&lt;span style=&quot;color:#a6e22e&quot;&gt;DATASOURCE_INDEX&lt;/span&gt;&lt;span style=&quot;color:#f92672&quot;&gt;))&lt;/span&gt; &lt;span style=&quot;color:#f92672&quot;&gt;{&lt;/span&gt;
-        &lt;span style=&quot;color:#66d9ef&quot;&gt;if&lt;/span&gt; &lt;span style=&quot;color:#f92672&quot;&gt;(&lt;/span&gt;annotation&lt;span style=&quot;color:#f92672&quot;&gt;.&lt;/span&gt;&lt;span style=&quot;color:#a6e22e&quot;&gt;switch2Backup&lt;/span&gt;&lt;span style=&quot;color:#f92672&quot;&gt;())&lt;/span&gt; &lt;span style=&quot;color:#f92672&quot;&gt;{&lt;/span&gt;
-            log&lt;span style=&quot;color:#f92672&quot;&gt;.&lt;/span&gt;&lt;span style=&quot;color:#a6e22e&quot;&gt;info&lt;/span&gt;&lt;span style=&quot;color:#f92672&quot;&gt;(&lt;/span&gt;&lt;span style=&quot;color:#e6db74&quot;&gt;&amp;#34;query back up DB, method: &amp;#34;&lt;/span&gt; &lt;span style=&quot;color:#f92672&quot;&gt;+&lt;/span&gt; method&lt;span style=&quot;color:#f92672&quot;&gt;.&lt;/span&gt;&lt;span style=&quot;color:#a6e22e&quot;&gt;getName&lt;/span&gt;&lt;span style=&quot;color:#f92672&quot;&gt;());&lt;/span&gt;
-            GroupDataSourceRouteHelper&lt;span style=&quot;color:#f92672&quot;&gt;.&lt;/span&gt;&lt;span style=&quot;color:#a6e22e&quot;&gt;executeByGroupDataSourceIndex&lt;/span&gt;&lt;span style=&quot;color:#f92672&quot;&gt;(&lt;/span&gt;1&lt;span style=&quot;color:#f92672&quot;&gt;,&lt;/span&gt; &lt;span style=&quot;color:#66d9ef&quot;&gt;true&lt;/span&gt;&lt;span style=&quot;color:#f92672&quot;&gt;);&lt;/span&gt;
-        &lt;span style=&quot;color:#f92672&quot;&gt;}&lt;/span&gt; &lt;span style=&quot;color:#66d9ef&quot;&gt;else&lt;/span&gt; &lt;span style=&quot;color:#f92672&quot;&gt;{&lt;/span&gt;
-            log&lt;span style=&quot;color:#f92672&quot;&gt;.&lt;/span&gt;&lt;span style=&quot;color:#a6e22e&quot;&gt;info&lt;/span&gt;&lt;span style=&quot;color:#f92672&quot;&gt;(&lt;/span&gt;&lt;span style=&quot;color:#e6db74&quot;&gt;&amp;#34;query primary DB, method: &amp;#34;&lt;/span&gt; &lt;span style=&quot;color:#f92672&quot;&gt;+&lt;/span&gt; method&lt;span style=&quot;color:#f92672&quot;&gt;.&lt;/span&gt;&lt;span style=&quot;color:#a6e22e&quot;&gt;getName&lt;/span&gt;&lt;span style=&quot;color:#f92672&quot;&gt;());&lt;/span&gt;
-            GroupDataSourceRouteHelper&lt;span style=&quot;color:#f92672&quot;&gt;.&lt;/span&gt;&lt;span style=&quot;color:#a6e22e&quot;&gt;executeByGroupDataSourceIndex&lt;/span&gt;&lt;span style=&quot;color:#f92672&quot;&gt;(&lt;/span&gt;0&lt;span style=&quot;color:#f92672&quot;&gt;,&lt;/span&gt; &lt;span style=&quot;color:#66d9ef&quot;&gt;true&lt;/span&gt;&lt;span style=&quot;color:#f92672&quot;&gt;);&lt;/span&gt;
-        &lt;span style=&quot;color:#f92672&quot;&gt;}&lt;/span&gt;
-    &lt;span style=&quot;color:#f92672&quot;&gt;}&lt;/span&gt;
-    &lt;span style=&quot;color:#66d9ef&quot;&gt;try&lt;/span&gt; &lt;span style=&quot;color:#f92672&quot;&gt;{&lt;/span&gt;
-        val &lt;span style=&quot;color:#f92672&quot;&gt;=&lt;/span&gt; invocation&lt;span style=&quot;color:#f92672&quot;&gt;.&lt;/span&gt;&lt;span style=&quot;color:#a6e22e&quot;&gt;proceed&lt;/span&gt;&lt;span style=&quot;color:#f92672&quot;&gt;();&lt;/span&gt;
-    &lt;span style=&quot;color:#f92672&quot;&gt;}&lt;/span&gt; &lt;span style=&quot;color:#66d9ef&quot;&gt;catch&lt;/span&gt; &lt;span style=&quot;color:#f92672&quot;&gt;(&lt;/span&gt;Exception e&lt;span style=&quot;color:#f92672&quot;&gt;)&lt;/span&gt; &lt;span style=&quot;color:#f92672&quot;&gt;{&lt;/span&gt;
-        log&lt;span style=&quot;color:#f92672&quot;&gt;.&lt;/span&gt;&lt;span style=&quot;color:#a6e22e&quot;&gt;info&lt;/span&gt;&lt;span style=&quot;color:#f92672&quot;&gt;(&lt;/span&gt;method&lt;span style=&quot;color:#f92672&quot;&gt;.&lt;/span&gt;&lt;span style=&quot;color:#a6e22e&quot;&gt;getDeclaringClass&lt;/span&gt;&lt;span style=&quot;color:#f92672&quot;&gt;().&lt;/span&gt;&lt;span style=&quot;color:#a6e22e&quot;&gt;getName&lt;/span&gt;&lt;span style=&quot;color:#f92672&quot;&gt;()&lt;/span&gt; &lt;span style=&quot;color:#f92672&quot;&gt;+&lt;/span&gt; &lt;span style=&quot;color:#e6db74&quot;&gt;&amp;#34;.&amp;#34;&lt;/span&gt; &lt;span style=&quot;color:#f92672&quot;&gt;+&lt;/span&gt;
-                invocation&lt;span style=&quot;color:#f92672&quot;&gt;.&lt;/span&gt;&lt;span style=&quot;color:#a6e22e&quot;&gt;getMethod&lt;/span&gt;&lt;span style=&quot;color:#f92672&quot;&gt;().&lt;/span&gt;&lt;span style=&quot;color:#a6e22e&quot;&gt;getName&lt;/span&gt;&lt;span style=&quot;color:#f92672&quot;&gt;()&lt;/span&gt; &lt;span style=&quot;color:#f92672&quot;&gt;+&lt;/span&gt; &lt;span style=&quot;color:#e6db74&quot;&gt;&amp;#34;方法调用失败，arguments：&amp;#34;&lt;/span&gt; &lt;span style=&quot;color:#f92672&quot;&gt;+&lt;/span&gt;
-                Arrays&lt;span style=&quot;color:#f92672&quot;&gt;.&lt;/span&gt;&lt;span style=&quot;color:#a6e22e&quot;&gt;toString&lt;/span&gt;&lt;span style=&quot;color:#f92672&quot;&gt;(&lt;/span&gt;invocation&lt;span style=&quot;color:#f92672&quot;&gt;.&lt;/span&gt;&lt;span style=&quot;color:#a6e22e&quot;&gt;getArguments&lt;/span&gt;&lt;span style=&quot;color:#f92672&quot;&gt;()));&lt;/span&gt;
-        &lt;span style=&quot;color:#66d9ef&quot;&gt;throw&lt;/span&gt; &lt;span style=&quot;color:#66d9ef&quot;&gt;new&lt;/span&gt; RuntimeException&lt;span style=&quot;color:#f92672&quot;&gt;(&lt;/span&gt;e&lt;span style=&quot;color:#f92672&quot;&gt;);&lt;/span&gt;
-    &lt;span style=&quot;color:#f92672&quot;&gt;}&lt;/span&gt; &lt;span style=&quot;color:#66d9ef&quot;&gt;finally&lt;/span&gt; &lt;span style=&quot;color:#f92672&quot;&gt;{&lt;/span&gt;
-        GroupDataSourceRouteHelper&lt;span style=&quot;color:#f92672&quot;&gt;.&lt;/span&gt;&lt;span style=&quot;color:#a6e22e&quot;&gt;removeGroupDataSourceIndex&lt;/span&gt;&lt;span style=&quot;color:#f92672&quot;&gt;();&lt;/span&gt;
-    &lt;span style=&quot;color:#f92672&quot;&gt;}&lt;/span&gt;
+<h3 id="1-1-自定义注解">1.1 自定义注解</h3>
 
-    &lt;span style=&quot;color:#66d9ef&quot;&gt;return&lt;/span&gt; val&lt;span style=&quot;color:#f92672&quot;&gt;;&lt;/span&gt;
-&lt;span style=&quot;color:#f92672&quot;&gt;}&lt;/span&gt;
+<p>自定义注解如下代码所示</p>
 
-&lt;span style=&quot;color:#75715e&quot;&gt;/**
+<pre><code class="language-java">import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
+
+@Retention(RetentionPolicy.RUNTIME)
+@Target(ElementType.METHOD)
+public @interface SwitchDataBase {
+    boolean switch2Backup() default false;
+}
 </code></pre>
-<p><!-- raw HTML omitted --><!-- raw HTML omitted -->     * 找方法上面声明的注解
-<!-- raw HTML omitted --><!-- raw HTML omitted -->     */<!-- raw HTML omitted -->
-<!-- raw HTML omitted -->private<!-- raw HTML omitted --> SwitchDataBase <!-- raw HTML omitted -->getAnnotation<!-- raw HTML omitted --><!-- raw HTML omitted -->(<!-- raw HTML omitted -->Method method<!-- raw HTML omitted -->)<!-- raw HTML omitted --> <!-- raw HTML omitted -->{<!-- raw HTML omitted -->
-<!-- raw HTML omitted -->if<!-- raw HTML omitted --> <!-- raw HTML omitted -->(<!-- raw HTML omitted -->method<!-- raw HTML omitted -->.<!-- raw HTML omitted --><!-- raw HTML omitted -->isAnnotationPresent<!-- raw HTML omitted --><!-- raw HTML omitted -->(<!-- raw HTML omitted -->SwitchDataBase<!-- raw HTML omitted -->.<!-- raw HTML omitted --><!-- raw HTML omitted -->class<!-- raw HTML omitted --><!-- raw HTML omitted -->))<!-- raw HTML omitted --> <!-- raw HTML omitted -->{<!-- raw HTML omitted -->
-<!-- raw HTML omitted -->return<!-- raw HTML omitted --> method<!-- raw HTML omitted -->.<!-- raw HTML omitted --><!-- raw HTML omitted -->getAnnotation<!-- raw HTML omitted --><!-- raw HTML omitted -->(<!-- raw HTML omitted -->SwitchDataBase<!-- raw HTML omitted -->.<!-- raw HTML omitted --><!-- raw HTML omitted -->class<!-- raw HTML omitted --><!-- raw HTML omitted -->);<!-- raw HTML omitted -->
-<!-- raw HTML omitted -->}<!-- raw HTML omitted -->
-<!-- raw HTML omitted -->return<!-- raw HTML omitted --> <!-- raw HTML omitted -->null<!-- raw HTML omitted --><!-- raw HTML omitted -->;<!-- raw HTML omitted -->
-<!-- raw HTML omitted -->}<!-- raw HTML omitted --></p>
-<p><!-- raw HTML omitted -->}<!-- raw HTML omitted --></p>
-<p><!-- raw HTML omitted --><!-- raw HTML omitted --><!-- raw HTML omitted --><!-- raw HTML omitted -->1.3 配置OverallQueryConfiguration<!-- raw HTML omitted --></p>
-<!-- raw HTML omitted -->
-<p><!-- raw HTML omitted -->import<!-- raw HTML omitted --> com.wdk.wms.annotation.SwitchDataBaseInterceptor<!-- raw HTML omitted -->;<!-- raw HTML omitted -->
-<!-- raw HTML omitted -->import<!-- raw HTML omitted --> org.springframework.aop.Advisor<!-- raw HTML omitted -->;<!-- raw HTML omitted -->
-<!-- raw HTML omitted -->import<!-- raw HTML omitted --> org.springframework.aop.support.DefaultPointcutAdvisor<!-- raw HTML omitted -->;<!-- raw HTML omitted -->
-<!-- raw HTML omitted -->import<!-- raw HTML omitted --> org.springframework.aop.support.JdkRegexpMethodPointcut<!-- raw HTML omitted -->;<!-- raw HTML omitted -->
-<!-- raw HTML omitted -->import<!-- raw HTML omitted --> org.springframework.context.annotation.Bean<!-- raw HTML omitted -->;<!-- raw HTML omitted -->
-<!-- raw HTML omitted -->import<!-- raw HTML omitted --> org.springframework.context.annotation.Configuration<!-- raw HTML omitted -->;<!-- raw HTML omitted --></p>
-<p><!-- raw HTML omitted -->@Configuration<!-- raw HTML omitted -->
-<!-- raw HTML omitted -->public<!-- raw HTML omitted --> <!-- raw HTML omitted -->class<!-- raw HTML omitted --> <!-- raw HTML omitted -->SwitchDataBaseConfiguration<!-- raw HTML omitted --> <!-- raw HTML omitted -->{<!-- raw HTML omitted --></p>
-<pre><code>&lt;span style=&quot;color:#a6e22e&quot;&gt;@Bean&lt;/span&gt;&lt;span style=&quot;color:#f92672&quot;&gt;(&lt;/span&gt;name &lt;span style=&quot;color:#f92672&quot;&gt;=&lt;/span&gt; &lt;span style=&quot;color:#e6db74&quot;&gt;&amp;#34;overallQueryInterceptor&amp;#34;&lt;/span&gt;&lt;span style=&quot;color:#f92672&quot;&gt;)&lt;/span&gt;
-&lt;span style=&quot;color:#66d9ef&quot;&gt;public&lt;/span&gt; SwitchDataBaseInterceptor &lt;span style=&quot;color:#a6e22e&quot;&gt;overallQueryInterceptor&lt;/span&gt;&lt;span style=&quot;color:#f92672&quot;&gt;()&lt;/span&gt; &lt;span style=&quot;color:#f92672&quot;&gt;{&lt;/span&gt;
-    &lt;span style=&quot;color:#66d9ef&quot;&gt;return&lt;/span&gt; &lt;span style=&quot;color:#66d9ef&quot;&gt;new&lt;/span&gt; SwitchDataBaseInterceptor&lt;span style=&quot;color:#f92672&quot;&gt;();&lt;/span&gt;
-&lt;span style=&quot;color:#f92672&quot;&gt;}&lt;/span&gt;
+
+<h3 id="1-2-实现方法拦截器对自定义注解处理">1.2  实现方法拦截器对自定义注解处理</h3>
+
+<pre><code class="language-java">import java.lang.reflect.Method;
+import java.util.Arrays;
+
+import org.aopalliance.intercept.MethodInterceptor;
+import org.aopalliance.intercept.MethodInvocation;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Component;
+
+/**
+ * 处理走备库逻辑的注解
+ */
+@Component
+public class SwitchDataBaseInterceptor implements MethodInterceptor {
+
+    private final Logger log = LoggerFactory.getLogger(SwitchDataBaseInterceptor.class);
+
+    @Override
+    public Object invoke(MethodInvocation invocation) throws Throwable {
+        Method method = invocation.getMethod();
+        SwitchDataBase annotation = getAnnotation(method);
+        if (annotation == null) {
+            return invocation.proceed();
+        }
+        Object val = null;
+        if(!ThreadLocalMap.containsKey(GroupDataSourceRouteHelper.DATASOURCE_INDEX)) {
+            if (annotation.switch2Backup()) {
+                log.info(&quot;query back up DB, method: &quot; + method.getName());
+                GroupDataSourceRouteHelper.executeByGroupDataSourceIndex(1, true);
+            } else {
+                log.info(&quot;query primary DB, method: &quot; + method.getName());
+                GroupDataSourceRouteHelper.executeByGroupDataSourceIndex(0, true);
+            }
+        }
+        try {
+            val = invocation.proceed();
+        } catch (Exception e) {
+            log.info(method.getDeclaringClass().getName() + &quot;.&quot; +
+                    invocation.getMethod().getName() + &quot;方法调用失败，arguments：&quot; +
+                    Arrays.toString(invocation.getArguments()));
+            throw new RuntimeException(e);
+        } finally {
+            GroupDataSourceRouteHelper.removeGroupDataSourceIndex();
+        }
+
+        return val;
+    }
+
+    /**
+     * 找方法上面声明的注解
+     */
+    private SwitchDataBase getAnnotation(Method method) {
+        if (method.isAnnotationPresent(SwitchDataBase.class)) {
+            return method.getAnnotation(SwitchDataBase.class);
+        }
+        return null;
+    }
+
+}
+
+</code></pre>
+
+<h3 id="1-3-配置overallqueryconfiguration">1.3 配置OverallQueryConfiguration</h3>
+
+<p>在Spring Boot中装配AOP Bean，实现扫描特定目录下的注解，实现切面变成形成通知处理。示例代码如下</p>
+
+<pre><code class="language-java">package com.wdk.wms.configuration;
+
+import com.wdk.wms.annotation.SwitchDataBaseInterceptor;
+import org.springframework.aop.Advisor;
+import org.springframework.aop.support.DefaultPointcutAdvisor;
+import org.springframework.aop.support.JdkRegexpMethodPointcut;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+
+@Configuration
+public class SwitchDataBaseConfiguration {
+
+    @Bean(name = &quot;overallQueryInterceptor&quot;)
+    public SwitchDataBaseInterceptor overallQueryInterceptor() {
+        return new SwitchDataBaseInterceptor();
+    }
 
 
-&lt;span style=&quot;color:#75715e&quot;&gt;//添加aop的pointcut
+    //添加aop的pointcut
+    @Bean(name = &quot;jdkRegexpMethodPointcut&quot;)
+    public JdkRegexpMethodPointcut jdkRegexpMethodPointcut() {
+        JdkRegexpMethodPointcut jdkRegexpMethodPointcut = new JdkRegexpMethodPointcut();
+        jdkRegexpMethodPointcut.setPatterns(&quot;com.wdk.wms.mapper.*&quot;);
+        return jdkRegexpMethodPointcut;
+    }
+
+    //设置默认的aop配置对应的是原来的&lt;aop:advisor&gt;
+    @Bean
+    public Advisor druidAdvisor() {
+        DefaultPointcutAdvisor defaultPointcutAdvisor = new DefaultPointcutAdvisor();
+        defaultPointcutAdvisor.setPointcut(jdkRegexpMethodPointcut());
+        defaultPointcutAdvisor.setAdvice(overallQueryInterceptor());
+        return defaultPointcutAdvisor;
+    }
+
+
+}
+
 </code></pre>
-<p><!-- raw HTML omitted --><!-- raw HTML omitted --><!-- raw HTML omitted -->    <!-- raw HTML omitted -->@Bean<!-- raw HTML omitted --><!-- raw HTML omitted -->(<!-- raw HTML omitted -->name <!-- raw HTML omitted -->=<!-- raw HTML omitted --> <!-- raw HTML omitted -->&quot;jdkRegexpMethodPointcut&quot;<!-- raw HTML omitted --><!-- raw HTML omitted -->)<!-- raw HTML omitted -->
-<!-- raw HTML omitted -->public<!-- raw HTML omitted --> JdkRegexpMethodPointcut <!-- raw HTML omitted -->jdkRegexpMethodPointcut<!-- raw HTML omitted --><!-- raw HTML omitted -->()<!-- raw HTML omitted --> <!-- raw HTML omitted -->{<!-- raw HTML omitted -->
-JdkRegexpMethodPointcut jdkRegexpMethodPointcut <!-- raw HTML omitted -->=<!-- raw HTML omitted --> <!-- raw HTML omitted -->new<!-- raw HTML omitted --> JdkRegexpMethodPointcut<!-- raw HTML omitted -->();<!-- raw HTML omitted -->
-jdkRegexpMethodPointcut<!-- raw HTML omitted -->.<!-- raw HTML omitted --><!-- raw HTML omitted -->setPatterns<!-- raw HTML omitted --><!-- raw HTML omitted -->(<!-- raw HTML omitted --><!-- raw HTML omitted -->&quot;com.wdk.wms.mapper.*&quot;<!-- raw HTML omitted --><!-- raw HTML omitted -->);<!-- raw HTML omitted -->
-<!-- raw HTML omitted -->return<!-- raw HTML omitted --> jdkRegexpMethodPointcut<!-- raw HTML omitted -->;<!-- raw HTML omitted -->
-<!-- raw HTML omitted -->}<!-- raw HTML omitted --></p>
-<pre><code>&lt;span style=&quot;color:#75715e&quot;&gt;//设置默认的aop配置对应的是原来的&amp;lt;aop:advisor&amp;gt;
+
+<h3 id="1-4-如何使用注解从主库到备库的切换">1.4 如何使用注解从主库到备库的切换</h3>
+
+<pre><code class="language-java">@SwitchDataBase(switch2Backup = true)
+List&lt;ConsumerNoticeMsg&gt; listByTemplateOver3(@Param(&quot;templates&quot;) List&lt;Integer&gt; templates);
+    
 </code></pre>
-<p><!-- raw HTML omitted --><!-- raw HTML omitted --><!-- raw HTML omitted -->    <!-- raw HTML omitted -->@Bean<!-- raw HTML omitted -->
-<!-- raw HTML omitted -->public<!-- raw HTML omitted --> Advisor <!-- raw HTML omitted -->druidAdvisor<!-- raw HTML omitted --><!-- raw HTML omitted -->()<!-- raw HTML omitted --> <!-- raw HTML omitted -->{<!-- raw HTML omitted -->
-DefaultPointcutAdvisor defaultPointcutAdvisor <!-- raw HTML omitted -->=<!-- raw HTML omitted --> <!-- raw HTML omitted -->new<!-- raw HTML omitted --> DefaultPointcutAdvisor<!-- raw HTML omitted -->();<!-- raw HTML omitted -->
-defaultPointcutAdvisor<!-- raw HTML omitted -->.<!-- raw HTML omitted --><!-- raw HTML omitted -->setPointcut<!-- raw HTML omitted --><!-- raw HTML omitted -->(<!-- raw HTML omitted -->jdkRegexpMethodPointcut<!-- raw HTML omitted -->());<!-- raw HTML omitted -->
-defaultPointcutAdvisor<!-- raw HTML omitted -->.<!-- raw HTML omitted --><!-- raw HTML omitted -->setAdvice<!-- raw HTML omitted --><!-- raw HTML omitted -->(<!-- raw HTML omitted -->overallQueryInterceptor<!-- raw HTML omitted -->());<!-- raw HTML omitted -->
-<!-- raw HTML omitted -->return<!-- raw HTML omitted --> defaultPointcutAdvisor<!-- raw HTML omitted -->;<!-- raw HTML omitted -->
-<!-- raw HTML omitted -->}<!-- raw HTML omitted --></p>
-<p><!-- raw HTML omitted -->}<!-- raw HTML omitted --></p>
-<p><!-- raw HTML omitted --><!-- raw HTML omitted --><!-- raw HTML omitted --><!-- raw HTML omitted -->1.4 如何使用注解从主库到备库的切换<!-- raw HTML omitted --></p>
-<!-- raw HTML omitted -->
-<p><!-- raw HTML omitted --><!-- raw HTML omitted --><!-- raw HTML omitted --></p>
 
 </article>
 
@@ -474,16 +507,18 @@ defaultPointcutAdvisor<!-- raw HTML omitted -->.<!-- raw HTML omitted --><!-- ra
 		目录
 	</h2>
   <nav id="TableOfContents">
-  <ul>
-    <li><a href="#1通过aop-自定义注解实现主库到备库的切换">1.通过AOP 自定义注解实现主库到备库的切换</a>
-      <ul>
-        <li><a href="#11-自定义注解">1.1 自定义注解</a></li>
-        <li><a href="#12--实现方法拦截器对自定义注解处理">1.2  实现方法拦截器对自定义注解处理</a></li>
-        <li><a href="#13-配置overallqueryconfiguration">1.3 配置OverallQueryConfiguration</a></li>
-        <li><a href="#14-如何使用注解从主库到备库的切换">1.4 如何使用注解从主库到备库的切换</a></li>
-      </ul>
-    </li>
-  </ul>
+<ul>
+<li>
+<ul>
+<li><a href="#1-通过aop-自定义注解实现主库到备库的切换">1.通过AOP 自定义注解实现主库到备库的切换</a>
+<ul>
+<li><a href="#1-1-自定义注解">1.1 自定义注解</a></li>
+<li><a href="#1-2-实现方法拦截器对自定义注解处理">1.2  实现方法拦截器对自定义注解处理</a></li>
+<li><a href="#1-3-配置overallqueryconfiguration">1.3 配置OverallQueryConfiguration</a></li>
+<li><a href="#1-4-如何使用注解从主库到备库的切换">1.4 如何使用注解从主库到备库的切换</a></li>
+</ul></li>
+</ul></li>
+</ul>
 </nav>
 </div>
 

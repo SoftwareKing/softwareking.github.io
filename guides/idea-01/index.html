@@ -10,7 +10,7 @@
 <meta name="viewport" content="width=device-width,minimum-scale=1">
 <meta name="description" content="玹霖志,许进沉思录,许进|Spring Cloud,中间件，基础架构，www.xujin.org,xujin.org,-许进沉思录,Venus&#43;,云首科技有限公司,云计算，大数据，物联网，Software_king的博客,云计算Saas，云计算Paas，云计算Iaas Hadoop，大数据，JavaEE，Java，物联网，Hadoop， NoSQL，MongoDB,Spring, Hibernate,Struts2," />
 
-<meta name="generator" content="Hugo 0.72.0" /><link rel="shortcut icon" href=/img/icon.png type="image/png">
+<meta name="generator" content="Hugo 0.55.6" /><link rel="shortcut icon" href=/img/icon.png type="image/png">
 
 <link href="https://unpkg.com/purecss@1.0.0/build/base-min.css" rel="stylesheet">
 
@@ -230,70 +230,116 @@ if (!doNotTrack) {
 	<div class="meta"></div>
 </div>
 		<article class="typo">
-	<!-- raw HTML omitted -->
-<pre><code>&lt;span style=&quot;color:#a6e22e&quot;&gt;@Override&lt;/span&gt;
-&lt;span style=&quot;color:#66d9ef&quot;&gt;public&lt;/span&gt; &lt;span style=&quot;color:#66d9ef&quot;&gt;void&lt;/span&gt; &lt;span style=&quot;color:#a6e22e&quot;&gt;actionPerformed&lt;/span&gt;&lt;span style=&quot;color:#f92672&quot;&gt;(&lt;/span&gt;AnActionEvent e&lt;span style=&quot;color:#f92672&quot;&gt;)&lt;/span&gt; &lt;span style=&quot;color:#f92672&quot;&gt;{&lt;/span&gt;
+	<h2 id="1-背景">1.背景</h2>
 
-    Project project &lt;span style=&quot;color:#f92672&quot;&gt;=&lt;/span&gt; e&lt;span style=&quot;color:#f92672&quot;&gt;.&lt;/span&gt;&lt;span style=&quot;color:#a6e22e&quot;&gt;getProject&lt;/span&gt;&lt;span style=&quot;color:#f92672&quot;&gt;();&lt;/span&gt;
-    &lt;span style=&quot;color:#75715e&quot;&gt;/**
-</code></pre>
-<p><!-- raw HTML omitted --><!-- raw HTML omitted -->         * 从Action中得到一个虚拟文件
-<!-- raw HTML omitted --><!-- raw HTML omitted -->         */<!-- raw HTML omitted -->
-VirtualFile virtualFile <!-- raw HTML omitted -->=<!-- raw HTML omitted --> e<!-- raw HTML omitted -->.<!-- raw HTML omitted --><!-- raw HTML omitted -->getData<!-- raw HTML omitted --><!-- raw HTML omitted -->(<!-- raw HTML omitted -->DataKeys<!-- raw HTML omitted -->.<!-- raw HTML omitted --><!-- raw HTML omitted -->VIRTUAL_FILE<!-- raw HTML omitted --><!-- raw HTML omitted -->);<!-- raw HTML omitted -->
-<!-- raw HTML omitted -->if<!-- raw HTML omitted --> <!-- raw HTML omitted -->(!<!-- raw HTML omitted -->virtualFile<!-- raw HTML omitted -->.<!-- raw HTML omitted --><!-- raw HTML omitted -->isDirectory<!-- raw HTML omitted --><!-- raw HTML omitted -->())<!-- raw HTML omitted --> <!-- raw HTML omitted -->{<!-- raw HTML omitted -->
-virtualFile <!-- raw HTML omitted -->=<!-- raw HTML omitted --> virtualFile<!-- raw HTML omitted -->.<!-- raw HTML omitted --><!-- raw HTML omitted -->getParent<!-- raw HTML omitted --><!-- raw HTML omitted -->();<!-- raw HTML omitted -->
-<!-- raw HTML omitted -->}<!-- raw HTML omitted -->
-Module module <!-- raw HTML omitted -->=<!-- raw HTML omitted --> ModuleUtil<!-- raw HTML omitted -->.<!-- raw HTML omitted --><!-- raw HTML omitted -->findModuleForFile<!-- raw HTML omitted --><!-- raw HTML omitted -->(<!-- raw HTML omitted -->virtualFile<!-- raw HTML omitted -->,<!-- raw HTML omitted --> project<!-- raw HTML omitted -->);<!-- raw HTML omitted --></p>
-<pre><code>    String moduleRootPath &lt;span style=&quot;color:#f92672&quot;&gt;=&lt;/span&gt; ModuleRootManager&lt;span style=&quot;color:#f92672&quot;&gt;.&lt;/span&gt;&lt;span style=&quot;color:#a6e22e&quot;&gt;getInstance&lt;/span&gt;&lt;span style=&quot;color:#f92672&quot;&gt;(&lt;/span&gt;module&lt;span style=&quot;color:#f92672&quot;&gt;).&lt;/span&gt;&lt;span style=&quot;color:#a6e22e&quot;&gt;getContentRoots&lt;/span&gt;&lt;span style=&quot;color:#f92672&quot;&gt;()[&lt;/span&gt;0&lt;span style=&quot;color:#f92672&quot;&gt;].&lt;/span&gt;&lt;span style=&quot;color:#a6e22e&quot;&gt;getPath&lt;/span&gt;&lt;span style=&quot;color:#f92672&quot;&gt;();&lt;/span&gt;
-    String actionDir &lt;span style=&quot;color:#f92672&quot;&gt;=&lt;/span&gt; virtualFile&lt;span style=&quot;color:#f92672&quot;&gt;.&lt;/span&gt;&lt;span style=&quot;color:#a6e22e&quot;&gt;getPath&lt;/span&gt;&lt;span style=&quot;color:#f92672&quot;&gt;();&lt;/span&gt;
-    String str &lt;span style=&quot;color:#f92672&quot;&gt;=&lt;/span&gt; StringUtils&lt;span style=&quot;color:#f92672&quot;&gt;.&lt;/span&gt;&lt;span style=&quot;color:#a6e22e&quot;&gt;substringAfter&lt;/span&gt;&lt;span style=&quot;color:#f92672&quot;&gt;(&lt;/span&gt;actionDir&lt;span style=&quot;color:#f92672&quot;&gt;,&lt;/span&gt; moduleRootPath &lt;span style=&quot;color:#f92672&quot;&gt;+&lt;/span&gt; &lt;span style=&quot;color:#e6db74&quot;&gt;&amp;#34;/src/main/java/&amp;#34;&lt;/span&gt;&lt;span style=&quot;color:#f92672&quot;&gt;);&lt;/span&gt;
-    &lt;span style=&quot;color:#75715e&quot;&gt;//获取右键后的路径
-</code></pre>
-<p><!-- raw HTML omitted --><!-- raw HTML omitted --><!-- raw HTML omitted -->        String basePackage <!-- raw HTML omitted -->=<!-- raw HTML omitted --> StringUtils<!-- raw HTML omitted -->.<!-- raw HTML omitted --><!-- raw HTML omitted -->replace<!-- raw HTML omitted --><!-- raw HTML omitted -->(<!-- raw HTML omitted -->str<!-- raw HTML omitted -->,<!-- raw HTML omitted --> <!-- raw HTML omitted -->&quot;/&quot;<!-- raw HTML omitted --><!-- raw HTML omitted -->,<!-- raw HTML omitted --> <!-- raw HTML omitted -->&quot;.&quot;<!-- raw HTML omitted --><!-- raw HTML omitted -->);<!-- raw HTML omitted -->
-NewRightContext<!-- raw HTML omitted -->.<!-- raw HTML omitted --><!-- raw HTML omitted -->clearAllSet<!-- raw HTML omitted --><!-- raw HTML omitted -->();<!-- raw HTML omitted -->
-NewRightContext<!-- raw HTML omitted -->.<!-- raw HTML omitted --><!-- raw HTML omitted -->setSelectedPackage<!-- raw HTML omitted --><!-- raw HTML omitted -->(<!-- raw HTML omitted -->basePackage<!-- raw HTML omitted -->);<!-- raw HTML omitted -->
-BasicActionOpenDialog dialog <!-- raw HTML omitted -->=<!-- raw HTML omitted --> <!-- raw HTML omitted -->new<!-- raw HTML omitted --> BasicActionOpenDialog<!-- raw HTML omitted -->(<!-- raw HTML omitted -->project<!-- raw HTML omitted -->,<!-- raw HTML omitted --> module<!-- raw HTML omitted -->);<!-- raw HTML omitted -->
-<!-- raw HTML omitted -->if<!-- raw HTML omitted --> <!-- raw HTML omitted -->(!<!-- raw HTML omitted -->dialog<!-- raw HTML omitted -->.<!-- raw HTML omitted --><!-- raw HTML omitted -->showAndGet<!-- raw HTML omitted --><!-- raw HTML omitted -->())<!-- raw HTML omitted --> <!-- raw HTML omitted -->{<!-- raw HTML omitted -->
-<!-- raw HTML omitted -->return<!-- raw HTML omitted --><!-- raw HTML omitted -->;<!-- raw HTML omitted -->
-<!-- raw HTML omitted -->}<!-- raw HTML omitted --></p>
-<pre><code>    DumbService&lt;span style=&quot;color:#f92672&quot;&gt;.&lt;/span&gt;&lt;span style=&quot;color:#a6e22e&quot;&gt;getInstance&lt;/span&gt;&lt;span style=&quot;color:#f92672&quot;&gt;(&lt;/span&gt;project&lt;span style=&quot;color:#f92672&quot;&gt;).&lt;/span&gt;&lt;span style=&quot;color:#a6e22e&quot;&gt;runWhenSmart&lt;/span&gt;&lt;span style=&quot;color:#f92672&quot;&gt;((&lt;/span&gt;DumbAwareRunnable&lt;span style=&quot;color:#f92672&quot;&gt;)&lt;/span&gt; &lt;span style=&quot;color:#f92672&quot;&gt;()&lt;/span&gt; &lt;span style=&quot;color:#f92672&quot;&gt;-&amp;gt;&lt;/span&gt; &lt;span style=&quot;color:#66d9ef&quot;&gt;new&lt;/span&gt; WriteCommandAction&lt;span style=&quot;color:#f92672&quot;&gt;(&lt;/span&gt;project&lt;span style=&quot;color:#f92672&quot;&gt;)&lt;/span&gt; &lt;span style=&quot;color:#f92672&quot;&gt;{&lt;/span&gt;
-        &lt;span style=&quot;color:#a6e22e&quot;&gt;@Override&lt;/span&gt;
-        &lt;span style=&quot;color:#66d9ef&quot;&gt;protected&lt;/span&gt; &lt;span style=&quot;color:#66d9ef&quot;&gt;void&lt;/span&gt; &lt;span style=&quot;color:#a6e22e&quot;&gt;run&lt;/span&gt;&lt;span style=&quot;color:#f92672&quot;&gt;(&lt;/span&gt;&lt;span style=&quot;color:#a6e22e&quot;&gt;@NotNull&lt;/span&gt; Result result&lt;span style=&quot;color:#f92672&quot;&gt;)&lt;/span&gt; &lt;span style=&quot;color:#f92672&quot;&gt;{&lt;/span&gt;
-            &lt;span style=&quot;color:#66d9ef&quot;&gt;switch&lt;/span&gt; &lt;span style=&quot;color:#f92672&quot;&gt;(&lt;/span&gt;NewRightContext&lt;span style=&quot;color:#f92672&quot;&gt;.&lt;/span&gt;&lt;span style=&quot;color:#a6e22e&quot;&gt;getClassType&lt;/span&gt;&lt;span style=&quot;color:#f92672&quot;&gt;())&lt;/span&gt; &lt;span style=&quot;color:#f92672&quot;&gt;{&lt;/span&gt;
-                &lt;span style=&quot;color:#66d9ef&quot;&gt;case&lt;/span&gt; HaloConstant&lt;span style=&quot;color:#f92672&quot;&gt;.&lt;/span&gt;&lt;span style=&quot;color:#a6e22e&quot;&gt;COMBOX_CONTROLLER&lt;/span&gt;&lt;span style=&quot;color:#f92672&quot;&gt;:&lt;/span&gt;
-                    createByFtl&lt;span style=&quot;color:#f92672&quot;&gt;(&lt;/span&gt;project&lt;span style=&quot;color:#f92672&quot;&gt;,&lt;/span&gt; moduleRootPath&lt;span style=&quot;color:#f92672&quot;&gt;,&lt;/span&gt;&lt;span style=&quot;color:#e6db74&quot;&gt;&amp;#34;Controller.java.ftl&amp;#34;&lt;/span&gt;&lt;span style=&quot;color:#f92672&quot;&gt;);&lt;/span&gt;
-                    &lt;span style=&quot;color:#66d9ef&quot;&gt;break&lt;/span&gt;&lt;span style=&quot;color:#f92672&quot;&gt;;&lt;/span&gt;
-            &lt;span style=&quot;color:#f92672&quot;&gt;}&lt;/span&gt;
-            MavenProjectsManager manager &lt;span style=&quot;color:#f92672&quot;&gt;=&lt;/span&gt; MavenProjectsManager&lt;span style=&quot;color:#f92672&quot;&gt;.&lt;/span&gt;&lt;span style=&quot;color:#a6e22e&quot;&gt;getInstance&lt;/span&gt;&lt;span style=&quot;color:#f92672&quot;&gt;(&lt;/span&gt;project&lt;span style=&quot;color:#f92672&quot;&gt;);&lt;/span&gt;
-            &lt;span style=&quot;color:#75715e&quot;&gt;//解决依赖
-</code></pre>
-<p><!-- raw HTML omitted --><!-- raw HTML omitted --><!-- raw HTML omitted -->                manager<!-- raw HTML omitted -->.<!-- raw HTML omitted --><!-- raw HTML omitted -->forceUpdateAllProjectsOrFindAllAvailablePomFiles<!-- raw HTML omitted --><!-- raw HTML omitted -->();<!-- raw HTML omitted -->
-<!-- raw HTML omitted -->//优化生成的所有Java类
-<!-- raw HTML omitted --><!-- raw HTML omitted --><!-- raw HTML omitted -->                HaloIdeaUtils<!-- raw HTML omitted -->.<!-- raw HTML omitted --><!-- raw HTML omitted -->doOptimize<!-- raw HTML omitted --><!-- raw HTML omitted -->(<!-- raw HTML omitted -->project<!-- raw HTML omitted -->);<!-- raw HTML omitted --></p>
-<pre><code>        &lt;span style=&quot;color:#f92672&quot;&gt;}&lt;/span&gt;
-    &lt;span style=&quot;color:#f92672&quot;&gt;}.&lt;/span&gt;&lt;span style=&quot;color:#a6e22e&quot;&gt;execute&lt;/span&gt;&lt;span style=&quot;color:#f92672&quot;&gt;());&lt;/span&gt;
+<p>使用IDEA或者其它IDE集成开发工具，无论写Java代码还是其它代码都需要很多右键操作，比如包上右键创建Java类，IDEA提供的包右键创建Java类，只是创建一个只有类名的空Java文件。
+而Java开发有很多重复性工作，比如Controller类上面加注解，或者基于Mybatis或Mybatis Plus去生成数据对象或者Mapper都是重复性工作。此时类似的功能，就需要通过右键功能解决。本文介绍的就是包右键功能定制开发。</p>
 
-&lt;span style=&quot;color:#f92672&quot;&gt;}&lt;/span&gt;
+<h2 id="2-idea包右键">2.IDEA包右键</h2>
 
+<p>IDEA包右键,就是在所在包上面右键创建自己定制的过的文件模板，生成自己需要生成的Java类，加速开发。如下图所示:</p>
 
-&lt;span style=&quot;color:#75715e&quot;&gt;/**
+<p><img src="1.png" alt="" /></p>
+
+<h2 id="3-开发idea插件">3. 开发IDEA插件</h2>
+
+<h3 id="3-1-增加扩展点到idea插件中">3.1 增加扩展点到IDEA插件中</h3>
+
+<p>在plugin.xml中，增加Actions，如下代码所示:</p>
+
+<pre><code class="language-xml">&lt;actions&gt;
+        &lt;group id=&quot;Halo Tools&quot; text=&quot;Halo Tool&quot;  ➊
+               popup=&quot;true&quot; icon=&quot;/icons/halo.png&quot;&gt;
+            &lt;add-to-group group-id=&quot;ProjectViewPopupMenu&quot; anchor=&quot;after&quot; relative-to-action=&quot;ReplaceInPath&quot;/&gt;
+        &lt;/group&gt;
+        &lt;!-- 创建Halo Basic --&gt;
+        &lt;action class=&quot;org.xujin.idea.right.NewBasicExeAction&quot; ➋
+                id=&quot;halo.basic.class&quot; description=&quot;Halo Basic&quot;
+                icon=&quot;/icons/right/HaloBasic.png&quot;
+                text=&quot;Basic Class&quot;&gt;
+            &lt;add-to-group group-id=&quot;Halo Tools&quot;/&gt;
+        &lt;/action&gt;
+    &lt;/actions&gt;
 </code></pre>
-<p><!-- raw HTML omitted --><!-- raw HTML omitted -->     * 通过ftl创建 Controller
-<!-- raw HTML omitted --><!-- raw HTML omitted -->     * @param project
-<!-- raw HTML omitted --><!-- raw HTML omitted -->     * @param moduleRootPath
-<!-- raw HTML omitted --><!-- raw HTML omitted -->     */<!-- raw HTML omitted -->
-<!-- raw HTML omitted -->private<!-- raw HTML omitted --> <!-- raw HTML omitted -->void<!-- raw HTML omitted --> <!-- raw HTML omitted -->createByFtl<!-- raw HTML omitted --><!-- raw HTML omitted -->(<!-- raw HTML omitted -->Project project<!-- raw HTML omitted -->,<!-- raw HTML omitted --> String moduleRootPath<!-- raw HTML omitted -->,<!-- raw HTML omitted --> String  ftlName<!-- raw HTML omitted -->)<!-- raw HTML omitted --> <!-- raw HTML omitted -->{<!-- raw HTML omitted -->
-NewRightModel newRightModel<!-- raw HTML omitted -->=<!-- raw HTML omitted --> NewRightContext<!-- raw HTML omitted -->.<!-- raw HTML omitted --><!-- raw HTML omitted -->copyToNewRightModel<!-- raw HTML omitted --><!-- raw HTML omitted -->();<!-- raw HTML omitted -->
-<!-- raw HTML omitted -->try<!-- raw HTML omitted --> <!-- raw HTML omitted -->{<!-- raw HTML omitted -->
-PisFileByFreeMarkerUtil<!-- raw HTML omitted -->.<!-- raw HTML omitted --><!-- raw HTML omitted -->createFile<!-- raw HTML omitted --><!-- raw HTML omitted -->(<!-- raw HTML omitted -->project<!-- raw HTML omitted -->,<!-- raw HTML omitted --> newRightModel<!-- raw HTML omitted -->,<!-- raw HTML omitted --> moduleRootPath<!-- raw HTML omitted -->,<!-- raw HTML omitted -->ftlName<!-- raw HTML omitted -->);<!-- raw HTML omitted -->
-NewRightContext<!-- raw HTML omitted -->.<!-- raw HTML omitted --><!-- raw HTML omitted -->clearAllSet<!-- raw HTML omitted --><!-- raw HTML omitted -->();<!-- raw HTML omitted -->
-<!-- raw HTML omitted -->}<!-- raw HTML omitted --> <!-- raw HTML omitted -->catch<!-- raw HTML omitted --> <!-- raw HTML omitted -->(<!-- raw HTML omitted -->Exception ex<!-- raw HTML omitted -->)<!-- raw HTML omitted --> <!-- raw HTML omitted -->{<!-- raw HTML omitted -->
-ex<!-- raw HTML omitted -->.<!-- raw HTML omitted --><!-- raw HTML omitted -->printStackTrace<!-- raw HTML omitted --><!-- raw HTML omitted -->();<!-- raw HTML omitted -->
-<!-- raw HTML omitted -->}<!-- raw HTML omitted -->
-<!-- raw HTML omitted -->}<!-- raw HTML omitted -->
-<!-- raw HTML omitted -->}<!-- raw HTML omitted -->
-<!-- raw HTML omitted --><!-- raw HTML omitted --><!-- raw HTML omitted --><!-- raw HTML omitted --></p>
-<!-- raw HTML omitted -->
+
+<p>➊ 在右键分组，并设置右键位置在添加到ReplaceInPath之后后
+➋ 添加右键子分组到Halo Tools中。</p>
+
+<h3 id="3-1-开发对应的action">3.1 开发对应的Action</h3>
+
+<p>右键点击之后，显示右键功能分组，点击右键分组将会触发一个Action，可以对Action定制是开会话框，还是开向导式方式创建Java类。</p>
+
+<pre><code class="language-java">/**
+ * 右键创建Basic Action
+ * @author xujin
+ */
+public class NewBasicExeAction extends AnAction {
+
+    @Override
+    public void actionPerformed(AnActionEvent e) {
+
+        Project project = e.getProject();
+        /**
+         * 从Action中得到一个虚拟文件
+         */
+        VirtualFile virtualFile = e.getData(DataKeys.VIRTUAL_FILE);
+        if (!virtualFile.isDirectory()) {
+            virtualFile = virtualFile.getParent();
+        }
+        Module module = ModuleUtil.findModuleForFile(virtualFile, project);
+
+        String moduleRootPath = ModuleRootManager.getInstance(module).getContentRoots()[0].getPath();
+        String actionDir = virtualFile.getPath();
+        String str = StringUtils.substringAfter(actionDir, moduleRootPath + &quot;/src/main/java/&quot;);
+        //获取右键后的路径
+        String basePackage = StringUtils.replace(str, &quot;/&quot;, &quot;.&quot;);
+        NewRightContext.clearAllSet();
+        NewRightContext.setSelectedPackage(basePackage);
+        BasicActionOpenDialog dialog = new BasicActionOpenDialog(project, module);
+        if (!dialog.showAndGet()) {
+            return;
+        }
+
+        DumbService.getInstance(project).runWhenSmart((DumbAwareRunnable) () -&gt; new WriteCommandAction(project) {
+            @Override
+            protected void run(@NotNull Result result) {
+                switch (NewRightContext.getClassType()) {
+                    case HaloConstant.COMBOX_CONTROLLER:
+                        createByFtl(project, moduleRootPath,&quot;Controller.java.ftl&quot;);
+                        break;
+                }
+                MavenProjectsManager manager = MavenProjectsManager.getInstance(project);
+                //解决依赖
+                manager.forceUpdateAllProjectsOrFindAllAvailablePomFiles();
+                //优化生成的所有Java类
+                HaloIdeaUtils.doOptimize(project);
+
+            }
+        }.execute());
+
+    }
+
+
+    /**
+     * 通过ftl创建 Controller
+     * @param project
+     * @param moduleRootPath
+     */
+    private void createByFtl(Project project, String moduleRootPath, String  ftlName) {
+        NewRightModel newRightModel= NewRightContext.copyToNewRightModel();
+        try {
+            PisFileByFreeMarkerUtil.createFile(project, newRightModel, moduleRootPath,ftlName);
+            NewRightContext.clearAllSet();
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+    }
+}
+</code></pre>
+
+<blockquote>
+<p>更多内容请下载代码，自行Debug查看。</p>
+</blockquote>
 
 </article>
 
@@ -438,16 +484,18 @@ ex<!-- raw HTML omitted -->.<!-- raw HTML omitted --><!-- raw HTML omitted -->pr
 		目录
 	</h2>
   <nav id="TableOfContents">
-  <ul>
-    <li><a href="#1背景">1.背景</a></li>
-    <li><a href="#2idea包右键">2.IDEA包右键</a></li>
-    <li><a href="#3-开发idea插件">3. 开发IDEA插件</a>
-      <ul>
-        <li><a href="#31-增加扩展点到idea插件中">3.1 增加扩展点到IDEA插件中</a></li>
-        <li><a href="#31-开发对应的action">3.1 开发对应的Action</a></li>
-      </ul>
-    </li>
-  </ul>
+<ul>
+<li>
+<ul>
+<li><a href="#1-背景">1.背景</a></li>
+<li><a href="#2-idea包右键">2.IDEA包右键</a></li>
+<li><a href="#3-开发idea插件">3. 开发IDEA插件</a>
+<ul>
+<li><a href="#3-1-增加扩展点到idea插件中">3.1 增加扩展点到IDEA插件中</a></li>
+<li><a href="#3-1-开发对应的action">3.1 开发对应的Action</a></li>
+</ul></li>
+</ul></li>
+</ul>
 </nav>
 </div>
 

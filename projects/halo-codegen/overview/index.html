@@ -10,7 +10,7 @@
 <meta name="viewport" content="width=device-width,minimum-scale=1">
 <meta name="description" content="玹霖志,许进沉思录,许进|Spring Cloud,中间件，基础架构，www.xujin.org,xujin.org,-许进沉思录,Venus&#43;,云首科技有限公司,云计算，大数据，物联网，Software_king的博客,云计算Saas，云计算Paas，云计算Iaas Hadoop，大数据，JavaEE，Java，物联网，Hadoop， NoSQL，MongoDB,Spring, Hibernate,Struts2," />
 
-<meta name="generator" content="Hugo 0.72.0" /><link rel="shortcut icon" href=/img/icon.png type="image/png">
+<meta name="generator" content="Hugo 0.55.6" /><link rel="shortcut icon" href=/img/icon.png type="image/png">
 
 <link href="https://unpkg.com/purecss@1.0.0/build/base-min.css" rel="stylesheet">
 
@@ -521,7 +521,23 @@ if (!doNotTrack) {
 </div>
 
 		<article class="typo">
-	<!-- raw HTML omitted -->
+	<h2 id="1-代码生成器">1. 代码生成器</h2>
+
+<h3 id="1-1-什么是代码生成器">1.1 什么是代码生成器</h3>
+
+<p>早起进行软件工程开发，用文本编辑器去开发写代码，后来为了加快开发效率，出现一系列<code>IDE（开发集成开发工具)</code>,比如Eclipse,IDEA等。创建Maven或者Gradle工程都是通过IDE去创建，但是有些重复的工作，比如单表的CRUD操作，或者重复性劳动的配置，包括Maven或者Gradle的配置。</p>
+
+<h2 id="2-代码生成器设计">2. 代码生成器设计</h2>
+
+<p>如下图所示，代码生成器的生成的工程，由元数据+模板(工程模板或代码模板)组装而成。
+* 元数据
+* 模板
+<img src="1.png" alt="" /></p>
+
+<h2 id="3-halo-codegen">3.Halo CodeGen</h2>
+
+<p>Halo Codegen是一个服务端，其中网页版和IDEA插件都是客户端，客户端只是用于跟用户交互，提交数据用于生成Halo Project</p>
+
 </article>
 
 <div id="gitalk-container"></div>
