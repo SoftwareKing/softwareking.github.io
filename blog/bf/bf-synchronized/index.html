@@ -10,7 +10,7 @@
 <meta name="viewport" content="width=device-width,minimum-scale=1">
 <meta name="description" content="玹霖志,许进沉思录,许进|Spring Cloud,中间件，基础架构，www.xujin.org,xujin.org,-许进沉思录,Venus&#43;,云首科技有限公司,云计算，大数据，物联网，Software_king的博客,云计算Saas，云计算Paas，云计算Iaas Hadoop，大数据，JavaEE，Java，物联网，Hadoop， NoSQL，MongoDB,Spring, Hibernate,Struts2," />
 
-<meta name="generator" content="Hugo 0.55.6" /><link rel="shortcut icon" href=/img/icon.png type="image/png">
+<meta name="generator" content="Hugo 0.72.0" /><link rel="shortcut icon" href=/img/icon.png type="image/png">
 
 <link href="https://unpkg.com/purecss@1.0.0/build/base-min.css" rel="stylesheet">
 
@@ -243,7 +243,7 @@ if (!doNotTrack) {
 				
 			</span>
 		
-		<span class="post-word-count">· 字数:4512·阅读时间 10 分钟</span>
+		<span class="post-word-count">· 字数:4463·阅读时间 9 分钟</span>
 		
 		阅读量<span id="busuanzi_value_page_pv"></span>次
 		
@@ -261,571 +261,407 @@ if (!doNotTrack) {
 	});
   </script>
 		<article class="typo">
-	<h2 id="1-脏读">1. 脏读</h2>
+	<!-- raw HTML omitted -->
+<pre><code>&lt;span style=&quot;color:#66d9ef&quot;&gt;private&lt;/span&gt; String username &lt;span style=&quot;color:#f92672&quot;&gt;=&lt;/span&gt; &lt;span style=&quot;color:#e6db74&quot;&gt;&amp;#34;xujin&amp;#34;&lt;/span&gt;&lt;span style=&quot;color:#f92672&quot;&gt;;&lt;/span&gt;
+&lt;span style=&quot;color:#66d9ef&quot;&gt;private&lt;/span&gt; String password &lt;span style=&quot;color:#f92672&quot;&gt;=&lt;/span&gt; &lt;span style=&quot;color:#e6db74&quot;&gt;&amp;#34;123&amp;#34;&lt;/span&gt;&lt;span style=&quot;color:#f92672&quot;&gt;;&lt;/span&gt;
 
-<h3 id="1-1-什么是脏读">1.1 什么是脏读</h3>
+&lt;span style=&quot;color:#66d9ef&quot;&gt;public&lt;/span&gt; &lt;span style=&quot;color:#66d9ef&quot;&gt;synchronized&lt;/span&gt; &lt;span style=&quot;color:#66d9ef&quot;&gt;void&lt;/span&gt; &lt;span style=&quot;color:#a6e22e&quot;&gt;setValue&lt;/span&gt;&lt;span style=&quot;color:#f92672&quot;&gt;(&lt;/span&gt;String username&lt;span style=&quot;color:#f92672&quot;&gt;,&lt;/span&gt; String password&lt;span style=&quot;color:#f92672&quot;&gt;)&lt;/span&gt; &lt;span style=&quot;color:#f92672&quot;&gt;{&lt;/span&gt;
+    &lt;span style=&quot;color:#66d9ef&quot;&gt;this&lt;/span&gt;&lt;span style=&quot;color:#f92672&quot;&gt;.&lt;/span&gt;&lt;span style=&quot;color:#a6e22e&quot;&gt;username&lt;/span&gt; &lt;span style=&quot;color:#f92672&quot;&gt;=&lt;/span&gt; username&lt;span style=&quot;color:#f92672&quot;&gt;;&lt;/span&gt;
+    &lt;span style=&quot;color:#66d9ef&quot;&gt;try&lt;/span&gt; &lt;span style=&quot;color:#f92672&quot;&gt;{&lt;/span&gt;
+        Thread&lt;span style=&quot;color:#f92672&quot;&gt;.&lt;/span&gt;&lt;span style=&quot;color:#a6e22e&quot;&gt;sleep&lt;/span&gt;&lt;span style=&quot;color:#f92672&quot;&gt;(&lt;/span&gt;2000&lt;span style=&quot;color:#f92672&quot;&gt;);&lt;/span&gt;
+    &lt;span style=&quot;color:#f92672&quot;&gt;}&lt;/span&gt; &lt;span style=&quot;color:#66d9ef&quot;&gt;catch&lt;/span&gt; &lt;span style=&quot;color:#f92672&quot;&gt;(&lt;/span&gt;InterruptedException e&lt;span style=&quot;color:#f92672&quot;&gt;)&lt;/span&gt; &lt;span style=&quot;color:#f92672&quot;&gt;{&lt;/span&gt;
+        e&lt;span style=&quot;color:#f92672&quot;&gt;.&lt;/span&gt;&lt;span style=&quot;color:#a6e22e&quot;&gt;printStackTrace&lt;/span&gt;&lt;span style=&quot;color:#f92672&quot;&gt;();&lt;/span&gt;
+    &lt;span style=&quot;color:#f92672&quot;&gt;}&lt;/span&gt;
 
-<p>对于对象的同步和异步方法，我们在设计程序，一定要考虑问题的整体性，不然会出现数据不一致的错误，最经典的错误就是脏读(DirtyRead)。</p>
+    &lt;span style=&quot;color:#66d9ef&quot;&gt;this&lt;/span&gt;&lt;span style=&quot;color:#f92672&quot;&gt;.&lt;/span&gt;&lt;span style=&quot;color:#a6e22e&quot;&gt;password&lt;/span&gt; &lt;span style=&quot;color:#f92672&quot;&gt;=&lt;/span&gt; password&lt;span style=&quot;color:#f92672&quot;&gt;;&lt;/span&gt;
 
-<h3 id="1-2-示例code">1.2 示例Code</h3>
+    System&lt;span style=&quot;color:#f92672&quot;&gt;.&lt;/span&gt;&lt;span style=&quot;color:#a6e22e&quot;&gt;out&lt;/span&gt;&lt;span style=&quot;color:#f92672&quot;&gt;.&lt;/span&gt;&lt;span style=&quot;color:#a6e22e&quot;&gt;println&lt;/span&gt;&lt;span style=&quot;color:#f92672&quot;&gt;(&lt;/span&gt;&lt;span style=&quot;color:#e6db74&quot;&gt;&amp;#34;setValue最终结果：username = &amp;#34;&lt;/span&gt; &lt;span style=&quot;color:#f92672&quot;&gt;+&lt;/span&gt; username &lt;span style=&quot;color:#f92672&quot;&gt;+&lt;/span&gt; &lt;span style=&quot;color:#e6db74&quot;&gt;&amp;#34; , password = &amp;#34;&lt;/span&gt; &lt;span style=&quot;color:#f92672&quot;&gt;+&lt;/span&gt; password&lt;span style=&quot;color:#f92672&quot;&gt;);&lt;/span&gt;
+&lt;span style=&quot;color:#f92672&quot;&gt;}&lt;/span&gt;
+&lt;span style=&quot;color:#75715e&quot;&gt;//①这里getValue没有加synchronized修饰
+</code></pre>
+<p><!-- raw HTML omitted --><!-- raw HTML omitted --><!-- raw HTML omitted -->    <!-- raw HTML omitted -->public<!-- raw HTML omitted --> <!-- raw HTML omitted -->void<!-- raw HTML omitted --> <!-- raw HTML omitted -->getValue<!-- raw HTML omitted --><!-- raw HTML omitted -->()<!-- raw HTML omitted --> <!-- raw HTML omitted -->{<!-- raw HTML omitted -->
+System<!-- raw HTML omitted -->.<!-- raw HTML omitted --><!-- raw HTML omitted -->out<!-- raw HTML omitted --><!-- raw HTML omitted -->.<!-- raw HTML omitted --><!-- raw HTML omitted -->println<!-- raw HTML omitted --><!-- raw HTML omitted -->(<!-- raw HTML omitted --><!-- raw HTML omitted -->&quot;getValue方法得到：username = &quot;<!-- raw HTML omitted --> <!-- raw HTML omitted -->+<!-- raw HTML omitted --> <!-- raw HTML omitted -->this<!-- raw HTML omitted --><!-- raw HTML omitted -->.<!-- raw HTML omitted --><!-- raw HTML omitted -->username<!-- raw HTML omitted --> <!-- raw HTML omitted -->+<!-- raw HTML omitted --> <!-- raw HTML omitted -->&quot; , password = &quot;<!-- raw HTML omitted --> <!-- raw HTML omitted -->+<!-- raw HTML omitted --> <!-- raw HTML omitted -->this<!-- raw HTML omitted --><!-- raw HTML omitted -->.<!-- raw HTML omitted --><!-- raw HTML omitted -->password<!-- raw HTML omitted --><!-- raw HTML omitted -->);<!-- raw HTML omitted -->
+<!-- raw HTML omitted -->}<!-- raw HTML omitted --></p>
+<pre><code>&lt;span style=&quot;color:#66d9ef&quot;&gt;public&lt;/span&gt; &lt;span style=&quot;color:#66d9ef&quot;&gt;static&lt;/span&gt; &lt;span style=&quot;color:#66d9ef&quot;&gt;void&lt;/span&gt; &lt;span style=&quot;color:#a6e22e&quot;&gt;main&lt;/span&gt;&lt;span style=&quot;color:#f92672&quot;&gt;(&lt;/span&gt;String&lt;span style=&quot;color:#f92672&quot;&gt;[]&lt;/span&gt; args&lt;span style=&quot;color:#f92672&quot;&gt;)&lt;/span&gt; &lt;span style=&quot;color:#66d9ef&quot;&gt;throws&lt;/span&gt; Exception &lt;span style=&quot;color:#f92672&quot;&gt;{&lt;/span&gt;
 
-<p>业务整体需要使用完整的synchronized，保持业务的原子性。</p>
+    &lt;span style=&quot;color:#66d9ef&quot;&gt;final&lt;/span&gt; DirtyRead dr &lt;span style=&quot;color:#f92672&quot;&gt;=&lt;/span&gt; &lt;span style=&quot;color:#66d9ef&quot;&gt;new&lt;/span&gt; DirtyRead&lt;span style=&quot;color:#f92672&quot;&gt;();&lt;/span&gt;
+    Thread t1 &lt;span style=&quot;color:#f92672&quot;&gt;=&lt;/span&gt; &lt;span style=&quot;color:#66d9ef&quot;&gt;new&lt;/span&gt; Thread&lt;span style=&quot;color:#f92672&quot;&gt;(&lt;/span&gt;&lt;span style=&quot;color:#66d9ef&quot;&gt;new&lt;/span&gt; Runnable&lt;span style=&quot;color:#f92672&quot;&gt;()&lt;/span&gt; &lt;span style=&quot;color:#f92672&quot;&gt;{&lt;/span&gt;
+        &lt;span style=&quot;color:#a6e22e&quot;&gt;@Override&lt;/span&gt;
+        &lt;span style=&quot;color:#66d9ef&quot;&gt;public&lt;/span&gt; &lt;span style=&quot;color:#66d9ef&quot;&gt;void&lt;/span&gt; &lt;span style=&quot;color:#a6e22e&quot;&gt;run&lt;/span&gt;&lt;span style=&quot;color:#f92672&quot;&gt;()&lt;/span&gt; &lt;span style=&quot;color:#f92672&quot;&gt;{&lt;/span&gt;
+            dr&lt;span style=&quot;color:#f92672&quot;&gt;.&lt;/span&gt;&lt;span style=&quot;color:#a6e22e&quot;&gt;setValue&lt;/span&gt;&lt;span style=&quot;color:#f92672&quot;&gt;(&lt;/span&gt;&lt;span style=&quot;color:#e6db74&quot;&gt;&amp;#34;张三&amp;#34;&lt;/span&gt;&lt;span style=&quot;color:#f92672&quot;&gt;,&lt;/span&gt; &lt;span style=&quot;color:#e6db74&quot;&gt;&amp;#34;456&amp;#34;&lt;/span&gt;&lt;span style=&quot;color:#f92672&quot;&gt;);&lt;/span&gt;
+        &lt;span style=&quot;color:#f92672&quot;&gt;}&lt;/span&gt;
+    &lt;span style=&quot;color:#f92672&quot;&gt;});&lt;/span&gt;
+    t1&lt;span style=&quot;color:#f92672&quot;&gt;.&lt;/span&gt;&lt;span style=&quot;color:#a6e22e&quot;&gt;start&lt;/span&gt;&lt;span style=&quot;color:#f92672&quot;&gt;();&lt;/span&gt;
+    Thread&lt;span style=&quot;color:#f92672&quot;&gt;.&lt;/span&gt;&lt;span style=&quot;color:#a6e22e&quot;&gt;sleep&lt;/span&gt;&lt;span style=&quot;color:#f92672&quot;&gt;(&lt;/span&gt;1000&lt;span style=&quot;color:#f92672&quot;&gt;);&lt;/span&gt;
 
-<pre><code class="language-java">/**
- * 业务整体需要使用完整的synchronized，保持业务的原子性。
- * 
- * @author xujin
- *
- */
-public class DirtyRead {
+    dr&lt;span style=&quot;color:#f92672&quot;&gt;.&lt;/span&gt;&lt;span style=&quot;color:#a6e22e&quot;&gt;getValue&lt;/span&gt;&lt;span style=&quot;color:#f92672&quot;&gt;();&lt;/span&gt;
+&lt;span style=&quot;color:#f92672&quot;&gt;}&lt;/span&gt;
+</code></pre>
+<p><!-- raw HTML omitted -->}<!-- raw HTML omitted -->
+<!-- raw HTML omitted --><!-- raw HTML omitted --><!-- raw HTML omitted --><!-- raw HTML omitted -->上面的Code中，getValue没有加synchronized修饰，打印结果如下,出现脏读<!-- raw HTML omitted --></p>
+<!-- raw HTML omitted -->
+<!-- raw HTML omitted -->
+<!-- raw HTML omitted -->
+<pre><code>&lt;span style=&quot;color:#66d9ef&quot;&gt;public&lt;/span&gt; &lt;span style=&quot;color:#66d9ef&quot;&gt;synchronized&lt;/span&gt; &lt;span style=&quot;color:#66d9ef&quot;&gt;void&lt;/span&gt; &lt;span style=&quot;color:#a6e22e&quot;&gt;method1&lt;/span&gt;&lt;span style=&quot;color:#f92672&quot;&gt;()&lt;/span&gt; &lt;span style=&quot;color:#f92672&quot;&gt;{&lt;/span&gt;
+    System&lt;span style=&quot;color:#f92672&quot;&gt;.&lt;/span&gt;&lt;span style=&quot;color:#a6e22e&quot;&gt;out&lt;/span&gt;&lt;span style=&quot;color:#f92672&quot;&gt;.&lt;/span&gt;&lt;span style=&quot;color:#a6e22e&quot;&gt;println&lt;/span&gt;&lt;span style=&quot;color:#f92672&quot;&gt;(&lt;/span&gt;&lt;span style=&quot;color:#e6db74&quot;&gt;&amp;#34;method1..&amp;#34;&lt;/span&gt;&lt;span style=&quot;color:#f92672&quot;&gt;);&lt;/span&gt;
+    method2&lt;span style=&quot;color:#f92672&quot;&gt;();&lt;/span&gt;
+&lt;span style=&quot;color:#f92672&quot;&gt;}&lt;/span&gt;
 
-    private String username = &quot;xujin&quot;;
-    private String password = &quot;123&quot;;
+&lt;span style=&quot;color:#66d9ef&quot;&gt;public&lt;/span&gt; &lt;span style=&quot;color:#66d9ef&quot;&gt;synchronized&lt;/span&gt; &lt;span style=&quot;color:#66d9ef&quot;&gt;void&lt;/span&gt; &lt;span style=&quot;color:#a6e22e&quot;&gt;method2&lt;/span&gt;&lt;span style=&quot;color:#f92672&quot;&gt;()&lt;/span&gt; &lt;span style=&quot;color:#f92672&quot;&gt;{&lt;/span&gt;
+    System&lt;span style=&quot;color:#f92672&quot;&gt;.&lt;/span&gt;&lt;span style=&quot;color:#a6e22e&quot;&gt;out&lt;/span&gt;&lt;span style=&quot;color:#f92672&quot;&gt;.&lt;/span&gt;&lt;span style=&quot;color:#a6e22e&quot;&gt;println&lt;/span&gt;&lt;span style=&quot;color:#f92672&quot;&gt;(&lt;/span&gt;&lt;span style=&quot;color:#e6db74&quot;&gt;&amp;#34;method2..&amp;#34;&lt;/span&gt;&lt;span style=&quot;color:#f92672&quot;&gt;);&lt;/span&gt;
+    method3&lt;span style=&quot;color:#f92672&quot;&gt;();&lt;/span&gt;
+&lt;span style=&quot;color:#f92672&quot;&gt;}&lt;/span&gt;
 
-    public synchronized void setValue(String username, String password) {
-        this.username = username;
-        try {
-            Thread.sleep(2000);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
+&lt;span style=&quot;color:#66d9ef&quot;&gt;public&lt;/span&gt; &lt;span style=&quot;color:#66d9ef&quot;&gt;synchronized&lt;/span&gt; &lt;span style=&quot;color:#66d9ef&quot;&gt;void&lt;/span&gt; &lt;span style=&quot;color:#a6e22e&quot;&gt;method3&lt;/span&gt;&lt;span style=&quot;color:#f92672&quot;&gt;()&lt;/span&gt; &lt;span style=&quot;color:#f92672&quot;&gt;{&lt;/span&gt;
+    System&lt;span style=&quot;color:#f92672&quot;&gt;.&lt;/span&gt;&lt;span style=&quot;color:#a6e22e&quot;&gt;out&lt;/span&gt;&lt;span style=&quot;color:#f92672&quot;&gt;.&lt;/span&gt;&lt;span style=&quot;color:#a6e22e&quot;&gt;println&lt;/span&gt;&lt;span style=&quot;color:#f92672&quot;&gt;(&lt;/span&gt;&lt;span style=&quot;color:#e6db74&quot;&gt;&amp;#34;method3..&amp;#34;&lt;/span&gt;&lt;span style=&quot;color:#f92672&quot;&gt;);&lt;/span&gt;
+&lt;span style=&quot;color:#f92672&quot;&gt;}&lt;/span&gt;
 
-        this.password = password;
-
-        System.out.println(&quot;setValue最终结果：username = &quot; + username + &quot; , password = &quot; + password);
-    }
-    //①这里getValue没有加synchronized修饰
-    public void getValue() {
-        System.out.println(&quot;getValue方法得到：username = &quot; + this.username + &quot; , password = &quot; + this.password);
-    }
-
-    public static void main(String[] args) throws Exception {
-
-        final DirtyRead dr = new DirtyRead();
-        Thread t1 = new Thread(new Runnable() {
-            @Override
-            public void run() {
-                dr.setValue(&quot;张三&quot;, &quot;456&quot;);
-            }
-        });
-        t1.start();
-        Thread.sleep(1000);
-
-        dr.getValue();
-    }
+&lt;span style=&quot;color:#66d9ef&quot;&gt;public&lt;/span&gt; &lt;span style=&quot;color:#66d9ef&quot;&gt;static&lt;/span&gt; &lt;span style=&quot;color:#66d9ef&quot;&gt;void&lt;/span&gt; &lt;span style=&quot;color:#a6e22e&quot;&gt;main&lt;/span&gt;&lt;span style=&quot;color:#f92672&quot;&gt;(&lt;/span&gt;String&lt;span style=&quot;color:#f92672&quot;&gt;[]&lt;/span&gt; args&lt;span style=&quot;color:#f92672&quot;&gt;)&lt;/span&gt; &lt;span style=&quot;color:#f92672&quot;&gt;{&lt;/span&gt;
+    &lt;span style=&quot;color:#66d9ef&quot;&gt;final&lt;/span&gt; SyncReenTrant sd &lt;span style=&quot;color:#f92672&quot;&gt;=&lt;/span&gt; &lt;span style=&quot;color:#66d9ef&quot;&gt;new&lt;/span&gt; SyncReenTrant&lt;span style=&quot;color:#f92672&quot;&gt;();&lt;/span&gt;
+    Thread t1 &lt;span style=&quot;color:#f92672&quot;&gt;=&lt;/span&gt; &lt;span style=&quot;color:#66d9ef&quot;&gt;new&lt;/span&gt; Thread&lt;span style=&quot;color:#f92672&quot;&gt;(&lt;/span&gt;&lt;span style=&quot;color:#66d9ef&quot;&gt;new&lt;/span&gt; Runnable&lt;span style=&quot;color:#f92672&quot;&gt;()&lt;/span&gt; &lt;span style=&quot;color:#f92672&quot;&gt;{&lt;/span&gt;
+        &lt;span style=&quot;color:#a6e22e&quot;&gt;@Override&lt;/span&gt;
+        &lt;span style=&quot;color:#66d9ef&quot;&gt;public&lt;/span&gt; &lt;span style=&quot;color:#66d9ef&quot;&gt;void&lt;/span&gt; &lt;span style=&quot;color:#a6e22e&quot;&gt;run&lt;/span&gt;&lt;span style=&quot;color:#f92672&quot;&gt;()&lt;/span&gt; &lt;span style=&quot;color:#f92672&quot;&gt;{&lt;/span&gt;
+            sd&lt;span style=&quot;color:#f92672&quot;&gt;.&lt;/span&gt;&lt;span style=&quot;color:#a6e22e&quot;&gt;method1&lt;/span&gt;&lt;span style=&quot;color:#f92672&quot;&gt;();&lt;/span&gt;
+        &lt;span style=&quot;color:#f92672&quot;&gt;}&lt;/span&gt;
+    &lt;span style=&quot;color:#f92672&quot;&gt;});&lt;/span&gt;
+    t1&lt;span style=&quot;color:#f92672&quot;&gt;.&lt;/span&gt;&lt;span style=&quot;color:#a6e22e&quot;&gt;start&lt;/span&gt;&lt;span style=&quot;color:#f92672&quot;&gt;();&lt;/span&gt;
+&lt;span style=&quot;color:#f92672&quot;&gt;}&lt;/span&gt;
+</code></pre>
+<p><!-- raw HTML omitted --><!-- raw HTML omitted --><!-- raw HTML omitted --><!-- raw HTML omitted -->运行结果如下:<!-- raw HTML omitted --></p>
+<!-- raw HTML omitted -->
+<!-- raw HTML omitted -->
+<!-- raw HTML omitted -->
+<pre><code>public synchronized void doSomething() {
+    System.out.println(&amp;quot;child.doSomething()&amp;quot;);
+    // 调用自己类中其他的synchronized方法
+    doAnotherThing();
 
 }
-</code></pre>
 
-<p>上面的Code中，getValue没有加synchronized修饰，打印结果如下,出现脏读</p>
+private synchronized void doAnotherThing() {
+    // 调用父类的synchronized方法
+    super.doSomething();
+    System.out.println(&amp;quot;child.doAnotherThing()&amp;quot;);
+}
 
-<pre><code>getValue方法得到：username = 张三 , password = 123
-setValue最终结果：username = 张三 , password = 456
-</code></pre>
-
-<p>只需在getValue加synchronized修饰，如下:</p>
-
-<pre><code class="language-java">public synchronized void getValue() {
-  System.out.println(&quot;getValue方法得到：username = &quot; + this.username + &quot; , password = &quot; + this.password);
+public static void main(String[] args) {
+    Son child = new Son();
+    child.doSomething();
 }
 </code></pre>
-
-<p>运行结果如下,没有造成数据脏读</p>
-
-<pre><code>setValue最终结果：username = 张三 , password = 456
-getValue方法得到：username = 张三 , password = 456
+<p>}</p>
+<p>class Father {
+public synchronized void doSomething() {
+System.out.println(&quot;father.doSomething()&quot;);
+}</p>
+<p>}
+<!-- raw HTML omitted --><!-- raw HTML omitted --><!-- raw HTML omitted -->运行结果:<!-- raw HTML omitted --></p>
+<!-- raw HTML omitted -->
+<!-- raw HTML omitted -->
+<!-- raw HTML omitted -->
+<pre><code>&lt;span style=&quot;color:#75715e&quot;&gt;// 父类
 </code></pre>
+<p><!-- raw HTML omitted --><!-- raw HTML omitted --><!-- raw HTML omitted -->    <!-- raw HTML omitted -->static<!-- raw HTML omitted --> <!-- raw HTML omitted -->class<!-- raw HTML omitted --> <!-- raw HTML omitted -->Father<!-- raw HTML omitted --> <!-- raw HTML omitted -->{<!-- raw HTML omitted -->
+<!-- raw HTML omitted -->public<!-- raw HTML omitted --> <!-- raw HTML omitted -->int<!-- raw HTML omitted --> i <!-- raw HTML omitted -->=<!-- raw HTML omitted --> 10<!-- raw HTML omitted -->;<!-- raw HTML omitted --></p>
+<pre><code>    &lt;span style=&quot;color:#66d9ef&quot;&gt;public&lt;/span&gt; &lt;span style=&quot;color:#66d9ef&quot;&gt;synchronized&lt;/span&gt; &lt;span style=&quot;color:#66d9ef&quot;&gt;void&lt;/span&gt; &lt;span style=&quot;color:#a6e22e&quot;&gt;operationSup&lt;/span&gt;&lt;span style=&quot;color:#f92672&quot;&gt;()&lt;/span&gt; &lt;span style=&quot;color:#f92672&quot;&gt;{&lt;/span&gt;
+        &lt;span style=&quot;color:#66d9ef&quot;&gt;try&lt;/span&gt; &lt;span style=&quot;color:#f92672&quot;&gt;{&lt;/span&gt;
+            i&lt;span style=&quot;color:#f92672&quot;&gt;--;&lt;/span&gt;
+            System&lt;span style=&quot;color:#f92672&quot;&gt;.&lt;/span&gt;&lt;span style=&quot;color:#a6e22e&quot;&gt;out&lt;/span&gt;&lt;span style=&quot;color:#f92672&quot;&gt;.&lt;/span&gt;&lt;span style=&quot;color:#a6e22e&quot;&gt;println&lt;/span&gt;&lt;span style=&quot;color:#f92672&quot;&gt;(&lt;/span&gt;&lt;span style=&quot;color:#e6db74&quot;&gt;&amp;#34;Father print i = &amp;#34;&lt;/span&gt; &lt;span style=&quot;color:#f92672&quot;&gt;+&lt;/span&gt; i&lt;span style=&quot;color:#f92672&quot;&gt;);&lt;/span&gt;
+            Thread&lt;span style=&quot;color:#f92672&quot;&gt;.&lt;/span&gt;&lt;span style=&quot;color:#a6e22e&quot;&gt;sleep&lt;/span&gt;&lt;span style=&quot;color:#f92672&quot;&gt;(&lt;/span&gt;100&lt;span style=&quot;color:#f92672&quot;&gt;);&lt;/span&gt;
+        &lt;span style=&quot;color:#f92672&quot;&gt;}&lt;/span&gt; &lt;span style=&quot;color:#66d9ef&quot;&gt;catch&lt;/span&gt; &lt;span style=&quot;color:#f92672&quot;&gt;(&lt;/span&gt;InterruptedException e&lt;span style=&quot;color:#f92672&quot;&gt;)&lt;/span&gt; &lt;span style=&quot;color:#f92672&quot;&gt;{&lt;/span&gt;
+            e&lt;span style=&quot;color:#f92672&quot;&gt;.&lt;/span&gt;&lt;span style=&quot;color:#a6e22e&quot;&gt;printStackTrace&lt;/span&gt;&lt;span style=&quot;color:#f92672&quot;&gt;();&lt;/span&gt;
+        &lt;span style=&quot;color:#f92672&quot;&gt;}&lt;/span&gt;
+    &lt;span style=&quot;color:#f92672&quot;&gt;}&lt;/span&gt;
+&lt;span style=&quot;color:#f92672&quot;&gt;}&lt;/span&gt;
 
-<h3 id="1-3-小结">1.3 小结</h3>
+&lt;span style=&quot;color:#75715e&quot;&gt;// 子类继承父类
+</code></pre>
+<p><!-- raw HTML omitted --><!-- raw HTML omitted --><!-- raw HTML omitted -->    <!-- raw HTML omitted -->static<!-- raw HTML omitted --> <!-- raw HTML omitted -->class<!-- raw HTML omitted --> <!-- raw HTML omitted -->Son<!-- raw HTML omitted --> <!-- raw HTML omitted -->extends<!-- raw HTML omitted --> Father <!-- raw HTML omitted -->{<!-- raw HTML omitted -->
+<!-- raw HTML omitted -->public<!-- raw HTML omitted --> <!-- raw HTML omitted -->synchronized<!-- raw HTML omitted --> <!-- raw HTML omitted -->void<!-- raw HTML omitted --> <!-- raw HTML omitted -->operationSub<!-- raw HTML omitted --><!-- raw HTML omitted -->()<!-- raw HTML omitted --> <!-- raw HTML omitted -->{<!-- raw HTML omitted -->
+<!-- raw HTML omitted -->try<!-- raw HTML omitted --> <!-- raw HTML omitted -->{<!-- raw HTML omitted -->
+<!-- raw HTML omitted -->while<!-- raw HTML omitted --> <!-- raw HTML omitted -->(<!-- raw HTML omitted -->i <!-- raw HTML omitted -->&gt;<!-- raw HTML omitted --> 0<!-- raw HTML omitted -->)<!-- raw HTML omitted --> <!-- raw HTML omitted -->{<!-- raw HTML omitted -->
+i<!-- raw HTML omitted -->&ndash;;<!-- raw HTML omitted -->
+System<!-- raw HTML omitted -->.<!-- raw HTML omitted --><!-- raw HTML omitted -->out<!-- raw HTML omitted --><!-- raw HTML omitted -->.<!-- raw HTML omitted --><!-- raw HTML omitted -->println<!-- raw HTML omitted --><!-- raw HTML omitted -->(<!-- raw HTML omitted --><!-- raw HTML omitted -->&quot;Son print i = &quot;<!-- raw HTML omitted --> <!-- raw HTML omitted -->+<!-- raw HTML omitted --> i<!-- raw HTML omitted -->);<!-- raw HTML omitted -->
+Thread<!-- raw HTML omitted -->.<!-- raw HTML omitted --><!-- raw HTML omitted -->sleep<!-- raw HTML omitted --><!-- raw HTML omitted -->(<!-- raw HTML omitted -->100<!-- raw HTML omitted -->);<!-- raw HTML omitted -->
+<!-- raw HTML omitted -->this<!-- raw HTML omitted --><!-- raw HTML omitted -->.<!-- raw HTML omitted --><!-- raw HTML omitted -->operationSup<!-- raw HTML omitted --><!-- raw HTML omitted -->();<!-- raw HTML omitted -->
+<!-- raw HTML omitted -->}<!-- raw HTML omitted -->
+<!-- raw HTML omitted -->}<!-- raw HTML omitted --> <!-- raw HTML omitted -->catch<!-- raw HTML omitted --> <!-- raw HTML omitted -->(<!-- raw HTML omitted -->InterruptedException e<!-- raw HTML omitted -->)<!-- raw HTML omitted --> <!-- raw HTML omitted -->{<!-- raw HTML omitted -->
+e<!-- raw HTML omitted -->.<!-- raw HTML omitted --><!-- raw HTML omitted -->printStackTrace<!-- raw HTML omitted --><!-- raw HTML omitted -->();<!-- raw HTML omitted -->
+<!-- raw HTML omitted -->}<!-- raw HTML omitted -->
+<!-- raw HTML omitted -->}<!-- raw HTML omitted -->
+<!-- raw HTML omitted -->}<!-- raw HTML omitted --></p>
+<pre><code>&lt;span style=&quot;color:#66d9ef&quot;&gt;public&lt;/span&gt; &lt;span style=&quot;color:#66d9ef&quot;&gt;static&lt;/span&gt; &lt;span style=&quot;color:#66d9ef&quot;&gt;void&lt;/span&gt; &lt;span style=&quot;color:#a6e22e&quot;&gt;main&lt;/span&gt;&lt;span style=&quot;color:#f92672&quot;&gt;(&lt;/span&gt;String&lt;span style=&quot;color:#f92672&quot;&gt;[]&lt;/span&gt; args&lt;span style=&quot;color:#f92672&quot;&gt;)&lt;/span&gt; &lt;span style=&quot;color:#f92672&quot;&gt;{&lt;/span&gt;
 
-<p>在我们对对象中的一个方法加锁的时候，需要考虑业务的或程序的整体性，也就是为程序中的set和get方法同时加锁synchronized同步关键字，保证业务的(service层)的原子性，不然会出现数据错误，脏读。</p>
+    Thread t1 &lt;span style=&quot;color:#f92672&quot;&gt;=&lt;/span&gt; &lt;span style=&quot;color:#66d9ef&quot;&gt;new&lt;/span&gt; Thread&lt;span style=&quot;color:#f92672&quot;&gt;(&lt;/span&gt;&lt;span style=&quot;color:#66d9ef&quot;&gt;new&lt;/span&gt; Runnable&lt;span style=&quot;color:#f92672&quot;&gt;()&lt;/span&gt; &lt;span style=&quot;color:#f92672&quot;&gt;{&lt;/span&gt;
+        &lt;span style=&quot;color:#a6e22e&quot;&gt;@Override&lt;/span&gt;
+        &lt;span style=&quot;color:#66d9ef&quot;&gt;public&lt;/span&gt; &lt;span style=&quot;color:#66d9ef&quot;&gt;void&lt;/span&gt; &lt;span style=&quot;color:#a6e22e&quot;&gt;run&lt;/span&gt;&lt;span style=&quot;color:#f92672&quot;&gt;()&lt;/span&gt; &lt;span style=&quot;color:#f92672&quot;&gt;{&lt;/span&gt;
+            Son sub &lt;span style=&quot;color:#f92672&quot;&gt;=&lt;/span&gt; &lt;span style=&quot;color:#66d9ef&quot;&gt;new&lt;/span&gt; Son&lt;span style=&quot;color:#f92672&quot;&gt;();&lt;/span&gt;
+            sub&lt;span style=&quot;color:#f92672&quot;&gt;.&lt;/span&gt;&lt;span style=&quot;color:#a6e22e&quot;&gt;operationSub&lt;/span&gt;&lt;span style=&quot;color:#f92672&quot;&gt;();&lt;/span&gt;
+        &lt;span style=&quot;color:#f92672&quot;&gt;}&lt;/span&gt;
+    &lt;span style=&quot;color:#f92672&quot;&gt;});&lt;/span&gt;
 
-<h2 id="2-synchronized的重入">2.synchronized的重入</h2>
+    t1&lt;span style=&quot;color:#f92672&quot;&gt;.&lt;/span&gt;&lt;span style=&quot;color:#a6e22e&quot;&gt;start&lt;/span&gt;&lt;span style=&quot;color:#f92672&quot;&gt;();&lt;/span&gt;
+&lt;span style=&quot;color:#f92672&quot;&gt;}&lt;/span&gt;
+</code></pre>
+<p><!-- raw HTML omitted -->}<!-- raw HTML omitted -->
+<!-- raw HTML omitted --><!-- raw HTML omitted --><!-- raw HTML omitted --><!-- raw HTML omitted -->运行结果如下:<!-- raw HTML omitted --></p>
+<!-- raw HTML omitted -->
+<!-- raw HTML omitted -->
+<p><!-- raw HTML omitted --><a href="http://blog.csdn.net/aigoogle/article/details/29893667">http://blog.csdn.net/aigoogle/article/details/29893667</a><!-- raw HTML omitted --><!-- raw HTML omitted --></p>
+<!-- raw HTML omitted -->
+<pre><code>&lt;span style=&quot;color:#66d9ef&quot;&gt;public&lt;/span&gt; &lt;span style=&quot;color:#66d9ef&quot;&gt;void&lt;/span&gt; &lt;span style=&quot;color:#a6e22e&quot;&gt;method1&lt;/span&gt;&lt;span style=&quot;color:#f92672&quot;&gt;()&lt;/span&gt; &lt;span style=&quot;color:#f92672&quot;&gt;{&lt;/span&gt;
+    &lt;span style=&quot;color:#75715e&quot;&gt;// 对this当前ObjectLock实例对象加锁
+</code></pre>
+<p><!-- raw HTML omitted --><!-- raw HTML omitted --><!-- raw HTML omitted -->        <!-- raw HTML omitted -->synchronized<!-- raw HTML omitted --> <!-- raw HTML omitted -->(<!-- raw HTML omitted --><!-- raw HTML omitted -->this<!-- raw HTML omitted --><!-- raw HTML omitted -->)<!-- raw HTML omitted --> <!-- raw HTML omitted -->{<!-- raw HTML omitted -->
+<!-- raw HTML omitted -->try<!-- raw HTML omitted --> <!-- raw HTML omitted -->{<!-- raw HTML omitted -->
+System<!-- raw HTML omitted -->.<!-- raw HTML omitted --><!-- raw HTML omitted -->out<!-- raw HTML omitted --><!-- raw HTML omitted -->.<!-- raw HTML omitted --><!-- raw HTML omitted -->println<!-- raw HTML omitted --><!-- raw HTML omitted -->(<!-- raw HTML omitted --><!-- raw HTML omitted -->&quot;do method1..&quot;<!-- raw HTML omitted --><!-- raw HTML omitted -->);<!-- raw HTML omitted -->
+Thread<!-- raw HTML omitted -->.<!-- raw HTML omitted --><!-- raw HTML omitted -->sleep<!-- raw HTML omitted --><!-- raw HTML omitted -->(<!-- raw HTML omitted -->2000<!-- raw HTML omitted -->);<!-- raw HTML omitted -->
+<!-- raw HTML omitted -->}<!-- raw HTML omitted --> <!-- raw HTML omitted -->catch<!-- raw HTML omitted --> <!-- raw HTML omitted -->(<!-- raw HTML omitted -->InterruptedException e<!-- raw HTML omitted -->)<!-- raw HTML omitted --> <!-- raw HTML omitted -->{<!-- raw HTML omitted -->
+e<!-- raw HTML omitted -->.<!-- raw HTML omitted --><!-- raw HTML omitted -->printStackTrace<!-- raw HTML omitted --><!-- raw HTML omitted -->();<!-- raw HTML omitted -->
+<!-- raw HTML omitted -->}<!-- raw HTML omitted -->
+<!-- raw HTML omitted -->}<!-- raw HTML omitted -->
+<!-- raw HTML omitted -->}<!-- raw HTML omitted --></p>
+<pre><code>&lt;span style=&quot;color:#66d9ef&quot;&gt;public&lt;/span&gt; &lt;span style=&quot;color:#66d9ef&quot;&gt;void&lt;/span&gt; &lt;span style=&quot;color:#a6e22e&quot;&gt;method2&lt;/span&gt;&lt;span style=&quot;color:#f92672&quot;&gt;()&lt;/span&gt; &lt;span style=&quot;color:#f92672&quot;&gt;{&lt;/span&gt;
+    &lt;span style=&quot;color:#75715e&quot;&gt;// 对ObjectLock类加锁
+</code></pre>
+<p><!-- raw HTML omitted --><!-- raw HTML omitted --><!-- raw HTML omitted -->        <!-- raw HTML omitted -->synchronized<!-- raw HTML omitted --> <!-- raw HTML omitted -->(<!-- raw HTML omitted -->ObjectLock<!-- raw HTML omitted -->.<!-- raw HTML omitted --><!-- raw HTML omitted -->class<!-- raw HTML omitted --><!-- raw HTML omitted -->)<!-- raw HTML omitted --> <!-- raw HTML omitted -->{<!-- raw HTML omitted -->
+<!-- raw HTML omitted -->try<!-- raw HTML omitted --> <!-- raw HTML omitted -->{<!-- raw HTML omitted -->
+System<!-- raw HTML omitted -->.<!-- raw HTML omitted --><!-- raw HTML omitted -->out<!-- raw HTML omitted --><!-- raw HTML omitted -->.<!-- raw HTML omitted --><!-- raw HTML omitted -->println<!-- raw HTML omitted --><!-- raw HTML omitted -->(<!-- raw HTML omitted --><!-- raw HTML omitted -->&quot;do method2..&quot;<!-- raw HTML omitted --><!-- raw HTML omitted -->);<!-- raw HTML omitted -->
+Thread<!-- raw HTML omitted -->.<!-- raw HTML omitted --><!-- raw HTML omitted -->sleep<!-- raw HTML omitted --><!-- raw HTML omitted -->(<!-- raw HTML omitted -->2000<!-- raw HTML omitted -->);<!-- raw HTML omitted -->
+<!-- raw HTML omitted -->}<!-- raw HTML omitted --> <!-- raw HTML omitted -->catch<!-- raw HTML omitted --> <!-- raw HTML omitted -->(<!-- raw HTML omitted -->InterruptedException e<!-- raw HTML omitted -->)<!-- raw HTML omitted --> <!-- raw HTML omitted -->{<!-- raw HTML omitted -->
+e<!-- raw HTML omitted -->.<!-- raw HTML omitted --><!-- raw HTML omitted -->printStackTrace<!-- raw HTML omitted --><!-- raw HTML omitted -->();<!-- raw HTML omitted -->
+<!-- raw HTML omitted -->}<!-- raw HTML omitted -->
+<!-- raw HTML omitted -->}<!-- raw HTML omitted -->
+<!-- raw HTML omitted -->}<!-- raw HTML omitted --></p>
+<pre><code>&lt;span style=&quot;color:#75715e&quot;&gt;// 任何对象锁
+</code></pre>
+<p><!-- raw HTML omitted --><!-- raw HTML omitted --><!-- raw HTML omitted -->    <!-- raw HTML omitted -->private<!-- raw HTML omitted --> Object anyObjectlock <!-- raw HTML omitted -->=<!-- raw HTML omitted --> <!-- raw HTML omitted -->new<!-- raw HTML omitted --> Object<!-- raw HTML omitted -->();<!-- raw HTML omitted --></p>
+<pre><code>&lt;span style=&quot;color:#66d9ef&quot;&gt;public&lt;/span&gt; &lt;span style=&quot;color:#66d9ef&quot;&gt;void&lt;/span&gt; &lt;span style=&quot;color:#a6e22e&quot;&gt;method3&lt;/span&gt;&lt;span style=&quot;color:#f92672&quot;&gt;()&lt;/span&gt; &lt;span style=&quot;color:#f92672&quot;&gt;{&lt;/span&gt;
+    &lt;span style=&quot;color:#66d9ef&quot;&gt;synchronized&lt;/span&gt; &lt;span style=&quot;color:#f92672&quot;&gt;(&lt;/span&gt;anyObjectlock&lt;span style=&quot;color:#f92672&quot;&gt;)&lt;/span&gt; &lt;span style=&quot;color:#f92672&quot;&gt;{&lt;/span&gt;
+        &lt;span style=&quot;color:#66d9ef&quot;&gt;try&lt;/span&gt; &lt;span style=&quot;color:#f92672&quot;&gt;{&lt;/span&gt;
+            System&lt;span style=&quot;color:#f92672&quot;&gt;.&lt;/span&gt;&lt;span style=&quot;color:#a6e22e&quot;&gt;out&lt;/span&gt;&lt;span style=&quot;color:#f92672&quot;&gt;.&lt;/span&gt;&lt;span style=&quot;color:#a6e22e&quot;&gt;println&lt;/span&gt;&lt;span style=&quot;color:#f92672&quot;&gt;(&lt;/span&gt;&lt;span style=&quot;color:#e6db74&quot;&gt;&amp;#34;do method3..&amp;#34;&lt;/span&gt;&lt;span style=&quot;color:#f92672&quot;&gt;);&lt;/span&gt;
+            Thread&lt;span style=&quot;color:#f92672&quot;&gt;.&lt;/span&gt;&lt;span style=&quot;color:#a6e22e&quot;&gt;sleep&lt;/span&gt;&lt;span style=&quot;color:#f92672&quot;&gt;(&lt;/span&gt;2000&lt;span style=&quot;color:#f92672&quot;&gt;);&lt;/span&gt;
+        &lt;span style=&quot;color:#f92672&quot;&gt;}&lt;/span&gt; &lt;span style=&quot;color:#66d9ef&quot;&gt;catch&lt;/span&gt; &lt;span style=&quot;color:#f92672&quot;&gt;(&lt;/span&gt;InterruptedException e&lt;span style=&quot;color:#f92672&quot;&gt;)&lt;/span&gt; &lt;span style=&quot;color:#f92672&quot;&gt;{&lt;/span&gt;
+            e&lt;span style=&quot;color:#f92672&quot;&gt;.&lt;/span&gt;&lt;span style=&quot;color:#a6e22e&quot;&gt;printStackTrace&lt;/span&gt;&lt;span style=&quot;color:#f92672&quot;&gt;();&lt;/span&gt;
+        &lt;span style=&quot;color:#f92672&quot;&gt;}&lt;/span&gt;
+    &lt;span style=&quot;color:#f92672&quot;&gt;}&lt;/span&gt;
+&lt;span style=&quot;color:#f92672&quot;&gt;}&lt;/span&gt;
 
-<h3 id="2-1-什么是synchronized的重入锁">2.1 什么是synchronized的重入锁</h3>
+&lt;span style=&quot;color:#66d9ef&quot;&gt;public&lt;/span&gt; &lt;span style=&quot;color:#66d9ef&quot;&gt;static&lt;/span&gt; &lt;span style=&quot;color:#66d9ef&quot;&gt;void&lt;/span&gt; &lt;span style=&quot;color:#a6e22e&quot;&gt;main&lt;/span&gt;&lt;span style=&quot;color:#f92672&quot;&gt;(&lt;/span&gt;String&lt;span style=&quot;color:#f92672&quot;&gt;[]&lt;/span&gt; args&lt;span style=&quot;color:#f92672&quot;&gt;)&lt;/span&gt; &lt;span style=&quot;color:#f92672&quot;&gt;{&lt;/span&gt;
 
-<ol>
-<li>synchronized,它拥有强制原子性的内置锁机制,是一个重入锁,所以在使用synchronized时,当一个线程请求得到一个对象锁后再次请求此对象锁,可以再次得到该对象锁,就是说在一个synchronized方法/块的内部调用本类的其他synchronized方法/块时，是永远可以拿到锁。</li>
-<li>当线程请求一个由其它线程持有的对象锁时，该线程会阻塞，而当线程请求由自己持有的对象锁时，如果该锁是重入锁,请求就会成功,否则阻塞.</li>
-</ol>
+    &lt;span style=&quot;color:#66d9ef&quot;&gt;final&lt;/span&gt; ObjectLock objLock &lt;span style=&quot;color:#f92672&quot;&gt;=&lt;/span&gt; &lt;span style=&quot;color:#66d9ef&quot;&gt;new&lt;/span&gt; ObjectLock&lt;span style=&quot;color:#f92672&quot;&gt;();&lt;/span&gt;
+    Thread t1 &lt;span style=&quot;color:#f92672&quot;&gt;=&lt;/span&gt; &lt;span style=&quot;color:#66d9ef&quot;&gt;new&lt;/span&gt; Thread&lt;span style=&quot;color:#f92672&quot;&gt;(&lt;/span&gt;&lt;span style=&quot;color:#66d9ef&quot;&gt;new&lt;/span&gt; Runnable&lt;span style=&quot;color:#f92672&quot;&gt;()&lt;/span&gt; &lt;span style=&quot;color:#f92672&quot;&gt;{&lt;/span&gt;
+        &lt;span style=&quot;color:#a6e22e&quot;&gt;@Override&lt;/span&gt;
+        &lt;span style=&quot;color:#66d9ef&quot;&gt;public&lt;/span&gt; &lt;span style=&quot;color:#66d9ef&quot;&gt;void&lt;/span&gt; &lt;span style=&quot;color:#a6e22e&quot;&gt;run&lt;/span&gt;&lt;span style=&quot;color:#f92672&quot;&gt;()&lt;/span&gt; &lt;span style=&quot;color:#f92672&quot;&gt;{&lt;/span&gt;
+            objLock&lt;span style=&quot;color:#f92672&quot;&gt;.&lt;/span&gt;&lt;span style=&quot;color:#a6e22e&quot;&gt;method1&lt;/span&gt;&lt;span style=&quot;color:#f92672&quot;&gt;();&lt;/span&gt;
+        &lt;span style=&quot;color:#f92672&quot;&gt;}&lt;/span&gt;
+    &lt;span style=&quot;color:#f92672&quot;&gt;});&lt;/span&gt;
+    Thread t2 &lt;span style=&quot;color:#f92672&quot;&gt;=&lt;/span&gt; &lt;span style=&quot;color:#66d9ef&quot;&gt;new&lt;/span&gt; Thread&lt;span style=&quot;color:#f92672&quot;&gt;(&lt;/span&gt;&lt;span style=&quot;color:#66d9ef&quot;&gt;new&lt;/span&gt; Runnable&lt;span style=&quot;color:#f92672&quot;&gt;()&lt;/span&gt; &lt;span style=&quot;color:#f92672&quot;&gt;{&lt;/span&gt;
+        &lt;span style=&quot;color:#a6e22e&quot;&gt;@Override&lt;/span&gt;
+        &lt;span style=&quot;color:#66d9ef&quot;&gt;public&lt;/span&gt; &lt;span style=&quot;color:#66d9ef&quot;&gt;void&lt;/span&gt; &lt;span style=&quot;color:#a6e22e&quot;&gt;run&lt;/span&gt;&lt;span style=&quot;color:#f92672&quot;&gt;()&lt;/span&gt; &lt;span style=&quot;color:#f92672&quot;&gt;{&lt;/span&gt;
+            objLock&lt;span style=&quot;color:#f92672&quot;&gt;.&lt;/span&gt;&lt;span style=&quot;color:#a6e22e&quot;&gt;method2&lt;/span&gt;&lt;span style=&quot;color:#f92672&quot;&gt;();&lt;/span&gt;
+        &lt;span style=&quot;color:#f92672&quot;&gt;}&lt;/span&gt;
+    &lt;span style=&quot;color:#f92672&quot;&gt;});&lt;/span&gt;
+    Thread t3 &lt;span style=&quot;color:#f92672&quot;&gt;=&lt;/span&gt; &lt;span style=&quot;color:#66d9ef&quot;&gt;new&lt;/span&gt; Thread&lt;span style=&quot;color:#f92672&quot;&gt;(&lt;/span&gt;&lt;span style=&quot;color:#66d9ef&quot;&gt;new&lt;/span&gt; Runnable&lt;span style=&quot;color:#f92672&quot;&gt;()&lt;/span&gt; &lt;span style=&quot;color:#f92672&quot;&gt;{&lt;/span&gt;
+        &lt;span style=&quot;color:#a6e22e&quot;&gt;@Override&lt;/span&gt;
+        &lt;span style=&quot;color:#66d9ef&quot;&gt;public&lt;/span&gt; &lt;span style=&quot;color:#66d9ef&quot;&gt;void&lt;/span&gt; &lt;span style=&quot;color:#a6e22e&quot;&gt;run&lt;/span&gt;&lt;span style=&quot;color:#f92672&quot;&gt;()&lt;/span&gt; &lt;span style=&quot;color:#f92672&quot;&gt;{&lt;/span&gt;
+            objLock&lt;span style=&quot;color:#f92672&quot;&gt;.&lt;/span&gt;&lt;span style=&quot;color:#a6e22e&quot;&gt;method3&lt;/span&gt;&lt;span style=&quot;color:#f92672&quot;&gt;();&lt;/span&gt;
+        &lt;span style=&quot;color:#f92672&quot;&gt;}&lt;/span&gt;
+    &lt;span style=&quot;color:#f92672&quot;&gt;});&lt;/span&gt;
 
+    t1&lt;span style=&quot;color:#f92672&quot;&gt;.&lt;/span&gt;&lt;span style=&quot;color:#a6e22e&quot;&gt;start&lt;/span&gt;&lt;span style=&quot;color:#f92672&quot;&gt;();&lt;/span&gt;
+    t2&lt;span style=&quot;color:#f92672&quot;&gt;.&lt;/span&gt;&lt;span style=&quot;color:#a6e22e&quot;&gt;start&lt;/span&gt;&lt;span style=&quot;color:#f92672&quot;&gt;();&lt;/span&gt;
+    t3&lt;span style=&quot;color:#f92672&quot;&gt;.&lt;/span&gt;&lt;span style=&quot;color:#a6e22e&quot;&gt;start&lt;/span&gt;&lt;span style=&quot;color:#f92672&quot;&gt;();&lt;/span&gt;
+
+&lt;span style=&quot;color:#f92672&quot;&gt;}&lt;/span&gt;
+</code></pre>
+<p><!-- raw HTML omitted -->}<!-- raw HTML omitted -->
+<!-- raw HTML omitted --><!-- raw HTML omitted --><!-- raw HTML omitted --><!-- raw HTML omitted -->2.使用synchronized声明的方法在某些情况下，是有弊端的，比如A线程调用同步的方法执行一个很长时间的任务,那么B线程就必须等待很长的时间才可以执行，这样情况下可以使用synchronize的去优化代码执行时间，也就是我们通常所说的减小锁的粒度。<!-- raw HTML omitted --></p>
+<!-- raw HTML omitted -->
+<pre><code>   &lt;span style=&quot;color:#66d9ef&quot;&gt;public&lt;/span&gt; &lt;span style=&quot;color:#66d9ef&quot;&gt;void&lt;/span&gt; &lt;span style=&quot;color:#a6e22e&quot;&gt;doLongTimeTask&lt;/span&gt;&lt;span style=&quot;color:#f92672&quot;&gt;()&lt;/span&gt; &lt;span style=&quot;color:#f92672&quot;&gt;{&lt;/span&gt;
+       &lt;span style=&quot;color:#66d9ef&quot;&gt;try&lt;/span&gt; &lt;span style=&quot;color:#f92672&quot;&gt;{&lt;/span&gt;
+
+           System&lt;span style=&quot;color:#f92672&quot;&gt;.&lt;/span&gt;&lt;span style=&quot;color:#a6e22e&quot;&gt;out&lt;/span&gt;&lt;span style=&quot;color:#f92672&quot;&gt;.&lt;/span&gt;&lt;span style=&quot;color:#a6e22e&quot;&gt;println&lt;/span&gt;&lt;span style=&quot;color:#f92672&quot;&gt;(&lt;/span&gt;&lt;span style=&quot;color:#e6db74&quot;&gt;&amp;#34;当前线程开始：&amp;#34;&lt;/span&gt; &lt;span style=&quot;color:#f92672&quot;&gt;+&lt;/span&gt; Thread&lt;span style=&quot;color:#f92672&quot;&gt;.&lt;/span&gt;&lt;span style=&quot;color:#a6e22e&quot;&gt;currentThread&lt;/span&gt;&lt;span style=&quot;color:#f92672&quot;&gt;().&lt;/span&gt;&lt;span style=&quot;color:#a6e22e&quot;&gt;getName&lt;/span&gt;&lt;span style=&quot;color:#f92672&quot;&gt;()&lt;/span&gt; &lt;span style=&quot;color:#f92672&quot;&gt;+&lt;/span&gt; &lt;span style=&quot;color:#e6db74&quot;&gt;&amp;#34;, 正在执行一个较长时间的业务操作，其内容不需要同步&amp;#34;&lt;/span&gt;&lt;span style=&quot;color:#f92672&quot;&gt;);&lt;/span&gt;
+           Thread&lt;span style=&quot;color:#f92672&quot;&gt;.&lt;/span&gt;&lt;span style=&quot;color:#a6e22e&quot;&gt;sleep&lt;/span&gt;&lt;span style=&quot;color:#f92672&quot;&gt;(&lt;/span&gt;2000&lt;span style=&quot;color:#f92672&quot;&gt;);&lt;/span&gt;
+           &lt;span style=&quot;color:#75715e&quot;&gt;// 使用synchronized代码块减小锁的粒度，提高性能
+</code></pre>
+<p><!-- raw HTML omitted --><!-- raw HTML omitted --><!-- raw HTML omitted -->               <!-- raw HTML omitted -->synchronized<!-- raw HTML omitted --> <!-- raw HTML omitted -->(<!-- raw HTML omitted --><!-- raw HTML omitted -->this<!-- raw HTML omitted --><!-- raw HTML omitted -->)<!-- raw HTML omitted --> <!-- raw HTML omitted -->{<!-- raw HTML omitted -->
+System<!-- raw HTML omitted -->.<!-- raw HTML omitted --><!-- raw HTML omitted -->out<!-- raw HTML omitted --><!-- raw HTML omitted -->.<!-- raw HTML omitted --><!-- raw HTML omitted -->println<!-- raw HTML omitted --><!-- raw HTML omitted -->(<!-- raw HTML omitted --><!-- raw HTML omitted -->&quot;当前线程：&quot;<!-- raw HTML omitted --> <!-- raw HTML omitted -->+<!-- raw HTML omitted --> Thread<!-- raw HTML omitted -->.<!-- raw HTML omitted --><!-- raw HTML omitted -->currentThread<!-- raw HTML omitted --><!-- raw HTML omitted -->().<!-- raw HTML omitted --><!-- raw HTML omitted -->getName<!-- raw HTML omitted --><!-- raw HTML omitted -->()<!-- raw HTML omitted --> <!-- raw HTML omitted -->+<!-- raw HTML omitted --> <!-- raw HTML omitted -->&quot;, 执行同步代码块，对其同步变量进行操作&quot;<!-- raw HTML omitted --><!-- raw HTML omitted -->);<!-- raw HTML omitted -->
+Thread<!-- raw HTML omitted -->.<!-- raw HTML omitted --><!-- raw HTML omitted -->sleep<!-- raw HTML omitted --><!-- raw HTML omitted -->(<!-- raw HTML omitted -->1000<!-- raw HTML omitted -->);<!-- raw HTML omitted -->
+<!-- raw HTML omitted -->}<!-- raw HTML omitted -->
+System<!-- raw HTML omitted -->.<!-- raw HTML omitted --><!-- raw HTML omitted -->out<!-- raw HTML omitted --><!-- raw HTML omitted -->.<!-- raw HTML omitted --><!-- raw HTML omitted -->println<!-- raw HTML omitted --><!-- raw HTML omitted -->(<!-- raw HTML omitted --><!-- raw HTML omitted -->&quot;当前线程结束：&quot;<!-- raw HTML omitted --> <!-- raw HTML omitted -->+<!-- raw HTML omitted --> Thread<!-- raw HTML omitted -->.<!-- raw HTML omitted --><!-- raw HTML omitted -->currentThread<!-- raw HTML omitted --><!-- raw HTML omitted -->().<!-- raw HTML omitted --><!-- raw HTML omitted -->getName<!-- raw HTML omitted --><!-- raw HTML omitted -->()<!-- raw HTML omitted --> <!-- raw HTML omitted -->+<!-- raw HTML omitted --> <!-- raw HTML omitted -->&quot;, 执行完毕&quot;<!-- raw HTML omitted --><!-- raw HTML omitted -->);<!-- raw HTML omitted --></p>
+<pre><code>       &lt;span style=&quot;color:#f92672&quot;&gt;}&lt;/span&gt; &lt;span style=&quot;color:#66d9ef&quot;&gt;catch&lt;/span&gt; &lt;span style=&quot;color:#f92672&quot;&gt;(&lt;/span&gt;InterruptedException e&lt;span style=&quot;color:#f92672&quot;&gt;)&lt;/span&gt; &lt;span style=&quot;color:#f92672&quot;&gt;{&lt;/span&gt;
+           e&lt;span style=&quot;color:#f92672&quot;&gt;.&lt;/span&gt;&lt;span style=&quot;color:#a6e22e&quot;&gt;printStackTrace&lt;/span&gt;&lt;span style=&quot;color:#f92672&quot;&gt;();&lt;/span&gt;
+       &lt;span style=&quot;color:#f92672&quot;&gt;}&lt;/span&gt;
+   &lt;span style=&quot;color:#f92672&quot;&gt;}&lt;/span&gt;
+
+   &lt;span style=&quot;color:#66d9ef&quot;&gt;public&lt;/span&gt; &lt;span style=&quot;color:#66d9ef&quot;&gt;static&lt;/span&gt; &lt;span style=&quot;color:#66d9ef&quot;&gt;void&lt;/span&gt; &lt;span style=&quot;color:#a6e22e&quot;&gt;main&lt;/span&gt;&lt;span style=&quot;color:#f92672&quot;&gt;(&lt;/span&gt;String&lt;span style=&quot;color:#f92672&quot;&gt;[]&lt;/span&gt; args&lt;span style=&quot;color:#f92672&quot;&gt;)&lt;/span&gt; &lt;span style=&quot;color:#f92672&quot;&gt;{&lt;/span&gt;
+       &lt;span style=&quot;color:#66d9ef&quot;&gt;final&lt;/span&gt; Optimize otz &lt;span style=&quot;color:#f92672&quot;&gt;=&lt;/span&gt; &lt;span style=&quot;color:#66d9ef&quot;&gt;new&lt;/span&gt; Optimize&lt;span style=&quot;color:#f92672&quot;&gt;();&lt;/span&gt;
+       Thread t1 &lt;span style=&quot;color:#f92672&quot;&gt;=&lt;/span&gt; &lt;span style=&quot;color:#66d9ef&quot;&gt;new&lt;/span&gt; Thread&lt;span style=&quot;color:#f92672&quot;&gt;(&lt;/span&gt;&lt;span style=&quot;color:#66d9ef&quot;&gt;new&lt;/span&gt; Runnable&lt;span style=&quot;color:#f92672&quot;&gt;()&lt;/span&gt; &lt;span style=&quot;color:#f92672&quot;&gt;{&lt;/span&gt;
+           &lt;span style=&quot;color:#a6e22e&quot;&gt;@Override&lt;/span&gt;
+           &lt;span style=&quot;color:#66d9ef&quot;&gt;public&lt;/span&gt; &lt;span style=&quot;color:#66d9ef&quot;&gt;void&lt;/span&gt; &lt;span style=&quot;color:#a6e22e&quot;&gt;run&lt;/span&gt;&lt;span style=&quot;color:#f92672&quot;&gt;()&lt;/span&gt; &lt;span style=&quot;color:#f92672&quot;&gt;{&lt;/span&gt;
+               otz&lt;span style=&quot;color:#f92672&quot;&gt;.&lt;/span&gt;&lt;span style=&quot;color:#a6e22e&quot;&gt;doLongTimeTask&lt;/span&gt;&lt;span style=&quot;color:#f92672&quot;&gt;();&lt;/span&gt;
+           &lt;span style=&quot;color:#f92672&quot;&gt;}&lt;/span&gt;
+       &lt;span style=&quot;color:#f92672&quot;&gt;},&lt;/span&gt; &lt;span style=&quot;color:#e6db74&quot;&gt;&amp;#34;t1&amp;#34;&lt;/span&gt;&lt;span style=&quot;color:#f92672&quot;&gt;);&lt;/span&gt;
+       Thread t2 &lt;span style=&quot;color:#f92672&quot;&gt;=&lt;/span&gt; &lt;span style=&quot;color:#66d9ef&quot;&gt;new&lt;/span&gt; Thread&lt;span style=&quot;color:#f92672&quot;&gt;(&lt;/span&gt;&lt;span style=&quot;color:#66d9ef&quot;&gt;new&lt;/span&gt; Runnable&lt;span style=&quot;color:#f92672&quot;&gt;()&lt;/span&gt; &lt;span style=&quot;color:#f92672&quot;&gt;{&lt;/span&gt;
+           &lt;span style=&quot;color:#a6e22e&quot;&gt;@Override&lt;/span&gt;
+           &lt;span style=&quot;color:#66d9ef&quot;&gt;public&lt;/span&gt; &lt;span style=&quot;color:#66d9ef&quot;&gt;void&lt;/span&gt; &lt;span style=&quot;color:#a6e22e&quot;&gt;run&lt;/span&gt;&lt;span style=&quot;color:#f92672&quot;&gt;()&lt;/span&gt; &lt;span style=&quot;color:#f92672&quot;&gt;{&lt;/span&gt;
+               otz&lt;span style=&quot;color:#f92672&quot;&gt;.&lt;/span&gt;&lt;span style=&quot;color:#a6e22e&quot;&gt;doLongTimeTask&lt;/span&gt;&lt;span style=&quot;color:#f92672&quot;&gt;();&lt;/span&gt;
+           &lt;span style=&quot;color:#f92672&quot;&gt;}&lt;/span&gt;
+       &lt;span style=&quot;color:#f92672&quot;&gt;},&lt;/span&gt; &lt;span style=&quot;color:#e6db74&quot;&gt;&amp;#34;t2&amp;#34;&lt;/span&gt;&lt;span style=&quot;color:#f92672&quot;&gt;);&lt;/span&gt;
+       t1&lt;span style=&quot;color:#f92672&quot;&gt;.&lt;/span&gt;&lt;span style=&quot;color:#a6e22e&quot;&gt;start&lt;/span&gt;&lt;span style=&quot;color:#f92672&quot;&gt;();&lt;/span&gt;
+       t2&lt;span style=&quot;color:#f92672&quot;&gt;.&lt;/span&gt;&lt;span style=&quot;color:#a6e22e&quot;&gt;start&lt;/span&gt;&lt;span style=&quot;color:#f92672&quot;&gt;();&lt;/span&gt;
+   &lt;span style=&quot;color:#f92672&quot;&gt;}&lt;/span&gt;
+</code></pre>
+<p><!-- raw HTML omitted -->}<!-- raw HTML omitted -->
+<!-- raw HTML omitted --><!-- raw HTML omitted --><!-- raw HTML omitted --><!-- raw HTML omitted -->执行结果:<!-- raw HTML omitted --></p>
+<!-- raw HTML omitted -->
+<!-- raw HTML omitted -->
+<!-- raw HTML omitted -->
+<pre><code>&lt;span style=&quot;color:#66d9ef&quot;&gt;public&lt;/span&gt; &lt;span style=&quot;color:#66d9ef&quot;&gt;void&lt;/span&gt; &lt;span style=&quot;color:#a6e22e&quot;&gt;method&lt;/span&gt;&lt;span style=&quot;color:#f92672&quot;&gt;()&lt;/span&gt; &lt;span style=&quot;color:#f92672&quot;&gt;{&lt;/span&gt;
+    &lt;span style=&quot;color:#66d9ef&quot;&gt;synchronized&lt;/span&gt; &lt;span style=&quot;color:#f92672&quot;&gt;(&lt;/span&gt;&lt;span style=&quot;color:#e6db74&quot;&gt;&amp;#34;字符串常量&amp;#34;&lt;/span&gt;&lt;span style=&quot;color:#f92672&quot;&gt;)&lt;/span&gt; &lt;span style=&quot;color:#f92672&quot;&gt;{&lt;/span&gt;
+        &lt;span style=&quot;color:#66d9ef&quot;&gt;try&lt;/span&gt; &lt;span style=&quot;color:#f92672&quot;&gt;{&lt;/span&gt;
+            &lt;span style=&quot;color:#66d9ef&quot;&gt;while&lt;/span&gt;&lt;span style=&quot;color:#f92672&quot;&gt;(&lt;/span&gt;&lt;span style=&quot;color:#66d9ef&quot;&gt;true&lt;/span&gt;&lt;span style=&quot;color:#f92672&quot;&gt;){&lt;/span&gt;
+                System&lt;span style=&quot;color:#f92672&quot;&gt;.&lt;/span&gt;&lt;span style=&quot;color:#a6e22e&quot;&gt;out&lt;/span&gt;&lt;span style=&quot;color:#f92672&quot;&gt;.&lt;/span&gt;&lt;span style=&quot;color:#a6e22e&quot;&gt;println&lt;/span&gt;&lt;span style=&quot;color:#f92672&quot;&gt;(&lt;/span&gt;&lt;span style=&quot;color:#e6db74&quot;&gt;&amp;#34;当前线程 : &amp;#34;&lt;/span&gt;  &lt;span style=&quot;color:#f92672&quot;&gt;+&lt;/span&gt; Thread&lt;span style=&quot;color:#f92672&quot;&gt;.&lt;/span&gt;&lt;span style=&quot;color:#a6e22e&quot;&gt;currentThread&lt;/span&gt;&lt;span style=&quot;color:#f92672&quot;&gt;().&lt;/span&gt;&lt;span style=&quot;color:#a6e22e&quot;&gt;getName&lt;/span&gt;&lt;span style=&quot;color:#f92672&quot;&gt;()&lt;/span&gt; &lt;span style=&quot;color:#f92672&quot;&gt;+&lt;/span&gt; &lt;span style=&quot;color:#e6db74&quot;&gt;&amp;#34;开始&amp;#34;&lt;/span&gt;&lt;span style=&quot;color:#f92672&quot;&gt;);&lt;/span&gt;
+                Thread&lt;span style=&quot;color:#f92672&quot;&gt;.&lt;/span&gt;&lt;span style=&quot;color:#a6e22e&quot;&gt;sleep&lt;/span&gt;&lt;span style=&quot;color:#f92672&quot;&gt;(&lt;/span&gt;1000&lt;span style=&quot;color:#f92672&quot;&gt;);&lt;/span&gt;		
+                System&lt;span style=&quot;color:#f92672&quot;&gt;.&lt;/span&gt;&lt;span style=&quot;color:#a6e22e&quot;&gt;out&lt;/span&gt;&lt;span style=&quot;color:#f92672&quot;&gt;.&lt;/span&gt;&lt;span style=&quot;color:#a6e22e&quot;&gt;println&lt;/span&gt;&lt;span style=&quot;color:#f92672&quot;&gt;(&lt;/span&gt;&lt;span style=&quot;color:#e6db74&quot;&gt;&amp;#34;当前线程 : &amp;#34;&lt;/span&gt;  &lt;span style=&quot;color:#f92672&quot;&gt;+&lt;/span&gt; Thread&lt;span style=&quot;color:#f92672&quot;&gt;.&lt;/span&gt;&lt;span style=&quot;color:#a6e22e&quot;&gt;currentThread&lt;/span&gt;&lt;span style=&quot;color:#f92672&quot;&gt;().&lt;/span&gt;&lt;span style=&quot;color:#a6e22e&quot;&gt;getName&lt;/span&gt;&lt;span style=&quot;color:#f92672&quot;&gt;()&lt;/span&gt; &lt;span style=&quot;color:#f92672&quot;&gt;+&lt;/span&gt; &lt;span style=&quot;color:#e6db74&quot;&gt;&amp;#34;结束&amp;#34;&lt;/span&gt;&lt;span style=&quot;color:#f92672&quot;&gt;);&lt;/span&gt;
+            &lt;span style=&quot;color:#f92672&quot;&gt;}&lt;/span&gt;
+        &lt;span style=&quot;color:#f92672&quot;&gt;}&lt;/span&gt; &lt;span style=&quot;color:#66d9ef&quot;&gt;catch&lt;/span&gt; &lt;span style=&quot;color:#f92672&quot;&gt;(&lt;/span&gt;InterruptedException e&lt;span style=&quot;color:#f92672&quot;&gt;)&lt;/span&gt; &lt;span style=&quot;color:#f92672&quot;&gt;{&lt;/span&gt;
+            e&lt;span style=&quot;color:#f92672&quot;&gt;.&lt;/span&gt;&lt;span style=&quot;color:#a6e22e&quot;&gt;printStackTrace&lt;/span&gt;&lt;span style=&quot;color:#f92672&quot;&gt;();&lt;/span&gt;
+        &lt;span style=&quot;color:#f92672&quot;&gt;}&lt;/span&gt;
+    &lt;span style=&quot;color:#f92672&quot;&gt;}&lt;/span&gt;
+&lt;span style=&quot;color:#f92672&quot;&gt;}&lt;/span&gt;
+   
+&lt;span style=&quot;color:#66d9ef&quot;&gt;public&lt;/span&gt; &lt;span style=&quot;color:#66d9ef&quot;&gt;static&lt;/span&gt; &lt;span style=&quot;color:#66d9ef&quot;&gt;void&lt;/span&gt; &lt;span style=&quot;color:#a6e22e&quot;&gt;main&lt;/span&gt;&lt;span style=&quot;color:#f92672&quot;&gt;(&lt;/span&gt;String&lt;span style=&quot;color:#f92672&quot;&gt;[]&lt;/span&gt; args&lt;span style=&quot;color:#f92672&quot;&gt;)&lt;/span&gt; &lt;span style=&quot;color:#f92672&quot;&gt;{&lt;/span&gt;
+    &lt;span style=&quot;color:#66d9ef&quot;&gt;final&lt;/span&gt; StringLock stringLock &lt;span style=&quot;color:#f92672&quot;&gt;=&lt;/span&gt; &lt;span style=&quot;color:#66d9ef&quot;&gt;new&lt;/span&gt; StringLock&lt;span style=&quot;color:#f92672&quot;&gt;();&lt;/span&gt;
+    Thread t1 &lt;span style=&quot;color:#f92672&quot;&gt;=&lt;/span&gt; &lt;span style=&quot;color:#66d9ef&quot;&gt;new&lt;/span&gt; Thread&lt;span style=&quot;color:#f92672&quot;&gt;(&lt;/span&gt;&lt;span style=&quot;color:#66d9ef&quot;&gt;new&lt;/span&gt; Runnable&lt;span style=&quot;color:#f92672&quot;&gt;()&lt;/span&gt; &lt;span style=&quot;color:#f92672&quot;&gt;{&lt;/span&gt;
+        &lt;span style=&quot;color:#a6e22e&quot;&gt;@Override&lt;/span&gt;
+        &lt;span style=&quot;color:#66d9ef&quot;&gt;public&lt;/span&gt; &lt;span style=&quot;color:#66d9ef&quot;&gt;void&lt;/span&gt; &lt;span style=&quot;color:#a6e22e&quot;&gt;run&lt;/span&gt;&lt;span style=&quot;color:#f92672&quot;&gt;()&lt;/span&gt; &lt;span style=&quot;color:#f92672&quot;&gt;{&lt;/span&gt;
+            stringLock&lt;span style=&quot;color:#f92672&quot;&gt;.&lt;/span&gt;&lt;span style=&quot;color:#a6e22e&quot;&gt;method&lt;/span&gt;&lt;span style=&quot;color:#f92672&quot;&gt;();&lt;/span&gt;
+        &lt;span style=&quot;color:#f92672&quot;&gt;}&lt;/span&gt;
+    &lt;span style=&quot;color:#f92672&quot;&gt;},&lt;/span&gt;&lt;span style=&quot;color:#e6db74&quot;&gt;&amp;#34;t1&amp;#34;&lt;/span&gt;&lt;span style=&quot;color:#f92672&quot;&gt;);&lt;/span&gt;
+    Thread t2 &lt;span style=&quot;color:#f92672&quot;&gt;=&lt;/span&gt; &lt;span style=&quot;color:#66d9ef&quot;&gt;new&lt;/span&gt; Thread&lt;span style=&quot;color:#f92672&quot;&gt;(&lt;/span&gt;&lt;span style=&quot;color:#66d9ef&quot;&gt;new&lt;/span&gt; Runnable&lt;span style=&quot;color:#f92672&quot;&gt;()&lt;/span&gt; &lt;span style=&quot;color:#f92672&quot;&gt;{&lt;/span&gt;
+        &lt;span style=&quot;color:#a6e22e&quot;&gt;@Override&lt;/span&gt;
+        &lt;span style=&quot;color:#66d9ef&quot;&gt;public&lt;/span&gt; &lt;span style=&quot;color:#66d9ef&quot;&gt;void&lt;/span&gt; &lt;span style=&quot;color:#a6e22e&quot;&gt;run&lt;/span&gt;&lt;span style=&quot;color:#f92672&quot;&gt;()&lt;/span&gt; &lt;span style=&quot;color:#f92672&quot;&gt;{&lt;/span&gt;
+            stringLock&lt;span style=&quot;color:#f92672&quot;&gt;.&lt;/span&gt;&lt;span style=&quot;color:#a6e22e&quot;&gt;method&lt;/span&gt;&lt;span style=&quot;color:#f92672&quot;&gt;();&lt;/span&gt;
+        &lt;span style=&quot;color:#f92672&quot;&gt;}&lt;/span&gt;
+    &lt;span style=&quot;color:#f92672&quot;&gt;},&lt;/span&gt;&lt;span style=&quot;color:#e6db74&quot;&gt;&amp;#34;t2&amp;#34;&lt;/span&gt;&lt;span style=&quot;color:#f92672&quot;&gt;);&lt;/span&gt;
+   	
+    t1&lt;span style=&quot;color:#f92672&quot;&gt;.&lt;/span&gt;&lt;span style=&quot;color:#a6e22e&quot;&gt;start&lt;/span&gt;&lt;span style=&quot;color:#f92672&quot;&gt;();&lt;/span&gt;
+    t2&lt;span style=&quot;color:#f92672&quot;&gt;.&lt;/span&gt;&lt;span style=&quot;color:#a6e22e&quot;&gt;start&lt;/span&gt;&lt;span style=&quot;color:#f92672&quot;&gt;();&lt;/span&gt;
+&lt;span style=&quot;color:#f92672&quot;&gt;}&lt;/span&gt;
+</code></pre>
+<p><!-- raw HTML omitted -->}<!-- raw HTML omitted -->
+<!-- raw HTML omitted --><!-- raw HTML omitted --><!-- raw HTML omitted --><!-- raw HTML omitted --><!-- raw HTML omitted -->提示<!-- raw HTML omitted -->:运行结果是:<!-- raw HTML omitted -->t1线程一直死循环<!-- raw HTML omitted -->。<!-- raw HTML omitted -->t2线程不执行<!-- raw HTML omitted -->。修改为如下代码,t1和t2线程交替执行<!-- raw HTML omitted --></p>
+<!-- raw HTML omitted -->
+<pre><code>   &lt;span style=&quot;color:#66d9ef&quot;&gt;private&lt;/span&gt; String lock &lt;span style=&quot;color:#f92672&quot;&gt;=&lt;/span&gt; &lt;span style=&quot;color:#e6db74&quot;&gt;&amp;#34;lock&amp;#34;&lt;/span&gt;&lt;span style=&quot;color:#f92672&quot;&gt;;&lt;/span&gt;
+
+   &lt;span style=&quot;color:#66d9ef&quot;&gt;private&lt;/span&gt; &lt;span style=&quot;color:#66d9ef&quot;&gt;void&lt;/span&gt; &lt;span style=&quot;color:#a6e22e&quot;&gt;method&lt;/span&gt;&lt;span style=&quot;color:#f92672&quot;&gt;()&lt;/span&gt; &lt;span style=&quot;color:#f92672&quot;&gt;{&lt;/span&gt;
+       &lt;span style=&quot;color:#66d9ef&quot;&gt;synchronized&lt;/span&gt; &lt;span style=&quot;color:#f92672&quot;&gt;(&lt;/span&gt;lock&lt;span style=&quot;color:#f92672&quot;&gt;)&lt;/span&gt; &lt;span style=&quot;color:#f92672&quot;&gt;{&lt;/span&gt;
+           &lt;span style=&quot;color:#66d9ef&quot;&gt;try&lt;/span&gt; &lt;span style=&quot;color:#f92672&quot;&gt;{&lt;/span&gt;
+               System&lt;span style=&quot;color:#f92672&quot;&gt;.&lt;/span&gt;&lt;span style=&quot;color:#a6e22e&quot;&gt;out&lt;/span&gt;&lt;span style=&quot;color:#f92672&quot;&gt;.&lt;/span&gt;&lt;span style=&quot;color:#a6e22e&quot;&gt;println&lt;/span&gt;&lt;span style=&quot;color:#f92672&quot;&gt;(&lt;/span&gt;&lt;span style=&quot;color:#e6db74&quot;&gt;&amp;#34;当前线程 : &amp;#34;&lt;/span&gt; &lt;span style=&quot;color:#f92672&quot;&gt;+&lt;/span&gt; Thread&lt;span style=&quot;color:#f92672&quot;&gt;.&lt;/span&gt;&lt;span style=&quot;color:#a6e22e&quot;&gt;currentThread&lt;/span&gt;&lt;span style=&quot;color:#f92672&quot;&gt;().&lt;/span&gt;&lt;span style=&quot;color:#a6e22e&quot;&gt;getName&lt;/span&gt;&lt;span style=&quot;color:#f92672&quot;&gt;()&lt;/span&gt; &lt;span style=&quot;color:#f92672&quot;&gt;+&lt;/span&gt; &lt;span style=&quot;color:#e6db74&quot;&gt;&amp;#34;开始&amp;#34;&lt;/span&gt;&lt;span style=&quot;color:#f92672&quot;&gt;);&lt;/span&gt;
+               &lt;span style=&quot;color:#75715e&quot;&gt;// 这里把锁的内容改变了，因此t1,t2线程基本同时进来，而不是t1休眠2秒后，t2进来
+</code></pre>
+<p><!-- raw HTML omitted --><!-- raw HTML omitted --><!-- raw HTML omitted -->                   lock <!-- raw HTML omitted -->=<!-- raw HTML omitted --> <!-- raw HTML omitted -->&quot;change lock&quot;<!-- raw HTML omitted --><!-- raw HTML omitted -->;<!-- raw HTML omitted -->
+Thread<!-- raw HTML omitted -->.<!-- raw HTML omitted --><!-- raw HTML omitted -->sleep<!-- raw HTML omitted --><!-- raw HTML omitted -->(<!-- raw HTML omitted -->2000<!-- raw HTML omitted -->);<!-- raw HTML omitted -->
+System<!-- raw HTML omitted -->.<!-- raw HTML omitted --><!-- raw HTML omitted -->out<!-- raw HTML omitted --><!-- raw HTML omitted -->.<!-- raw HTML omitted --><!-- raw HTML omitted -->println<!-- raw HTML omitted --><!-- raw HTML omitted -->(<!-- raw HTML omitted --><!-- raw HTML omitted -->&quot;当前线程 : &quot;<!-- raw HTML omitted --> <!-- raw HTML omitted -->+<!-- raw HTML omitted --> Thread<!-- raw HTML omitted -->.<!-- raw HTML omitted --><!-- raw HTML omitted -->currentThread<!-- raw HTML omitted --><!-- raw HTML omitted -->().<!-- raw HTML omitted --><!-- raw HTML omitted -->getName<!-- raw HTML omitted --><!-- raw HTML omitted -->()<!-- raw HTML omitted --> <!-- raw HTML omitted -->+<!-- raw HTML omitted --> <!-- raw HTML omitted -->&quot;结束&quot;<!-- raw HTML omitted --><!-- raw HTML omitted -->);<!-- raw HTML omitted -->
+<!-- raw HTML omitted -->}<!-- raw HTML omitted --> <!-- raw HTML omitted -->catch<!-- raw HTML omitted --> <!-- raw HTML omitted -->(<!-- raw HTML omitted -->InterruptedException e<!-- raw HTML omitted -->)<!-- raw HTML omitted --> <!-- raw HTML omitted -->{<!-- raw HTML omitted -->
+e<!-- raw HTML omitted -->.<!-- raw HTML omitted --><!-- raw HTML omitted -->printStackTrace<!-- raw HTML omitted --><!-- raw HTML omitted -->();<!-- raw HTML omitted -->
+<!-- raw HTML omitted -->}<!-- raw HTML omitted -->
+<!-- raw HTML omitted -->}<!-- raw HTML omitted -->
+<!-- raw HTML omitted -->}<!-- raw HTML omitted --></p>
+<pre><code>   &lt;span style=&quot;color:#66d9ef&quot;&gt;public&lt;/span&gt; &lt;span style=&quot;color:#66d9ef&quot;&gt;static&lt;/span&gt; &lt;span style=&quot;color:#66d9ef&quot;&gt;void&lt;/span&gt; &lt;span style=&quot;color:#a6e22e&quot;&gt;main&lt;/span&gt;&lt;span style=&quot;color:#f92672&quot;&gt;(&lt;/span&gt;String&lt;span style=&quot;color:#f92672&quot;&gt;[]&lt;/span&gt; args&lt;span style=&quot;color:#f92672&quot;&gt;)&lt;/span&gt; &lt;span style=&quot;color:#f92672&quot;&gt;{&lt;/span&gt;
+
+       &lt;span style=&quot;color:#66d9ef&quot;&gt;final&lt;/span&gt; ChangeLock changeLock &lt;span style=&quot;color:#f92672&quot;&gt;=&lt;/span&gt; &lt;span style=&quot;color:#66d9ef&quot;&gt;new&lt;/span&gt; ChangeLock&lt;span style=&quot;color:#f92672&quot;&gt;();&lt;/span&gt;
+       Thread t1 &lt;span style=&quot;color:#f92672&quot;&gt;=&lt;/span&gt; &lt;span style=&quot;color:#66d9ef&quot;&gt;new&lt;/span&gt; Thread&lt;span style=&quot;color:#f92672&quot;&gt;(&lt;/span&gt;&lt;span style=&quot;color:#66d9ef&quot;&gt;new&lt;/span&gt; Runnable&lt;span style=&quot;color:#f92672&quot;&gt;()&lt;/span&gt; &lt;span style=&quot;color:#f92672&quot;&gt;{&lt;/span&gt;
+           &lt;span style=&quot;color:#a6e22e&quot;&gt;@Override&lt;/span&gt;
+           &lt;span style=&quot;color:#66d9ef&quot;&gt;public&lt;/span&gt; &lt;span style=&quot;color:#66d9ef&quot;&gt;void&lt;/span&gt; &lt;span style=&quot;color:#a6e22e&quot;&gt;run&lt;/span&gt;&lt;span style=&quot;color:#f92672&quot;&gt;()&lt;/span&gt; &lt;span style=&quot;color:#f92672&quot;&gt;{&lt;/span&gt;
+               changeLock&lt;span style=&quot;color:#f92672&quot;&gt;.&lt;/span&gt;&lt;span style=&quot;color:#a6e22e&quot;&gt;method&lt;/span&gt;&lt;span style=&quot;color:#f92672&quot;&gt;();&lt;/span&gt;
+           &lt;span style=&quot;color:#f92672&quot;&gt;}&lt;/span&gt;
+       &lt;span style=&quot;color:#f92672&quot;&gt;},&lt;/span&gt; &lt;span style=&quot;color:#e6db74&quot;&gt;&amp;#34;t1&amp;#34;&lt;/span&gt;&lt;span style=&quot;color:#f92672&quot;&gt;);&lt;/span&gt;
+       Thread t2 &lt;span style=&quot;color:#f92672&quot;&gt;=&lt;/span&gt; &lt;span style=&quot;color:#66d9ef&quot;&gt;new&lt;/span&gt; Thread&lt;span style=&quot;color:#f92672&quot;&gt;(&lt;/span&gt;&lt;span style=&quot;color:#66d9ef&quot;&gt;new&lt;/span&gt; Runnable&lt;span style=&quot;color:#f92672&quot;&gt;()&lt;/span&gt; &lt;span style=&quot;color:#f92672&quot;&gt;{&lt;/span&gt;
+           &lt;span style=&quot;color:#a6e22e&quot;&gt;@Override&lt;/span&gt;
+           &lt;span style=&quot;color:#66d9ef&quot;&gt;public&lt;/span&gt; &lt;span style=&quot;color:#66d9ef&quot;&gt;void&lt;/span&gt; &lt;span style=&quot;color:#a6e22e&quot;&gt;run&lt;/span&gt;&lt;span style=&quot;color:#f92672&quot;&gt;()&lt;/span&gt; &lt;span style=&quot;color:#f92672&quot;&gt;{&lt;/span&gt;
+               changeLock&lt;span style=&quot;color:#f92672&quot;&gt;.&lt;/span&gt;&lt;span style=&quot;color:#a6e22e&quot;&gt;method&lt;/span&gt;&lt;span style=&quot;color:#f92672&quot;&gt;();&lt;/span&gt;
+           &lt;span style=&quot;color:#f92672&quot;&gt;}&lt;/span&gt;
+       &lt;span style=&quot;color:#f92672&quot;&gt;},&lt;/span&gt; &lt;span style=&quot;color:#e6db74&quot;&gt;&amp;#34;t2&amp;#34;&lt;/span&gt;&lt;span style=&quot;color:#f92672&quot;&gt;);&lt;/span&gt;
+       t1&lt;span style=&quot;color:#f92672&quot;&gt;.&lt;/span&gt;&lt;span style=&quot;color:#a6e22e&quot;&gt;start&lt;/span&gt;&lt;span style=&quot;color:#f92672&quot;&gt;();&lt;/span&gt;
+       &lt;span style=&quot;color:#66d9ef&quot;&gt;try&lt;/span&gt; &lt;span style=&quot;color:#f92672&quot;&gt;{&lt;/span&gt;
+           Thread&lt;span style=&quot;color:#f92672&quot;&gt;.&lt;/span&gt;&lt;span style=&quot;color:#a6e22e&quot;&gt;sleep&lt;/span&gt;&lt;span style=&quot;color:#f92672&quot;&gt;(&lt;/span&gt;100&lt;span style=&quot;color:#f92672&quot;&gt;);&lt;/span&gt;
+       &lt;span style=&quot;color:#f92672&quot;&gt;}&lt;/span&gt; &lt;span style=&quot;color:#66d9ef&quot;&gt;catch&lt;/span&gt; &lt;span style=&quot;color:#f92672&quot;&gt;(&lt;/span&gt;InterruptedException e&lt;span style=&quot;color:#f92672&quot;&gt;)&lt;/span&gt; &lt;span style=&quot;color:#f92672&quot;&gt;{&lt;/span&gt;
+           e&lt;span style=&quot;color:#f92672&quot;&gt;.&lt;/span&gt;&lt;span style=&quot;color:#a6e22e&quot;&gt;printStackTrace&lt;/span&gt;&lt;span style=&quot;color:#f92672&quot;&gt;();&lt;/span&gt;
+       &lt;span style=&quot;color:#f92672&quot;&gt;}&lt;/span&gt;
+       t2&lt;span style=&quot;color:#f92672&quot;&gt;.&lt;/span&gt;&lt;span style=&quot;color:#a6e22e&quot;&gt;start&lt;/span&gt;&lt;span style=&quot;color:#f92672&quot;&gt;();&lt;/span&gt;
+   &lt;span style=&quot;color:#f92672&quot;&gt;}&lt;/span&gt;
+</code></pre>
+<p><!-- raw HTML omitted -->}<!-- raw HTML omitted -->
+<!-- raw HTML omitted --><!-- raw HTML omitted --><!-- raw HTML omitted --><!-- raw HTML omitted -->4.2 示例代码2:<!-- raw HTML omitted -->同一对象属性的修改不会影响锁的情况<!-- raw HTML omitted --><!-- raw HTML omitted --></p>
+<!-- raw HTML omitted -->
+<pre><code>   &lt;span style=&quot;color:#66d9ef&quot;&gt;private&lt;/span&gt; String name&lt;span style=&quot;color:#f92672&quot;&gt;;&lt;/span&gt;
+   &lt;span style=&quot;color:#66d9ef&quot;&gt;private&lt;/span&gt; &lt;span style=&quot;color:#66d9ef&quot;&gt;int&lt;/span&gt; age&lt;span style=&quot;color:#f92672&quot;&gt;;&lt;/span&gt;
+
+   &lt;span style=&quot;color:#66d9ef&quot;&gt;public&lt;/span&gt; String &lt;span style=&quot;color:#a6e22e&quot;&gt;getName&lt;/span&gt;&lt;span style=&quot;color:#f92672&quot;&gt;()&lt;/span&gt; &lt;span style=&quot;color:#f92672&quot;&gt;{&lt;/span&gt;
+       &lt;span style=&quot;color:#66d9ef&quot;&gt;return&lt;/span&gt; name&lt;span style=&quot;color:#f92672&quot;&gt;;&lt;/span&gt;
+   &lt;span style=&quot;color:#f92672&quot;&gt;}&lt;/span&gt;
+
+   &lt;span style=&quot;color:#66d9ef&quot;&gt;public&lt;/span&gt; &lt;span style=&quot;color:#66d9ef&quot;&gt;void&lt;/span&gt; &lt;span style=&quot;color:#a6e22e&quot;&gt;setName&lt;/span&gt;&lt;span style=&quot;color:#f92672&quot;&gt;(&lt;/span&gt;String name&lt;span style=&quot;color:#f92672&quot;&gt;)&lt;/span&gt; &lt;span style=&quot;color:#f92672&quot;&gt;{&lt;/span&gt;
+       &lt;span style=&quot;color:#66d9ef&quot;&gt;this&lt;/span&gt;&lt;span style=&quot;color:#f92672&quot;&gt;.&lt;/span&gt;&lt;span style=&quot;color:#a6e22e&quot;&gt;name&lt;/span&gt; &lt;span style=&quot;color:#f92672&quot;&gt;=&lt;/span&gt; name&lt;span style=&quot;color:#f92672&quot;&gt;;&lt;/span&gt;
+   &lt;span style=&quot;color:#f92672&quot;&gt;}&lt;/span&gt;
+
+   &lt;span style=&quot;color:#66d9ef&quot;&gt;public&lt;/span&gt; &lt;span style=&quot;color:#66d9ef&quot;&gt;int&lt;/span&gt; &lt;span style=&quot;color:#a6e22e&quot;&gt;getAge&lt;/span&gt;&lt;span style=&quot;color:#f92672&quot;&gt;()&lt;/span&gt; &lt;span style=&quot;color:#f92672&quot;&gt;{&lt;/span&gt;
+       &lt;span style=&quot;color:#66d9ef&quot;&gt;return&lt;/span&gt; age&lt;span style=&quot;color:#f92672&quot;&gt;;&lt;/span&gt;
+   &lt;span style=&quot;color:#f92672&quot;&gt;}&lt;/span&gt;
+
+   &lt;span style=&quot;color:#66d9ef&quot;&gt;public&lt;/span&gt; &lt;span style=&quot;color:#66d9ef&quot;&gt;void&lt;/span&gt; &lt;span style=&quot;color:#a6e22e&quot;&gt;setAge&lt;/span&gt;&lt;span style=&quot;color:#f92672&quot;&gt;(&lt;/span&gt;&lt;span style=&quot;color:#66d9ef&quot;&gt;int&lt;/span&gt; age&lt;span style=&quot;color:#f92672&quot;&gt;)&lt;/span&gt; &lt;span style=&quot;color:#f92672&quot;&gt;{&lt;/span&gt;
+       &lt;span style=&quot;color:#66d9ef&quot;&gt;this&lt;/span&gt;&lt;span style=&quot;color:#f92672&quot;&gt;.&lt;/span&gt;&lt;span style=&quot;color:#a6e22e&quot;&gt;age&lt;/span&gt; &lt;span style=&quot;color:#f92672&quot;&gt;=&lt;/span&gt; age&lt;span style=&quot;color:#f92672&quot;&gt;;&lt;/span&gt;
+   &lt;span style=&quot;color:#f92672&quot;&gt;}&lt;/span&gt;
+
+   &lt;span style=&quot;color:#66d9ef&quot;&gt;public&lt;/span&gt; &lt;span style=&quot;color:#66d9ef&quot;&gt;synchronized&lt;/span&gt; &lt;span style=&quot;color:#66d9ef&quot;&gt;void&lt;/span&gt; &lt;span style=&quot;color:#a6e22e&quot;&gt;changeAttributte&lt;/span&gt;&lt;span style=&quot;color:#f92672&quot;&gt;(&lt;/span&gt;String name&lt;span style=&quot;color:#f92672&quot;&gt;,&lt;/span&gt; &lt;span style=&quot;color:#66d9ef&quot;&gt;int&lt;/span&gt; age&lt;span style=&quot;color:#f92672&quot;&gt;)&lt;/span&gt; &lt;span style=&quot;color:#f92672&quot;&gt;{&lt;/span&gt;
+       &lt;span style=&quot;color:#66d9ef&quot;&gt;try&lt;/span&gt; &lt;span style=&quot;color:#f92672&quot;&gt;{&lt;/span&gt;
+           System&lt;span style=&quot;color:#f92672&quot;&gt;.&lt;/span&gt;&lt;span style=&quot;color:#a6e22e&quot;&gt;out&lt;/span&gt;&lt;span style=&quot;color:#f92672&quot;&gt;.&lt;/span&gt;&lt;span style=&quot;color:#a6e22e&quot;&gt;println&lt;/span&gt;&lt;span style=&quot;color:#f92672&quot;&gt;(&lt;/span&gt;&lt;span style=&quot;color:#e6db74&quot;&gt;&amp;#34;当前线程 : &amp;#34;&lt;/span&gt; &lt;span style=&quot;color:#f92672&quot;&gt;+&lt;/span&gt; Thread&lt;span style=&quot;color:#f92672&quot;&gt;.&lt;/span&gt;&lt;span style=&quot;color:#a6e22e&quot;&gt;currentThread&lt;/span&gt;&lt;span style=&quot;color:#f92672&quot;&gt;().&lt;/span&gt;&lt;span style=&quot;color:#a6e22e&quot;&gt;getName&lt;/span&gt;&lt;span style=&quot;color:#f92672&quot;&gt;()&lt;/span&gt; &lt;span style=&quot;color:#f92672&quot;&gt;+&lt;/span&gt; &lt;span style=&quot;color:#e6db74&quot;&gt;&amp;#34; 开始&amp;#34;&lt;/span&gt;&lt;span style=&quot;color:#f92672&quot;&gt;);&lt;/span&gt;
+           &lt;span style=&quot;color:#66d9ef&quot;&gt;this&lt;/span&gt;&lt;span style=&quot;color:#f92672&quot;&gt;.&lt;/span&gt;&lt;span style=&quot;color:#a6e22e&quot;&gt;setName&lt;/span&gt;&lt;span style=&quot;color:#f92672&quot;&gt;(&lt;/span&gt;name&lt;span style=&quot;color:#f92672&quot;&gt;);&lt;/span&gt;
+           &lt;span style=&quot;color:#66d9ef&quot;&gt;this&lt;/span&gt;&lt;span style=&quot;color:#f92672&quot;&gt;.&lt;/span&gt;&lt;span style=&quot;color:#a6e22e&quot;&gt;setAge&lt;/span&gt;&lt;span style=&quot;color:#f92672&quot;&gt;(&lt;/span&gt;age&lt;span style=&quot;color:#f92672&quot;&gt;);&lt;/span&gt;
+
+           System&lt;span style=&quot;color:#f92672&quot;&gt;.&lt;/span&gt;&lt;span style=&quot;color:#a6e22e&quot;&gt;out&lt;/span&gt;&lt;span style=&quot;color:#f92672&quot;&gt;.&lt;/span&gt;&lt;span style=&quot;color:#a6e22e&quot;&gt;println&lt;/span&gt;&lt;span style=&quot;color:#f92672&quot;&gt;(&lt;/span&gt;&lt;span style=&quot;color:#e6db74&quot;&gt;&amp;#34;当前线程 : &amp;#34;&lt;/span&gt; &lt;span style=&quot;color:#f92672&quot;&gt;+&lt;/span&gt; Thread&lt;span style=&quot;color:#f92672&quot;&gt;.&lt;/span&gt;&lt;span style=&quot;color:#a6e22e&quot;&gt;currentThread&lt;/span&gt;&lt;span style=&quot;color:#f92672&quot;&gt;().&lt;/span&gt;&lt;span style=&quot;color:#a6e22e&quot;&gt;getName&lt;/span&gt;&lt;span style=&quot;color:#f92672&quot;&gt;()&lt;/span&gt; &lt;span style=&quot;color:#f92672&quot;&gt;+&lt;/span&gt; &lt;span style=&quot;color:#e6db74&quot;&gt;&amp;#34; 修改对象内容为： &amp;#34;&lt;/span&gt; &lt;span style=&quot;color:#f92672&quot;&gt;+&lt;/span&gt; &lt;span style=&quot;color:#66d9ef&quot;&gt;this&lt;/span&gt;&lt;span style=&quot;color:#f92672&quot;&gt;.&lt;/span&gt;&lt;span style=&quot;color:#a6e22e&quot;&gt;getName&lt;/span&gt;&lt;span style=&quot;color:#f92672&quot;&gt;()&lt;/span&gt; &lt;span style=&quot;color:#f92672&quot;&gt;+&lt;/span&gt; &lt;span style=&quot;color:#e6db74&quot;&gt;&amp;#34;, &amp;#34;&lt;/span&gt;
+                   &lt;span style=&quot;color:#f92672&quot;&gt;+&lt;/span&gt; &lt;span style=&quot;color:#66d9ef&quot;&gt;this&lt;/span&gt;&lt;span style=&quot;color:#f92672&quot;&gt;.&lt;/span&gt;&lt;span style=&quot;color:#a6e22e&quot;&gt;getAge&lt;/span&gt;&lt;span style=&quot;color:#f92672&quot;&gt;());&lt;/span&gt;
+
+           Thread&lt;span style=&quot;color:#f92672&quot;&gt;.&lt;/span&gt;&lt;span style=&quot;color:#a6e22e&quot;&gt;sleep&lt;/span&gt;&lt;span style=&quot;color:#f92672&quot;&gt;(&lt;/span&gt;2000&lt;span style=&quot;color:#f92672&quot;&gt;);&lt;/span&gt;
+           System&lt;span style=&quot;color:#f92672&quot;&gt;.&lt;/span&gt;&lt;span style=&quot;color:#a6e22e&quot;&gt;out&lt;/span&gt;&lt;span style=&quot;color:#f92672&quot;&gt;.&lt;/span&gt;&lt;span style=&quot;color:#a6e22e&quot;&gt;println&lt;/span&gt;&lt;span style=&quot;color:#f92672&quot;&gt;(&lt;/span&gt;&lt;span style=&quot;color:#e6db74&quot;&gt;&amp;#34;当前线程 : &amp;#34;&lt;/span&gt; &lt;span style=&quot;color:#f92672&quot;&gt;+&lt;/span&gt; Thread&lt;span style=&quot;color:#f92672&quot;&gt;.&lt;/span&gt;&lt;span style=&quot;color:#a6e22e&quot;&gt;currentThread&lt;/span&gt;&lt;span style=&quot;color:#f92672&quot;&gt;().&lt;/span&gt;&lt;span style=&quot;color:#a6e22e&quot;&gt;getName&lt;/span&gt;&lt;span style=&quot;color:#f92672&quot;&gt;()&lt;/span&gt; &lt;span style=&quot;color:#f92672&quot;&gt;+&lt;/span&gt; &lt;span style=&quot;color:#e6db74&quot;&gt;&amp;#34; 结束&amp;#34;&lt;/span&gt;&lt;span style=&quot;color:#f92672&quot;&gt;);&lt;/span&gt;
+       &lt;span style=&quot;color:#f92672&quot;&gt;}&lt;/span&gt; &lt;span style=&quot;color:#66d9ef&quot;&gt;catch&lt;/span&gt; &lt;span style=&quot;color:#f92672&quot;&gt;(&lt;/span&gt;InterruptedException e&lt;span style=&quot;color:#f92672&quot;&gt;)&lt;/span&gt; &lt;span style=&quot;color:#f92672&quot;&gt;{&lt;/span&gt;
+           e&lt;span style=&quot;color:#f92672&quot;&gt;.&lt;/span&gt;&lt;span style=&quot;color:#a6e22e&quot;&gt;printStackTrace&lt;/span&gt;&lt;span style=&quot;color:#f92672&quot;&gt;();&lt;/span&gt;
+       &lt;span style=&quot;color:#f92672&quot;&gt;}&lt;/span&gt;
+   &lt;span style=&quot;color:#f92672&quot;&gt;}&lt;/span&gt;
+
+   &lt;span style=&quot;color:#66d9ef&quot;&gt;public&lt;/span&gt; &lt;span style=&quot;color:#66d9ef&quot;&gt;static&lt;/span&gt; &lt;span style=&quot;color:#66d9ef&quot;&gt;void&lt;/span&gt; &lt;span style=&quot;color:#a6e22e&quot;&gt;main&lt;/span&gt;&lt;span style=&quot;color:#f92672&quot;&gt;(&lt;/span&gt;String&lt;span style=&quot;color:#f92672&quot;&gt;[]&lt;/span&gt; args&lt;span style=&quot;color:#f92672&quot;&gt;)&lt;/span&gt; &lt;span style=&quot;color:#f92672&quot;&gt;{&lt;/span&gt;
+       &lt;span style=&quot;color:#66d9ef&quot;&gt;final&lt;/span&gt; ModifyLock modifyLock &lt;span style=&quot;color:#f92672&quot;&gt;=&lt;/span&gt; &lt;span style=&quot;color:#66d9ef&quot;&gt;new&lt;/span&gt; ModifyLock&lt;span style=&quot;color:#f92672&quot;&gt;();&lt;/span&gt;
+       Thread t1 &lt;span style=&quot;color:#f92672&quot;&gt;=&lt;/span&gt; &lt;span style=&quot;color:#66d9ef&quot;&gt;new&lt;/span&gt; Thread&lt;span style=&quot;color:#f92672&quot;&gt;(&lt;/span&gt;&lt;span style=&quot;color:#66d9ef&quot;&gt;new&lt;/span&gt; Runnable&lt;span style=&quot;color:#f92672&quot;&gt;()&lt;/span&gt; &lt;span style=&quot;color:#f92672&quot;&gt;{&lt;/span&gt;
+           &lt;span style=&quot;color:#a6e22e&quot;&gt;@Override&lt;/span&gt;
+           &lt;span style=&quot;color:#66d9ef&quot;&gt;public&lt;/span&gt; &lt;span style=&quot;color:#66d9ef&quot;&gt;void&lt;/span&gt; &lt;span style=&quot;color:#a6e22e&quot;&gt;run&lt;/span&gt;&lt;span style=&quot;color:#f92672&quot;&gt;()&lt;/span&gt; &lt;span style=&quot;color:#f92672&quot;&gt;{&lt;/span&gt;
+               modifyLock&lt;span style=&quot;color:#f92672&quot;&gt;.&lt;/span&gt;&lt;span style=&quot;color:#a6e22e&quot;&gt;changeAttributte&lt;/span&gt;&lt;span style=&quot;color:#f92672&quot;&gt;(&lt;/span&gt;&lt;span style=&quot;color:#e6db74&quot;&gt;&amp;#34;许进&amp;#34;&lt;/span&gt;&lt;span style=&quot;color:#f92672&quot;&gt;,&lt;/span&gt; 25&lt;span style=&quot;color:#f92672&quot;&gt;);&lt;/span&gt;
+           &lt;span style=&quot;color:#f92672&quot;&gt;}&lt;/span&gt;
+       &lt;span style=&quot;color:#f92672&quot;&gt;},&lt;/span&gt; &lt;span style=&quot;color:#e6db74&quot;&gt;&amp;#34;t1&amp;#34;&lt;/span&gt;&lt;span style=&quot;color:#f92672&quot;&gt;);&lt;/span&gt;
+       Thread t2 &lt;span style=&quot;color:#f92672&quot;&gt;=&lt;/span&gt; &lt;span style=&quot;color:#66d9ef&quot;&gt;new&lt;/span&gt; Thread&lt;span style=&quot;color:#f92672&quot;&gt;(&lt;/span&gt;&lt;span style=&quot;color:#66d9ef&quot;&gt;new&lt;/span&gt; Runnable&lt;span style=&quot;color:#f92672&quot;&gt;()&lt;/span&gt; &lt;span style=&quot;color:#f92672&quot;&gt;{&lt;/span&gt;
+           &lt;span style=&quot;color:#a6e22e&quot;&gt;@Override&lt;/span&gt;
+           &lt;span style=&quot;color:#66d9ef&quot;&gt;public&lt;/span&gt; &lt;span style=&quot;color:#66d9ef&quot;&gt;void&lt;/span&gt; &lt;span style=&quot;color:#a6e22e&quot;&gt;run&lt;/span&gt;&lt;span style=&quot;color:#f92672&quot;&gt;()&lt;/span&gt; &lt;span style=&quot;color:#f92672&quot;&gt;{&lt;/span&gt;
+               modifyLock&lt;span style=&quot;color:#f92672&quot;&gt;.&lt;/span&gt;&lt;span style=&quot;color:#a6e22e&quot;&gt;changeAttributte&lt;/span&gt;&lt;span style=&quot;color:#f92672&quot;&gt;(&lt;/span&gt;&lt;span style=&quot;color:#e6db74&quot;&gt;&amp;#34;李四X&amp;#34;&lt;/span&gt;&lt;span style=&quot;color:#f92672&quot;&gt;,&lt;/span&gt; 21&lt;span style=&quot;color:#f92672&quot;&gt;);&lt;/span&gt;
+           &lt;span style=&quot;color:#f92672&quot;&gt;}&lt;/span&gt;
+       &lt;span style=&quot;color:#f92672&quot;&gt;},&lt;/span&gt; &lt;span style=&quot;color:#e6db74&quot;&gt;&amp;#34;t2&amp;#34;&lt;/span&gt;&lt;span style=&quot;color:#f92672&quot;&gt;);&lt;/span&gt;
+
+       t1&lt;span style=&quot;color:#f92672&quot;&gt;.&lt;/span&gt;&lt;span style=&quot;color:#a6e22e&quot;&gt;start&lt;/span&gt;&lt;span style=&quot;color:#f92672&quot;&gt;();&lt;/span&gt;
+       &lt;span style=&quot;color:#66d9ef&quot;&gt;try&lt;/span&gt; &lt;span style=&quot;color:#f92672&quot;&gt;{&lt;/span&gt;
+           Thread&lt;span style=&quot;color:#f92672&quot;&gt;.&lt;/span&gt;&lt;span style=&quot;color:#a6e22e&quot;&gt;sleep&lt;/span&gt;&lt;span style=&quot;color:#f92672&quot;&gt;(&lt;/span&gt;100&lt;span style=&quot;color:#f92672&quot;&gt;);&lt;/span&gt;
+       &lt;span style=&quot;color:#f92672&quot;&gt;}&lt;/span&gt; &lt;span style=&quot;color:#66d9ef&quot;&gt;catch&lt;/span&gt; &lt;span style=&quot;color:#f92672&quot;&gt;(&lt;/span&gt;InterruptedException e&lt;span style=&quot;color:#f92672&quot;&gt;)&lt;/span&gt; &lt;span style=&quot;color:#f92672&quot;&gt;{&lt;/span&gt;
+           e&lt;span style=&quot;color:#f92672&quot;&gt;.&lt;/span&gt;&lt;span style=&quot;color:#a6e22e&quot;&gt;printStackTrace&lt;/span&gt;&lt;span style=&quot;color:#f92672&quot;&gt;();&lt;/span&gt;
+       &lt;span style=&quot;color:#f92672&quot;&gt;}&lt;/span&gt;
+       t2&lt;span style=&quot;color:#f92672&quot;&gt;.&lt;/span&gt;&lt;span style=&quot;color:#a6e22e&quot;&gt;start&lt;/span&gt;&lt;span style=&quot;color:#f92672&quot;&gt;();&lt;/span&gt;
+   &lt;span style=&quot;color:#f92672&quot;&gt;}&lt;/span&gt;
+</code></pre>
+<p><!-- raw HTML omitted -->}<!-- raw HTML omitted -->
+<!-- raw HTML omitted --><!-- raw HTML omitted --><!-- raw HTML omitted --><!-- raw HTML omitted -->运行结果:<!-- raw HTML omitted --></p>
+<!-- raw HTML omitted -->
+<!-- raw HTML omitted -->
 <blockquote>
-<p>简单的说:关键字synchronized具有<code>锁重入</code>的功能，也就是在使用<code>synchronized时</code>，<code>当一个线程</code>得到一个<code>对象锁</code>的<code>锁后</code>，<code>再次请求此对象时</code>可以<code>再次</code>得到该<code>对象对应的锁</code>。</p>
 </blockquote>
-
-<h3 id="2-2-嵌套调用关系synchronized的重入">2.2 嵌套调用关系synchronized的重入</h3>
-
-<p>嵌套调用关系synchronized的重入也是线程安全的，下面是method1，method2，method3都被synchronized修饰，调用关系method1&ndash;&gt;method2&ndash;&gt;method3,也是线程安全的。</p>
-
-<pre><code class="language-java">/**
- * synchronized的重入
- * 
- * @author xujin
- *
- */
-public class SyncReenTrant {
-
-    public synchronized void method1() {
-        System.out.println(&quot;method1..&quot;);
-        method2();
-    }
-
-    public synchronized void method2() {
-        System.out.println(&quot;method2..&quot;);
-        method3();
-    }
-
-    public synchronized void method3() {
-        System.out.println(&quot;method3..&quot;);
-    }
-
-    public static void main(String[] args) {
-        final SyncReenTrant sd = new SyncReenTrant();
-        Thread t1 = new Thread(new Runnable() {
-            @Override
-            public void run() {
-                sd.method1();
-            }
-        });
-        t1.start();
-    }
-</code></pre>
-
-<p>运行结果如下:</p>
-
-<pre><code>method1..
-method2..
-method3..
-</code></pre>
-
-<h3 id="2-3-继承关系的synchronized的重入">2.3 继承关系的synchronized的重入</h3>
-
-<p>简单 Code1：</p>
-
-<pre><code>public class Son extends Father {
-
-    public synchronized void doSomething() {
-        System.out.println(&quot;child.doSomething()&quot;);
-        // 调用自己类中其他的synchronized方法
-        doAnotherThing();
-
-    }
-
-    private synchronized void doAnotherThing() {
-        // 调用父类的synchronized方法
-        super.doSomething();
-        System.out.println(&quot;child.doAnotherThing()&quot;);
-    }
-
-    public static void main(String[] args) {
-        Son child = new Son();
-        child.doSomething();
-    }
-}
-
-class Father {
-    public synchronized void doSomething() {
-        System.out.println(&quot;father.doSomething()&quot;);
-    }
-
-}
-</code></pre>
-
-<p>运行结果:</p>
-
-<pre><code>child.doSomething()
-father.doSomething()
-child.doAnotherThing()
-</code></pre>
-
-<ol>
-<li>这里的对象锁只有一个,就是child对象的锁,当执行child.doSomething时，该线程获得child对象的锁，在doSomething方法内执行doAnotherThing时再次请求child对象的锁，因为synchronized是重入锁，所以可以得到该锁，继续在doAnotherThing里执行父类的doSomething方法时第三次请求child对象的锁，同理可得到，如果不是重入锁的话，那这后面这两次请求锁将会被一直阻塞，从而导致死锁。</li>
-<li>所以在Java内部，同一线程在调用自己类中其他synchronized方法/块或调用父类的synchronized方法/块都不会阻碍该线程的执行，就是说同一线程对同一个对象锁是可重入的，而且同一个线程可以获取同一把锁多次，也就是可以多次重入。因为java线程是基于“每线程（per-thread）”，而不是基于“每调用（per-invocation）”的（java中线程获得对象锁的操作是以每线程为粒度的，per-invocation互斥体获得对象锁的操作是以每调用作为粒度的）</li>
-</ol>
-
-<blockquote>
-<p>我们再来看看重入锁是怎么实现可重入性的，其实现方法是为每个锁关联一个线程持有者和计数器，当计数器为0时表示该锁没有被任何线程持有，那么任何线程都可能获得该锁而调用相应的方法；当某一线程请求成功后，JVM会记下锁的持有线程，并且将计数器置为1；此时其它线程请求该锁，则必须等待；而该持有锁的线程如果再次请求这个锁，就可以再次拿到这个锁，同时计数器会递增；当线程退出同步代码块时，计数器会递减，如果计数器为0，则释放该锁。</p>
-</blockquote>
-
-<pre><code class="language-java">public class SyncExtends {
-
-    // 父类
-    static class Father {
-        public int i = 10;
-
-        public synchronized void operationSup() {
-            try {
-                i--;
-                System.out.println(&quot;Father print i = &quot; + i);
-                Thread.sleep(100);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-        }
-    }
-
-    // 子类继承父类
-    static class Son extends Father {
-        public synchronized void operationSub() {
-            try {
-                while (i &gt; 0) {
-                    i--;
-                    System.out.println(&quot;Son print i = &quot; + i);
-                    Thread.sleep(100);
-                    this.operationSup();
-                }
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-        }
-    }
-
-    public static void main(String[] args) {
-
-        Thread t1 = new Thread(new Runnable() {
-            @Override
-            public void run() {
-                Son sub = new Son();
-                sub.operationSub();
-            }
-        });
-
-        t1.start();
-    }
-
-}
-</code></pre>
-
-<p>运行结果如下:</p>
-
-<pre><code>Son print i = 9
-Father print i = 8
-Son print i = 7
-Father print i = 6
-Son print i = 5
-Father print i = 4
-Son print i = 3
-Father print i = 2
-Son print i = 1
-Father print i = 0
-</code></pre>
-
-<p>参考文章:
-<a href="http://blog.csdn.net/aigoogle/article/details/29893667">http://blog.csdn.net/aigoogle/article/details/29893667</a></p>
-
-<h3 id="2-4-synchronized常见代码块">2.4 synchronized常见代码块</h3>
-
-<ol>
-<li>synchronized可以使用任意的Object进行加锁， 使用synchronized代码块加锁,比较灵活，如下代码所示:</li>
-</ol>
-
-<pre><code class="language-java">public class ObjectLock {
-
-    public void method1() {
-        // 对this当前ObjectLock实例对象加锁
-        synchronized (this) {
-            try {
-                System.out.println(&quot;do method1..&quot;);
-                Thread.sleep(2000);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-        }
-    }
-
-    public void method2() {
-        // 对ObjectLock类加锁
-        synchronized (ObjectLock.class) {
-            try {
-                System.out.println(&quot;do method2..&quot;);
-                Thread.sleep(2000);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-        }
-    }
-
-    // 任何对象锁
-    private Object anyObjectlock = new Object();
-
-    public void method3() {
-        synchronized (anyObjectlock) {
-            try {
-                System.out.println(&quot;do method3..&quot;);
-                Thread.sleep(2000);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-        }
-    }
-
-    public static void main(String[] args) {
-
-        final ObjectLock objLock = new ObjectLock();
-        Thread t1 = new Thread(new Runnable() {
-            @Override
-            public void run() {
-                objLock.method1();
-            }
-        });
-        Thread t2 = new Thread(new Runnable() {
-            @Override
-            public void run() {
-                objLock.method2();
-            }
-        });
-        Thread t3 = new Thread(new Runnable() {
-            @Override
-            public void run() {
-                objLock.method3();
-            }
-        });
-
-        t1.start();
-        t2.start();
-        t3.start();
-
-    }
-
-}
-</code></pre>
-
-<p>2.使用synchronized声明的方法在某些情况下，是有弊端的，比如A线程调用同步的方法执行一个很长时间的任务,那么B线程就必须等待很长的时间才可以执行，这样情况下可以使用synchronize的去优化代码执行时间，也就是我们通常所说的减小锁的粒度。</p>
-
-<pre><code class="language-java">   public class Optimize {
-
-       public void doLongTimeTask() {
-           try {
-
-               System.out.println(&quot;当前线程开始：&quot; + Thread.currentThread().getName() + &quot;, 正在执行一个较长时间的业务操作，其内容不需要同步&quot;);
-               Thread.sleep(2000);
-               // 使用synchronized代码块减小锁的粒度，提高性能
-               synchronized (this) {
-                   System.out.println(&quot;当前线程：&quot; + Thread.currentThread().getName() + &quot;, 执行同步代码块，对其同步变量进行操作&quot;);
-                   Thread.sleep(1000);
-               }
-               System.out.println(&quot;当前线程结束：&quot; + Thread.currentThread().getName() + &quot;, 执行完毕&quot;);
-
-           } catch (InterruptedException e) {
-               e.printStackTrace();
-           }
-       }
-
-       public static void main(String[] args) {
-           final Optimize otz = new Optimize();
-           Thread t1 = new Thread(new Runnable() {
-               @Override
-               public void run() {
-                   otz.doLongTimeTask();
-               }
-           }, &quot;t1&quot;);
-           Thread t2 = new Thread(new Runnable() {
-               @Override
-               public void run() {
-                   otz.doLongTimeTask();
-               }
-           }, &quot;t2&quot;);
-           t1.start();
-           t2.start();
-       }
-
-   }
-</code></pre>
-
-<p>执行结果:</p>
-
-<pre><code>当前线程开始：t1, 正在执行一个较长时间的业务操作，其内容不需要同步
-当前线程开始：t2, 正在执行一个较长时间的业务操作，其内容不需要同步
-当前线程：t2, 执行同步代码块，对其同步变量进行操作
-当前线程结束：t2, 执行完毕
-当前线程：t1, 执行同步代码块，对其同步变量进行操作
-当前线程结束：t1, 执行完毕
-</code></pre>
-
-<p>3.注意就是不要使用String的常量加锁，会出现死循环问题。</p>
-
-<p>synchronized代码块对字符串的锁，注意String常量池的缓存功能,示例代码如下:</p>
-
-<pre><code class="language-java">   public class StringLock {
-
-    public void method() {
-        synchronized (&quot;字符串常量&quot;) {
-            try {
-                while(true){
-                    System.out.println(&quot;当前线程 : &quot;  + Thread.currentThread().getName() + &quot;开始&quot;);
-                    Thread.sleep(1000);     
-                    System.out.println(&quot;当前线程 : &quot;  + Thread.currentThread().getName() + &quot;结束&quot;);
-                }
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-        }
-    }
-    
-    public static void main(String[] args) {
-        final StringLock stringLock = new StringLock();
-        Thread t1 = new Thread(new Runnable() {
-            @Override
-            public void run() {
-                stringLock.method();
-            }
-        },&quot;t1&quot;);
-        Thread t2 = new Thread(new Runnable() {
-            @Override
-            public void run() {
-                stringLock.method();
-            }
-        },&quot;t2&quot;);
-        
-        t1.start();
-        t2.start();
-    }
-   }
-</code></pre>
-
-<p><strong>提示</strong>:运行结果是:<strong>t1线程一直死循环</strong>。<strong>t2线程不执行</strong>。修改为如下代码,t1和t2线程交替执行</p>
-
-<pre><code class="language-java">    public void method() {
-           //把synchronized (&quot;字符串常量&quot;) 修改为synchronized (new String(&quot;字符串常量&quot;))
-           synchronized (new String(&quot;字符串常量&quot;)) {
-               try {
-                   while (true) {
-                       System.out.println(&quot;当前线程 : &quot; + Thread.currentThread().getName() + &quot;开始&quot;);
-                       Thread.sleep(1000);
-                       System.out.println(&quot;当前线程 : &quot; + Thread.currentThread().getName() + &quot;结束&quot;);
-                   }
-               } catch (InterruptedException e) {
-                   e.printStackTrace();
-               }
-           }
-       }
-</code></pre>
-
-<p>4.锁对象的改变问题:
-   当使用一个对象进行加锁的时候，要注意对象本身发生变化的时候，那么持有的锁就不同。如果对象本身不发生改变，那么依然是同步的，即使是对象的属性发生了变化。</p>
-
-<p>4.1 示例代码1:<code>对象本身发生变化的时候,那么对象持有的锁就发生变化</code></p>
-
-<pre><code class="language-java">   public class ChangeLock {
-
-       private String lock = &quot;lock&quot;;
-
-       private void method() {
-           synchronized (lock) {
-               try {
-                   System.out.println(&quot;当前线程 : &quot; + Thread.currentThread().getName() + &quot;开始&quot;);
-                   // 这里把锁的内容改变了，因此t1,t2线程基本同时进来，而不是t1休眠2秒后，t2进来
-                   lock = &quot;change lock&quot;;
-                   Thread.sleep(2000);
-                   System.out.println(&quot;当前线程 : &quot; + Thread.currentThread().getName() + &quot;结束&quot;);
-               } catch (InterruptedException e) {
-                   e.printStackTrace();
-               }
-           }
-       }
-
-       public static void main(String[] args) {
-
-           final ChangeLock changeLock = new ChangeLock();
-           Thread t1 = new Thread(new Runnable() {
-               @Override
-               public void run() {
-                   changeLock.method();
-               }
-           }, &quot;t1&quot;);
-           Thread t2 = new Thread(new Runnable() {
-               @Override
-               public void run() {
-                   changeLock.method();
-               }
-           }, &quot;t2&quot;);
-           t1.start();
-           try {
-               Thread.sleep(100);
-           } catch (InterruptedException e) {
-               e.printStackTrace();
-           }
-           t2.start();
-       }
-
-   }
-</code></pre>
-
-<p>4.2 示例代码2:<code>同一对象属性的修改不会影响锁的情况</code></p>
-
-<pre><code class="language-java">   public class ModifyLock {
-
-       private String name;
-       private int age;
-
-       public String getName() {
-           return name;
-       }
-
-       public void setName(String name) {
-           this.name = name;
-       }
-
-       public int getAge() {
-           return age;
-       }
-
-       public void setAge(int age) {
-           this.age = age;
-       }
-
-       public synchronized void changeAttributte(String name, int age) {
-           try {
-               System.out.println(&quot;当前线程 : &quot; + Thread.currentThread().getName() + &quot; 开始&quot;);
-               this.setName(name);
-               this.setAge(age);
-
-               System.out.println(&quot;当前线程 : &quot; + Thread.currentThread().getName() + &quot; 修改对象内容为： &quot; + this.getName() + &quot;, &quot;
-                       + this.getAge());
-
-               Thread.sleep(2000);
-               System.out.println(&quot;当前线程 : &quot; + Thread.currentThread().getName() + &quot; 结束&quot;);
-           } catch (InterruptedException e) {
-               e.printStackTrace();
-           }
-       }
-
-       public static void main(String[] args) {
-           final ModifyLock modifyLock = new ModifyLock();
-           Thread t1 = new Thread(new Runnable() {
-               @Override
-               public void run() {
-                   modifyLock.changeAttributte(&quot;许进&quot;, 25);
-               }
-           }, &quot;t1&quot;);
-           Thread t2 = new Thread(new Runnable() {
-               @Override
-               public void run() {
-                   modifyLock.changeAttributte(&quot;李四X&quot;, 21);
-               }
-           }, &quot;t2&quot;);
-
-           t1.start();
-           try {
-               Thread.sleep(100);
-           } catch (InterruptedException e) {
-               e.printStackTrace();
-           }
-           t2.start();
-       }
-
-   }
-</code></pre>
-
-<p>运行结果:</p>
-
-<pre><code>   当前线程 : t1 开始
-   当前线程 : t1 修改对象内容为： 许进, 25
-   当前线程 : t1 结束
-   当前线程 : t2 开始
-   当前线程 : t2 修改对象内容为： 李四X, 21
-   当前线程 : t2 结束
-</code></pre>
 
 </article>
 
@@ -942,24 +778,23 @@ Father print i = 0
 		目录
 	</h2>
   <nav id="TableOfContents">
-<ul>
-<li>
-<ul>
-<li><a href="#1-脏读">1. 脏读</a>
-<ul>
-<li><a href="#1-1-什么是脏读">1.1 什么是脏读</a></li>
-<li><a href="#1-2-示例code">1.2 示例Code</a></li>
-<li><a href="#1-3-小结">1.3 小结</a></li>
-</ul></li>
-<li><a href="#2-synchronized的重入">2.synchronized的重入</a>
-<ul>
-<li><a href="#2-1-什么是synchronized的重入锁">2.1 什么是synchronized的重入锁</a></li>
-<li><a href="#2-2-嵌套调用关系synchronized的重入">2.2 嵌套调用关系synchronized的重入</a></li>
-<li><a href="#2-3-继承关系的synchronized的重入">2.3 继承关系的synchronized的重入</a></li>
-<li><a href="#2-4-synchronized常见代码块">2.4 synchronized常见代码块</a></li>
-</ul></li>
-</ul></li>
-</ul>
+  <ul>
+    <li><a href="#1-脏读">1. 脏读</a>
+      <ul>
+        <li><a href="#11-什么是脏读">1.1 什么是脏读</a></li>
+        <li><a href="#12-示例code">1.2 示例Code</a></li>
+        <li><a href="#13-小结">1.3 小结</a></li>
+      </ul>
+    </li>
+    <li><a href="#2synchronized的重入">2.synchronized的重入</a>
+      <ul>
+        <li><a href="#21-什么是synchronized的重入锁">2.1 什么是synchronized的重入锁</a></li>
+        <li><a href="#22-嵌套调用关系synchronized的重入">2.2 嵌套调用关系synchronized的重入</a></li>
+        <li><a href="#23-继承关系的synchronized的重入">2.3 继承关系的synchronized的重入</a></li>
+        <li><a href="#24-synchronized常见代码块">2.4 synchronized常见代码块</a></li>
+      </ul>
+    </li>
+  </ul>
 </nav>
 </div>
 

@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Halo ToolKit on 玹霖志</title>
@@ -20,6 +20,24 @@
     </item>
     
     <item>
+      <title>Halo Toolkit创建工程功能</title>
+      <link>/projects/halo-toolkit/create-project/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>/projects/halo-toolkit/create-project/</guid>
+      <description>1.选择应用类型创建工程 2.配置工程基本信息 3.数据库相关配置 4.点击Finish生成工程</description>
+    </item>
+    
+    <item>
+      <title>Halo ToolKit右键创建功能</title>
+      <link>/projects/halo-toolkit/right-create/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>/projects/halo-toolkit/right-create/</guid>
+      <description>Halo ToolKit增强右键 Halo ToolKit提供右键增强功能，帮助开发快速创建常用的Java类，提高开发效率。如下图所示: 如下图所示，右键支持创</description>
+    </item>
+    
+    <item>
       <title>Halo ToolKit概述</title>
       <link>/projects/halo-toolkit/overview/</link>
       <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
@@ -35,24 +53,6 @@
       
       <guid>/projects/halo-toolkit/line-marker/</guid>
       <description>1.行标记功能 1.1 @Domain行标记修改 Halo框架所创建的应用需要管中台可视化纳管，因此当应用启动的时候会判断当前应用是否属于某个域，不属</description>
-    </item>
-    
-    <item>
-      <title>Halo Toolkit创建工程功能</title>
-      <link>/projects/halo-toolkit/create-project/</link>
-      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
-      
-      <guid>/projects/halo-toolkit/create-project/</guid>
-      <description>1.选择应用类型创建工程 2.配置工程基本信息 3.数据库相关配置 4.点击Finish生成工程</description>
-    </item>
-    
-    <item>
-      <title>Halo Tools右键创建功能</title>
-      <link>/projects/halo-toolkit/right-create/</link>
-      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
-      
-      <guid>/projects/halo-toolkit/right-create/</guid>
-      <description>Halo Tools增强右键 Halo Tools提供右键增强功能，帮助开发快速创建常用的Java类，提高开发效率。如下图所示: 如下图所示，右键支持创建13种</description>
     </item>
     
   </channel>

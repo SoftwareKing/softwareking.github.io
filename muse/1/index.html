@@ -10,7 +10,7 @@
 <meta name="viewport" content="width=device-width,minimum-scale=1">
 <meta name="description" content="玹霖志,许进沉思录,许进|Spring Cloud,中间件，基础架构，www.xujin.org,xujin.org,-许进沉思录,Venus&#43;,云首科技有限公司,云计算，大数据，物联网，Software_king的博客,云计算Saas，云计算Paas，云计算Iaas Hadoop，大数据，JavaEE，Java，物联网，Hadoop， NoSQL，MongoDB,Spring, Hibernate,Struts2," />
 
-<meta name="generator" content="Hugo 0.55.6" /><link rel="shortcut icon" href=/img/icon.png type="image/png">
+<meta name="generator" content="Hugo 0.72.0" /><link rel="shortcut icon" href=/img/icon.png type="image/png">
 
 <link href="https://unpkg.com/purecss@1.0.0/build/base-min.css" rel="stylesheet">
 
@@ -241,7 +241,7 @@ if (!doNotTrack) {
 				
 			</span>
 		
-		<span class="post-word-count">· 字数:665·阅读时间 2 分钟</span>
+		<span class="post-word-count">· 字数:661·阅读时间 2 分钟</span>
 		
 		阅读量<span id="busuanzi_value_page_pv"></span>次
 		
@@ -259,177 +259,74 @@ if (!doNotTrack) {
 	});
   </script>
 		<article class="typo">
-	<p>本文主要记录在阿里云ECS上安装配置Ngnix，通过公网域名访问多个Spring Boot应用。</p>
-
-<h2 id="1-安装ngnix">1.安装Ngnix</h2>
-
-<p>1.yum安装Nginx</p>
-
-<pre><code>sudo yum install -y nginx
-</code></pre>
-
-<p>2.启动Nginx</p>
-
-<pre><code>systemctl start nginx.service
-</code></pre>
-
-<p>3.开机启动Nginx</p>
-
-<pre><code>systemctl enable nginx.service
-</code></pre>
-
-<h2 id="2-ngnix的常用命令">2. Ngnix的常用命令</h2>
-
-<p>1.nginx -t 查看Ngnix的配置文件位置</p>
-
-<pre><code>[root@iZm5ei42hq2wbmbr6yb489Z ~]# nginx -t
-nginx: the configuration file /etc/nginx/nginx.conf syntax is ok
-nginx: configuration file /etc/nginx/nginx.conf test is successful
-</code></pre>
-
-<p>2.启动Ngnix</p>
-
-<pre><code>[root@iZm5ei42hq2wbmbr6yb489Z nginx]# nginx
-</code></pre>
-
-<p>3.停止Ngnix</p>
-
-<pre><code>[root@iZm5ei42hq2wbmbr6yb489Z nginx]# nginx -s stop
-</code></pre>
-
-<h2 id="3-ngnix配置总结">3. Ngnix配置总结</h2>
-
-<h3 id="3-1-nginx配置访问多个spring-boot-jar">3.1 Nginx配置访问多个Spring Boot Jar</h3>
-
-<p>1.配置域名a.qingcloud.net访问端口为8080的应用</p>
-
-<pre><code class="language-shell">server {
-    listen       80;
-    server_name  a.qingcloud.net;
-    location / {
-        proxy_pass http://127.0.0.1:8080;
-        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
-        proxy_set_header X-Forwarded-Proto $scheme;
-        proxy_set_header X-Forwarded-Port $server_port;
-    }
-}
-</code></pre>
-
-<p>2.配置域名b.qingcloud.net访问端口为8082的Spring Boot的应用</p>
-
-<pre><code>server {
-    listen       80;
-    server_name  b.qingcloud.net;
-    location / {
-        proxy_pass http://127.0.0.1:8082;
-        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
-        proxy_set_header X-Forwarded-Proto $scheme;
-        proxy_set_header X-Forwarded-Port $server_port;
-    }
-}
-</code></pre>
-
-<h3 id="3-2-ngnix配置访问静态资源">3.2 Ngnix配置访问静态资源</h3>
-
-<p>配置域名c.qingcloud.net访问某个文件夹下面的静态资源</p>
-
-<pre><code>server {
-    listen 80; #暴露给外部访问的端口
-    server_name c.qingcloud.net;
-        charset utf-8;
-    location / {
-        #项目静态路径设置
-        alias /usr/xujin/halo/;
-    }
-}
-</code></pre>
-
-<h2 id="4-编写shell命令启动spring-boot-jar">4.编写shell命令启动Spring Boot jar</h2>
-
-<h3 id="4-1启动可执行jar">4.1启动可执行Jar</h3>
-
-<pre><code>sh halo-admin-mgmt.sh start
-</code></pre>
-
-<h3 id="4-2-对应的shell脚本如下">4.2 对应的shell脚本如下</h3>
-
-<pre><code class="language-shell">#!/bin/bash
-
-APP_NAME=/usr/xujin/jar/halo-admin-start-1.0.0.RELEASE.jar
-
-#使用说明，用来提示输入参数
-usage() {
-    echo &quot;Usage: sh halo-admin-mgmt.sh [start|stop|restart|status]&quot;
-    exit 1
-}
-
-#检查程序是否在运行
-is_exist(){
-  pid=`ps -ef|grep $APP_NAME|grep -v grep|awk '{print $2}'`
-  #如果不存在返回1，存在返回0     
-  if [ -z &quot;${pid}&quot; ]; then
-   return 1
-  else
-    return 0
-  fi
-}
-
-#启动方法
-start(){
-  is_exist
-  if [ $? -eq 0 ]; then
-    echo &quot;${APP_NAME} is already running. pid=${pid}&quot;
-  else
-    nohup java -jar ${APP_NAME}  &gt;halo-admin.out 2&gt;&amp;1 &amp;
-  fi
-}
-
-#停止方法
-stop(){
-  is_exist
-  if [ $? -eq &quot;0&quot; ]; then
-    kill -9 $pid
-  else
-    echo &quot;${APP_NAME} is not running&quot;
-  fi  
-}
-
-#输出运行状态
-status(){
-  is_exist
-  if [ $? -eq &quot;0&quot; ]; then
-    echo &quot;${APP_NAME} is running. Pid is ${pid}&quot;
-  else
-    echo &quot;${APP_NAME} is NOT running.&quot;
-  fi
-}
-
-#重启
-restart(){
-  stop
-  sleep 5
-  start
-}
-
-#根据输入参数，选择执行对应方法，不输入则执行使用说明
-case &quot;$1&quot; in
-  &quot;start&quot;)
-    start
-    ;;
-  &quot;stop&quot;)
-    stop
-    ;;
-  &quot;status&quot;)
-    status
-    ;;
-  &quot;restart&quot;)
-    restart
-    ;;
-  *)
-    usage
-    ;;
-esac
-</code></pre>
+	<!-- raw HTML omitted -->
+<p><!-- raw HTML omitted -->#使用说明，用来提示输入参数<!-- raw HTML omitted -->
+usage<!-- raw HTML omitted -->()<!-- raw HTML omitted --> <!-- raw HTML omitted -->{<!-- raw HTML omitted -->
+echo <!-- raw HTML omitted -->&quot;Usage: sh halo-admin-mgmt.sh [start|stop|restart|status]&quot;<!-- raw HTML omitted -->
+exit <!-- raw HTML omitted -->1<!-- raw HTML omitted -->
+<!-- raw HTML omitted -->}<!-- raw HTML omitted --></p>
+<p><!-- raw HTML omitted -->#检查程序是否在运行<!-- raw HTML omitted -->
+is_exist<!-- raw HTML omitted -->(){<!-- raw HTML omitted -->
+pid<!-- raw HTML omitted -->=<!-- raw HTML omitted --><!-- raw HTML omitted --><code>&lt;/span&gt;ps -ef|grep $APP_NAME|grep -v grep|awk &lt;span style=&quot;color:#e6db74&quot;&gt;&amp;#39;{print $2}&amp;#39;&lt;/span&gt;&lt;span style=&quot;color:#e6db74&quot;&gt;</code><!-- raw HTML omitted -->
+<!-- raw HTML omitted -->#如果不存在返回1，存在返回0<!-- raw HTML omitted -->  <br>
+<!-- raw HTML omitted -->if<!-- raw HTML omitted --> <!-- raw HTML omitted -->[<!-- raw HTML omitted --> -z <!-- raw HTML omitted -->&quot;<!-- raw HTML omitted --><!-- raw HTML omitted -->${<!-- raw HTML omitted -->pid<!-- raw HTML omitted -->}<!-- raw HTML omitted --><!-- raw HTML omitted -->&quot;<!-- raw HTML omitted --> <!-- raw HTML omitted -->]<!-- raw HTML omitted -->; <!-- raw HTML omitted -->then<!-- raw HTML omitted -->
+<!-- raw HTML omitted -->return<!-- raw HTML omitted --> <!-- raw HTML omitted -->1<!-- raw HTML omitted -->
+<!-- raw HTML omitted -->else<!-- raw HTML omitted -->
+<!-- raw HTML omitted -->return<!-- raw HTML omitted --> <!-- raw HTML omitted -->0<!-- raw HTML omitted -->
+<!-- raw HTML omitted -->fi<!-- raw HTML omitted -->
+<!-- raw HTML omitted -->}<!-- raw HTML omitted --></p>
+<p><!-- raw HTML omitted -->#启动方法<!-- raw HTML omitted -->
+start<!-- raw HTML omitted -->(){<!-- raw HTML omitted -->
+is_exist
+<!-- raw HTML omitted -->if<!-- raw HTML omitted --> <!-- raw HTML omitted -->[<!-- raw HTML omitted --> $? -eq <!-- raw HTML omitted -->0<!-- raw HTML omitted --> <!-- raw HTML omitted -->]<!-- raw HTML omitted -->; <!-- raw HTML omitted -->then<!-- raw HTML omitted -->
+echo <!-- raw HTML omitted -->&quot;<!-- raw HTML omitted --><!-- raw HTML omitted -->${<!-- raw HTML omitted -->APP_NAME<!-- raw HTML omitted -->}<!-- raw HTML omitted --><!-- raw HTML omitted --> is already running. pid=<!-- raw HTML omitted --><!-- raw HTML omitted -->${<!-- raw HTML omitted -->pid<!-- raw HTML omitted -->}<!-- raw HTML omitted --><!-- raw HTML omitted -->&quot;<!-- raw HTML omitted -->
+<!-- raw HTML omitted -->else<!-- raw HTML omitted -->
+nohup java -jar <!-- raw HTML omitted -->${<!-- raw HTML omitted -->APP_NAME<!-- raw HTML omitted -->}<!-- raw HTML omitted -->  &gt;halo-admin.out 2&gt;&amp;<!-- raw HTML omitted -->1<!-- raw HTML omitted --> &amp;
+<!-- raw HTML omitted -->fi<!-- raw HTML omitted -->
+<!-- raw HTML omitted -->}<!-- raw HTML omitted --></p>
+<p><!-- raw HTML omitted -->#停止方法<!-- raw HTML omitted -->
+stop<!-- raw HTML omitted -->(){<!-- raw HTML omitted -->
+is_exist
+<!-- raw HTML omitted -->if<!-- raw HTML omitted --> <!-- raw HTML omitted -->[<!-- raw HTML omitted --> $? -eq <!-- raw HTML omitted -->&quot;0&quot;<!-- raw HTML omitted --> <!-- raw HTML omitted -->]<!-- raw HTML omitted -->; <!-- raw HTML omitted -->then<!-- raw HTML omitted -->
+kill -9 $pid
+<!-- raw HTML omitted -->else<!-- raw HTML omitted -->
+echo <!-- raw HTML omitted -->&quot;<!-- raw HTML omitted --><!-- raw HTML omitted -->${<!-- raw HTML omitted -->APP_NAME<!-- raw HTML omitted -->}<!-- raw HTML omitted --><!-- raw HTML omitted --> is not running&quot;<!-- raw HTML omitted -->
+<!-- raw HTML omitted -->fi<!-- raw HTML omitted --><br>
+<!-- raw HTML omitted -->}<!-- raw HTML omitted --></p>
+<p><!-- raw HTML omitted -->#输出运行状态<!-- raw HTML omitted -->
+status<!-- raw HTML omitted -->(){<!-- raw HTML omitted -->
+is_exist
+<!-- raw HTML omitted -->if<!-- raw HTML omitted --> <!-- raw HTML omitted -->[<!-- raw HTML omitted --> $? -eq <!-- raw HTML omitted -->&quot;0&quot;<!-- raw HTML omitted --> <!-- raw HTML omitted -->]<!-- raw HTML omitted -->; <!-- raw HTML omitted -->then<!-- raw HTML omitted -->
+echo <!-- raw HTML omitted -->&quot;<!-- raw HTML omitted --><!-- raw HTML omitted -->${<!-- raw HTML omitted -->APP_NAME<!-- raw HTML omitted -->}<!-- raw HTML omitted --><!-- raw HTML omitted --> is running. Pid is <!-- raw HTML omitted --><!-- raw HTML omitted -->${<!-- raw HTML omitted -->pid<!-- raw HTML omitted -->}<!-- raw HTML omitted --><!-- raw HTML omitted -->&quot;<!-- raw HTML omitted -->
+<!-- raw HTML omitted -->else<!-- raw HTML omitted -->
+echo <!-- raw HTML omitted -->&quot;<!-- raw HTML omitted --><!-- raw HTML omitted -->${<!-- raw HTML omitted -->APP_NAME<!-- raw HTML omitted -->}<!-- raw HTML omitted --><!-- raw HTML omitted --> is NOT running.&quot;<!-- raw HTML omitted -->
+<!-- raw HTML omitted -->fi<!-- raw HTML omitted -->
+<!-- raw HTML omitted -->}<!-- raw HTML omitted --></p>
+<p><!-- raw HTML omitted -->#重启<!-- raw HTML omitted -->
+restart<!-- raw HTML omitted -->(){<!-- raw HTML omitted -->
+stop
+sleep <!-- raw HTML omitted -->5<!-- raw HTML omitted -->
+start
+<!-- raw HTML omitted -->}<!-- raw HTML omitted --></p>
+<p><!-- raw HTML omitted -->#根据输入参数，选择执行对应方法，不输入则执行使用说明<!-- raw HTML omitted -->
+<!-- raw HTML omitted -->case<!-- raw HTML omitted --> <!-- raw HTML omitted -->&quot;<!-- raw HTML omitted -->$1<!-- raw HTML omitted -->&quot;<!-- raw HTML omitted --> in
+<!-- raw HTML omitted -->&quot;start&quot;<!-- raw HTML omitted --><!-- raw HTML omitted -->)<!-- raw HTML omitted -->
+start
+;;
+<!-- raw HTML omitted -->&quot;stop&quot;<!-- raw HTML omitted --><!-- raw HTML omitted -->)<!-- raw HTML omitted -->
+stop
+;;
+<!-- raw HTML omitted -->&quot;status&quot;<!-- raw HTML omitted --><!-- raw HTML omitted -->)<!-- raw HTML omitted -->
+status
+;;
+<!-- raw HTML omitted -->&quot;restart&quot;<!-- raw HTML omitted --><!-- raw HTML omitted -->)<!-- raw HTML omitted -->
+restart
+;;
+*<!-- raw HTML omitted -->)<!-- raw HTML omitted -->
+usage
+;;
+<!-- raw HTML omitted -->esac<!-- raw HTML omitted -->
+<!-- raw HTML omitted --><!-- raw HTML omitted --><!-- raw HTML omitted --></p>
 
 </article>
 
@@ -535,23 +432,22 @@ esac
 		目录
 	</h2>
   <nav id="TableOfContents">
-<ul>
-<li>
-<ul>
-<li><a href="#1-安装ngnix">1.安装Ngnix</a></li>
-<li><a href="#2-ngnix的常用命令">2. Ngnix的常用命令</a></li>
-<li><a href="#3-ngnix配置总结">3. Ngnix配置总结</a>
-<ul>
-<li><a href="#3-1-nginx配置访问多个spring-boot-jar">3.1 Nginx配置访问多个Spring Boot Jar</a></li>
-<li><a href="#3-2-ngnix配置访问静态资源">3.2 Ngnix配置访问静态资源</a></li>
-</ul></li>
-<li><a href="#4-编写shell命令启动spring-boot-jar">4.编写shell命令启动Spring Boot jar</a>
-<ul>
-<li><a href="#4-1启动可执行jar">4.1启动可执行Jar</a></li>
-<li><a href="#4-2-对应的shell脚本如下">4.2 对应的shell脚本如下</a></li>
-</ul></li>
-</ul></li>
-</ul>
+  <ul>
+    <li><a href="#1安装ngnix">1.安装Ngnix</a></li>
+    <li><a href="#2-ngnix的常用命令">2. Ngnix的常用命令</a></li>
+    <li><a href="#3-ngnix配置总结">3. Ngnix配置总结</a>
+      <ul>
+        <li><a href="#31-nginx配置访问多个spring-boot-jar">3.1 Nginx配置访问多个Spring Boot Jar</a></li>
+        <li><a href="#32-ngnix配置访问静态资源">3.2 Ngnix配置访问静态资源</a></li>
+      </ul>
+    </li>
+    <li><a href="#4编写shell命令启动spring-boot-jar">4.编写shell命令启动Spring Boot jar</a>
+      <ul>
+        <li><a href="#41启动可执行jar">4.1启动可执行Jar</a></li>
+        <li><a href="#42-对应的shell脚本如下">4.2 对应的shell脚本如下</a></li>
+      </ul>
+    </li>
+  </ul>
 </nav>
 </div>
 

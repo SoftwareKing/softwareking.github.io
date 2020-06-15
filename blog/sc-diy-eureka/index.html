@@ -10,7 +10,7 @@
 <meta name="viewport" content="width=device-width,minimum-scale=1">
 <meta name="description" content="玹霖志,许进沉思录,许进|Spring Cloud,中间件，基础架构，www.xujin.org,xujin.org,-许进沉思录,Venus&#43;,云首科技有限公司,云计算，大数据，物联网，Software_king的博客,云计算Saas，云计算Paas，云计算Iaas Hadoop，大数据，JavaEE，Java，物联网，Hadoop， NoSQL，MongoDB,Spring, Hibernate,Struts2," />
 
-<meta name="generator" content="Hugo 0.55.6" /><link rel="shortcut icon" href=/img/icon.png type="image/png">
+<meta name="generator" content="Hugo 0.72.0" /><link rel="shortcut icon" href=/img/icon.png type="image/png">
 
 <link href="https://unpkg.com/purecss@1.0.0/build/base-min.css" rel="stylesheet">
 
@@ -241,7 +241,7 @@ if (!doNotTrack) {
 				
 			</span>
 		
-		<span class="post-word-count">· 字数:744·阅读时间 2 分钟</span>
+		<span class="post-word-count">· 字数:742·阅读时间 2 分钟</span>
 		
 		阅读量<span id="busuanzi_value_page_pv"></span>次
 		
@@ -259,81 +259,31 @@ if (!doNotTrack) {
 	});
   </script>
 		<article class="typo">
-	<h2 id="1-spring-cloud中国公益eureka-server">1. Spring Cloud中国公益Eureka Server</h2>
-
-<p>Eureka Server为作为Spring Cloud开发过程中常用的注册中心组件，作为基础设施组件，开发学习过程中，经常需要自己创建Eureka Server应用和重启。为了帮助开发者快速学习入门。Spring Cloud中国社区特搭建一个公益注册中心，仅作为帮助Spring Cloud的开发者进行学习和调试。为了更好服务大家，请勿对本注册中心进行压测。定制的Eureka Server注册中心UI如下所示。</p>
-
-<p><img src="1.png" alt="" /></p>
-
-<h3 id="1-1-访问地址">1.1 访问地址</h3>
-
-<p><a href="http://eureka.springcloud.cn" title="http://eureka.springcloud.cn">http://eureka.springcloud.cn</a></p>
-
-<h2 id="2-定制eureka-serrver的ui">2.定制Eureka Serrver的UI</h2>
-
-<h3 id="2-1-为什么要定制eureka-server">2.1 为什么要定制Eureka Server</h3>
-
-<p>原因两点:
-*  1.觉得默认的UI比较丑<br />
-*  2.Eureka Server想客制化一下</p>
-
-<blockquote>
-<p>至于Spring Cloud Eureka的UI客制化成什么样子由你而定！</p>
-</blockquote>
-
-<h2 id="3-两种方法定制eureka-server">3. 两种方法定制Eureka Server</h2>
-
-<h3 id="3-1-直接修改eureka-server的源代码">3.1 直接修改eureka server的源代码</h3>
-
-<p>直接修改eureka server的源代码，该方法是最纯的方式，而且每次有一个Eureka Server的版本都需要去修改。</p>
-
-<h3 id="3-2-只修改eureka-server的ui">3.2 只修改Eureka Server的UI</h3>
-
-<p>只需要修改对应的html+css+文案即可，完全不用去修改Eureka Server的源码,强烈推荐。</p>
-
-<blockquote>
-<p>源码参考地址:<a href="https://github.com/SpringCloud/spring-cloud-eureka">https://github.com/SpringCloud/spring-cloud-eureka</a></p>
-</blockquote>
-
-<h3 id="3-3-为什么我定制自己的ui加进去">3.3 为什么我定制自己的UI加进去</h3>
-
-<p>为什么我定制自己的UI加进去，就可以直接Run，那源码代码中的UI是不是被覆盖了？</p>
-
-<pre><code class="language-xml">&lt;dependencies&gt;
-
-        &lt;dependency&gt;
-            &lt;groupId&gt;cn.springcloud.eureka&lt;/groupId&gt;
-            &lt;artifactId&gt;eureka-server-ui&lt;/artifactId&gt;
-        &lt;/dependency&gt;
-        &lt;dependency&gt;
-            &lt;groupId&gt;org.springframework.cloud&lt;/groupId&gt;
-            &lt;artifactId&gt;spring-cloud-starter-netflix-eureka-server&lt;/artifactId&gt;
-        &lt;/dependency&gt;
-
-    &lt;/dependencies&gt;
+	<!-- raw HTML omitted -->
+<pre><code>   &lt;span style=&quot;color:#f92672&quot;&gt;&amp;lt;dependency&amp;gt;&lt;/span&gt;
+       &lt;span style=&quot;color:#f92672&quot;&gt;&amp;lt;groupId&amp;gt;&lt;/span&gt;cn.springcloud.eureka&lt;span style=&quot;color:#f92672&quot;&gt;&amp;lt;/groupId&amp;gt;&lt;/span&gt;
+       &lt;span style=&quot;color:#f92672&quot;&gt;&amp;lt;artifactId&amp;gt;&lt;/span&gt;eureka-server-ui&lt;span style=&quot;color:#f92672&quot;&gt;&amp;lt;/artifactId&amp;gt;&lt;/span&gt;
+   &lt;span style=&quot;color:#f92672&quot;&gt;&amp;lt;/dependency&amp;gt;&lt;/span&gt;
+   &lt;span style=&quot;color:#f92672&quot;&gt;&amp;lt;dependency&amp;gt;&lt;/span&gt;
+       &lt;span style=&quot;color:#f92672&quot;&gt;&amp;lt;groupId&amp;gt;&lt;/span&gt;org.springframework.cloud&lt;span style=&quot;color:#f92672&quot;&gt;&amp;lt;/groupId&amp;gt;&lt;/span&gt;
+       &lt;span style=&quot;color:#f92672&quot;&gt;&amp;lt;artifactId&amp;gt;&lt;/span&gt;spring-cloud-starter-netflix-eureka-server&lt;span style=&quot;color:#f92672&quot;&gt;&amp;lt;/artifactId&amp;gt;&lt;/span&gt;
+   &lt;span style=&quot;color:#f92672&quot;&gt;&amp;lt;/dependency&amp;gt;&lt;/span&gt;
 </code></pre>
+<p><!-- raw HTML omitted -->&lt;/dependencies&gt;<!-- raw HTML omitted -->
+<!-- raw HTML omitted --><!-- raw HTML omitted --><!-- raw HTML omitted --><!-- raw HTML omitted --></p>
+<!-- raw HTML omitted -->
+<pre><code>    &lt;span style=&quot;color:#f92672&quot;&gt;&amp;lt;dependency&amp;gt;&lt;/span&gt;
+        &lt;span style=&quot;color:#f92672&quot;&gt;&amp;lt;groupId&amp;gt;&lt;/span&gt;cn.springcloud.eureka&lt;span style=&quot;color:#f92672&quot;&gt;&amp;lt;/groupId&amp;gt;&lt;/span&gt;
+        &lt;span style=&quot;color:#f92672&quot;&gt;&amp;lt;artifactId&amp;gt;&lt;/span&gt;eureka-server-ui&lt;span style=&quot;color:#f92672&quot;&gt;&amp;lt;/artifactId&amp;gt;&lt;/span&gt;
+    &lt;span style=&quot;color:#f92672&quot;&gt;&amp;lt;/dependency&amp;gt;&lt;/span&gt;
+    &lt;span style=&quot;color:#f92672&quot;&gt;&amp;lt;dependency&amp;gt;&lt;/span&gt;
+        &lt;span style=&quot;color:#f92672&quot;&gt;&amp;lt;groupId&amp;gt;&lt;/span&gt;org.springframework.cloud&lt;span style=&quot;color:#f92672&quot;&gt;&amp;lt;/groupId&amp;gt;&lt;/span&gt;
+        &lt;span style=&quot;color:#f92672&quot;&gt;&amp;lt;artifactId&amp;gt;&lt;/span&gt;spring-cloud-starter-netflix-eureka-server&lt;span style=&quot;color:#f92672&quot;&gt;&amp;lt;/artifactId&amp;gt;&lt;/span&gt;
+    &lt;span style=&quot;color:#f92672&quot;&gt;&amp;lt;/dependency&amp;gt;&lt;/span&gt;
 
-<blockquote>
-<p>如上maven配置所示，官方的spring-cloud-starter-netflix-eureka-server依赖信息配置在下面，由maven的依赖加载顺序决定，定制的UI优先加载显示。</p>
-</blockquote>
-
-<h2 id="4-如何在项目中使用diy的eureka-server">4. 如何在项目中使用DIY的Eureka Server</h2>
-
-<p>只需要配置maven依赖即可:</p>
-
-<pre><code class="language-xml">&lt;dependencies&gt;
-
-        &lt;dependency&gt;
-            &lt;groupId&gt;cn.springcloud.eureka&lt;/groupId&gt;
-            &lt;artifactId&gt;eureka-server-ui&lt;/artifactId&gt;
-        &lt;/dependency&gt;
-        &lt;dependency&gt;
-            &lt;groupId&gt;org.springframework.cloud&lt;/groupId&gt;
-            &lt;artifactId&gt;spring-cloud-starter-netflix-eureka-server&lt;/artifactId&gt;
-        &lt;/dependency&gt;
-
-    &lt;/dependencies&gt;
+&lt;span style=&quot;color:#f92672&quot;&gt;&amp;lt;/dependencies&amp;gt;&lt;/span&gt;
 </code></pre>
+<p><!-- raw HTML omitted --><!-- raw HTML omitted --><!-- raw HTML omitted --></p>
 
 </article>
 
@@ -450,26 +400,26 @@ if (!doNotTrack) {
 		目录
 	</h2>
   <nav id="TableOfContents">
-<ul>
-<li>
-<ul>
-<li><a href="#1-spring-cloud中国公益eureka-server">1. Spring Cloud中国公益Eureka Server</a>
-<ul>
-<li><a href="#1-1-访问地址">1.1 访问地址</a></li>
-</ul></li>
-<li><a href="#2-定制eureka-serrver的ui">2.定制Eureka Serrver的UI</a>
-<ul>
-<li><a href="#2-1-为什么要定制eureka-server">2.1 为什么要定制Eureka Server</a></li>
-</ul></li>
-<li><a href="#3-两种方法定制eureka-server">3. 两种方法定制Eureka Server</a>
-<ul>
-<li><a href="#3-1-直接修改eureka-server的源代码">3.1 直接修改eureka server的源代码</a></li>
-<li><a href="#3-2-只修改eureka-server的ui">3.2 只修改Eureka Server的UI</a></li>
-<li><a href="#3-3-为什么我定制自己的ui加进去">3.3 为什么我定制自己的UI加进去</a></li>
-</ul></li>
-<li><a href="#4-如何在项目中使用diy的eureka-server">4. 如何在项目中使用DIY的Eureka Server</a></li>
-</ul></li>
-</ul>
+  <ul>
+    <li><a href="#1-spring-cloud中国公益eureka-server">1. Spring Cloud中国公益Eureka Server</a>
+      <ul>
+        <li><a href="#11-访问地址">1.1 访问地址</a></li>
+      </ul>
+    </li>
+    <li><a href="#2定制eureka-serrver的ui">2.定制Eureka Serrver的UI</a>
+      <ul>
+        <li><a href="#21-为什么要定制eureka-server">2.1 为什么要定制Eureka Server</a></li>
+      </ul>
+    </li>
+    <li><a href="#3-两种方法定制eureka-server">3. 两种方法定制Eureka Server</a>
+      <ul>
+        <li><a href="#31-直接修改eureka-server的源代码">3.1 直接修改eureka server的源代码</a></li>
+        <li><a href="#32-只修改eureka-server的ui">3.2 只修改Eureka Server的UI</a></li>
+        <li><a href="#33-为什么我定制自己的ui加进去">3.3 为什么我定制自己的UI加进去</a></li>
+      </ul>
+    </li>
+    <li><a href="#4-如何在项目中使用diy的eureka-server">4. 如何在项目中使用DIY的Eureka Server</a></li>
+  </ul>
 </nav>
 </div>
 

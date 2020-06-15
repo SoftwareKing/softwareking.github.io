@@ -10,7 +10,7 @@
 <meta name="viewport" content="width=device-width,minimum-scale=1">
 <meta name="description" content="玹霖志,许进沉思录,许进|Spring Cloud,中间件，基础架构，www.xujin.org,xujin.org,-许进沉思录,Venus&#43;,云首科技有限公司,云计算，大数据，物联网，Software_king的博客,云计算Saas，云计算Paas，云计算Iaas Hadoop，大数据，JavaEE，Java，物联网，Hadoop， NoSQL，MongoDB,Spring, Hibernate,Struts2," />
 
-<meta name="generator" content="Hugo 0.55.6" /><link rel="shortcut icon" href=/img/icon.png type="image/png">
+<meta name="generator" content="Hugo 0.72.0" /><link rel="shortcut icon" href=/img/icon.png type="image/png">
 
 <link href="https://unpkg.com/purecss@1.0.0/build/base-min.css" rel="stylesheet">
 
@@ -230,190 +230,113 @@ if (!doNotTrack) {
 	<div class="meta"></div>
 </div>
 		<article class="typo">
-	<p><strong>摘要</strong>:本文主要讲解如何将Spring Boot Admin与Spring Cloud Alibaba中的spring-cloud-starter-alibaba-nacos-discovery进行整合使用。</p>
+	<!-- raw HTML omitted -->
+<pre><code>&lt;span style=&quot;color:#f92672&quot;&gt;&amp;lt;modelVersion&amp;gt;&lt;/span&gt;4.0.0&lt;span style=&quot;color:#f92672&quot;&gt;&amp;lt;/modelVersion&amp;gt;&lt;/span&gt;
+&lt;span style=&quot;color:#f92672&quot;&gt;&amp;lt;parent&amp;gt;&lt;/span&gt;
+    &lt;span style=&quot;color:#f92672&quot;&gt;&amp;lt;groupId&amp;gt;&lt;/span&gt;org.springframework.boot&lt;span style=&quot;color:#f92672&quot;&gt;&amp;lt;/groupId&amp;gt;&lt;/span&gt;
+    &lt;span style=&quot;color:#f92672&quot;&gt;&amp;lt;artifactId&amp;gt;&lt;/span&gt;spring-boot-starter-parent&lt;span style=&quot;color:#f92672&quot;&gt;&amp;lt;/artifactId&amp;gt;&lt;/span&gt;
+    &lt;span style=&quot;color:#f92672&quot;&gt;&amp;lt;version&amp;gt;&lt;/span&gt;2.1.2.RELEASE&lt;span style=&quot;color:#f92672&quot;&gt;&amp;lt;/version&amp;gt;&lt;/span&gt;
+&lt;span style=&quot;color:#f92672&quot;&gt;&amp;lt;/parent&amp;gt;&lt;/span&gt;
 
-<h2 id="1-整合概述">1. 整合概述</h2>
+&lt;span style=&quot;color:#f92672&quot;&gt;&amp;lt;groupId&amp;gt;&lt;/span&gt;org.xujin.moss&lt;span style=&quot;color:#f92672&quot;&gt;&amp;lt;/groupId&amp;gt;&lt;/span&gt;
+&lt;span style=&quot;color:#f92672&quot;&gt;&amp;lt;artifactId&amp;gt;&lt;/span&gt;sba-nacos&lt;span style=&quot;color:#f92672&quot;&gt;&amp;lt;/artifactId&amp;gt;&lt;/span&gt;
 
-<p>通过搭建一个Spring Boot Admin Server，并将其通过spring-cloud-starter-alibaba-nacos-discovery注册到Nacos Server中即可。
- 源码工程地址为:<a href="https://github.com/SoftwareKing/sba-nacos">https://github.com/SoftwareKing/sba-nacos</a></p>
+&lt;span style=&quot;color:#f92672&quot;&gt;&amp;lt;properties&amp;gt;&lt;/span&gt;
+    &lt;span style=&quot;color:#f92672&quot;&gt;&amp;lt;spring.boot.admin.version&amp;gt;&lt;/span&gt;2.1.2&lt;span style=&quot;color:#f92672&quot;&gt;&amp;lt;/spring.boot.admin.version&amp;gt;&lt;/span&gt;
+&lt;span style=&quot;color:#f92672&quot;&gt;&amp;lt;/properties&amp;gt;&lt;/span&gt;
 
-<blockquote>
-<p>说明本文使用的Spring Boot Admin的版本为2.1.2，Spring Cloud的版本为Greenwich.RELEASE，Spring Cloud Alibaba的版本为0.2.1.RELEASE。至于其它版本，请读者自行适配处理。</p>
-</blockquote>
+&lt;span style=&quot;color:#f92672&quot;&gt;&amp;lt;dependencyManagement&amp;gt;&lt;/span&gt;
+    &lt;span style=&quot;color:#f92672&quot;&gt;&amp;lt;dependencies&amp;gt;&lt;/span&gt;
+        &lt;span style=&quot;color:#f92672&quot;&gt;&amp;lt;dependency&amp;gt;&lt;/span&gt;
+            &lt;span style=&quot;color:#f92672&quot;&gt;&amp;lt;groupId&amp;gt;&lt;/span&gt;org.springframework.cloud&lt;span style=&quot;color:#f92672&quot;&gt;&amp;lt;/groupId&amp;gt;&lt;/span&gt;
+            &lt;span style=&quot;color:#f92672&quot;&gt;&amp;lt;artifactId&amp;gt;&lt;/span&gt;spring-cloud-dependencies&lt;span style=&quot;color:#f92672&quot;&gt;&amp;lt;/artifactId&amp;gt;&lt;/span&gt;
+            &lt;span style=&quot;color:#f92672&quot;&gt;&amp;lt;version&amp;gt;&lt;/span&gt;Greenwich.RELEASE&lt;span style=&quot;color:#f92672&quot;&gt;&amp;lt;/version&amp;gt;&lt;/span&gt;
+            &lt;span style=&quot;color:#f92672&quot;&gt;&amp;lt;type&amp;gt;&lt;/span&gt;pom&lt;span style=&quot;color:#f92672&quot;&gt;&amp;lt;/type&amp;gt;&lt;/span&gt;
+            &lt;span style=&quot;color:#f92672&quot;&gt;&amp;lt;scope&amp;gt;&lt;/span&gt;import&lt;span style=&quot;color:#f92672&quot;&gt;&amp;lt;/scope&amp;gt;&lt;/span&gt;
+        &lt;span style=&quot;color:#f92672&quot;&gt;&amp;lt;/dependency&amp;gt;&lt;/span&gt;
+        &lt;span style=&quot;color:#f92672&quot;&gt;&amp;lt;dependency&amp;gt;&lt;/span&gt;
+            &lt;span style=&quot;color:#f92672&quot;&gt;&amp;lt;groupId&amp;gt;&lt;/span&gt;org.springframework.cloud&lt;span style=&quot;color:#f92672&quot;&gt;&amp;lt;/groupId&amp;gt;&lt;/span&gt;
+            &lt;span style=&quot;color:#f92672&quot;&gt;&amp;lt;artifactId&amp;gt;&lt;/span&gt;spring-cloud-alibaba-dependencies&lt;span style=&quot;color:#f92672&quot;&gt;&amp;lt;/artifactId&amp;gt;&lt;/span&gt;
+            &lt;span style=&quot;color:#f92672&quot;&gt;&amp;lt;version&amp;gt;&lt;/span&gt;0.2.1.RELEASE&lt;span style=&quot;color:#f92672&quot;&gt;&amp;lt;/version&amp;gt;&lt;/span&gt;
+            &lt;span style=&quot;color:#f92672&quot;&gt;&amp;lt;type&amp;gt;&lt;/span&gt;pom&lt;span style=&quot;color:#f92672&quot;&gt;&amp;lt;/type&amp;gt;&lt;/span&gt;
+            &lt;span style=&quot;color:#f92672&quot;&gt;&amp;lt;scope&amp;gt;&lt;/span&gt;import&lt;span style=&quot;color:#f92672&quot;&gt;&amp;lt;/scope&amp;gt;&lt;/span&gt;
+        &lt;span style=&quot;color:#f92672&quot;&gt;&amp;lt;/dependency&amp;gt;&lt;/span&gt;
+    &lt;span style=&quot;color:#f92672&quot;&gt;&amp;lt;/dependencies&amp;gt;&lt;/span&gt;
+&lt;span style=&quot;color:#f92672&quot;&gt;&amp;lt;/dependencyManagement&amp;gt;&lt;/span&gt;
 
-<h2 id="2-创建sba-nacos工程">2. 创建sba-nacos工程</h2>
+&lt;span style=&quot;color:#f92672&quot;&gt;&amp;lt;dependencies&amp;gt;&lt;/span&gt;
 
-<p>1.创建sba-nacos工程，添加maven依赖如下所示:</p>
+    &lt;span style=&quot;color:#f92672&quot;&gt;&amp;lt;dependency&amp;gt;&lt;/span&gt;
+        &lt;span style=&quot;color:#f92672&quot;&gt;&amp;lt;groupId&amp;gt;&lt;/span&gt;org.springframework.boot&lt;span style=&quot;color:#f92672&quot;&gt;&amp;lt;/groupId&amp;gt;&lt;/span&gt;
+        &lt;span style=&quot;color:#f92672&quot;&gt;&amp;lt;artifactId&amp;gt;&lt;/span&gt;spring-boot-starter-actuator&lt;span style=&quot;color:#f92672&quot;&gt;&amp;lt;/artifactId&amp;gt;&lt;/span&gt;
+    &lt;span style=&quot;color:#f92672&quot;&gt;&amp;lt;/dependency&amp;gt;&lt;/span&gt;
 
-<pre><code class="language-xml">&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;
-&lt;project xmlns=&quot;http://maven.apache.org/POM/4.0.0&quot;
-         xmlns:xsi=&quot;http://www.w3.org/2001/XMLSchema-instance&quot;
-         xsi:schemaLocation=&quot;http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd&quot;&gt;
+    &lt;span style=&quot;color:#f92672&quot;&gt;&amp;lt;dependency&amp;gt;&lt;/span&gt;
+        &lt;span style=&quot;color:#f92672&quot;&gt;&amp;lt;groupId&amp;gt;&lt;/span&gt;org.springframework.cloud&lt;span style=&quot;color:#f92672&quot;&gt;&amp;lt;/groupId&amp;gt;&lt;/span&gt;
+        &lt;span style=&quot;color:#f92672&quot;&gt;&amp;lt;artifactId&amp;gt;&lt;/span&gt;spring-cloud-starter-alibaba-nacos-discovery&lt;span style=&quot;color:#f92672&quot;&gt;&amp;lt;/artifactId&amp;gt;&lt;/span&gt;
+    &lt;span style=&quot;color:#f92672&quot;&gt;&amp;lt;/dependency&amp;gt;&lt;/span&gt;
 
-    &lt;modelVersion&gt;4.0.0&lt;/modelVersion&gt;
-    &lt;parent&gt;
-        &lt;groupId&gt;org.springframework.boot&lt;/groupId&gt;
-        &lt;artifactId&gt;spring-boot-starter-parent&lt;/artifactId&gt;
-        &lt;version&gt;2.1.2.RELEASE&lt;/version&gt;
-    &lt;/parent&gt;
+    &lt;span style=&quot;color:#f92672&quot;&gt;&amp;lt;dependency&amp;gt;&lt;/span&gt;
+        &lt;span style=&quot;color:#f92672&quot;&gt;&amp;lt;groupId&amp;gt;&lt;/span&gt;de.codecentric&lt;span style=&quot;color:#f92672&quot;&gt;&amp;lt;/groupId&amp;gt;&lt;/span&gt;
+        &lt;span style=&quot;color:#f92672&quot;&gt;&amp;lt;artifactId&amp;gt;&lt;/span&gt;spring-boot-admin-starter-server&lt;span style=&quot;color:#f92672&quot;&gt;&amp;lt;/artifactId&amp;gt;&lt;/span&gt;
+        &lt;span style=&quot;color:#f92672&quot;&gt;&amp;lt;version&amp;gt;&lt;/span&gt;${spring.boot.admin.version}&lt;span style=&quot;color:#f92672&quot;&gt;&amp;lt;/version&amp;gt;&lt;/span&gt;
+    &lt;span style=&quot;color:#f92672&quot;&gt;&amp;lt;/dependency&amp;gt;&lt;/span&gt;
 
-    &lt;groupId&gt;org.xujin.moss&lt;/groupId&gt;
-    &lt;artifactId&gt;sba-nacos&lt;/artifactId&gt;
+    &lt;span style=&quot;color:#f92672&quot;&gt;&amp;lt;dependency&amp;gt;&lt;/span&gt;
+        &lt;span style=&quot;color:#f92672&quot;&gt;&amp;lt;groupId&amp;gt;&lt;/span&gt;org.springframework.boot&lt;span style=&quot;color:#f92672&quot;&gt;&amp;lt;/groupId&amp;gt;&lt;/span&gt;
+        &lt;span style=&quot;color:#f92672&quot;&gt;&amp;lt;artifactId&amp;gt;&lt;/span&gt;spring-boot-starter-web&lt;span style=&quot;color:#f92672&quot;&gt;&amp;lt;/artifactId&amp;gt;&lt;/span&gt;
+    &lt;span style=&quot;color:#f92672&quot;&gt;&amp;lt;/dependency&amp;gt;&lt;/span&gt;
 
-    &lt;properties&gt;
-        &lt;spring.boot.admin.version&gt;2.1.2&lt;/spring.boot.admin.version&gt;
-    &lt;/properties&gt;
-
-    &lt;dependencyManagement&gt;
-        &lt;dependencies&gt;
-            &lt;dependency&gt;
-                &lt;groupId&gt;org.springframework.cloud&lt;/groupId&gt;
-                &lt;artifactId&gt;spring-cloud-dependencies&lt;/artifactId&gt;
-                &lt;version&gt;Greenwich.RELEASE&lt;/version&gt;
-                &lt;type&gt;pom&lt;/type&gt;
-                &lt;scope&gt;import&lt;/scope&gt;
-            &lt;/dependency&gt;
-            &lt;dependency&gt;
-                &lt;groupId&gt;org.springframework.cloud&lt;/groupId&gt;
-                &lt;artifactId&gt;spring-cloud-alibaba-dependencies&lt;/artifactId&gt;
-                &lt;version&gt;0.2.1.RELEASE&lt;/version&gt;
-                &lt;type&gt;pom&lt;/type&gt;
-                &lt;scope&gt;import&lt;/scope&gt;
-            &lt;/dependency&gt;
-        &lt;/dependencies&gt;
-    &lt;/dependencyManagement&gt;
-
-    &lt;dependencies&gt;
-
-        &lt;dependency&gt;
-            &lt;groupId&gt;org.springframework.boot&lt;/groupId&gt;
-            &lt;artifactId&gt;spring-boot-starter-actuator&lt;/artifactId&gt;
-        &lt;/dependency&gt;
-
-        &lt;dependency&gt;
-            &lt;groupId&gt;org.springframework.cloud&lt;/groupId&gt;
-            &lt;artifactId&gt;spring-cloud-starter-alibaba-nacos-discovery&lt;/artifactId&gt;
-        &lt;/dependency&gt;
-
-        &lt;dependency&gt;
-            &lt;groupId&gt;de.codecentric&lt;/groupId&gt;
-            &lt;artifactId&gt;spring-boot-admin-starter-server&lt;/artifactId&gt;
-            &lt;version&gt;${spring.boot.admin.version}&lt;/version&gt;
-        &lt;/dependency&gt;
-
-        &lt;dependency&gt;
-            &lt;groupId&gt;org.springframework.boot&lt;/groupId&gt;
-            &lt;artifactId&gt;spring-boot-starter-web&lt;/artifactId&gt;
-        &lt;/dependency&gt;
-
-        &lt;dependency&gt;
-            &lt;groupId&gt;org.jolokia&lt;/groupId&gt;
-            &lt;artifactId&gt;jolokia-core&lt;/artifactId&gt;
-        &lt;/dependency&gt;
-    &lt;/dependencies&gt;
-    &lt;build&gt;
-        &lt;finalName&gt;sba-nacos&lt;/finalName&gt;
-        &lt;plugins&gt;
-            &lt;plugin&gt;
-                &lt;groupId&gt;org.springframework.boot&lt;/groupId&gt;
-                &lt;artifactId&gt;spring-boot-maven-plugin&lt;/artifactId&gt;
-            &lt;/plugin&gt;
-        &lt;/plugins&gt;
-    &lt;/build&gt;
-&lt;/project&gt;
+    &lt;span style=&quot;color:#f92672&quot;&gt;&amp;lt;dependency&amp;gt;&lt;/span&gt;
+        &lt;span style=&quot;color:#f92672&quot;&gt;&amp;lt;groupId&amp;gt;&lt;/span&gt;org.jolokia&lt;span style=&quot;color:#f92672&quot;&gt;&amp;lt;/groupId&amp;gt;&lt;/span&gt;
+        &lt;span style=&quot;color:#f92672&quot;&gt;&amp;lt;artifactId&amp;gt;&lt;/span&gt;jolokia-core&lt;span style=&quot;color:#f92672&quot;&gt;&amp;lt;/artifactId&amp;gt;&lt;/span&gt;
+    &lt;span style=&quot;color:#f92672&quot;&gt;&amp;lt;/dependency&amp;gt;&lt;/span&gt;
+&lt;span style=&quot;color:#f92672&quot;&gt;&amp;lt;/dependencies&amp;gt;&lt;/span&gt;
+&lt;span style=&quot;color:#f92672&quot;&gt;&amp;lt;build&amp;gt;&lt;/span&gt;
+    &lt;span style=&quot;color:#f92672&quot;&gt;&amp;lt;finalName&amp;gt;&lt;/span&gt;sba-nacos&lt;span style=&quot;color:#f92672&quot;&gt;&amp;lt;/finalName&amp;gt;&lt;/span&gt;
+    &lt;span style=&quot;color:#f92672&quot;&gt;&amp;lt;plugins&amp;gt;&lt;/span&gt;
+        &lt;span style=&quot;color:#f92672&quot;&gt;&amp;lt;plugin&amp;gt;&lt;/span&gt;
+            &lt;span style=&quot;color:#f92672&quot;&gt;&amp;lt;groupId&amp;gt;&lt;/span&gt;org.springframework.boot&lt;span style=&quot;color:#f92672&quot;&gt;&amp;lt;/groupId&amp;gt;&lt;/span&gt;
+            &lt;span style=&quot;color:#f92672&quot;&gt;&amp;lt;artifactId&amp;gt;&lt;/span&gt;spring-boot-maven-plugin&lt;span style=&quot;color:#f92672&quot;&gt;&amp;lt;/artifactId&amp;gt;&lt;/span&gt;
+        &lt;span style=&quot;color:#f92672&quot;&gt;&amp;lt;/plugin&amp;gt;&lt;/span&gt;
+    &lt;span style=&quot;color:#f92672&quot;&gt;&amp;lt;/plugins&amp;gt;&lt;/span&gt;
+&lt;span style=&quot;color:#f92672&quot;&gt;&amp;lt;/build&amp;gt;&lt;/span&gt;
 </code></pre>
-
-<ol>
-<li>创建主入口程序，代码如下所示:</li>
-</ol>
-
-<pre><code class="language-java">package org.xujin.moss.nacos;
-
-import de.codecentric.boot.admin.server.config.EnableAdminServer;
-import org.springframework.boot.SpringApplication;
-import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
-
-
-@SpringBootApplication
-@EnableAdminServer
-@EnableDiscoveryClient
-public class MossNacosApplication {
-    public static void main(String[] args) {
-        SpringApplication.run(MossNacosApplication.class, args);
-    }
-}
-
-</code></pre>
-
-<p>3.application.yml配置如下所示:</p>
-
-<pre><code class="language-yml">spring:
-    application:
-        name: sba-nacos
-    cloud:
-      nacos:
-        discovery:
-          server-addr: 127.0.0.1:8848
-
-server:
-    port: 8080 #启动端口
-
-info.groupId: @project.groupId@
-info.artifactId: @project.artifactId@
-info.version: @project.version@
-
-
-#开启端点
-management:
-  endpoints:
-    web:
-      exposure:
-        include: '*'
-  security:
-    enabled: false
-  endpoint:
-    health:
-      show-details: ALWAYS
-</code></pre>
-
-<blockquote>
-<p>其中127.0.0.1:8848为Nacos Server的地址。</p>
-</blockquote>
-
-<h2 id="3-启动测试">3.启动测试</h2>
-
-<h3 id="3-1-本地源码启动nacos">3.1 本地源码启动Nacos</h3>
-
-<p>至于什么是Nacos，这里不做过多介绍。有兴趣者可以访问<a href="http://nacos.io">http://nacos.io</a>,或者访问: <a href="http://nacos.net">http://nacos.net</a>.</p>
-
-<blockquote>
-<p>说明: <a href="http://nacos.net">http://nacos.net</a>.目前内容为快照版本。</p>
-</blockquote>
-
-<p>访问<a href="https://github.com/alibaba/nacos">https://github.com/alibaba/nacos</a> ,使用Git克隆Nacos代码，直接导入到IDEA中，如下所示设置启动参数，直接启动。
-<img src="1.png" alt="" /></p>
-
-<blockquote>
-<p>从IDE中启动Nacos是我个人喜欢的方式，因为可以随时Debug Nacos任何代码，其它启动方式请参考官网。</p>
-</blockquote>
-
-<h3 id="3-2-启动sba-nacos">3.2 启动sba-nacos</h3>
-
-<p>以Debug方式启动，sba-nacos，如下图所示：</p>
-
-<p><img src="2.png" alt="" /></p>
-
-<p>启动之后访问nacos控制台，我们可以看到sba-nacos已经注册到Nacos注册中心。如下图所示.
-<img src="3.png" alt="" /></p>
-
-<blockquote>
-<p>说明访问Nacos控制台，需要输入用户名和密码默认为用户名为nacos，密码:nacos</p>
-</blockquote>
-
-<p>访问<a href="http://localhost:8080/#/instances/92cfba09790d/details，我们可以看到Spring">http://localhost:8080/#/instances/92cfba09790d/details，我们可以看到Spring</a> Boot Admin Server已经成功启动，并且通过EndPoint获取到自己的端点信息，如下图所示:</p>
-
-<p><img src="4.png" alt="" /></p>
+<p><!-- raw HTML omitted -->&lt;/project&gt;<!-- raw HTML omitted -->
+<!-- raw HTML omitted --><!-- raw HTML omitted --><!-- raw HTML omitted --><!-- raw HTML omitted --></p>
+<!-- raw HTML omitted -->
+<p><!-- raw HTML omitted -->import<!-- raw HTML omitted --> de.codecentric.boot.admin.server.config.EnableAdminServer<!-- raw HTML omitted -->;<!-- raw HTML omitted -->
+<!-- raw HTML omitted -->import<!-- raw HTML omitted --> org.springframework.boot.SpringApplication<!-- raw HTML omitted -->;<!-- raw HTML omitted -->
+<!-- raw HTML omitted -->import<!-- raw HTML omitted --> org.springframework.boot.autoconfigure.SpringBootApplication<!-- raw HTML omitted -->;<!-- raw HTML omitted -->
+<!-- raw HTML omitted -->import<!-- raw HTML omitted --> org.springframework.cloud.client.discovery.EnableDiscoveryClient<!-- raw HTML omitted -->;<!-- raw HTML omitted --></p>
+<p><!-- raw HTML omitted -->@SpringBootApplication<!-- raw HTML omitted -->
+<!-- raw HTML omitted -->@EnableAdminServer<!-- raw HTML omitted -->
+<!-- raw HTML omitted -->@EnableDiscoveryClient<!-- raw HTML omitted -->
+<!-- raw HTML omitted -->public<!-- raw HTML omitted --> <!-- raw HTML omitted -->class<!-- raw HTML omitted --> <!-- raw HTML omitted -->MossNacosApplication<!-- raw HTML omitted --> <!-- raw HTML omitted -->{<!-- raw HTML omitted -->
+<!-- raw HTML omitted -->public<!-- raw HTML omitted --> <!-- raw HTML omitted -->static<!-- raw HTML omitted --> <!-- raw HTML omitted -->void<!-- raw HTML omitted --> <!-- raw HTML omitted -->main<!-- raw HTML omitted --><!-- raw HTML omitted -->(<!-- raw HTML omitted -->String<!-- raw HTML omitted -->[]<!-- raw HTML omitted --> args<!-- raw HTML omitted -->)<!-- raw HTML omitted --> <!-- raw HTML omitted -->{<!-- raw HTML omitted -->
+SpringApplication<!-- raw HTML omitted -->.<!-- raw HTML omitted --><!-- raw HTML omitted -->run<!-- raw HTML omitted --><!-- raw HTML omitted -->(<!-- raw HTML omitted -->MossNacosApplication<!-- raw HTML omitted -->.<!-- raw HTML omitted --><!-- raw HTML omitted -->class<!-- raw HTML omitted --><!-- raw HTML omitted -->,<!-- raw HTML omitted --> args<!-- raw HTML omitted -->);<!-- raw HTML omitted -->
+<!-- raw HTML omitted -->}<!-- raw HTML omitted -->
+<!-- raw HTML omitted -->}<!-- raw HTML omitted --></p>
+<p><!-- raw HTML omitted --><!-- raw HTML omitted --><!-- raw HTML omitted --><!-- raw HTML omitted -->3.application.yml配置如下所示:<!-- raw HTML omitted --></p>
+<!-- raw HTML omitted -->
+<p><!-- raw HTML omitted -->server<!-- raw HTML omitted -->:
+<!-- raw HTML omitted -->port<!-- raw HTML omitted -->: <!-- raw HTML omitted -->8080<!-- raw HTML omitted --> <!-- raw HTML omitted -->#启动端口<!-- raw HTML omitted --></p>
+<p><!-- raw HTML omitted -->info.groupId<!-- raw HTML omitted -->: @project.groupId@
+<!-- raw HTML omitted -->info.artifactId<!-- raw HTML omitted -->: @project.artifactId@
+<!-- raw HTML omitted -->info.version<!-- raw HTML omitted -->: @project.version@</p>
+<p><!-- raw HTML omitted -->#开启端点<!-- raw HTML omitted -->
+<!-- raw HTML omitted -->management<!-- raw HTML omitted -->:
+<!-- raw HTML omitted -->endpoints<!-- raw HTML omitted -->:
+<!-- raw HTML omitted -->web<!-- raw HTML omitted -->:
+<!-- raw HTML omitted -->exposure<!-- raw HTML omitted -->:
+<!-- raw HTML omitted -->include<!-- raw HTML omitted -->: <!-- raw HTML omitted -->'*'<!-- raw HTML omitted -->
+<!-- raw HTML omitted -->security<!-- raw HTML omitted -->:
+<!-- raw HTML omitted -->enabled<!-- raw HTML omitted -->: <!-- raw HTML omitted -->false<!-- raw HTML omitted -->
+<!-- raw HTML omitted -->endpoint<!-- raw HTML omitted -->:
+<!-- raw HTML omitted -->health<!-- raw HTML omitted -->:
+<!-- raw HTML omitted -->show-details<!-- raw HTML omitted -->: ALWAYS
+<!-- raw HTML omitted --><!-- raw HTML omitted --><!-- raw HTML omitted --><!-- raw HTML omitted --></p>
+<!-- raw HTML omitted -->
 
 </article>
 
@@ -561,18 +484,16 @@ management:
 		目录
 	</h2>
   <nav id="TableOfContents">
-<ul>
-<li>
-<ul>
-<li><a href="#1-整合概述">1. 整合概述</a></li>
-<li><a href="#2-创建sba-nacos工程">2. 创建sba-nacos工程</a></li>
-<li><a href="#3-启动测试">3.启动测试</a>
-<ul>
-<li><a href="#3-1-本地源码启动nacos">3.1 本地源码启动Nacos</a></li>
-<li><a href="#3-2-启动sba-nacos">3.2 启动sba-nacos</a></li>
-</ul></li>
-</ul></li>
-</ul>
+  <ul>
+    <li><a href="#1-整合概述">1. 整合概述</a></li>
+    <li><a href="#2-创建sba-nacos工程">2. 创建sba-nacos工程</a></li>
+    <li><a href="#3启动测试">3.启动测试</a>
+      <ul>
+        <li><a href="#31-本地源码启动nacos">3.1 本地源码启动Nacos</a></li>
+        <li><a href="#32-启动sba-nacos">3.2 启动sba-nacos</a></li>
+      </ul>
+    </li>
+  </ul>
 </nav>
 </div>
 

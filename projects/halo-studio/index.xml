@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Halo Studio on 玹霖志</title>
+    <link>/projects/halo-studio/</link>
+    <description>Recent content in Halo Studio on 玹霖志</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>zh-CN</language>
+    <lastBuildDate>Tue, 12 May 2020 00:00:00 +0000</lastBuildDate>
+    
+	<atom:link href="/projects/halo-studio/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>Halo Studio概述</title>
+      <link>/projects/halo-studio/overview/</link>
+      <pubDate>Tue, 12 May 2020 00:00:00 +0000</pubDate>
+      
+      <guid>/projects/halo-studio/overview/</guid>
+      <description>1. Halo Studio概述 Halo Studio 基于开源的 IntelliJ Platform进行定制开发扩展，将Halo Toolkit内置其中增强,提供企业级IDE支持。</description>
+    </item>
+    
+  </channel>
+</rss>

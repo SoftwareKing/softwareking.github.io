@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>多线程 on 玹霖志</title>
@@ -17,7 +17,7 @@
       <pubDate>Tue, 03 Oct 2017 21:00:00 +0800</pubDate>
       
       <guid>/blog/bf/bf01/</guid>
-      <description>1. 同步类容器 同步类容器都是线程安全的，但在某些场景下可能需要加锁来保护复合操作。 复合操作如： * 迭代(反复访问元素，遍历容器中所有的元素)， *</description>
+      <description>1. 同步类容器 同步类容器都是线程安全的，但在某些场景下可能需要加锁来保护复合操作。 复合操作如： 迭代(反复访问元素，遍历容器中所有的元素)， 跳转</description>
     </item>
     
     <item>

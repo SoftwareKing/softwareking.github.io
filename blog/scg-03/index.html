@@ -10,7 +10,7 @@
 <meta name="viewport" content="width=device-width,minimum-scale=1">
 <meta name="description" content="玹霖志,许进沉思录,许进|Spring Cloud,中间件，基础架构，www.xujin.org,xujin.org,-许进沉思录,Venus&#43;,云首科技有限公司,云计算，大数据，物联网，Software_king的博客,云计算Saas，云计算Paas，云计算Iaas Hadoop，大数据，JavaEE，Java，物联网，Hadoop， NoSQL，MongoDB,Spring, Hibernate,Struts2," />
 
-<meta name="generator" content="Hugo 0.55.6" /><link rel="shortcut icon" href=/img/icon.png type="image/png">
+<meta name="generator" content="Hugo 0.72.0" /><link rel="shortcut icon" href=/img/icon.png type="image/png">
 
 <link href="https://unpkg.com/purecss@1.0.0/build/base-min.css" rel="stylesheet">
 
@@ -241,7 +241,7 @@ if (!doNotTrack) {
 				
 			</span>
 		
-		<span class="post-word-count">· 字数:2441·阅读时间 5 分钟</span>
+		<span class="post-word-count">· 字数:2446·阅读时间 5 分钟</span>
 		
 		阅读量<span id="busuanzi_value_page_pv"></span>次
 		
@@ -259,260 +259,126 @@ if (!doNotTrack) {
 	});
   </script>
 		<article class="typo">
-	<p><strong>摘要</strong>:本文主要介绍了什么是GatewayFilter和GlobalFilter，以及区别和联系。然后介绍如何在Spring Cloud Gateway中自定义使用GatewayFilter和GlobalFilter。</p>
+	<!-- raw HTML omitted -->
+<pre><code>String NAME_KEY &lt;span style=&quot;color:#f92672&quot;&gt;=&lt;/span&gt; &lt;span style=&quot;color:#e6db74&quot;&gt;&amp;#34;name&amp;#34;&lt;/span&gt;&lt;span style=&quot;color:#f92672&quot;&gt;;&lt;/span&gt;
+String VALUE_KEY &lt;span style=&quot;color:#f92672&quot;&gt;=&lt;/span&gt; &lt;span style=&quot;color:#e6db74&quot;&gt;&amp;#34;value&amp;#34;&lt;/span&gt;&lt;span style=&quot;color:#f92672&quot;&gt;;&lt;/span&gt;
 
-<h2 id="1-spring-cloud-gateway的filter">1. Spring Cloud gateway的Filter</h2>
-
-<p>Spring Cloud gateway中的Filter从接口实现上分为两种一种是GatewayFilter，另外一种是GlobalFilter。</p>
-
-<h2 id="1-1-gatewayfilter与globalfilter的区别">1.1 GatewayFilter与GlobalFilter的区别</h2>
-
-<p>区别用英语可以总结如下:
-At a high level global filters are applied to all routes, while a gateway filter will be applied to an individual route(s)
-&gt;在一个高的角度来看，Global filters会被应用到所有的路由上，而Gateway filter将应用到<code>单个路由</code>上或者<code>一个分组的路由</code>上。在下面的案例中将会进行说明。</p>
-
-<h2 id="1-2-本文代码地址">1.2 本文代码地址</h2>
-
-<blockquote>
-<p><a href="https://github.com/SoftwareKing/sc-gateway/tree/master/ch2">https://github.com/SoftwareKing/sc-gateway/tree/master/ch2</a></p>
-</blockquote>
-
-<h2 id="2-gatewayfilter和globalfilter">2. GatewayFilter和GlobalFilter</h2>
-
-<h3 id="2-1-gatewayfilter">2.1 GatewayFilter</h3>
-
-<h4 id="2-1-1-什么是gatewayfilter">2.1.1 什么是GatewayFilter</h4>
-
-<p>Contract for interception-style, chained processing of Web requests that may be used to implement cross-cutting, application-agnostic requirements such
- as security, timeouts, and others. Specific to a Gateway Copied from WebFilter
-&gt;GatewayFilter是从WebFilter中Copy过来的，相当于一个Filter过滤器，可以对访问的URL过滤横切处理，应用场景比如超时，安全等。</p>
-
-<p>从Spring Cloud Gateway的源码中如下所示，可以看出GatewayFilter的使用场景:</p>
-
-<pre><code class="language-java">/**
- * Contract for interception-style, chained processing of Web requests that may
- * be used to implement cross-cutting, application-agnostic requirements such
- * as security, timeouts, and others. Specific to a Gateway
- *
- * Copied from WebFilter
- *
- * @author Rossen Stoyanchev
- * @since 5.0
- */
-public interface GatewayFilter extends ShortcutConfigurable {
-
-    String NAME_KEY = &quot;name&quot;;
-    String VALUE_KEY = &quot;value&quot;;
-
-    /**
-     * Process the Web request and (optionally) delegate to the next
-     * {@code WebFilter} through the given {@link GatewayFilterChain}.
-     * @param exchange the current server exchange
-     * @param chain provides a way to delegate to the next filter
-     * @return {@code Mono&lt;Void&gt;} to indicate when request processing is complete
-     */
-    Mono&lt;Void&gt; filter(ServerWebExchange exchange, GatewayFilterChain chain);
-
-}
+&lt;span style=&quot;color:#75715e&quot;&gt;/**
 </code></pre>
+<p><!-- raw HTML omitted --><!-- raw HTML omitted -->	 * Process the Web request and (optionally) delegate to the next
+<!-- raw HTML omitted --><!-- raw HTML omitted -->	 * {@code WebFilter} through the given {@link GatewayFilterChain}.
+<!-- raw HTML omitted --><!-- raw HTML omitted -->	 * @param exchange the current server exchange
+<!-- raw HTML omitted --><!-- raw HTML omitted -->	 * @param chain provides a way to delegate to the next filter
+<!-- raw HTML omitted --><!-- raw HTML omitted -->	 * @return {@code Mono&lt;Void&gt;} to indicate when request processing is complete
+<!-- raw HTML omitted --><!-- raw HTML omitted -->	 */<!-- raw HTML omitted -->
+Mono<!-- raw HTML omitted -->&lt;<!-- raw HTML omitted -->Void<!-- raw HTML omitted -->&gt;<!-- raw HTML omitted --> <!-- raw HTML omitted -->filter<!-- raw HTML omitted --><!-- raw HTML omitted -->(<!-- raw HTML omitted -->ServerWebExchange exchange<!-- raw HTML omitted -->,<!-- raw HTML omitted --> GatewayFilterChain chain<!-- raw HTML omitted -->);<!-- raw HTML omitted --></p>
+<p><!-- raw HTML omitted -->}<!-- raw HTML omitted -->
+<!-- raw HTML omitted --><!-- raw HTML omitted --><!-- raw HTML omitted --><!-- raw HTML omitted --></p>
+<!-- raw HTML omitted -->
+<p><!-- raw HTML omitted -->import<!-- raw HTML omitted --> org.apache.commons.logging.Log<!-- raw HTML omitted -->;<!-- raw HTML omitted -->
+<!-- raw HTML omitted -->import<!-- raw HTML omitted --> org.apache.commons.logging.LogFactory<!-- raw HTML omitted -->;<!-- raw HTML omitted -->
+<!-- raw HTML omitted -->import<!-- raw HTML omitted --> org.springframework.cloud.gateway.filter.GatewayFilter<!-- raw HTML omitted -->;<!-- raw HTML omitted -->
+<!-- raw HTML omitted -->import<!-- raw HTML omitted --> org.springframework.cloud.gateway.filter.GatewayFilterChain<!-- raw HTML omitted -->;<!-- raw HTML omitted -->
+<!-- raw HTML omitted -->import<!-- raw HTML omitted --> org.springframework.core.Ordered<!-- raw HTML omitted -->;<!-- raw HTML omitted -->
+<!-- raw HTML omitted -->import<!-- raw HTML omitted --> org.springframework.web.server.ServerWebExchange<!-- raw HTML omitted -->;<!-- raw HTML omitted -->
+<!-- raw HTML omitted -->import<!-- raw HTML omitted --> reactor.core.publisher.Mono<!-- raw HTML omitted -->;<!-- raw HTML omitted --></p>
+<p><!-- raw HTML omitted -->/**
+<!-- raw HTML omitted --><!-- raw HTML omitted --> * 统计某个或者某种路由的的处理时长
+<!-- raw HTML omitted --><!-- raw HTML omitted --> * @author xujin
+<!-- raw HTML omitted --><!-- raw HTML omitted --> */<!-- raw HTML omitted -->
+<!-- raw HTML omitted -->public<!-- raw HTML omitted --> <!-- raw HTML omitted -->class<!-- raw HTML omitted --> <!-- raw HTML omitted -->CustomFilter<!-- raw HTML omitted --> <!-- raw HTML omitted -->implements<!-- raw HTML omitted --> GatewayFilter<!-- raw HTML omitted -->,<!-- raw HTML omitted --> Ordered <!-- raw HTML omitted -->{<!-- raw HTML omitted --></p>
+<pre><code>&lt;span style=&quot;color:#66d9ef&quot;&gt;private&lt;/span&gt; &lt;span style=&quot;color:#66d9ef&quot;&gt;static&lt;/span&gt; &lt;span style=&quot;color:#66d9ef&quot;&gt;final&lt;/span&gt; Log log &lt;span style=&quot;color:#f92672&quot;&gt;=&lt;/span&gt; LogFactory&lt;span style=&quot;color:#f92672&quot;&gt;.&lt;/span&gt;&lt;span style=&quot;color:#a6e22e&quot;&gt;getLog&lt;/span&gt;&lt;span style=&quot;color:#f92672&quot;&gt;(&lt;/span&gt;GatewayFilter&lt;span style=&quot;color:#f92672&quot;&gt;.&lt;/span&gt;&lt;span style=&quot;color:#a6e22e&quot;&gt;class&lt;/span&gt;&lt;span style=&quot;color:#f92672&quot;&gt;);&lt;/span&gt;
+&lt;span style=&quot;color:#66d9ef&quot;&gt;private&lt;/span&gt; &lt;span style=&quot;color:#66d9ef&quot;&gt;static&lt;/span&gt; &lt;span style=&quot;color:#66d9ef&quot;&gt;final&lt;/span&gt; String COUNT_Start_TIME &lt;span style=&quot;color:#f92672&quot;&gt;=&lt;/span&gt; &lt;span style=&quot;color:#e6db74&quot;&gt;&amp;#34;countStartTime&amp;#34;&lt;/span&gt;&lt;span style=&quot;color:#f92672&quot;&gt;;&lt;/span&gt;
 
-<blockquote>
-<p>GatewayFilter和GlobalFilter两个接口中定义的方法一样都是Mono<Void> filter(ServerWebExchange exchange, GatewayFilterChain chain)，唯一的区别就是GatewayFilter继承了ShortcutConfigurable，GlobalFilter没有任何继承。</p>
-</blockquote>
+&lt;span style=&quot;color:#a6e22e&quot;&gt;@Override&lt;/span&gt;
+&lt;span style=&quot;color:#66d9ef&quot;&gt;public&lt;/span&gt; Mono&lt;span style=&quot;color:#f92672&quot;&gt;&amp;lt;&lt;/span&gt;Void&lt;span style=&quot;color:#f92672&quot;&gt;&amp;gt;&lt;/span&gt; &lt;span style=&quot;color:#a6e22e&quot;&gt;filter&lt;/span&gt;&lt;span style=&quot;color:#f92672&quot;&gt;(&lt;/span&gt;ServerWebExchange exchange&lt;span style=&quot;color:#f92672&quot;&gt;,&lt;/span&gt; GatewayFilterChain chain&lt;span style=&quot;color:#f92672&quot;&gt;)&lt;/span&gt; &lt;span style=&quot;color:#f92672&quot;&gt;{&lt;/span&gt;
+    exchange&lt;span style=&quot;color:#f92672&quot;&gt;.&lt;/span&gt;&lt;span style=&quot;color:#a6e22e&quot;&gt;getAttributes&lt;/span&gt;&lt;span style=&quot;color:#f92672&quot;&gt;().&lt;/span&gt;&lt;span style=&quot;color:#a6e22e&quot;&gt;put&lt;/span&gt;&lt;span style=&quot;color:#f92672&quot;&gt;(&lt;/span&gt;COUNT_Start_TIME&lt;span style=&quot;color:#f92672&quot;&gt;,&lt;/span&gt; System&lt;span style=&quot;color:#f92672&quot;&gt;.&lt;/span&gt;&lt;span style=&quot;color:#a6e22e&quot;&gt;currentTimeMillis&lt;/span&gt;&lt;span style=&quot;color:#f92672&quot;&gt;());&lt;/span&gt;
+    &lt;span style=&quot;color:#66d9ef&quot;&gt;return&lt;/span&gt; chain&lt;span style=&quot;color:#f92672&quot;&gt;.&lt;/span&gt;&lt;span style=&quot;color:#a6e22e&quot;&gt;filter&lt;/span&gt;&lt;span style=&quot;color:#f92672&quot;&gt;(&lt;/span&gt;exchange&lt;span style=&quot;color:#f92672&quot;&gt;).&lt;/span&gt;&lt;span style=&quot;color:#a6e22e&quot;&gt;then&lt;/span&gt;&lt;span style=&quot;color:#f92672&quot;&gt;(&lt;/span&gt;
+            Mono&lt;span style=&quot;color:#f92672&quot;&gt;.&lt;/span&gt;&lt;span style=&quot;color:#a6e22e&quot;&gt;fromRunnable&lt;/span&gt;&lt;span style=&quot;color:#f92672&quot;&gt;(()&lt;/span&gt; &lt;span style=&quot;color:#f92672&quot;&gt;-&amp;gt;&lt;/span&gt; &lt;span style=&quot;color:#f92672&quot;&gt;{&lt;/span&gt;
+                Long startTime &lt;span style=&quot;color:#f92672&quot;&gt;=&lt;/span&gt; exchange&lt;span style=&quot;color:#f92672&quot;&gt;.&lt;/span&gt;&lt;span style=&quot;color:#a6e22e&quot;&gt;getAttribute&lt;/span&gt;&lt;span style=&quot;color:#f92672&quot;&gt;(&lt;/span&gt;COUNT_Start_TIME&lt;span style=&quot;color:#f92672&quot;&gt;);&lt;/span&gt;
+                Long endTime&lt;span style=&quot;color:#f92672&quot;&gt;=(&lt;/span&gt;System&lt;span style=&quot;color:#f92672&quot;&gt;.&lt;/span&gt;&lt;span style=&quot;color:#a6e22e&quot;&gt;currentTimeMillis&lt;/span&gt;&lt;span style=&quot;color:#f92672&quot;&gt;()&lt;/span&gt; &lt;span style=&quot;color:#f92672&quot;&gt;-&lt;/span&gt; startTime&lt;span style=&quot;color:#f92672&quot;&gt;);&lt;/span&gt;
+                &lt;span style=&quot;color:#66d9ef&quot;&gt;if&lt;/span&gt; &lt;span style=&quot;color:#f92672&quot;&gt;(&lt;/span&gt;startTime &lt;span style=&quot;color:#f92672&quot;&gt;!=&lt;/span&gt; &lt;span style=&quot;color:#66d9ef&quot;&gt;null&lt;/span&gt;&lt;span style=&quot;color:#f92672&quot;&gt;)&lt;/span&gt; &lt;span style=&quot;color:#f92672&quot;&gt;{&lt;/span&gt;
+                    log&lt;span style=&quot;color:#f92672&quot;&gt;.&lt;/span&gt;&lt;span style=&quot;color:#a6e22e&quot;&gt;info&lt;/span&gt;&lt;span style=&quot;color:#f92672&quot;&gt;(&lt;/span&gt;exchange&lt;span style=&quot;color:#f92672&quot;&gt;.&lt;/span&gt;&lt;span style=&quot;color:#a6e22e&quot;&gt;getRequest&lt;/span&gt;&lt;span style=&quot;color:#f92672&quot;&gt;().&lt;/span&gt;&lt;span style=&quot;color:#a6e22e&quot;&gt;getURI&lt;/span&gt;&lt;span style=&quot;color:#f92672&quot;&gt;().&lt;/span&gt;&lt;span style=&quot;color:#a6e22e&quot;&gt;getRawPath&lt;/span&gt;&lt;span style=&quot;color:#f92672&quot;&gt;()&lt;/span&gt; &lt;span style=&quot;color:#f92672&quot;&gt;+&lt;/span&gt; &lt;span style=&quot;color:#e6db74&quot;&gt;&amp;#34;: &amp;#34;&lt;/span&gt; &lt;span style=&quot;color:#f92672&quot;&gt;+&lt;/span&gt; endTime &lt;span style=&quot;color:#f92672&quot;&gt;+&lt;/span&gt; &lt;span style=&quot;color:#e6db74&quot;&gt;&amp;#34;ms&amp;#34;&lt;/span&gt;&lt;span style=&quot;color:#f92672&quot;&gt;);&lt;/span&gt;
+                &lt;span style=&quot;color:#f92672&quot;&gt;}&lt;/span&gt;
+            &lt;span style=&quot;color:#f92672&quot;&gt;})&lt;/span&gt;
+    &lt;span style=&quot;color:#f92672&quot;&gt;);&lt;/span&gt;
+&lt;span style=&quot;color:#f92672&quot;&gt;}&lt;/span&gt;
 
-<h5 id="2-1-2-自定义gatewayfilter-custom-gatewayfilter">2.1.2 自定义GatewayFilter(Custom GatewayFilter)</h5>
-
-<p>如org.xujin.sc.filter.CustomFilter代码所示，通过自定义GatewayFilter对路由转发的处理时长统计。</p>
-
-<pre><code class="language-java">package org.xujin.sc.filter;
-
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-import org.springframework.cloud.gateway.filter.GatewayFilter;
-import org.springframework.cloud.gateway.filter.GatewayFilterChain;
-import org.springframework.core.Ordered;
-import org.springframework.web.server.ServerWebExchange;
-import reactor.core.publisher.Mono;
-
-/**
- * 统计某个或者某种路由的的处理时长
- * @author xujin
- */
-public class CustomFilter implements GatewayFilter, Ordered {
-
-    private static final Log log = LogFactory.getLog(GatewayFilter.class);
-    private static final String COUNT_Start_TIME = &quot;countStartTime&quot;;
-
-    @Override
-    public Mono&lt;Void&gt; filter(ServerWebExchange exchange, GatewayFilterChain chain) {
-        exchange.getAttributes().put(COUNT_Start_TIME, System.currentTimeMillis());
-        return chain.filter(exchange).then(
-                Mono.fromRunnable(() -&gt; {
-                    Long startTime = exchange.getAttribute(COUNT_Start_TIME);
-                    Long endTime=(System.currentTimeMillis() - startTime);
-                    if (startTime != null) {
-                        log.info(exchange.getRequest().getURI().getRawPath() + &quot;: &quot; + endTime + &quot;ms&quot;);
-                    }
-                })
-        );
-    }
-
-    @Override
-    public int getOrder() {
-        return Ordered.LOWEST_PRECEDENCE;
-    }
-}
-
+&lt;span style=&quot;color:#a6e22e&quot;&gt;@Override&lt;/span&gt;
+&lt;span style=&quot;color:#66d9ef&quot;&gt;public&lt;/span&gt; &lt;span style=&quot;color:#66d9ef&quot;&gt;int&lt;/span&gt; &lt;span style=&quot;color:#a6e22e&quot;&gt;getOrder&lt;/span&gt;&lt;span style=&quot;color:#f92672&quot;&gt;()&lt;/span&gt; &lt;span style=&quot;color:#f92672&quot;&gt;{&lt;/span&gt;
+    &lt;span style=&quot;color:#66d9ef&quot;&gt;return&lt;/span&gt; Ordered&lt;span style=&quot;color:#f92672&quot;&gt;.&lt;/span&gt;&lt;span style=&quot;color:#a6e22e&quot;&gt;LOWEST_PRECEDENCE&lt;/span&gt;&lt;span style=&quot;color:#f92672&quot;&gt;;&lt;/span&gt;
+&lt;span style=&quot;color:#f92672&quot;&gt;}&lt;/span&gt;
 </code></pre>
+<p><!-- raw HTML omitted -->}<!-- raw HTML omitted --></p>
+<p><!-- raw HTML omitted --><!-- raw HTML omitted --><!-- raw HTML omitted --><!-- raw HTML omitted -->2.1.3 Gateway Filter与RouteLocator绑定使用<!-- raw HTML omitted --></p>
+<!-- raw HTML omitted -->
+<pre><code>&lt;span style=&quot;color:#a6e22e&quot;&gt;@Bean&lt;/span&gt;
+&lt;span style=&quot;color:#66d9ef&quot;&gt;public&lt;/span&gt; RouteLocator &lt;span style=&quot;color:#a6e22e&quot;&gt;customerRouteLocator&lt;/span&gt;&lt;span style=&quot;color:#f92672&quot;&gt;(&lt;/span&gt;RouteLocatorBuilder builder&lt;span style=&quot;color:#f92672&quot;&gt;)&lt;/span&gt; &lt;span style=&quot;color:#f92672&quot;&gt;{&lt;/span&gt;
+    &lt;span style=&quot;color:#66d9ef&quot;&gt;return&lt;/span&gt; builder&lt;span style=&quot;color:#f92672&quot;&gt;.&lt;/span&gt;&lt;span style=&quot;color:#a6e22e&quot;&gt;routes&lt;/span&gt;&lt;span style=&quot;color:#f92672&quot;&gt;()&lt;/span&gt;
+            &lt;span style=&quot;color:#f92672&quot;&gt;.&lt;/span&gt;&lt;span style=&quot;color:#a6e22e&quot;&gt;route&lt;/span&gt;&lt;span style=&quot;color:#f92672&quot;&gt;(&lt;/span&gt;r &lt;span style=&quot;color:#f92672&quot;&gt;-&amp;gt;&lt;/span&gt; r&lt;span style=&quot;color:#f92672&quot;&gt;.&lt;/span&gt;&lt;span style=&quot;color:#a6e22e&quot;&gt;path&lt;/span&gt;&lt;span style=&quot;color:#f92672&quot;&gt;(&lt;/span&gt;&lt;span style=&quot;color:#e6db74&quot;&gt;&amp;#34;/test/prefix/**&amp;#34;&lt;/span&gt;&lt;span style=&quot;color:#f92672&quot;&gt;)&lt;/span&gt;
+                    &lt;span style=&quot;color:#f92672&quot;&gt;.&lt;/span&gt;&lt;span style=&quot;color:#a6e22e&quot;&gt;filters&lt;/span&gt;&lt;span style=&quot;color:#f92672&quot;&gt;(&lt;/span&gt;f &lt;span style=&quot;color:#f92672&quot;&gt;-&amp;gt;&lt;/span&gt; f&lt;span style=&quot;color:#f92672&quot;&gt;.&lt;/span&gt;&lt;span style=&quot;color:#a6e22e&quot;&gt;stripPrefix&lt;/span&gt;&lt;span style=&quot;color:#f92672&quot;&gt;(&lt;/span&gt;2&lt;span style=&quot;color:#f92672&quot;&gt;)&lt;/span&gt;
+                            &lt;span style=&quot;color:#f92672&quot;&gt;.&lt;/span&gt;&lt;span style=&quot;color:#a6e22e&quot;&gt;filter&lt;/span&gt;&lt;span style=&quot;color:#f92672&quot;&gt;(&lt;/span&gt;&lt;span style=&quot;color:#66d9ef&quot;&gt;new&lt;/span&gt; CustomFilter&lt;span style=&quot;color:#f92672&quot;&gt;())&lt;/span&gt;
+                            &lt;span style=&quot;color:#f92672&quot;&gt;.&lt;/span&gt;&lt;span style=&quot;color:#a6e22e&quot;&gt;addResponseHeader&lt;/span&gt;&lt;span style=&quot;color:#f92672&quot;&gt;(&lt;/span&gt;&lt;span style=&quot;color:#e6db74&quot;&gt;&amp;#34;X-Response-test&amp;#34;&lt;/span&gt;&lt;span style=&quot;color:#f92672&quot;&gt;,&lt;/span&gt; &lt;span style=&quot;color:#e6db74&quot;&gt;&amp;#34;test&amp;#34;&lt;/span&gt;&lt;span style=&quot;color:#f92672&quot;&gt;))&lt;/span&gt;
+                    &lt;span style=&quot;color:#f92672&quot;&gt;.&lt;/span&gt;&lt;span style=&quot;color:#a6e22e&quot;&gt;uri&lt;/span&gt;&lt;span style=&quot;color:#f92672&quot;&gt;(&lt;/span&gt;&lt;span style=&quot;color:#e6db74&quot;&gt;&amp;#34;lb://SC-CONSUMER&amp;#34;&lt;/span&gt;&lt;span style=&quot;color:#f92672&quot;&gt;)&lt;/span&gt;
+                    &lt;span style=&quot;color:#f92672&quot;&gt;.&lt;/span&gt;&lt;span style=&quot;color:#a6e22e&quot;&gt;order&lt;/span&gt;&lt;span style=&quot;color:#f92672&quot;&gt;(&lt;/span&gt;0&lt;span style=&quot;color:#f92672&quot;&gt;)&lt;/span&gt;
+                    &lt;span style=&quot;color:#f92672&quot;&gt;.&lt;/span&gt;&lt;span style=&quot;color:#a6e22e&quot;&gt;id&lt;/span&gt;&lt;span style=&quot;color:#f92672&quot;&gt;(&lt;/span&gt;&lt;span style=&quot;color:#e6db74&quot;&gt;&amp;#34;test_consumer_service&amp;#34;&lt;/span&gt;&lt;span style=&quot;color:#f92672&quot;&gt;)&lt;/span&gt;
+            &lt;span style=&quot;color:#f92672&quot;&gt;)&lt;/span&gt;
+            &lt;span style=&quot;color:#f92672&quot;&gt;.&lt;/span&gt;&lt;span style=&quot;color:#a6e22e&quot;&gt;build&lt;/span&gt;&lt;span style=&quot;color:#f92672&quot;&gt;();&lt;/span&gt;
+&lt;span style=&quot;color:#f92672&quot;&gt;}&lt;/span&gt;
 
-<h4 id="2-1-3-gateway-filter与routelocator绑定使用">2.1.3 Gateway Filter与RouteLocator绑定使用</h4>
-
-<p>在org.xujin.sc.GatewayServerApplication中customerRouteLocator如下所示:</p>
-
-<pre><code class="language-java">@SpringBootApplication
-public class GatewayServerApplication {
-
-
-    @Bean
-    public RouteLocator customerRouteLocator(RouteLocatorBuilder builder) {
-        return builder.routes()
-                .route(r -&gt; r.path(&quot;/test/prefix/**&quot;)
-                        .filters(f -&gt; f.stripPrefix(2)
-                                .filter(new CustomFilter())
-                                .addResponseHeader(&quot;X-Response-test&quot;, &quot;test&quot;))
-                        .uri(&quot;lb://SC-CONSUMER&quot;)
-                        .order(0)
-                        .id(&quot;test_consumer_service&quot;)
-                )
-                .build();
-    }
-
-    public static void main(String[] args) {
-        SpringApplication.run(GatewayServerApplication.class, args);
-    }
-
-}
+&lt;span style=&quot;color:#66d9ef&quot;&gt;public&lt;/span&gt; &lt;span style=&quot;color:#66d9ef&quot;&gt;static&lt;/span&gt; &lt;span style=&quot;color:#66d9ef&quot;&gt;void&lt;/span&gt; &lt;span style=&quot;color:#a6e22e&quot;&gt;main&lt;/span&gt;&lt;span style=&quot;color:#f92672&quot;&gt;(&lt;/span&gt;String&lt;span style=&quot;color:#f92672&quot;&gt;[]&lt;/span&gt; args&lt;span style=&quot;color:#f92672&quot;&gt;)&lt;/span&gt; &lt;span style=&quot;color:#f92672&quot;&gt;{&lt;/span&gt;
+    SpringApplication&lt;span style=&quot;color:#f92672&quot;&gt;.&lt;/span&gt;&lt;span style=&quot;color:#a6e22e&quot;&gt;run&lt;/span&gt;&lt;span style=&quot;color:#f92672&quot;&gt;(&lt;/span&gt;GatewayServerApplication&lt;span style=&quot;color:#f92672&quot;&gt;.&lt;/span&gt;&lt;span style=&quot;color:#a6e22e&quot;&gt;class&lt;/span&gt;&lt;span style=&quot;color:#f92672&quot;&gt;,&lt;/span&gt; args&lt;span style=&quot;color:#f92672&quot;&gt;);&lt;/span&gt;
+&lt;span style=&quot;color:#f92672&quot;&gt;}&lt;/span&gt;
 </code></pre>
-
-<ol>
-<li><p>r.path(&ldquo;/test/prefix/**&ldquo;)表示自定义了访问前缀，在真正的Gateway进行路由转发的时候，会用过f.stripPrefix(2)把前缀去掉。
-&gt;使用场景:可以把对外暴露的URL通过加前缀分组打标。</p></li>
-
-<li><p>filter(new CustomFilter()
-&gt;filter(new CustomFilter()，表示把自定义的Filter加到Filter链里面执行，注意一点是自定义GlobalFilter不需要加进去。</p></li>
-
-<li><p>uri(&ldquo;lb://SC-CONSUMER&rdquo;)
-&gt;uri(&ldquo;lb://SC-CONSUMER&rdquo;)表示Spring Cloud Gateway对spring.application.name等于sc-consumer源服务应用中的URL进行协议适配转发。</p></li>
-</ol>
-
-<h4 id="2-1-4-测试如下">2.1.4 测试如下:</h4>
-
-<p>1.访问<a href="http://localhost:9000/SC-CONSUMER/hello/xujin">http://localhost:9000/SC-CONSUMER/hello/xujin</a> 能正常访问。</p>
-
-<pre><code class="language-shell">DEBUG 31658 --- [ctor-http-nio-2] o.s.c.g.h.RoutePredicateHandlerMapping   : Route matched: CompositeDiscoveryClient_SC-CONSUMER
-2018-05-27 09:58:07.905 DEBUG 31658 --- [ctor-http-nio-2] o.s.c.g.h.RoutePredicateHandlerMapping   : Mapping [Exchange: GET http://localhost:9000/SC-CONSUMER/hello/xujin] to Route{id='CompositeDiscoveryClient_SC-CONSUMER', uri=lb://SC-CONSUMER, order=0, predicate=org.springframework.cloud.gateway.handler.predicate.PathRoutePredicateFactory$$Lambda$337/1295338046@f2ff0c8, gatewayFilters=[OrderedGatewayFilter{delegate=org.springframework.cloud.gateway.filter.factory.RewritePathGatewayFilterFactory$$Lambda$717/1168359877@1f74a2b, order=1}]}
-2018-05-27 09:58:07.905 DEBUG 31658 --- [ctor-http-nio-2] o.s.c.g.handler.FilteringWebHandler      : Sorted gatewayFilterFactories: [OrderedGatewayFilter{delegate=GatewayFilterAdapter{delegate=org.springframework.cloud.gateway.filter.NettyWriteResponseFilter@f5bf288}, order=-1}, OrderedGatewayFilter{delegate=org.springframework.cloud.gateway.filter.factory.RewritePathGatewayFilterFactory$$Lambda$717/1168359877@1f74a2b, order=1}, OrderedGatewayFilter{delegate=GatewayFilterAdapter{delegate=org.springframework.cloud.gateway.filter.RouteToRequestUrlFilter@26c77f54}, order=10000}, OrderedGatewayFilter{delegate=GatewayFilterAdapter{delegate=org.springframework.cloud.gateway.filter.LoadBalancerClientFilter@4c38cd16}, order=10100}, OrderedGatewayFilter{delegate=GatewayFilterAdapter{delegate=org.springframework.cloud.gateway.filter.AdaptCachedBodyGlobalFilter@2c1d57bc}, order=2147483637}, OrderedGatewayFilter{delegate=GatewayFilterAdapter{delegate=org.springframework.cloud.gateway.filter.WebsocketRoutingFilter@6e9a0bea}, order=2147483646}, OrderedGatewayFilter{delegate=GatewayFilterAdapter{delegate=org.springframework.cloud.gateway.filter.NettyRoutingFilter@7ddcb0dc}, order=2147483647}, OrderedGatewayFilter{delegate=GatewayFilterAdapter{delegate=org.springframework.cloud.gateway.filter.ForwardRoutingFilter@3e856100}, order=2147483647}]
-
+<p><!-- raw HTML omitted -->}<!-- raw HTML omitted -->
+<!-- raw HTML omitted --><!-- raw HTML omitted --><!-- raw HTML omitted --><!-- raw HTML omitted --></p>
+<!-- raw HTML omitted -->
+<p><!-- raw HTML omitted --><!-- raw HTML omitted --><!-- raw HTML omitted --><!-- raw HTML omitted --></p>
+<!-- raw HTML omitted -->
+<p><!-- raw HTML omitted --><!-- raw HTML omitted --><!-- raw HTML omitted --><!-- raw HTML omitted --></p>
+<!-- raw HTML omitted -->
+<pre><code>&lt;span style=&quot;color:#75715e&quot;&gt;/**
 </code></pre>
+<p><!-- raw HTML omitted --><!-- raw HTML omitted -->	 * Process the Web request and (optionally) delegate to the next
+<!-- raw HTML omitted --><!-- raw HTML omitted -->	 * {@code WebFilter} through the given {@link GatewayFilterChain}.
+<!-- raw HTML omitted --><!-- raw HTML omitted -->	 * @param exchange the current server exchange
+<!-- raw HTML omitted --><!-- raw HTML omitted -->	 * @param chain provides a way to delegate to the next filter
+<!-- raw HTML omitted --><!-- raw HTML omitted -->	 * @return {@code Mono&lt;Void&gt;} to indicate when request processing is complete
+<!-- raw HTML omitted --><!-- raw HTML omitted -->	 */<!-- raw HTML omitted -->
+Mono<!-- raw HTML omitted -->&lt;<!-- raw HTML omitted -->Void<!-- raw HTML omitted -->&gt;<!-- raw HTML omitted --> <!-- raw HTML omitted -->filter<!-- raw HTML omitted --><!-- raw HTML omitted -->(<!-- raw HTML omitted -->ServerWebExchange exchange<!-- raw HTML omitted -->,<!-- raw HTML omitted --> GatewayFilterChain chain<!-- raw HTML omitted -->);<!-- raw HTML omitted --></p>
+<p><!-- raw HTML omitted -->}<!-- raw HTML omitted -->
+<!-- raw HTML omitted --><!-- raw HTML omitted --><!-- raw HTML omitted --><!-- raw HTML omitted -->2.2.2 自定义全局过滤器(Custom GlobalFilter)<!-- raw HTML omitted --></p>
+<!-- raw HTML omitted -->
+<p><!-- raw HTML omitted -->import<!-- raw HTML omitted --> org.springframework.cloud.gateway.filter.GatewayFilterChain<!-- raw HTML omitted -->;<!-- raw HTML omitted -->
+<!-- raw HTML omitted -->import<!-- raw HTML omitted --> org.springframework.cloud.gateway.filter.GlobalFilter<!-- raw HTML omitted -->;<!-- raw HTML omitted -->
+<!-- raw HTML omitted -->import<!-- raw HTML omitted --> org.springframework.core.Ordered<!-- raw HTML omitted -->;<!-- raw HTML omitted -->
+<!-- raw HTML omitted -->import<!-- raw HTML omitted --> org.springframework.http.HttpStatus<!-- raw HTML omitted -->;<!-- raw HTML omitted -->
+<!-- raw HTML omitted -->import<!-- raw HTML omitted --> org.springframework.stereotype.Component<!-- raw HTML omitted -->;<!-- raw HTML omitted -->
+<!-- raw HTML omitted -->import<!-- raw HTML omitted --> org.springframework.web.server.ServerWebExchange<!-- raw HTML omitted -->;<!-- raw HTML omitted -->
+<!-- raw HTML omitted -->import<!-- raw HTML omitted --> reactor.core.publisher.Mono<!-- raw HTML omitted -->;<!-- raw HTML omitted --></p>
+<p><!-- raw HTML omitted -->/**
+<!-- raw HTML omitted --><!-- raw HTML omitted --> * 调用鉴权
+<!-- raw HTML omitted --><!-- raw HTML omitted --> */<!-- raw HTML omitted -->
+<!-- raw HTML omitted -->@Component<!-- raw HTML omitted -->
+<!-- raw HTML omitted -->public<!-- raw HTML omitted --> <!-- raw HTML omitted -->class<!-- raw HTML omitted --> <!-- raw HTML omitted -->AuthSignatureFilter<!-- raw HTML omitted --> <!-- raw HTML omitted -->implements<!-- raw HTML omitted --> GlobalFilter<!-- raw HTML omitted -->,<!-- raw HTML omitted --> Ordered <!-- raw HTML omitted -->{<!-- raw HTML omitted --></p>
+<pre><code>&lt;span style=&quot;color:#a6e22e&quot;&gt;@Override&lt;/span&gt;
+&lt;span style=&quot;color:#66d9ef&quot;&gt;public&lt;/span&gt; Mono&lt;span style=&quot;color:#f92672&quot;&gt;&amp;lt;&lt;/span&gt;Void&lt;span style=&quot;color:#f92672&quot;&gt;&amp;gt;&lt;/span&gt; &lt;span style=&quot;color:#a6e22e&quot;&gt;filter&lt;/span&gt;&lt;span style=&quot;color:#f92672&quot;&gt;(&lt;/span&gt;ServerWebExchange exchange&lt;span style=&quot;color:#f92672&quot;&gt;,&lt;/span&gt; GatewayFilterChain chain&lt;span style=&quot;color:#f92672&quot;&gt;)&lt;/span&gt; &lt;span style=&quot;color:#f92672&quot;&gt;{&lt;/span&gt;
+    String token &lt;span style=&quot;color:#f92672&quot;&gt;=&lt;/span&gt; exchange&lt;span style=&quot;color:#f92672&quot;&gt;.&lt;/span&gt;&lt;span style=&quot;color:#a6e22e&quot;&gt;getRequest&lt;/span&gt;&lt;span style=&quot;color:#f92672&quot;&gt;().&lt;/span&gt;&lt;span style=&quot;color:#a6e22e&quot;&gt;getQueryParams&lt;/span&gt;&lt;span style=&quot;color:#f92672&quot;&gt;().&lt;/span&gt;&lt;span style=&quot;color:#a6e22e&quot;&gt;getFirst&lt;/span&gt;&lt;span style=&quot;color:#f92672&quot;&gt;(&lt;/span&gt;&lt;span style=&quot;color:#e6db74&quot;&gt;&amp;#34;authToken&amp;#34;&lt;/span&gt;&lt;span style=&quot;color:#f92672&quot;&gt;);&lt;/span&gt;
+    &lt;span style=&quot;color:#66d9ef&quot;&gt;if&lt;/span&gt; &lt;span style=&quot;color:#f92672&quot;&gt;(&lt;/span&gt;token &lt;span style=&quot;color:#f92672&quot;&gt;==&lt;/span&gt; &lt;span style=&quot;color:#66d9ef&quot;&gt;null&lt;/span&gt; &lt;span style=&quot;color:#f92672&quot;&gt;||&lt;/span&gt; token&lt;span style=&quot;color:#f92672&quot;&gt;.&lt;/span&gt;&lt;span style=&quot;color:#a6e22e&quot;&gt;isEmpty&lt;/span&gt;&lt;span style=&quot;color:#f92672&quot;&gt;())&lt;/span&gt; &lt;span style=&quot;color:#f92672&quot;&gt;{&lt;/span&gt;
+        exchange&lt;span style=&quot;color:#f92672&quot;&gt;.&lt;/span&gt;&lt;span style=&quot;color:#a6e22e&quot;&gt;getResponse&lt;/span&gt;&lt;span style=&quot;color:#f92672&quot;&gt;().&lt;/span&gt;&lt;span style=&quot;color:#a6e22e&quot;&gt;setStatusCode&lt;/span&gt;&lt;span style=&quot;color:#f92672&quot;&gt;(&lt;/span&gt;HttpStatus&lt;span style=&quot;color:#f92672&quot;&gt;.&lt;/span&gt;&lt;span style=&quot;color:#a6e22e&quot;&gt;UNAUTHORIZED&lt;/span&gt;&lt;span style=&quot;color:#f92672&quot;&gt;);&lt;/span&gt;
+        &lt;span style=&quot;color:#66d9ef&quot;&gt;return&lt;/span&gt; exchange&lt;span style=&quot;color:#f92672&quot;&gt;.&lt;/span&gt;&lt;span style=&quot;color:#a6e22e&quot;&gt;getResponse&lt;/span&gt;&lt;span style=&quot;color:#f92672&quot;&gt;().&lt;/span&gt;&lt;span style=&quot;color:#a6e22e&quot;&gt;setComplete&lt;/span&gt;&lt;span style=&quot;color:#f92672&quot;&gt;();&lt;/span&gt;
+    &lt;span style=&quot;color:#f92672&quot;&gt;}&lt;/span&gt;
+    &lt;span style=&quot;color:#66d9ef&quot;&gt;return&lt;/span&gt; chain&lt;span style=&quot;color:#f92672&quot;&gt;.&lt;/span&gt;&lt;span style=&quot;color:#a6e22e&quot;&gt;filter&lt;/span&gt;&lt;span style=&quot;color:#f92672&quot;&gt;(&lt;/span&gt;exchange&lt;span style=&quot;color:#f92672&quot;&gt;);&lt;/span&gt;
+&lt;span style=&quot;color:#f92672&quot;&gt;}&lt;/span&gt;
 
-<blockquote>
-<p>从上面的控制台打印日志可以看出，没有打印出该URL对应的耗时。</p>
-</blockquote>
-
-<p>2.加上URL前缀/test/prefix/访问，测试URL为
-<a href="http://localhost:9000/test/prefix/hello/testCustomFilter/xujin">http://localhost:9000/test/prefix/hello/testCustomFilter/xujin</a></p>
-
-<pre><code class="language-shell">2018-05-27 10:01:56.057 DEBUG 31658 --- [ctor-http-nio-2] o.s.c.g.h.RoutePredicateHandlerMapping   : Mapping [Exchange: GET http://localhost:9000/test/prefix/hello/testCustomFilter/xujin] to Route{id='test_consumer_service', uri=lb://SC-CONSUMER, order=0, predicate=org.springframework.cloud.gateway.handler.predicate.PathRoutePredicateFactory$$Lambda$337/1295338046@6dbaa72e, gatewayFilters=[OrderedGatewayFilter{delegate=org.springframework.cloud.gateway.filter.factory.StripPrefixGatewayFilterFactory$$Lambda$340/1149217113@41fb2078, order=0}, org.xujin.sc.filter.CustomFilter@281885a3, OrderedGatewayFilter{delegate=org.springframework.cloud.gateway.filter.factory.AddResponseHeaderGatewayFilterFactory$$Lambda$342/1099925775@4705cae6, order=0}]}
-2018-05-27 10:01:56.057 DEBUG 31658 --- [ctor-http-nio-2] o.s.c.g.handler.FilteringWebHandler      : Sorted gatewayFilterFactories: [OrderedGatewayFilter{delegate=GatewayFilterAdapter{delegate=org.springframework.cloud.gateway.filter.NettyWriteResponseFilter@f5bf288}, order=-1}, OrderedGatewayFilter{delegate=org.springframework.cloud.gateway.filter.factory.StripPrefixGatewayFilterFactory$$Lambda$340/1149217113@41fb2078, order=0}, OrderedGatewayFilter{delegate=org.springframework.cloud.gateway.filter.factory.AddResponseHeaderGatewayFilterFactory$$Lambda$342/1099925775@4705cae6, order=0}, OrderedGatewayFilter{delegate=GatewayFilterAdapter{delegate=org.springframework.cloud.gateway.filter.RouteToRequestUrlFilter@26c77f54}, order=10000}, OrderedGatewayFilter{delegate=GatewayFilterAdapter{delegate=org.springframework.cloud.gateway.filter.LoadBalancerClientFilter@4c38cd16}, order=10100}, OrderedGatewayFilter{delegate=GatewayFilterAdapter{delegate=org.springframework.cloud.gateway.filter.AdaptCachedBodyGlobalFilter@2c1d57bc}, order=2147483637}, OrderedGatewayFilter{delegate=GatewayFilterAdapter{delegate=org.springframework.cloud.gateway.filter.WebsocketRoutingFilter@6e9a0bea}, order=2147483646}, OrderedGatewayFilter{delegate=GatewayFilterAdapter{delegate=org.springframework.cloud.gateway.filter.NettyRoutingFilter@7ddcb0dc}, order=2147483647}, OrderedGatewayFilter{delegate=GatewayFilterAdapter{delegate=org.springframework.cloud.gateway.filter.ForwardRoutingFilter@3e856100}, order=2147483647}, org.xujin.sc.filter.CustomFilter@281885a3]
-2018-05-27 10:02:00.347  INFO 31658 --- [ctor-http-nio-8] o.s.cloud.gateway.filter.GatewayFilter   : /hello/testCustomFilter/xujin: 859ms
-
+&lt;span style=&quot;color:#a6e22e&quot;&gt;@Override&lt;/span&gt;
+&lt;span style=&quot;color:#66d9ef&quot;&gt;public&lt;/span&gt; &lt;span style=&quot;color:#66d9ef&quot;&gt;int&lt;/span&gt; &lt;span style=&quot;color:#a6e22e&quot;&gt;getOrder&lt;/span&gt;&lt;span style=&quot;color:#f92672&quot;&gt;()&lt;/span&gt; &lt;span style=&quot;color:#f92672&quot;&gt;{&lt;/span&gt;
+    &lt;span style=&quot;color:#66d9ef&quot;&gt;return&lt;/span&gt; &lt;span style=&quot;color:#f92672&quot;&gt;-&lt;/span&gt;200&lt;span style=&quot;color:#f92672&quot;&gt;;&lt;/span&gt;
+&lt;span style=&quot;color:#f92672&quot;&gt;}&lt;/span&gt;
 </code></pre>
-
-<blockquote>
-<p>如上日志可以看到/hello/testCustomFilter/xujin: 859ms，Gateway转发的时候去掉了前缀。</p>
-</blockquote>
-
-<h3 id="2-2-globalfilter">2.2 GlobalFilter</h3>
-
-<h4 id="2-2-1-什么是globalfilter">2.2.1 什么是GlobalFilter</h4>
-
-<blockquote>
-<p>The GlobalFilter interface has the same signature as GatewayFilter. These are special filters that are conditionally applied to all routes. (This interface and usage are subject to change in future milestones).</p>
-</blockquote>
-
-<p>Spring Cloud gateway定义了GlobalFilter的接口让我们去自定义实现自己的的GlobalFilter。GlobalFilter是一个全局的Filter，作用于所有的路由。</p>
-
-<pre><code class="language-java">public interface GlobalFilter {
-
-    /**
-     * Process the Web request and (optionally) delegate to the next
-     * {@code WebFilter} through the given {@link GatewayFilterChain}.
-     * @param exchange the current server exchange
-     * @param chain provides a way to delegate to the next filter
-     * @return {@code Mono&lt;Void&gt;} to indicate when request processing is complete
-     */
-    Mono&lt;Void&gt; filter(ServerWebExchange exchange, GatewayFilterChain chain);
-
-}
-</code></pre>
-
-<h4 id="2-2-2-自定义全局过滤器-custom-globalfilter">2.2.2 自定义全局过滤器(Custom GlobalFilter)</h4>
-
-<p>在这里简单定义AuthSignatureFilter实现<code>GlobalFilter</code>，使用场景就是Gateway对请求的URL校验权限，判断请求的URL是否是合法请求。通过从ServerWebExchange获取请求上下文中authToken对应的值，进行判null处理，其它的check逻辑可以自定定制。</p>
-
-<pre><code class="language-java">package org.xujin.sc.filter;
-
-import org.springframework.cloud.gateway.filter.GatewayFilterChain;
-import org.springframework.cloud.gateway.filter.GlobalFilter;
-import org.springframework.core.Ordered;
-import org.springframework.http.HttpStatus;
-import org.springframework.stereotype.Component;
-import org.springframework.web.server.ServerWebExchange;
-import reactor.core.publisher.Mono;
-
-/**
- * 调用鉴权
- */
-@Component
-public class AuthSignatureFilter implements GlobalFilter, Ordered {
-
-    @Override
-    public Mono&lt;Void&gt; filter(ServerWebExchange exchange, GatewayFilterChain chain) {
-        String token = exchange.getRequest().getQueryParams().getFirst(&quot;authToken&quot;);
-        if (token == null || token.isEmpty()) {
-            exchange.getResponse().setStatusCode(HttpStatus.UNAUTHORIZED);
-            return exchange.getResponse().setComplete();
-        }
-        return chain.filter(exchange);
-    }
-
-    @Override
-    public int getOrder() {
-        return -200;
-    }
-}
-
-</code></pre>
-
-<blockquote>
-<p>GlobalFilter写完了，那问题来了？如何让其在Gateway中运行生效，有两种方式一种直接加<code>@Component</code>注解，另外一种可以在 Spring Config 中配置这个 Bean如下所示:</p>
-</blockquote>
-
-<pre><code class="language-java">@Bean
-public AuthSignatureFilter authSignatureFilter(){
-    return new AuthSignatureFilter();
-}
-</code></pre>
-
-<h4 id="测试">测试</h4>
-
-<p>1.访问<a href="http://localhost:9000/test/prefix/hello/testCustomFilter/xujin">http://localhost:9000/test/prefix/hello/testCustomFilter/xujin</a> 如下所示由于authToken为空401返回.</p>
-
-<p><img src="2.jpeg" alt="" /></p>
-
-<p>2.访问<a href="http://localhost:9000/test/prefix/hello/testCustomFilter/xujin?authToken=asdasdsddasadsadsadsdadsewew32rg">http://localhost:9000/test/prefix/hello/testCustomFilter/xujin?authToken=asdasdsddasadsadsadsdadsewew32rg</a></p>
-
-<p><img src="3.jpeg" alt="" /></p>
+<p><!-- raw HTML omitted -->}<!-- raw HTML omitted --></p>
+<p><!-- raw HTML omitted --><!-- raw HTML omitted --><!-- raw HTML omitted --><!-- raw HTML omitted --></p>
+<!-- raw HTML omitted -->
 
 </article>
 
@@ -629,32 +495,17 @@ public AuthSignatureFilter authSignatureFilter(){
 		目录
 	</h2>
   <nav id="TableOfContents">
-<ul>
-<li>
-<ul>
-<li><a href="#1-spring-cloud-gateway的filter">1. Spring Cloud gateway的Filter</a></li>
-<li><a href="#1-1-gatewayfilter与globalfilter的区别">1.1 GatewayFilter与GlobalFilter的区别</a></li>
-<li><a href="#1-2-本文代码地址">1.2 本文代码地址</a></li>
-<li><a href="#2-gatewayfilter和globalfilter">2. GatewayFilter和GlobalFilter</a>
-<ul>
-<li><a href="#2-1-gatewayfilter">2.1 GatewayFilter</a>
-<ul>
-<li><a href="#2-1-1-什么是gatewayfilter">2.1.1 什么是GatewayFilter</a>
-<ul>
-<li><a href="#2-1-2-自定义gatewayfilter-custom-gatewayfilter">2.1.2 自定义GatewayFilter(Custom GatewayFilter)</a></li>
-</ul></li>
-<li><a href="#2-1-3-gateway-filter与routelocator绑定使用">2.1.3 Gateway Filter与RouteLocator绑定使用</a></li>
-<li><a href="#2-1-4-测试如下">2.1.4 测试如下:</a></li>
-</ul></li>
-<li><a href="#2-2-globalfilter">2.2 GlobalFilter</a>
-<ul>
-<li><a href="#2-2-1-什么是globalfilter">2.2.1 什么是GlobalFilter</a></li>
-<li><a href="#2-2-2-自定义全局过滤器-custom-globalfilter">2.2.2 自定义全局过滤器(Custom GlobalFilter)</a></li>
-<li><a href="#测试">测试</a></li>
-</ul></li>
-</ul></li>
-</ul></li>
-</ul>
+  <ul>
+    <li><a href="#1-spring-cloud-gateway的filter">1. Spring Cloud gateway的Filter</a></li>
+    <li><a href="#11-gatewayfilter与globalfilter的区别">1.1 GatewayFilter与GlobalFilter的区别</a></li>
+    <li><a href="#12-本文代码地址">1.2 本文代码地址</a></li>
+    <li><a href="#2-gatewayfilter和globalfilter">2. GatewayFilter和GlobalFilter</a>
+      <ul>
+        <li><a href="#21-gatewayfilter">2.1 GatewayFilter</a></li>
+        <li><a href="#22-globalfilter">2.2 GlobalFilter</a></li>
+      </ul>
+    </li>
+  </ul>
 </nav>
 </div>
 
@@ -703,11 +554,11 @@ public AuthSignatureFilter authSignatureFilter(){
 	
 	<ul class="ss-aside-related">
 		
-			<li><a href="/blog/scg-06/">Spring Cloud Gateway的Before路由断言工厂</a></li>
+			<li><a href="/blog/scg-05/">Spring Cloud Gateway基于服务发现的默认路由规则</a></li>
 		
 			<li><a href="/blog/scg-nacos-01/">使用Nacos实现Spring Cloud Gateway的动态路由</a></li>
 		
-			<li><a href="/blog/scg-05/">Spring Cloud Gateway基于服务发现的默认路由规则</a></li>
+			<li><a href="/blog/scg-06/">Spring Cloud Gateway的Before路由断言工厂</a></li>
 		
 			<li><a href="/blog/scg-dmy-route/">Spring Cloud Gateway的动态路由的简单实现方式</a></li>
 		

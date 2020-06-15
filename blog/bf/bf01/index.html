@@ -10,7 +10,7 @@
 <meta name="viewport" content="width=device-width,minimum-scale=1">
 <meta name="description" content="玹霖志,许进沉思录,许进|Spring Cloud,中间件，基础架构，www.xujin.org,xujin.org,-许进沉思录,Venus&#43;,云首科技有限公司,云计算，大数据，物联网，Software_king的博客,云计算Saas，云计算Paas，云计算Iaas Hadoop，大数据，JavaEE，Java，物联网，Hadoop， NoSQL，MongoDB,Spring, Hibernate,Struts2," />
 
-<meta name="generator" content="Hugo 0.55.6" /><link rel="shortcut icon" href=/img/icon.png type="image/png">
+<meta name="generator" content="Hugo 0.72.0" /><link rel="shortcut icon" href=/img/icon.png type="image/png">
 
 <link href="https://unpkg.com/purecss@1.0.0/build/base-min.css" rel="stylesheet">
 
@@ -243,7 +243,7 @@ if (!doNotTrack) {
 				
 			</span>
 		
-		<span class="post-word-count">· 字数:1597·阅读时间 4 分钟</span>
+		<span class="post-word-count">· 字数:1593·阅读时间 4 分钟</span>
 		
 		阅读量<span id="busuanzi_value_page_pv"></span>次
 		
@@ -261,105 +261,49 @@ if (!doNotTrack) {
 	});
   </script>
 		<article class="typo">
-	<h2 id="1-同步类容器">1. 同步类容器</h2>
-
-<p>同步类容器都是线程安全的，但在某些场景下可能需要<code>加锁来保护复合操作</code>。
- 复合操作如：
-*   迭代(反复访问元素，遍历容器中所有的元素)，
-*   跳转（根据指定的顺序找到当前元素的下一个元素），以及条件运算。</p>
-
-<blockquote>
-<p>这些复合操作在多线并发地修改容器时，可能会表现出意外的行为，最经典的便是ConcurrentModificationException，原因是当容器迭代的过程中，被并发的修改了内容，这是由于早期迭代器设计的时候并没有考虑并发修改的问题。</p>
-</blockquote>
-
-<pre><code class="language-java">public class Tickets {
-
-    public static void main(String[] args) {
-        //初始化火车票池并添加火车票:避免线程同步可采用Vector替代ArrayList  HashTable替代HashMap
-        final Vector&lt;String&gt; tickets = new Vector&lt;String&gt;();
-
-        for (int i = 1; i &lt;= 1000; i++) {
-            tickets.add(&quot;火车票&quot; + i);
-        }
-
-        for (Iterator iterator = tickets.iterator(); iterator.hasNext(); ) {
-            String string = (String) iterator.next();
-            tickets.remove(20);
-        }
-
-    }
-}
+	<!-- raw HTML omitted -->
+<pre><code>&lt;span style=&quot;color:#66d9ef&quot;&gt;public&lt;/span&gt; &lt;span style=&quot;color:#66d9ef&quot;&gt;static&lt;/span&gt; &lt;span style=&quot;color:#66d9ef&quot;&gt;void&lt;/span&gt; &lt;span style=&quot;color:#a6e22e&quot;&gt;main&lt;/span&gt;&lt;span style=&quot;color:#f92672&quot;&gt;(&lt;/span&gt;String&lt;span style=&quot;color:#f92672&quot;&gt;[]&lt;/span&gt; args&lt;span style=&quot;color:#f92672&quot;&gt;)&lt;/span&gt; &lt;span style=&quot;color:#f92672&quot;&gt;{&lt;/span&gt;
+    &lt;span style=&quot;color:#75715e&quot;&gt;//初始化火车票池并添加火车票:避免线程同步可采用Vector替代ArrayList  HashTable替代HashMap
 </code></pre>
+<p><!-- raw HTML omitted --><!-- raw HTML omitted --><!-- raw HTML omitted -->        <!-- raw HTML omitted -->final<!-- raw HTML omitted --> Vector<!-- raw HTML omitted -->&lt;<!-- raw HTML omitted -->String<!-- raw HTML omitted -->&gt;<!-- raw HTML omitted --> tickets <!-- raw HTML omitted -->=<!-- raw HTML omitted --> <!-- raw HTML omitted -->new<!-- raw HTML omitted --> Vector<!-- raw HTML omitted -->&lt;<!-- raw HTML omitted -->String<!-- raw HTML omitted -->&gt;();<!-- raw HTML omitted --></p>
+<pre><code>    &lt;span style=&quot;color:#66d9ef&quot;&gt;for&lt;/span&gt; &lt;span style=&quot;color:#f92672&quot;&gt;(&lt;/span&gt;&lt;span style=&quot;color:#66d9ef&quot;&gt;int&lt;/span&gt; i &lt;span style=&quot;color:#f92672&quot;&gt;=&lt;/span&gt; 1&lt;span style=&quot;color:#f92672&quot;&gt;;&lt;/span&gt; i &lt;span style=&quot;color:#f92672&quot;&gt;&amp;lt;=&lt;/span&gt; 1000&lt;span style=&quot;color:#f92672&quot;&gt;;&lt;/span&gt; i&lt;span style=&quot;color:#f92672&quot;&gt;++)&lt;/span&gt; &lt;span style=&quot;color:#f92672&quot;&gt;{&lt;/span&gt;
+        tickets&lt;span style=&quot;color:#f92672&quot;&gt;.&lt;/span&gt;&lt;span style=&quot;color:#a6e22e&quot;&gt;add&lt;/span&gt;&lt;span style=&quot;color:#f92672&quot;&gt;(&lt;/span&gt;&lt;span style=&quot;color:#e6db74&quot;&gt;&amp;#34;火车票&amp;#34;&lt;/span&gt; &lt;span style=&quot;color:#f92672&quot;&gt;+&lt;/span&gt; i&lt;span style=&quot;color:#f92672&quot;&gt;);&lt;/span&gt;
+    &lt;span style=&quot;color:#f92672&quot;&gt;}&lt;/span&gt;
 
-<p>运行出现，如下错误:</p>
+    &lt;span style=&quot;color:#66d9ef&quot;&gt;for&lt;/span&gt; &lt;span style=&quot;color:#f92672&quot;&gt;(&lt;/span&gt;Iterator iterator &lt;span style=&quot;color:#f92672&quot;&gt;=&lt;/span&gt; tickets&lt;span style=&quot;color:#f92672&quot;&gt;.&lt;/span&gt;&lt;span style=&quot;color:#a6e22e&quot;&gt;iterator&lt;/span&gt;&lt;span style=&quot;color:#f92672&quot;&gt;();&lt;/span&gt; iterator&lt;span style=&quot;color:#f92672&quot;&gt;.&lt;/span&gt;&lt;span style=&quot;color:#a6e22e&quot;&gt;hasNext&lt;/span&gt;&lt;span style=&quot;color:#f92672&quot;&gt;();&lt;/span&gt; &lt;span style=&quot;color:#f92672&quot;&gt;)&lt;/span&gt; &lt;span style=&quot;color:#f92672&quot;&gt;{&lt;/span&gt;
+        String string &lt;span style=&quot;color:#f92672&quot;&gt;=&lt;/span&gt; &lt;span style=&quot;color:#f92672&quot;&gt;(&lt;/span&gt;String&lt;span style=&quot;color:#f92672&quot;&gt;)&lt;/span&gt; iterator&lt;span style=&quot;color:#f92672&quot;&gt;.&lt;/span&gt;&lt;span style=&quot;color:#a6e22e&quot;&gt;next&lt;/span&gt;&lt;span style=&quot;color:#f92672&quot;&gt;();&lt;/span&gt;
+        tickets&lt;span style=&quot;color:#f92672&quot;&gt;.&lt;/span&gt;&lt;span style=&quot;color:#a6e22e&quot;&gt;remove&lt;/span&gt;&lt;span style=&quot;color:#f92672&quot;&gt;(&lt;/span&gt;20&lt;span style=&quot;color:#f92672&quot;&gt;);&lt;/span&gt;
+    &lt;span style=&quot;color:#f92672&quot;&gt;}&lt;/span&gt;
 
-<pre><code>Exception in thread &quot;main&quot; java.util.ConcurrentModificationException
-    at java.util.Vector$Itr.checkForComodification(Vector.java:1184)
-    at java.util.Vector$Itr.next(Vector.java:1137)
-    at org.xujin.janus.poc.server.Tickets.main(Tickets.java:35)
-
+&lt;span style=&quot;color:#f92672&quot;&gt;}&lt;/span&gt;
 </code></pre>
+<p><!-- raw HTML omitted -->}<!-- raw HTML omitted -->
+<!-- raw HTML omitted --><!-- raw HTML omitted --><!-- raw HTML omitted --><!-- raw HTML omitted -->运行出现，如下错误:<!-- raw HTML omitted --></p>
+<!-- raw HTML omitted -->
+<!-- raw HTML omitted -->
+<!-- raw HTML omitted -->
+<pre><code>&lt;span style=&quot;color:#66d9ef&quot;&gt;public&lt;/span&gt; &lt;span style=&quot;color:#66d9ef&quot;&gt;static&lt;/span&gt; &lt;span style=&quot;color:#66d9ef&quot;&gt;void&lt;/span&gt; &lt;span style=&quot;color:#a6e22e&quot;&gt;main&lt;/span&gt;&lt;span style=&quot;color:#f92672&quot;&gt;(&lt;/span&gt;String&lt;span style=&quot;color:#f92672&quot;&gt;[]&lt;/span&gt; args&lt;span style=&quot;color:#f92672&quot;&gt;)&lt;/span&gt; &lt;span style=&quot;color:#f92672&quot;&gt;{&lt;/span&gt;
+    &lt;span style=&quot;color:#66d9ef&quot;&gt;final&lt;/span&gt; Vector&lt;span style=&quot;color:#f92672&quot;&gt;&amp;lt;&lt;/span&gt;String&lt;span style=&quot;color:#f92672&quot;&gt;&amp;gt;&lt;/span&gt; tickets &lt;span style=&quot;color:#f92672&quot;&gt;=&lt;/span&gt; &lt;span style=&quot;color:#66d9ef&quot;&gt;new&lt;/span&gt; Vector&lt;span style=&quot;color:#f92672&quot;&gt;&amp;lt;&lt;/span&gt;String&lt;span style=&quot;color:#f92672&quot;&gt;&amp;gt;();&lt;/span&gt;
 
-<p>1.2 同步类容器:如古老的Vector，HashTable。这些容器的同步功能其实都是由jdk的<code>Collections.synchronized*** 比如:Collections.synchronizedMap</code>等工厂方法去创建实现的。比如,如下：</p>
+    &lt;span style=&quot;color:#66d9ef&quot;&gt;for&lt;/span&gt; &lt;span style=&quot;color:#f92672&quot;&gt;(&lt;/span&gt;&lt;span style=&quot;color:#66d9ef&quot;&gt;int&lt;/span&gt; i &lt;span style=&quot;color:#f92672&quot;&gt;=&lt;/span&gt; 1&lt;span style=&quot;color:#f92672&quot;&gt;;&lt;/span&gt; i &lt;span style=&quot;color:#f92672&quot;&gt;&amp;lt;=&lt;/span&gt; 1000&lt;span style=&quot;color:#f92672&quot;&gt;;&lt;/span&gt; i&lt;span style=&quot;color:#f92672&quot;&gt;++)&lt;/span&gt; &lt;span style=&quot;color:#f92672&quot;&gt;{&lt;/span&gt;
+        tickets&lt;span style=&quot;color:#f92672&quot;&gt;.&lt;/span&gt;&lt;span style=&quot;color:#a6e22e&quot;&gt;add&lt;/span&gt;&lt;span style=&quot;color:#f92672&quot;&gt;(&lt;/span&gt;&lt;span style=&quot;color:#e6db74&quot;&gt;&amp;#34;火车票&amp;#34;&lt;/span&gt; &lt;span style=&quot;color:#f92672&quot;&gt;+&lt;/span&gt; i&lt;span style=&quot;color:#f92672&quot;&gt;);&lt;/span&gt;
+    &lt;span style=&quot;color:#f92672&quot;&gt;}&lt;/span&gt;
 
-<pre><code class="language-java">Map&lt;String, String&gt; map = Collections.synchronizedMap(new HashMap&lt;String, String&gt;());
+    &lt;span style=&quot;color:#66d9ef&quot;&gt;for&lt;/span&gt; &lt;span style=&quot;color:#f92672&quot;&gt;(&lt;/span&gt;&lt;span style=&quot;color:#66d9ef&quot;&gt;int&lt;/span&gt; i &lt;span style=&quot;color:#f92672&quot;&gt;=&lt;/span&gt; 1&lt;span style=&quot;color:#f92672&quot;&gt;;&lt;/span&gt; i &lt;span style=&quot;color:#f92672&quot;&gt;&amp;lt;=&lt;/span&gt; 10&lt;span style=&quot;color:#f92672&quot;&gt;;&lt;/span&gt; i&lt;span style=&quot;color:#f92672&quot;&gt;++)&lt;/span&gt; &lt;span style=&quot;color:#f92672&quot;&gt;{&lt;/span&gt;
+        &lt;span style=&quot;color:#66d9ef&quot;&gt;new&lt;/span&gt; Thread&lt;span style=&quot;color:#f92672&quot;&gt;(&lt;/span&gt;&lt;span style=&quot;color:#e6db74&quot;&gt;&amp;#34;线程&amp;#34;&lt;/span&gt; &lt;span style=&quot;color:#f92672&quot;&gt;+&lt;/span&gt; i&lt;span style=&quot;color:#f92672&quot;&gt;)&lt;/span&gt; &lt;span style=&quot;color:#f92672&quot;&gt;{&lt;/span&gt;
+            &lt;span style=&quot;color:#66d9ef&quot;&gt;public&lt;/span&gt; &lt;span style=&quot;color:#66d9ef&quot;&gt;void&lt;/span&gt; &lt;span style=&quot;color:#a6e22e&quot;&gt;run&lt;/span&gt;&lt;span style=&quot;color:#f92672&quot;&gt;()&lt;/span&gt; &lt;span style=&quot;color:#f92672&quot;&gt;{&lt;/span&gt;
+                &lt;span style=&quot;color:#66d9ef&quot;&gt;while&lt;/span&gt; &lt;span style=&quot;color:#f92672&quot;&gt;(&lt;/span&gt;&lt;span style=&quot;color:#66d9ef&quot;&gt;true&lt;/span&gt;&lt;span style=&quot;color:#f92672&quot;&gt;)&lt;/span&gt; &lt;span style=&quot;color:#f92672&quot;&gt;{&lt;/span&gt;
+                    &lt;span style=&quot;color:#66d9ef&quot;&gt;if&lt;/span&gt; &lt;span style=&quot;color:#f92672&quot;&gt;(&lt;/span&gt;tickets&lt;span style=&quot;color:#f92672&quot;&gt;.&lt;/span&gt;&lt;span style=&quot;color:#a6e22e&quot;&gt;isEmpty&lt;/span&gt;&lt;span style=&quot;color:#f92672&quot;&gt;())&lt;/span&gt; &lt;span style=&quot;color:#66d9ef&quot;&gt;break&lt;/span&gt;&lt;span style=&quot;color:#f92672&quot;&gt;;&lt;/span&gt;
+                    System&lt;span style=&quot;color:#f92672&quot;&gt;.&lt;/span&gt;&lt;span style=&quot;color:#a6e22e&quot;&gt;out&lt;/span&gt;&lt;span style=&quot;color:#f92672&quot;&gt;.&lt;/span&gt;&lt;span style=&quot;color:#a6e22e&quot;&gt;println&lt;/span&gt;&lt;span style=&quot;color:#f92672&quot;&gt;(&lt;/span&gt;Thread&lt;span style=&quot;color:#f92672&quot;&gt;.&lt;/span&gt;&lt;span style=&quot;color:#a6e22e&quot;&gt;currentThread&lt;/span&gt;&lt;span style=&quot;color:#f92672&quot;&gt;().&lt;/span&gt;&lt;span style=&quot;color:#a6e22e&quot;&gt;getName&lt;/span&gt;&lt;span style=&quot;color:#f92672&quot;&gt;()&lt;/span&gt; &lt;span style=&quot;color:#f92672&quot;&gt;+&lt;/span&gt; &lt;span style=&quot;color:#e6db74&quot;&gt;&amp;#34;---&amp;#34;&lt;/span&gt; &lt;span style=&quot;color:#f92672&quot;&gt;+&lt;/span&gt; tickets&lt;span style=&quot;color:#f92672&quot;&gt;.&lt;/span&gt;&lt;span style=&quot;color:#a6e22e&quot;&gt;remove&lt;/span&gt;&lt;span style=&quot;color:#f92672&quot;&gt;(&lt;/span&gt;0&lt;span style=&quot;color:#f92672&quot;&gt;));&lt;/span&gt;
+                &lt;span style=&quot;color:#f92672&quot;&gt;}&lt;/span&gt;
+            &lt;span style=&quot;color:#f92672&quot;&gt;}&lt;/span&gt;
+        &lt;span style=&quot;color:#f92672&quot;&gt;}.&lt;/span&gt;&lt;span style=&quot;color:#a6e22e&quot;&gt;start&lt;/span&gt;&lt;span style=&quot;color:#f92672&quot;&gt;();&lt;/span&gt;
+    &lt;span style=&quot;color:#f92672&quot;&gt;}&lt;/span&gt;
+&lt;span style=&quot;color:#f92672&quot;&gt;}&lt;/span&gt;
 </code></pre>
-
-<blockquote>
-<p>本身hashMap不是线程安全的，但是Collections.synchronizedMap(new HashMap<String, String>())工厂方法包裹之后，就变成线程安全的。</p>
-</blockquote>
-
-<p>其底层的机制无非就是传统的synchronized关键字对每个公用的方法都进行同步，使得每次只能有一个线程访问容器的状态。这很明显不满足我们今天互联网时代高并发的需求，在保证线程安全的同时，也必须要有足够好的性能。</p>
-
-<pre><code class="language-java">public class Tickets {
-
-    public static void main(String[] args) {
-        final Vector&lt;String&gt; tickets = new Vector&lt;String&gt;();
-
-        for (int i = 1; i &lt;= 1000; i++) {
-            tickets.add(&quot;火车票&quot; + i);
-        }
-
-        for (int i = 1; i &lt;= 10; i++) {
-            new Thread(&quot;线程&quot; + i) {
-                public void run() {
-                    while (true) {
-                        if (tickets.isEmpty()) break;
-                        System.out.println(Thread.currentThread().getName() + &quot;---&quot; + tickets.remove(0));
-                    }
-                }
-            }.start();
-        }
-    }
-}
-</code></pre>
-
-<blockquote>
-<p>Ps:在实际开发中，尽量使用并发类容器替代同步类容器。</p>
-</blockquote>
-
-<h2 id="2-并发类容器">2. 并发类容器</h2>
-
-<h3 id="2-1-并发类容器概述">2.1 并发类容器概述</h3>
-
-<p>jdk5.0之后提供了多种并发类容器来替代同步类容器从而改善性能。同步类容器的状态都是串行化的，他们虽然实现了线程安全，但是严重降低了并发性，在多线程环境时，严重降低了应用程序的吞吐量。
- 并发类容器是专门针对并发设计的，使用ConcurrentHashMap来替代给予散列的传统hashTable，而且在ConcurrentHashMap中，添加了一些常见复合操作的支持。以及使用了CopyOnWriteArrayList代替Voctor，并发的CopOnwriteArraySet，以及并发的Queue，ConcurrentLinkedQueue和LinkedBlockingQueue，前者是高性能的队列，后者是以阻塞形式的队列，具体实现Queue还有很多，例如ArrayBlockQueue，PriorityBlockingQueue，SynchronousQueue等。</p>
-
-<h3 id="2-3-concurrentmap">2.3  ConcurrentMap</h3>
-
-<p>ConcurrentMap接口下有两个重要的实现: ConcurrentHashMap,ConcurrentSkipListMap(支持并发排序功能，弥补ConcurrentHashMap)</p>
-
-<p>ConcurrentHashMap内部使用分段锁(segment)来标识这些不同的部门，在每个段其实就是一个小的hashTable，它们有自己的锁。只要多个修改操作发生在不同的段上，它们就是可以并发进行。把一个整体划分成了16个段(segment)。也就是最高支持16个线程的并发修改操作，这也是在多线程场景时减小锁的粒度从而减低锁竞争的一种方案。并且代码中大多共享变量使用volatile关键字声明，目的是第一时间获取修改的内容，性能非常好。</p>
-
-<blockquote>
-<p>ConcurrentHashMap最高支持分16个段。</p>
-</blockquote>
-
-<h3 id="2-4-copy-on-write容器">2.4 Copy-On-Write容器</h3>
-
-<blockquote>
-<p>未完待续。。。。。</p>
-</blockquote>
+<p><!-- raw HTML omitted -->}<!-- raw HTML omitted -->
+<!-- raw HTML omitted --><!-- raw HTML omitted --><!-- raw HTML omitted --><!-- raw HTML omitted --></p>
+<!-- raw HTML omitted -->
 
 </article>
 
@@ -476,18 +420,16 @@ if (!doNotTrack) {
 		目录
 	</h2>
   <nav id="TableOfContents">
-<ul>
-<li>
-<ul>
-<li><a href="#1-同步类容器">1. 同步类容器</a></li>
-<li><a href="#2-并发类容器">2. 并发类容器</a>
-<ul>
-<li><a href="#2-1-并发类容器概述">2.1 并发类容器概述</a></li>
-<li><a href="#2-3-concurrentmap">2.3  ConcurrentMap</a></li>
-<li><a href="#2-4-copy-on-write容器">2.4 Copy-On-Write容器</a></li>
-</ul></li>
-</ul></li>
-</ul>
+  <ul>
+    <li><a href="#1-同步类容器">1. 同步类容器</a></li>
+    <li><a href="#2-并发类容器">2. 并发类容器</a>
+      <ul>
+        <li><a href="#21-并发类容器概述">2.1 并发类容器概述</a></li>
+        <li><a href="#23--concurrentmap">2.3  ConcurrentMap</a></li>
+        <li><a href="#24-copy-on-write容器">2.4 Copy-On-Write容器</a></li>
+      </ul>
+    </li>
+  </ul>
 </nav>
 </div>
 
@@ -538,9 +480,9 @@ if (!doNotTrack) {
 		
 			<li><a href="/blog/bf/bf-th-sing/">并发编程之ThreadLocal与单例的推荐写法</a></li>
 		
-			<li><a href="/blog/bf/bf-thread-singal/">并发编程总结之线程间的通信</a></li>
-		
 			<li><a href="/blog/bf/bf-volatile/">并发编程总结之volatile</a></li>
+		
+			<li><a href="/blog/bf/bf-thread-singal/">并发编程总结之线程间的通信</a></li>
 		
 			<li><a href="/blog/bf/bf-synchronized/">并发编程总结之synchronized细节问题</a></li>
 		

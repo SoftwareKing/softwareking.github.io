@@ -10,7 +10,7 @@
 <meta name="viewport" content="width=device-width,minimum-scale=1">
 <meta name="description" content="玹霖志,许进沉思录,许进|Spring Cloud,中间件，基础架构，www.xujin.org,xujin.org,-许进沉思录,Venus&#43;,云首科技有限公司,云计算，大数据，物联网，Software_king的博客,云计算Saas，云计算Paas，云计算Iaas Hadoop，大数据，JavaEE，Java，物联网，Hadoop， NoSQL，MongoDB,Spring, Hibernate,Struts2," />
 
-<meta name="generator" content="Hugo 0.55.6" /><link rel="shortcut icon" href=/img/icon.png type="image/png">
+<meta name="generator" content="Hugo 0.72.0" /><link rel="shortcut icon" href=/img/icon.png type="image/png">
 
 <link href="https://unpkg.com/purecss@1.0.0/build/base-min.css" rel="stylesheet">
 
@@ -259,56 +259,16 @@ if (!doNotTrack) {
 	});
   </script>
 		<article class="typo">
-	<h2 id="1-domain行标记修改">1. @Domain行标记修改</h2>
-
-<p>Halo框架所创建的应用需要管中台可视化纳管，因此当应用启动的时候会判断当前应用是否属于某个域，不属于某个域将停止启动，HaloTools提供一个快速修改编辑的功能。如下图所示:
-<img src="2.png" alt="" /></p>
-
-<blockquote>
-<p>如上图所示，可以成功进行行标记代码修改，但是会出现报错信息,下面将对报错信息进行分析Fix。</p>
-</blockquote>
-
-<h2 id="2-报错分析">2.报错分析</h2>
-
-<pre><code>java.lang.Throwable: Assertion failed: Write access is allowed inside write-action only (see com.intellij.openapi.application.Application.runWriteAction())
-    at com.intellij.openapi.diagnostic.Logger.assertTrue(Logger.java:180)
-    at com.intellij.openapi.application.impl.ApplicationImpl.assertWriteAccessAllowed(ApplicationImpl.java:1344)
-    at 
+	<!-- raw HTML omitted -->
+<pre><code>    Application applicationManager &lt;span style=&quot;color:#f92672&quot;&gt;=&lt;/span&gt; ApplicationManager&lt;span style=&quot;color:#f92672&quot;&gt;.&lt;/span&gt;&lt;span style=&quot;color:#a6e22e&quot;&gt;getApplication&lt;/span&gt;&lt;span style=&quot;color:#f92672&quot;&gt;();&lt;/span&gt;
+    applicationManager&lt;span style=&quot;color:#f92672&quot;&gt;.&lt;/span&gt;&lt;span style=&quot;color:#a6e22e&quot;&gt;runWriteAction&lt;/span&gt;&lt;span style=&quot;color:#f92672&quot;&gt;(()&lt;/span&gt; &lt;span style=&quot;color:#f92672&quot;&gt;-&amp;gt;&lt;/span&gt; &lt;span style=&quot;color:#960050;background-color:#1e0010&quot;&gt;➊&lt;/span&gt;
+            processor&lt;span style=&quot;color:#f92672&quot;&gt;.&lt;/span&gt;&lt;span style=&quot;color:#a6e22e&quot;&gt;executeCommand&lt;/span&gt;&lt;span style=&quot;color:#f92672&quot;&gt;(&lt;/span&gt;project&lt;span style=&quot;color:#f92672&quot;&gt;,&lt;/span&gt; &lt;span style=&quot;color:#66d9ef&quot;&gt;new&lt;/span&gt; DocumentReplace&lt;span style=&quot;color:#f92672&quot;&gt;(&lt;/span&gt;document&lt;span style=&quot;color:#f92672&quot;&gt;,&lt;/span&gt; startOffset&lt;span style=&quot;color:#f92672&quot;&gt;,&lt;/span&gt; endOffset&lt;span style=&quot;color:#f92672&quot;&gt;,&lt;/span&gt; domain&lt;span style=&quot;color:#f92672&quot;&gt;),&lt;/span&gt; &lt;span style=&quot;color:#e6db74&quot;&gt;&amp;#34;&amp;#34;&lt;/span&gt;&lt;span style=&quot;color:#f92672&quot;&gt;,&lt;/span&gt; document&lt;span style=&quot;color:#f92672&quot;&gt;)&lt;/span&gt; &lt;span style=&quot;color:#960050;background-color:#1e0010&quot;&gt;➋&lt;/span&gt;
+    &lt;span style=&quot;color:#f92672&quot;&gt;);&lt;/span&gt;
+    DomainModelContext&lt;span style=&quot;color:#f92672&quot;&gt;.&lt;/span&gt;&lt;span style=&quot;color:#a6e22e&quot;&gt;clearAllSet&lt;/span&gt;&lt;span style=&quot;color:#f92672&quot;&gt;();&lt;/span&gt;
+&lt;span style=&quot;color:#f92672&quot;&gt;}&lt;/span&gt;
 </code></pre>
-
-<ul>
-<li>大致意思是写的权限只能在Application.runWriteAction()里面是允许的</li>
-<li>查询官网资料解释如下图所示:
-<img src="3.png" alt="" /></li>
-</ul>
-
-<blockquote>
-<p>IDEA行标记修改用到了写文件操作，因此需要在线程中操作，不然会出现文章开头出现的错误。</p>
-</blockquote>
-
-<h2 id="3-bug-fix">3. Bug Fix</h2>
-
-<p>定位到出错代码，如下所示:</p>
-
-<pre><code class="language-java"> processor.executeCommand(project, new DocumentReplace(document, startOffset, endOffset, domain), &quot;&quot;, document) 
-</code></pre>
-
-<p>将上述代码放入写操作中，修改如下所示:</p>
-
-<pre><code class="language-java">@Override
-    public void navigate(MouseEvent mouseEvent, PsiElement psiElement)  {
-
-        Application applicationManager = ApplicationManager.getApplication();
-        applicationManager.runWriteAction(() -&gt; ➊
-                processor.executeCommand(project, new DocumentReplace(document, startOffset, endOffset, domain), &quot;&quot;, document) ➋
-        );
-        DomainModelContext.clearAllSet();
-    }
-</code></pre>
-
-<p>➊ 在applicationManager.runWriteAction线程中开启写操作</p>
-
-<p>➋ 进行行标记代码替换操作</p>
+<p><!-- raw HTML omitted --><!-- raw HTML omitted --><!-- raw HTML omitted --><!-- raw HTML omitted -->➊ 在applicationManager.runWriteAction线程中开启写操作<!-- raw HTML omitted --></p>
+<!-- raw HTML omitted -->
 
 </article>
 
@@ -425,14 +385,11 @@ if (!doNotTrack) {
 		目录
 	</h2>
   <nav id="TableOfContents">
-<ul>
-<li>
-<ul>
-<li><a href="#1-domain行标记修改">1. @Domain行标记修改</a></li>
-<li><a href="#2-报错分析">2.报错分析</a></li>
-<li><a href="#3-bug-fix">3. Bug Fix</a></li>
-</ul></li>
-</ul>
+  <ul>
+    <li><a href="#1-domain行标记修改">1. @Domain行标记修改</a></li>
+    <li><a href="#2报错分析">2.报错分析</a></li>
+    <li><a href="#3-bug-fix">3. Bug Fix</a></li>
+  </ul>
 </nav>
 </div>
 

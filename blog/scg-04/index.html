@@ -10,7 +10,7 @@
 <meta name="viewport" content="width=device-width,minimum-scale=1">
 <meta name="description" content="玹霖志,许进沉思录,许进|Spring Cloud,中间件，基础架构，www.xujin.org,xujin.org,-许进沉思录,Venus&#43;,云首科技有限公司,云计算，大数据，物联网，Software_king的博客,云计算Saas，云计算Paas，云计算Iaas Hadoop，大数据，JavaEE，Java，物联网，Hadoop， NoSQL，MongoDB,Spring, Hibernate,Struts2," />
 
-<meta name="generator" content="Hugo 0.55.6" /><link rel="shortcut icon" href=/img/icon.png type="image/png">
+<meta name="generator" content="Hugo 0.72.0" /><link rel="shortcut icon" href=/img/icon.png type="image/png">
 
 <link href="https://unpkg.com/purecss@1.0.0/build/base-min.css" rel="stylesheet">
 
@@ -259,67 +259,39 @@ if (!doNotTrack) {
 	});
   </script>
 		<article class="typo">
-	<p><strong>摘要</strong>:Spring Cloud Gateway只有两种类型的Filter，本文介绍如何在Spring Cloud Gateway中创建一个Pre或Post类型的Filter。</p>
+	<!-- raw HTML omitted -->
+<p><!-- raw HTML omitted -->import<!-- raw HTML omitted --> org.springframework.cloud.gateway.filter.GatewayFilter<!-- raw HTML omitted -->;<!-- raw HTML omitted -->
+<!-- raw HTML omitted -->import<!-- raw HTML omitted --> org.springframework.http.server.reactive.ServerHttpRequest<!-- raw HTML omitted -->;<!-- raw HTML omitted --></p>
+<p><!-- raw HTML omitted -->/**
+<!-- raw HTML omitted --><!-- raw HTML omitted --> * @author Spencer Gibb
+<!-- raw HTML omitted --><!-- raw HTML omitted --> */<!-- raw HTML omitted -->
+<!-- raw HTML omitted -->public<!-- raw HTML omitted --> <!-- raw HTML omitted -->class<!-- raw HTML omitted --> <!-- raw HTML omitted -->AddRequestHeaderGatewayFilterFactory<!-- raw HTML omitted --> <!-- raw HTML omitted -->extends<!-- raw HTML omitted --> AbstractNameValueGatewayFilterFactory <!-- raw HTML omitted -->{<!-- raw HTML omitted --></p>
+<pre><code>&lt;span style=&quot;color:#a6e22e&quot;&gt;@Override&lt;/span&gt;
+&lt;span style=&quot;color:#66d9ef&quot;&gt;public&lt;/span&gt; GatewayFilter &lt;span style=&quot;color:#a6e22e&quot;&gt;apply&lt;/span&gt;&lt;span style=&quot;color:#f92672&quot;&gt;(&lt;/span&gt;NameValueConfig config&lt;span style=&quot;color:#f92672&quot;&gt;)&lt;/span&gt; &lt;span style=&quot;color:#f92672&quot;&gt;{&lt;/span&gt;
+    &lt;span style=&quot;color:#66d9ef&quot;&gt;return&lt;/span&gt; &lt;span style=&quot;color:#f92672&quot;&gt;(&lt;/span&gt;exchange&lt;span style=&quot;color:#f92672&quot;&gt;,&lt;/span&gt; chain&lt;span style=&quot;color:#f92672&quot;&gt;)&lt;/span&gt; &lt;span style=&quot;color:#f92672&quot;&gt;-&amp;gt;&lt;/span&gt; &lt;span style=&quot;color:#f92672&quot;&gt;{&lt;/span&gt;
+        ServerHttpRequest request &lt;span style=&quot;color:#f92672&quot;&gt;=&lt;/span&gt; exchange&lt;span style=&quot;color:#f92672&quot;&gt;.&lt;/span&gt;&lt;span style=&quot;color:#a6e22e&quot;&gt;getRequest&lt;/span&gt;&lt;span style=&quot;color:#f92672&quot;&gt;().&lt;/span&gt;&lt;span style=&quot;color:#a6e22e&quot;&gt;mutate&lt;/span&gt;&lt;span style=&quot;color:#f92672&quot;&gt;()&lt;/span&gt;
+                &lt;span style=&quot;color:#f92672&quot;&gt;.&lt;/span&gt;&lt;span style=&quot;color:#a6e22e&quot;&gt;header&lt;/span&gt;&lt;span style=&quot;color:#f92672&quot;&gt;(&lt;/span&gt;config&lt;span style=&quot;color:#f92672&quot;&gt;.&lt;/span&gt;&lt;span style=&quot;color:#a6e22e&quot;&gt;getName&lt;/span&gt;&lt;span style=&quot;color:#f92672&quot;&gt;(),&lt;/span&gt; config&lt;span style=&quot;color:#f92672&quot;&gt;.&lt;/span&gt;&lt;span style=&quot;color:#a6e22e&quot;&gt;getValue&lt;/span&gt;&lt;span style=&quot;color:#f92672&quot;&gt;())&lt;/span&gt;
+                &lt;span style=&quot;color:#f92672&quot;&gt;.&lt;/span&gt;&lt;span style=&quot;color:#a6e22e&quot;&gt;build&lt;/span&gt;&lt;span style=&quot;color:#f92672&quot;&gt;();&lt;/span&gt;
 
-<h2 id="zuul的filter类型">zuul的Filter类型</h2>
-
-<p>Zuul 的 Filter 是通过filterType()方法来指定，一个 Filter 只能对应一种类型，要么是 “pre” 要么是“post”</p>
-
-<h3 id="spring-cloud-gateway的filter类型">Spring Cloud Gateway的Filter类型</h3>
-
-<p>Spring Cloud Gateway 基于 Project Reactor 和 WebFlux，采用响应式编程风格，打开它的 Filter 的接口GatewayFilter你会发现它只有一个方法filter</p>
-
-<h2 id="pre类型的filter">Pre类型的Filter</h2>
-
-<p>在Spring Cloud Gateway源码中定义了一个Pre类型的Filter，code将会在chain.filter() 之前被执行,代码:<a href="https://github.com/spring-cloud/spring-cloud-gateway/blob/master/spring-cloud-gateway-core/src/main/java/org/springframework/cloud/gateway/filter/factory/AddRequestHeaderGatewayFilterFactory.java">AddRequestHeader</a></p>
-
-<pre><code class="language-java">package org.springframework.cloud.gateway.filter.factory;
-
-import org.springframework.cloud.gateway.filter.GatewayFilter;
-import org.springframework.http.server.reactive.ServerHttpRequest;
-
-/**
- * @author Spencer Gibb
- */
-public class AddRequestHeaderGatewayFilterFactory extends AbstractNameValueGatewayFilterFactory {
-
-    @Override
-    public GatewayFilter apply(NameValueConfig config) {
-        return (exchange, chain) -&gt; {
-            ServerHttpRequest request = exchange.getRequest().mutate()
-                    .header(config.getName(), config.getValue())
-                    .build();
-
-            return chain.filter(exchange.mutate().request(request).build());
-        };
-    }
-
-}
+        &lt;span style=&quot;color:#66d9ef&quot;&gt;return&lt;/span&gt; chain&lt;span style=&quot;color:#f92672&quot;&gt;.&lt;/span&gt;&lt;span style=&quot;color:#a6e22e&quot;&gt;filter&lt;/span&gt;&lt;span style=&quot;color:#f92672&quot;&gt;(&lt;/span&gt;exchange&lt;span style=&quot;color:#f92672&quot;&gt;.&lt;/span&gt;&lt;span style=&quot;color:#a6e22e&quot;&gt;mutate&lt;/span&gt;&lt;span style=&quot;color:#f92672&quot;&gt;().&lt;/span&gt;&lt;span style=&quot;color:#a6e22e&quot;&gt;request&lt;/span&gt;&lt;span style=&quot;color:#f92672&quot;&gt;(&lt;/span&gt;request&lt;span style=&quot;color:#f92672&quot;&gt;).&lt;/span&gt;&lt;span style=&quot;color:#a6e22e&quot;&gt;build&lt;/span&gt;&lt;span style=&quot;color:#f92672&quot;&gt;());&lt;/span&gt;
+    &lt;span style=&quot;color:#f92672&quot;&gt;};&lt;/span&gt;
+&lt;span style=&quot;color:#f92672&quot;&gt;}&lt;/span&gt;
 </code></pre>
-
-<h2 id="post类型的filter">Post类型的Filter</h2>
-
-<p>对于Post类型的Filter，<a href="https://github.com/spring-cloud/spring-cloud-gateway/blob/master/spring-cloud-gateway-core/src/main/java/org/springframework/cloud/gateway/filter/factory/SetStatusGatewayFilterFactory.java">SetStatus</a>
-代码将会在chain.filter(exchange).then()里面的代码运行。</p>
-
-<pre><code class="language-java">public class SetStatusGatewayFilterFactory extends AbstractGatewayFilterFactory&lt;SetStatusGatewayFilterFactory.Config&gt; {
-    @Override
-    public GatewayFilter apply(Config config) {
-        final HttpStatus status = ServerWebExchangeUtils.parse(config.status);
-        return (exchange, chain) -&gt; {
-
-            return chain.filter(exchange).then(Mono.fromRunnable(() -&gt; {
-                // check not really needed, since it is guarded in setStatusCode,
-                // but it's a good example
-                if (!exchange.getResponse().isCommitted()) {
-                    setResponseStatus(exchange, status);
-                }
-            }));
-        };
-    }
-}
-
+<p><!-- raw HTML omitted -->}<!-- raw HTML omitted -->
+<!-- raw HTML omitted --><!-- raw HTML omitted --><!-- raw HTML omitted --><!-- raw HTML omitted -->Post类型的Filter<!-- raw HTML omitted --></p>
+<!-- raw HTML omitted -->
+<pre><code>        &lt;span style=&quot;color:#66d9ef&quot;&gt;return&lt;/span&gt; chain&lt;span style=&quot;color:#f92672&quot;&gt;.&lt;/span&gt;&lt;span style=&quot;color:#a6e22e&quot;&gt;filter&lt;/span&gt;&lt;span style=&quot;color:#f92672&quot;&gt;(&lt;/span&gt;exchange&lt;span style=&quot;color:#f92672&quot;&gt;).&lt;/span&gt;&lt;span style=&quot;color:#a6e22e&quot;&gt;then&lt;/span&gt;&lt;span style=&quot;color:#f92672&quot;&gt;(&lt;/span&gt;Mono&lt;span style=&quot;color:#f92672&quot;&gt;.&lt;/span&gt;&lt;span style=&quot;color:#a6e22e&quot;&gt;fromRunnable&lt;/span&gt;&lt;span style=&quot;color:#f92672&quot;&gt;(()&lt;/span&gt; &lt;span style=&quot;color:#f92672&quot;&gt;-&amp;gt;&lt;/span&gt; &lt;span style=&quot;color:#f92672&quot;&gt;{&lt;/span&gt;
+            &lt;span style=&quot;color:#75715e&quot;&gt;// check not really needed, since it is guarded in setStatusCode,
 </code></pre>
+<p><!-- raw HTML omitted --><!-- raw HTML omitted --><!-- raw HTML omitted -->                <!-- raw HTML omitted -->// but it's a good example
+<!-- raw HTML omitted --><!-- raw HTML omitted --><!-- raw HTML omitted -->                <!-- raw HTML omitted -->if<!-- raw HTML omitted --> <!-- raw HTML omitted -->(!<!-- raw HTML omitted -->exchange<!-- raw HTML omitted -->.<!-- raw HTML omitted --><!-- raw HTML omitted -->getResponse<!-- raw HTML omitted --><!-- raw HTML omitted -->().<!-- raw HTML omitted --><!-- raw HTML omitted -->isCommitted<!-- raw HTML omitted --><!-- raw HTML omitted -->())<!-- raw HTML omitted --> <!-- raw HTML omitted -->{<!-- raw HTML omitted -->
+setResponseStatus<!-- raw HTML omitted -->(<!-- raw HTML omitted -->exchange<!-- raw HTML omitted -->,<!-- raw HTML omitted --> status<!-- raw HTML omitted -->);<!-- raw HTML omitted -->
+<!-- raw HTML omitted -->}<!-- raw HTML omitted -->
+<!-- raw HTML omitted -->}));<!-- raw HTML omitted -->
+<!-- raw HTML omitted -->};<!-- raw HTML omitted -->
+<!-- raw HTML omitted -->}<!-- raw HTML omitted -->
+<!-- raw HTML omitted -->}<!-- raw HTML omitted --></p>
+<p><!-- raw HTML omitted --><!-- raw HTML omitted --><!-- raw HTML omitted --></p>
 
 </article>
 
@@ -436,17 +408,15 @@ public class AddRequestHeaderGatewayFilterFactory extends AbstractNameValueGatew
 		目录
 	</h2>
   <nav id="TableOfContents">
-<ul>
-<li>
-<ul>
-<li><a href="#zuul的filter类型">zuul的Filter类型</a>
-<ul>
-<li><a href="#spring-cloud-gateway的filter类型">Spring Cloud Gateway的Filter类型</a></li>
-</ul></li>
-<li><a href="#pre类型的filter">Pre类型的Filter</a></li>
-<li><a href="#post类型的filter">Post类型的Filter</a></li>
-</ul></li>
-</ul>
+  <ul>
+    <li><a href="#zuul的filter类型">zuul的Filter类型</a>
+      <ul>
+        <li><a href="#spring-cloud-gateway的filter类型">Spring Cloud Gateway的Filter类型</a></li>
+      </ul>
+    </li>
+    <li><a href="#pre类型的filter">Pre类型的Filter</a></li>
+    <li><a href="#post类型的filter">Post类型的Filter</a></li>
+  </ul>
 </nav>
 </div>
 

@@ -23,6 +23,13 @@
   </url>
   
   <url>
+    <loc>/projects/halo-studio/</loc>
+    <lastmod>2020-05-12T00:00:00+00:00</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.5</priority>
+  </url>
+  
+  <url>
     <loc>/projects/halo-boot/</loc>
     <lastmod>2019-09-12T00:00:00+00:00</lastmod>
     <changefreq>monthly</changefreq>
@@ -78,6 +85,27 @@
   </url>
   
   <url>
+    <loc>/projects/</loc>
+    <lastmod>2020-05-12T00:00:00+00:00</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.5</priority>
+  </url>
+  
+  <url>
+    <loc>/projects/halo-studio/overview/</loc>
+    <lastmod>2020-05-12T00:00:00+00:00</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.5</priority>
+  </url>
+  
+  <url>
+    <loc>/</loc>
+    <lastmod>2020-05-12T00:00:00+00:00</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.5</priority>
+  </url>
+  
+  <url>
     <loc>/muse/1/</loc>
     <lastmod>2020-02-27T21:00:00+08:00</lastmod>
     <changefreq>monthly</changefreq>
@@ -87,23 +115,19 @@
   <url>
     <loc>/categories/muse/</loc>
     <lastmod>2020-02-27T21:00:00+08:00</lastmod>
-    <priority>0</priority>
+    <changefreq>monthly</changefreq>
+    <priority>0.5</priority>
   </url>
   
   <url>
     <loc>/muse/</loc>
     <lastmod>2020-02-27T21:00:00+08:00</lastmod>
-    <priority>0</priority>
+    <changefreq>monthly</changefreq>
+    <priority>0.5</priority>
   </url>
   
   <url>
     <loc>/tags/ngnix/</loc>
-    <lastmod>2020-02-27T21:00:00+08:00</lastmod>
-    <priority>0</priority>
-  </url>
-  
-  <url>
-    <loc>/</loc>
     <lastmod>2020-02-27T21:00:00+08:00</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
@@ -119,13 +143,15 @@
   <url>
     <loc>/tags/myabtis/</loc>
     <lastmod>2020-01-19T14:00:00+08:00</lastmod>
-    <priority>0</priority>
+    <changefreq>monthly</changefreq>
+    <priority>0.5</priority>
   </url>
   
   <url>
     <loc>/categories/mybatis/</loc>
     <lastmod>2020-01-19T14:00:00+08:00</lastmod>
-    <priority>0</priority>
+    <changefreq>monthly</changefreq>
+    <priority>0.5</priority>
   </url>
   
   <url>
@@ -138,19 +164,22 @@
   <url>
     <loc>/tags/%E9%A1%B9%E7%9B%AE%E7%BB%8F%E9%AA%8C/</loc>
     <lastmod>2020-01-19T14:00:00+08:00</lastmod>
-    <priority>0</priority>
-  </url>
-  
-  <url>
-    <loc>/categories/%E4%B8%AD%E9%97%B4%E4%BB%B6/</loc>
-    <lastmod>2019-11-14T15:00:00+08:00</lastmod>
-    <priority>0</priority>
+    <changefreq>monthly</changefreq>
+    <priority>0.5</priority>
   </url>
   
   <url>
     <loc>/tags/%E4%B8%AD%E9%97%B4%E4%BB%B6/</loc>
     <lastmod>2019-11-14T15:00:00+08:00</lastmod>
-    <priority>0</priority>
+    <changefreq>monthly</changefreq>
+    <priority>0.5</priority>
+  </url>
+  
+  <url>
+    <loc>/categories/%E4%B8%AD%E9%97%B4%E4%BB%B6/</loc>
+    <lastmod>2019-11-14T15:00:00+08:00</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.5</priority>
   </url>
   
   <url>
@@ -161,15 +190,17 @@
   </url>
   
   <url>
-    <loc>/categories/nacos/</loc>
+    <loc>/tags/nacos/</loc>
     <lastmod>2019-11-10T14:00:00+08:00</lastmod>
-    <priority>0</priority>
+    <changefreq>monthly</changefreq>
+    <priority>0.5</priority>
   </url>
   
   <url>
-    <loc>/tags/nacos/</loc>
+    <loc>/categories/nacos/</loc>
     <lastmod>2019-11-10T14:00:00+08:00</lastmod>
-    <priority>0</priority>
+    <changefreq>monthly</changefreq>
+    <priority>0.5</priority>
   </url>
   
   <url>
@@ -182,13 +213,15 @@
   <url>
     <loc>/tags/%E4%B8%9A%E5%8A%A1%E4%B8%AD%E5%8F%B0/</loc>
     <lastmod>2019-10-29T14:00:00+08:00</lastmod>
-    <priority>0</priority>
+    <changefreq>monthly</changefreq>
+    <priority>0.5</priority>
   </url>
   
   <url>
     <loc>/categories/%E4%B8%AD%E5%8F%B0/</loc>
     <lastmod>2019-10-29T14:00:00+08:00</lastmod>
-    <priority>0</priority>
+    <changefreq>monthly</changefreq>
+    <priority>0.5</priority>
   </url>
   
   <url>
@@ -213,15 +246,17 @@
   </url>
   
   <url>
-    <loc>/categories/halo-tools/</loc>
+    <loc>/tags/halo-tools/</loc>
     <lastmod>2019-10-18T17:00:00+08:00</lastmod>
-    <priority>0</priority>
+    <changefreq>monthly</changefreq>
+    <priority>0.5</priority>
   </url>
   
   <url>
-    <loc>/tags/halo-tools/</loc>
+    <loc>/categories/halo-tools/</loc>
     <lastmod>2019-10-18T17:00:00+08:00</lastmod>
-    <priority>0</priority>
+    <changefreq>monthly</changefreq>
+    <priority>0.5</priority>
   </url>
   
   <url>
@@ -248,7 +283,8 @@
   <url>
     <loc>/tags/switch/</loc>
     <lastmod>2019-10-17T20:00:00+08:00</lastmod>
-    <priority>0</priority>
+    <changefreq>monthly</changefreq>
+    <priority>0.5</priority>
   </url>
   
   <url>
@@ -280,15 +316,17 @@
   </url>
   
   <url>
-    <loc>/categories/spring-boot-admin/</loc>
+    <loc>/tags/spring-boot-admin/</loc>
     <lastmod>2019-09-16T20:00:00+08:00</lastmod>
-    <priority>0</priority>
+    <changefreq>monthly</changefreq>
+    <priority>0.5</priority>
   </url>
   
   <url>
-    <loc>/tags/spring-boot-admin/</loc>
+    <loc>/categories/spring-boot-admin/</loc>
     <lastmod>2019-09-16T20:00:00+08:00</lastmod>
-    <priority>0</priority>
+    <changefreq>monthly</changefreq>
+    <priority>0.5</priority>
   </url>
   
   <url>
@@ -299,27 +337,31 @@
   </url>
   
   <url>
-    <loc>/categories/spring-cloud/</loc>
-    <lastmod>2019-09-16T20:00:00+08:00</lastmod>
-    <priority>0</priority>
-  </url>
-  
-  <url>
     <loc>/tags/spring-cloud/</loc>
     <lastmod>2019-09-16T20:00:00+08:00</lastmod>
-    <priority>0</priority>
+    <changefreq>monthly</changefreq>
+    <priority>0.5</priority>
   </url>
   
   <url>
-    <loc>/categories/spring-cloud-gateway/</loc>
+    <loc>/categories/spring-cloud/</loc>
     <lastmod>2019-09-16T20:00:00+08:00</lastmod>
-    <priority>0</priority>
+    <changefreq>monthly</changefreq>
+    <priority>0.5</priority>
   </url>
   
   <url>
     <loc>/tags/spring-cloud-gateway/</loc>
     <lastmod>2019-09-16T20:00:00+08:00</lastmod>
-    <priority>0</priority>
+    <changefreq>monthly</changefreq>
+    <priority>0.5</priority>
+  </url>
+  
+  <url>
+    <loc>/categories/spring-cloud-gateway/</loc>
+    <lastmod>2019-09-16T20:00:00+08:00</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.5</priority>
   </url>
   
   <url>
@@ -381,13 +423,15 @@
   <url>
     <loc>/activities/</loc>
     <lastmod>2018-10-17T10:20:00+00:00</lastmod>
-    <priority>0</priority>
+    <changefreq>monthly</changefreq>
+    <priority>0.5</priority>
   </url>
   
   <url>
     <loc>/tags/spring-cloud%E4%B8%AD%E5%9B%BD%E7%A4%BE%E5%8C%BA/</loc>
     <lastmod>2018-10-17T10:20:00+00:00</lastmod>
-    <priority>0</priority>
+    <changefreq>monthly</changefreq>
+    <priority>0.5</priority>
   </url>
   
   <url>
@@ -398,15 +442,17 @@
   </url>
   
   <url>
-    <loc>/categories/%E7%A4%BE%E5%8C%BA%E6%B2%99%E9%BE%99/</loc>
+    <loc>/tags/%E7%A4%BE%E5%8C%BA%E6%B2%99%E9%BE%99/</loc>
     <lastmod>2018-10-17T10:20:00+00:00</lastmod>
-    <priority>0</priority>
+    <changefreq>monthly</changefreq>
+    <priority>0.5</priority>
   </url>
   
   <url>
-    <loc>/tags/%E7%A4%BE%E5%8C%BA%E6%B2%99%E9%BE%99/</loc>
+    <loc>/categories/%E7%A4%BE%E5%8C%BA%E6%B2%99%E9%BE%99/</loc>
     <lastmod>2018-10-17T10:20:00+00:00</lastmod>
-    <priority>0</priority>
+    <changefreq>monthly</changefreq>
+    <priority>0.5</priority>
   </url>
   
   <url>
@@ -466,15 +512,17 @@
   </url>
   
   <url>
-    <loc>/categories/eureka-server/</loc>
+    <loc>/tags/eureka-server/</loc>
     <lastmod>2018-05-14T20:00:00+08:00</lastmod>
-    <priority>0</priority>
+    <changefreq>monthly</changefreq>
+    <priority>0.5</priority>
   </url>
   
   <url>
-    <loc>/tags/eureka-server/</loc>
+    <loc>/categories/eureka-server/</loc>
     <lastmod>2018-05-14T20:00:00+08:00</lastmod>
-    <priority>0</priority>
+    <changefreq>monthly</changefreq>
+    <priority>0.5</priority>
   </url>
   
   <url>
@@ -515,19 +563,22 @@
   <url>
     <loc>/tags/%E5%A4%9A%E7%BA%BF%E7%A8%8B/</loc>
     <lastmod>2017-10-03T21:00:00+08:00</lastmod>
-    <priority>0</priority>
-  </url>
-  
-  <url>
-    <loc>/categories/%E5%B9%B6%E5%8F%91%E7%BC%96%E7%A8%8B/</loc>
-    <lastmod>2017-10-03T21:00:00+08:00</lastmod>
-    <priority>0</priority>
+    <changefreq>monthly</changefreq>
+    <priority>0.5</priority>
   </url>
   
   <url>
     <loc>/tags/%E5%B9%B6%E5%8F%91%E7%BC%96%E7%A8%8B/</loc>
     <lastmod>2017-10-03T21:00:00+08:00</lastmod>
-    <priority>0</priority>
+    <changefreq>monthly</changefreq>
+    <priority>0.5</priority>
+  </url>
+  
+  <url>
+    <loc>/categories/%E5%B9%B6%E5%8F%91%E7%BC%96%E7%A8%8B/</loc>
+    <lastmod>2017-10-03T21:00:00+08:00</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.5</priority>
   </url>
   
   <url>
@@ -540,7 +591,8 @@
   <url>
     <loc>/categories/spring-boot/</loc>
     <lastmod>2017-09-26T14:00:00+08:00</lastmod>
-    <priority>0</priority>
+    <changefreq>monthly</changefreq>
+    <priority>0.5</priority>
   </url>
   
   <url>
@@ -599,12 +651,6 @@
   </url>
   
   <url>
-    <loc>/projects/</loc>
-    <changefreq>monthly</changefreq>
-    <priority>0.5</priority>
-  </url>
-  
-  <url>
     <loc>/search/</loc>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
@@ -623,18 +669,6 @@
   </url>
   
   <url>
-    <loc>/projects/halo-toolkit/overview/</loc>
-    <changefreq>monthly</changefreq>
-    <priority>0.5</priority>
-  </url>
-  
-  <url>
-    <loc>/projects/halo-toolkit/line-marker/</loc>
-    <changefreq>monthly</changefreq>
-    <priority>0.5</priority>
-  </url>
-  
-  <url>
     <loc>/projects/halo-toolkit/create-project/</loc>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
@@ -642,6 +676,18 @@
   
   <url>
     <loc>/projects/halo-toolkit/right-create/</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.5</priority>
+  </url>
+  
+  <url>
+    <loc>/projects/halo-toolkit/overview/</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.5</priority>
+  </url>
+  
+  <url>
+    <loc>/projects/halo-toolkit/line-marker/</loc>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url>

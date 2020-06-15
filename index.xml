@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>玹霖志</title>
@@ -6,10 +6,19 @@
     <description>Recent content on 玹霖志</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>zh-CN</language>
-    <lastBuildDate>Thu, 27 Feb 2020 21:00:00 +0800</lastBuildDate>
+    <lastBuildDate>Tue, 12 May 2020 00:00:00 +0000</lastBuildDate>
     
 	<atom:link href="/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>Halo Studio概述</title>
+      <link>/projects/halo-studio/overview/</link>
+      <pubDate>Tue, 12 May 2020 00:00:00 +0000</pubDate>
+      
+      <guid>/projects/halo-studio/overview/</guid>
+      <description>1. Halo Studio概述 Halo Studio 基于开源的 IntelliJ Platform进行定制开发扩展，将Halo Toolkit内置其中增强,提供企业级IDE支持。</description>
+    </item>
     
     <item>
       <title>ECS中配置公网域名访问多个Spring Boot应用</title>
@@ -350,7 +359,7 @@
       <pubDate>Tue, 03 Oct 2017 21:00:00 +0800</pubDate>
       
       <guid>/blog/bf/bf01/</guid>
-      <description>1. 同步类容器 同步类容器都是线程安全的，但在某些场景下可能需要加锁来保护复合操作。 复合操作如： * 迭代(反复访问元素，遍历容器中所有的元素)， *</description>
+      <description>1. 同步类容器 同步类容器都是线程安全的，但在某些场景下可能需要加锁来保护复合操作。 复合操作如： 迭代(反复访问元素，遍历容器中所有的元素)， 跳转</description>
     </item>
     
     <item>
@@ -426,6 +435,24 @@
     </item>
     
     <item>
+      <title>Halo Toolkit创建工程功能</title>
+      <link>/projects/halo-toolkit/create-project/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>/projects/halo-toolkit/create-project/</guid>
+      <description>1.选择应用类型创建工程 2.配置工程基本信息 3.数据库相关配置 4.点击Finish生成工程</description>
+    </item>
+    
+    <item>
+      <title>Halo ToolKit右键创建功能</title>
+      <link>/projects/halo-toolkit/right-create/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>/projects/halo-toolkit/right-create/</guid>
+      <description>Halo ToolKit增强右键 Halo ToolKit提供右键增强功能，帮助开发快速创建常用的Java类，提高开发效率。如下图所示: 如下图所示，右键支持创</description>
+    </item>
+    
+    <item>
       <title>Halo ToolKit概述</title>
       <link>/projects/halo-toolkit/overview/</link>
       <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
@@ -441,24 +468,6 @@
       
       <guid>/projects/halo-toolkit/line-marker/</guid>
       <description>1.行标记功能 1.1 @Domain行标记修改 Halo框架所创建的应用需要管中台可视化纳管，因此当应用启动的时候会判断当前应用是否属于某个域，不属</description>
-    </item>
-    
-    <item>
-      <title>Halo Toolkit创建工程功能</title>
-      <link>/projects/halo-toolkit/create-project/</link>
-      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
-      
-      <guid>/projects/halo-toolkit/create-project/</guid>
-      <description>1.选择应用类型创建工程 2.配置工程基本信息 3.数据库相关配置 4.点击Finish生成工程</description>
-    </item>
-    
-    <item>
-      <title>Halo Tools右键创建功能</title>
-      <link>/projects/halo-toolkit/right-create/</link>
-      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
-      
-      <guid>/projects/halo-toolkit/right-create/</guid>
-      <description>Halo Tools增强右键 Halo Tools提供右键增强功能，帮助开发快速创建常用的Java类，提高开发效率。如下图所示: 如下图所示，右键支持创建13种</description>
     </item>
     
     <item>

@@ -10,7 +10,7 @@
 <meta name="viewport" content="width=device-width,minimum-scale=1">
 <meta name="description" content="玹霖志,许进沉思录,许进|Spring Cloud,中间件，基础架构，www.xujin.org,xujin.org,-许进沉思录,Venus&#43;,云首科技有限公司,云计算，大数据，物联网，Software_king的博客,云计算Saas，云计算Paas，云计算Iaas Hadoop，大数据，JavaEE，Java，物联网，Hadoop， NoSQL，MongoDB,Spring, Hibernate,Struts2," />
 
-<meta name="generator" content="Hugo 0.55.6" /><link rel="shortcut icon" href=/img/icon.png type="image/png">
+<meta name="generator" content="Hugo 0.72.0" /><link rel="shortcut icon" href=/img/icon.png type="image/png">
 
 <link href="https://unpkg.com/purecss@1.0.0/build/base-min.css" rel="stylesheet">
 
@@ -259,154 +259,7 @@ if (!doNotTrack) {
 	});
   </script>
 		<article class="typo">
-	<p><strong>摘要</strong>: 随着Eureka不再维护，Hystrix不再开发新功能，进入维护状态。以及最近中国开源出现一些大事，预测一下2019年未来Spring Cloud生态圈中的第二代组件的组合，仅<code>代表个人看法</code>。</p>
-
-<h2 id="1-spring-cloud第一代">1. Spring Cloud第一代</h2>
-
-<p>Spring Cloud自从推出之后，给大家的感觉就是Spring Cloud做<code>它最擅长的事，也就是高度抽象和封装，强强联手整合最优东西为我所用</code>，比如Netflix开源的Eureka，Hystrix，Ribbon等。而且提供<code>多种技术选型，态度中立而选最优</code>。8天前也就是2018年11月19号左右，Netflix的开源项目Hystrix宣布状态，不再开发新功能，处于维护状态。引发朋友圈的一些思考。</p>
-
-<p><img src="hystrix.jpg" alt="" /></p>
-
-<blockquote>
-<p>虽然Eureka，Hystrix等不再继续开发或维护，但是目前来说不影响使用，不管怎么说感谢开源，向Netflix公司的开源致敬。</p>
-</blockquote>
-
-<p>随着Spring Cloud生态圈的发展与成长，Spring Cloud陆续推出了自己的一些组件，挑选主要组件说明如下表所示:</p>
-
-<table>
-<thead>
-<tr>
-<th>组件</th>
-<th>来源</th>
-<th>说明</th>
-</tr>
-</thead>
-
-<tbody>
-<tr>
-<td>Spring-cloud-openfeign</td>
-<td>基于Feign的升级</td>
-<td>服务之间调用的必备组件</td>
-</tr>
-
-<tr>
-<td>spring-cloud-zuul</td>
-<td>来源于Netflix Zuul</td>
-<td>目前还在继续维护，但是已经有自己的Spring Cloud Gateway,不久将来逐渐淘汰</td>
-</tr>
-
-<tr>
-<td>spring-cloud-eureka</td>
-<td>集成于Netflix Eureka</td>
-<td>目前还在跟随Spring Cloud版本升级维护，最终也会被替代</td>
-</tr>
-
-<tr>
-<td>spring-cloud-config</td>
-<td>自研</td>
-<td>功能不足，国内使用其它配置中心替代，比如携程的Apollo</td>
-</tr>
-
-<tr>
-<td>全链路监控(sleuth+zikpin或pinpont)</td>
-<td>sleuth自研，其它第三方</td>
-<td>国内目前使用最多的是skywaling等上生产</td>
-</tr>
-
-<tr>
-<td>spring-cloud-ribbon</td>
-<td>来源于Netflix集成</td>
-<td>ribbon目前还在跟随Spring Cloud版本维护中，目前孵化未来替代品spring-cloud-lb</td>
-</tr>
-
-<tr>
-<td>Spring-cloud-hystrix</td>
-<td>来源于Netflix集成</td>
-<td>目前还在跟随Spring Cloud版本维护中目前已经孵化spring-cloud-r4j</td>
-</tr>
-</tbody>
-</table>
-
-<h2 id="2-spring-cloud-第二代">2. Spring Cloud 第二代</h2>
-
-<p>Spring Cloud第一代和第二代的组件组合汇总，如下表所示。</p>
-
-<table>
-<thead>
-<tr>
-<th></th>
-<th>Spring Cloud第一代</th>
-<th>Spring Cloud第二代</th>
-</tr>
-</thead>
-
-<tbody>
-<tr>
-<td>网关</td>
-<td>Spring Cloud Zuul</td>
-<td>Spring Cloud Gateway</td>
-</tr>
-
-<tr>
-<td>注册中心</td>
-<td>eureka(不再更新)，Consul,ZK</td>
-<td>阿里Nacos，拍拍贷radar等可选</td>
-</tr>
-
-<tr>
-<td>配置中心</td>
-<td>spring cloud config</td>
-<td>阿里Nacos，携程Apollo，随行付Config Keeper</td>
-</tr>
-
-<tr>
-<td>客户端软负载均衡</td>
-<td>Ribbon</td>
-<td>spring-cloud-loadbalancer</td>
-</tr>
-
-<tr>
-<td>熔断器</td>
-<td>Hystrix</td>
-<td>spring-cloud-r4j(Resilience4J)，阿里Sentinel</td>
-</tr>
-</tbody>
-</table>
-
-<blockquote>
-<p>由于Zuul性能一般，zuul 2.x(一直跳票，虽最终开源）但是Spring Cloud官方已经推出Spring Cloud gateway,Spring Cloud中国社区很久之前已经证实，Spring Cloud将不会集成zuul 2.x，也就是说在不就未来Zuul将从Spring Cloud生态圈中退出。</p>
-</blockquote>
-
-<hr />
-
-<blockquote>
-<p>ribbon由于不支持webFlux的负载均衡，Spring Cloud官方很早就在孵化器项目中孵化spring-cloud-loadbalancer，目前已经将代码合并到spring-cloud-common中，预计在Spring Cloud G版可以使用，预计2018年12月底realese。</p>
-</blockquote>
-
-<hr />
-
-<blockquote>
-<p>至于Hystrix，Netflix在2018年11月19号左右，Netflix的开源项目Hystrix宣布状态，不再开发新功能，处于维护状态，其实在之前Spring Cloud官方就在孵化spring-cloud-r4j.</p>
-</blockquote>
-
-<h2 id="3-开源项目的链接">3.开源项目的链接</h2>
-
-<p>本文所提到的开源项目链接汇总如下所示：</p>
-
-<p><a href="https://github.com/alibaba/Sentinel">https://github.com/alibaba/Sentinel</a></p>
-
-<p><a href="https://github.com/spring-cloud-incubator/spring-cloud-r4j">https://github.com/spring-cloud-incubator/spring-cloud-r4j</a></p>
-
-<p><a href="https://github.com/alibaba/nacos">阿里Nacos-https://github.com/alibaba/nacos</a></p>
-
-<p><a href="https://github.com/sxfad/config-keeper">随行付Config-keeper-https://github.com/sxfad/config-keeper</a></p>
-
-<p><a href="https://github.com/spring-cloud-incubator/spring-cloud-loadbalancer">spring-cloud-loadbalancer</a></p>
-
-<p><a href="https://github.com/ctripcorp/apollo">https://github.com/ctripcorp/apollo</a></p>
-
-<p><a href="https://github.com/apache/incubator-skywalking">https://github.com/apache/incubator-skywalking</a></p>
-
+	<!-- raw HTML omitted -->
 </article>
 
 <div id="gitalk-container"></div>
@@ -522,14 +375,11 @@ if (!doNotTrack) {
 		目录
 	</h2>
   <nav id="TableOfContents">
-<ul>
-<li>
-<ul>
-<li><a href="#1-spring-cloud第一代">1. Spring Cloud第一代</a></li>
-<li><a href="#2-spring-cloud-第二代">2. Spring Cloud 第二代</a></li>
-<li><a href="#3-开源项目的链接">3.开源项目的链接</a></li>
-</ul></li>
-</ul>
+  <ul>
+    <li><a href="#1-spring-cloud第一代">1. Spring Cloud第一代</a></li>
+    <li><a href="#2-spring-cloud-第二代">2. Spring Cloud 第二代</a></li>
+    <li><a href="#3开源项目的链接">3.开源项目的链接</a></li>
+  </ul>
 </nav>
 </div>
 

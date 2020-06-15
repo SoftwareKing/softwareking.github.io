@@ -10,7 +10,7 @@
 <meta name="viewport" content="width=device-width,minimum-scale=1">
 <meta name="description" content="玹霖志,许进沉思录,许进|Spring Cloud,中间件，基础架构，www.xujin.org,xujin.org,-许进沉思录,Venus&#43;,云首科技有限公司,云计算，大数据，物联网，Software_king的博客,云计算Saas，云计算Paas，云计算Iaas Hadoop，大数据，JavaEE，Java，物联网，Hadoop， NoSQL，MongoDB,Spring, Hibernate,Struts2," />
 
-<meta name="generator" content="Hugo 0.55.6" /><link rel="shortcut icon" href=/img/icon.png type="image/png">
+<meta name="generator" content="Hugo 0.72.0" /><link rel="shortcut icon" href=/img/icon.png type="image/png">
 
 <link href="https://unpkg.com/purecss@1.0.0/build/base-min.css" rel="stylesheet">
 
@@ -305,6 +305,10 @@ if (!doNotTrack) {
 
 	
 
+	
+
+	
+
 
 
 
@@ -411,6 +415,16 @@ if (!doNotTrack) {
 								
 									
 								
+								<a href=/projects/halo-studio/overview>
+									Halo Studio
+								</a>
+              </li>
+						
+							<li class="item">
+								
+								
+									
+								
 								<a href=/projects/halo-toolkit/overview>
 									Halo ToolKit
 								</a>
@@ -507,48 +521,7 @@ if (!doNotTrack) {
 </div>
 
 		<article class="typo">
-	<h2 id="1-halo-check概述">1. Halo Check概述</h2>
-
-<p>Halo Check基于Git Hook+JGit+CheckStyle+PMD对代码增量diff Check是否满足Halo Style。在代码Git Commit提交的时候进行检查。分为客户端和Gitlab服务端Check。</p>
-
-<ul>
-<li>支持应用白名单过滤，在白名单里面的应用，当进行Git Commit时候不进行check</li>
-<li>一个应用可以对应一个checkstyle和pmd检测文件</li>
-<li>对check不过的git提交人，进行次数评级</li>
-</ul>
-
-<h2 id="2-halo-check模块">2.Halo Check模块</h2>
-
-<table>
-<thead>
-<tr>
-<th>模块</th>
-<th>说明</th>
-</tr>
-</thead>
-
-<tbody>
-<tr>
-<td>halo-check-core </td>
-<td>基于JGit获取增量的diff代码片段，非单个Java文件。</td>
-</tr>
-
-<tr>
-<td>halo-checkstyle</td>
-<td>基于<a href="https://github.com/checkstyle/checkstyle">Checkstyle</a> 定制Halo CheckStyle,变成可执行Jar进行Check</td>
-</tr>
-
-<tr>
-<td>halo-pmd</td>
-<td>对阿里P3c pmd进行增强，变成可执行Jar</td>
-</tr>
-
-<tr>
-<td>halo-maven-githook</td>
-<td>Halo Check的Mave插件n安装器，埋在Halo框架顶级父Pom中传递</td>
-</tr>
-</tbody>
-</table>
+	<!-- raw HTML omitted -->
 </article>
 
 <div id="gitalk-container"></div>

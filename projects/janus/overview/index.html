@@ -10,7 +10,7 @@
 <meta name="viewport" content="width=device-width,minimum-scale=1">
 <meta name="description" content="玹霖志,许进沉思录,许进|Spring Cloud,中间件，基础架构，www.xujin.org,xujin.org,-许进沉思录,Venus&#43;,云首科技有限公司,云计算，大数据，物联网，Software_king的博客,云计算Saas，云计算Paas，云计算Iaas Hadoop，大数据，JavaEE，Java，物联网，Hadoop， NoSQL，MongoDB,Spring, Hibernate,Struts2," />
 
-<meta name="generator" content="Hugo 0.55.6" /><link rel="shortcut icon" href=/img/icon.png type="image/png">
+<meta name="generator" content="Hugo 0.72.0" /><link rel="shortcut icon" href=/img/icon.png type="image/png">
 
 <link href="https://unpkg.com/purecss@1.0.0/build/base-min.css" rel="stylesheet">
 
@@ -305,6 +305,10 @@ if (!doNotTrack) {
 
 	
 
+	
+
+	
+
 
 
 
@@ -411,6 +415,16 @@ if (!doNotTrack) {
 								
 									
 								
+								<a href=/projects/halo-studio/overview>
+									Halo Studio
+								</a>
+              </li>
+						
+							<li class="item">
+								
+								
+									
+								
 								<a href=/projects/halo-toolkit/overview>
 									Halo ToolKit
 								</a>
@@ -507,38 +521,7 @@ if (!doNotTrack) {
 </div>
 
 		<article class="typo">
-	<h2 id="1-janus概述">1.Janus概述</h2>
-
-<p>Janus网关中间件，掌管着企业级服务对外提供所有请求的入口和出口。功能包括协议适配，协议转发等。</p>
-
-<h3 id="1-1-janus命名由来">1.1 Janus命名由来</h3>
-
-<p>在罗马神话中Janus（汉译作“杰纳斯”或“雅努斯”）是天门神，早晨打开天门，让阳光普照人间，晚上又把天门关上，使黑暗降临大地。</p>
-
-<p><img src="janus-1.jpeg" alt="" /></p>
-
-<p>他的头部前后各有一副面孔，如上图所示，同时看着两个不同方向，一副看着过去，一副看着未来，因此也称两面神，或被尊称为时间之神。罗马有好几座Janus神庙。<strong>Janus掌管所有的出入门户</strong>，因此罗马人在战时永远将杰纳斯神殿的门敞开着，以便军人在败阵时躲入殿内以求庇护，或是在战胜时凯旋入殿。</p>
-
-<h3 id="1-2-janus的功能">1.2 Janus的功能</h3>
-
-<p>网关该具备的最基本的四大功能:统一接入，流量管控，协议适配转发，安全防护。
-<img src="gwf.png" alt="" /></p>
-
-<h2 id="基于netty的janus架构">基于Netty的Janus架构</h2>
-
-<p><img src="janus.jpg" alt="" /></p>
-
-<h3 id="2-1-设计原则">2.1 设计原则</h3>
-
-<ul>
-<li>1.每个Filter基于责任链，只做专一的一件事</li>
-<li>2.每个Filter有各自独立的数据</li>
-<li>3.损耗性能的Filter顺序往后放</li>
-<li>4.启动读取配置顺序，先远端，若远端失败，则读取本地。</li>
-<li>5.集群网关，要注意数据的diff和灰度</li>
-<li>6.尽量做到和服务治理框架解耦，易于接入，易于升级</li>
-</ul>
-
+	<!-- raw HTML omitted -->
 </article>
 
 <div id="gitalk-container"></div>
