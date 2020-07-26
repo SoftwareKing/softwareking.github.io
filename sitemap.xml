@@ -23,6 +23,12 @@
   </url>
   
   <url>
+    <loc>/projects/unico/</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.5</priority>
+  </url>
+  
+  <url>
     <loc>/projects/halo-studio/</loc>
     <lastmod>2020-05-12T00:00:00+00:00</lastmod>
     <changefreq>monthly</changefreq>
