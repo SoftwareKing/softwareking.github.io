@@ -3,7 +3,7 @@
 
 <head>
 	<title>
-	Spring Cloud Gateway的权重路由 · 玹霖志
+	 · 玹霖志
 </title>
 	<meta charset="utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
@@ -239,158 +239,136 @@ if (!doNotTrack) {
 	<main class="ss-layout-main -card">
 		<div class="ss-meta">
 	<h1 class="title">
-		Spring Cloud Gateway的权重路由
+	
+		<span id="postTitle"></span>
+
 	</h1>
-	<div class="meta"></div>
+	<div class="meta">
+		
+		<span class="post-word-count">· 字数:153·阅读时间 1 分钟</span>
+		
+		阅读量<span id="busuanzi_value_page_pv"></span>次
+		
+	</div>
 </div>
+  <script>
+    var typed = new Typed('#postTitle', {
+		strings: [
+        '  ',
+		"",
+      ],
+      cursorChar: "|",
+      typeSpeed: 70,
+	  loop: false,
+	});
+  </script>
 		<article class="typo">
-	<h2 id="1-权重路由">1.权重路由</h2>
+	<h2 id="网关的线程模型">网关的线程模型</h2>
 
-<h3 id="1-1-权重路由使用场景">1.1 权重路由使用场景</h3>
+<h3 id="nio的核心实现">NIO的核心实现</h3>
 
-<p>在开发或者测试的时候，或者线上发布，线上服务多版本控制的时候，需要对服务提供权重路由，最常见的使用就是，一个服务有两个版本，旧版本V1，新版本v2。在线上灰度的时候，需要通过网关动态实时推送，路由权重信息。比如95%的流量走服务v1版本，5%的流量走服务v2版本。</p>
+<p>NIO的核心API Buffer，channel，selecter。</p>
 
-<p><img src="1.jpg" alt="" /></p>
+<h4 id="channel与流的区别">channel与流的区别</h4>
+
+<table>
+<thead>
+<tr>
+<th>对比</th>
+<th>channel</th>
+<th>流</th>
+</tr>
+</thead>
+
+<tbody>
+<tr>
+<td>读写</td>
+<td>同时进行读写</td>
+<td>只能读或者写</td>
+</tr>
+
+<tr>
+<td>异步</td>
+<td>可以异步读写</td>
+<td></td>
+</tr>
+
+<tr>
+<td>异步</td>
+<td>通道可以写缓冲区，也可以从缓冲区读</td>
+<td></td>
+</tr>
+</tbody>
+</table>
+
+<h4 id="buffer">buffer</h4>
+
+<p>缓冲区本质上是一个可以写入数据的内存块，然后可以再次读取，该对象提供了一组方法，可以更轻松地使用内存块，使用缓冲区读取和写入数据通常遵循以下四个步骤：</p>
+
+<ol>
+<li><p>写数据到缓冲区；</p></li>
+
+<li><p>调用buffer.flip()方法；</p></li>
+
+<li><p>从缓冲区中读取数据；</p></li>
+
+<li><p>调用buffer.clear()或buffer.compat()方法；</p></li>
+</ol>
+
+<p>当向buffer写入数据时，buffer会记录下写了多少数据，一旦要读取数据，需要通过flip()方法将Buffer从写模式切换到读模式，在读模式下可以读取之前写入到buffer的所有数据，一旦读完了所有的数据，就需要清空缓冲区，让它可以再次被写入。</p>
 
 <blockquote>
-<p>issue: The Spring Cloud Gateway issue of Allow Rolling Deployments <a href="https://github.com/spring-cloud/spring-cloud-gateway/issues/67">https://github.com/spring-cloud/spring-cloud-gateway/issues/67</a></p>
+<p>参考文章:<a href="https://www.jianshu.com/p/362b365e1bcc">https://www.jianshu.com/p/362b365e1bcc</a></p>
 </blockquote>
 
-<h3 id="1-2-spring-cloud-gateway权重路由原理">1.2 Spring Cloud Gateway权重路由原理</h3>
+<h3 id="netty的线程模型">Netty的线程模型</h3>
 
-<p>Spring Cloud Gateway中提供了<code>org.springframework.cloud.gateway.handler.predicate.WeightRoutePredicateFactory</code>去实现根据分组设置权重进行路由，因此使用起来相对比较简单，有兴趣的可以debug阅读源码。</p>
+<p>Netty的线程模型主要有单线程Reactor模型，多线程Reactor，主从多线程Reactor模型。</p>
 
-<pre><code class="language-java">public class WeightRoutePredicateFactory extends AbstractRoutePredicateFactory&lt;WeightConfig&gt; implements ApplicationEventPublisherAware {
+<pre><code class="language-java"> ServerBootstrap bootstrap = new ServerBootstrap();
+        //绑定线程池
+        bootstrap.group(bossGroup, workGroup)
+                .channel(NioServerSocketChannel.class) //指定使用的channel
+                .option(ChannelOption.SO_REUSEADDR, serverConfig.isReUseAddr())
+                .option(ChannelOption.SO_BACKLOG, serverConfig.getBackLog())
+                .childOption(ChannelOption.SO_RCVBUF, serverConfig.getRevBuf())
+                .childOption(ChannelOption.SO_SNDBUF, serverConfig.getSndBuf())
+                .childOption(ChannelOption.TCP_NODELAY, serverConfig.isTcpNoDelay())
+                .childOption(ChannelOption.SO_KEEPALIVE, serverConfig.isKeepalive())
+                .childHandler(initChildHandler());
+</code></pre>
 
-    private static final Log log = LogFactory.getLog(WeightRoutePredicateFactory.class);
+<p>查看Netty的源码io.netty.bootstrap.ServerBootstrap.java，知道如下:</p>
 
-    public static final String GROUP_KEY = WeightConfig.CONFIG_PREFIX + &quot;.group&quot;;
-    public static final String WEIGHT_KEY = WeightConfig.CONFIG_PREFIX + &quot;.weight&quot;;
-
-    private ApplicationEventPublisher publisher;
-
-    public WeightRoutePredicateFactory() {
-        super(WeightConfig.class);
+<pre><code class="language-java"> /**
+     * Specify the {@link EventLoopGroup} which is used for the parent (acceptor) and the child (client).
+     *   这里的单参数即为连接与请求处理线程-是公用的线程池
+     */
+    @Override
+    public ServerBootstrap group(EventLoopGroup group) {
+        return group(group, group);
     }
 
-    @Override
-    public void setApplicationEventPublisher(ApplicationEventPublisher publisher) {
-        this.publisher = publisher;
-    }
-
-    @Override
-    public List&lt;String&gt; shortcutFieldOrder() {
-        return Arrays.asList(GROUP_KEY, WEIGHT_KEY);
-    }
-
-    @Override
-    public String shortcutFieldPrefix() {
-            return WeightConfig.CONFIG_PREFIX;
-    }
-
-    @Override
-    public void beforeApply(WeightConfig config) {
-        if (publisher != null) {
-            publisher.publishEvent(new WeightDefinedEvent(this, config));
+    /**
+     * Set the {@link EventLoopGroup} for the parent (acceptor) and the child (client). These
+     * {@link EventLoopGroup}'s are used to handle all the events and IO for {@link ServerChannel} and
+     * {@link Channel}'s.
+     */
+    public ServerBootstrap group(EventLoopGroup parentGroup, EventLoopGroup childGroup) {
+        super.group(parentGroup);
+        ObjectUtil.checkNotNull(childGroup, &quot;childGroup&quot;);
+        if (this.childGroup != null) {
+            throw new IllegalStateException(&quot;childGroup set already&quot;);
         }
+        this.childGroup = childGroup;
+        return this;
     }
-
-    @Override
-    public Predicate&lt;ServerWebExchange&gt; apply(WeightConfig config) {
-        return exchange -&gt; {
-            Map&lt;String, String&gt; weights = exchange.getAttributeOrDefault(WEIGHT_ATTR,
-                    Collections.emptyMap());
-
-            String routeId = exchange.getAttribute(GATEWAY_PREDICATE_ROUTE_ATTR);
-
-            // all calculations and comparison against random num happened in
-            // WeightCalculatorWebFilter
-            String group = config.getGroup();
-            if (weights.containsKey(group)) {
-
-                String chosenRoute = weights.get(group);
-                if (log.isTraceEnabled()) {
-                    log.trace(&quot;in group weight: &quot;+ group + &quot;, current route: &quot; + routeId +&quot;, chosen route: &quot; + chosenRoute);
-                }
-
-                return routeId.equals(chosenRoute);
-            }
-
-            return false;
-        };
-    }
-}
-
 </code></pre>
 
-<h2 id="2-spring-cloud-gateway中的权重路由案例">2.Spring Cloud Gateway中的权重路由案例</h2>
-
-<h3 id="2-1-案例代码地址">2.1 案例代码地址</h3>
-
-<p><a href="https://github.com/SoftwareKing/sc-gateway/tree/master/ch4">https://github.com/SoftwareKing/sc-gateway/tree/master/ch4</a></p>
-
-<h3 id="2-2-spring-cloud-gateway-server说明">2.2 Spring Cloud Gateway Server说明</h3>
-
-<p>Spring Cloud Gateway will dispatch 95% of the requests to version 1 and 5% of the traffic to version 2 of a specified service, as shown by the following figure.</p>
-
-<p><img src="2.jpeg" alt="" /></p>
-
-<p>我们通过在Spring Cloud Gateway中会配置不同的权重信息到不同URL上，Spring Cloud Gateway会根据我们配置的路由权重信息，将请求分发到不同的源服务组，权重信息如ch4/ch4-gateway中的application.yml所示，主要配置信息如下。</p>
-
-<pre><code class="language-yml">spring:
-  application:
-    name: ch4-gateway
-  cloud:
-    gateway:
-      routes:
-
-      - id: service1_v1
-        uri: http://localhost:8081/v1
-        predicates:
-        - Path=/test
-        - Weight=service1, 95
-
-      - id: service1_v2
-        uri: http://localhost:8081/v2
-        predicates:
-        - Path=/test
-        - Weight=service1, 5
-</code></pre>
-
-<blockquote>
-<p>Weight=service1, 95，Weight=service1, 5就是路由的权重信息。</p>
-</blockquote>
-
-<h3 id="2-3-源服务">2.3 源服务</h3>
-
-<p>源服务在本案例中源服务如ch4-service-provider所示，主要提提供Gateway Server权重路由对应的后端源服务。因为比较简单因此不做详细说明，主要代码如下所示。</p>
-
-<pre><code class="language-java">package org.xujin.sc.service;
-
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
-
-import reactor.core.publisher.Mono;
-
-@RestController
-public class ServiceController {
-
-    @RequestMapping(value = &quot;/v1&quot;, produces = &quot;text/plain;charset=UTF-8&quot;)
-    public Mono&lt;String&gt; v1() {
-        return Mono.just(&quot;v1&quot;);
-    }
-
-    @RequestMapping(value = &quot;/v2&quot;, produces = &quot;text/plain;charset=UTF-8&quot;)
-    public Mono&lt;String&gt; v2() {
-        return Mono.just(&quot;v2&quot;);
-    }
-}
-
-</code></pre>
-
-<h3 id="2-4-测试">2.4 测试</h3>
-
-<p>分别启动ch4-gateway，ch4-service-provider进行访问:<a href="http://localhost:8080/test">http://localhost:8080/test</a> 测试,发现会根据所设权重进行路由。</p>
+<ol>
+<li>当 EventLoopGroup bossGroup = new NioEventLoopGroup()不填值时，默认为cpu核数*2</li>
+<li>当 EventLoopGroup bossGroup = new NioEventLoopGroup()不填值时，默认为cpu核数*2</li>
+</ol>
 
 </article>
 
@@ -481,52 +459,21 @@ public class ServiceController {
 
 </style>
 
-		
+		<div class="-show-mobile">
+			
 
 	<nav class="ss-pagination-next">
 		
-		<a class="link-next" href="/guides/sba-nacos/">
+		<a class="link-next" href="/blog/bf/bf-multithread/">
 			<span class="text">下一篇: </span>
-			<span class="text">Spring Boot Admin和Nacos集成</span>
+			<span class="text">并发编程总结之多线程基础</span>
 		</a>
 	</nav>
 
+		</div>
 	</main>
 
 	<aside class="ss-layout-aside">
-		<div class="ss-card">
-	<h2 class="card-title">
-		获取代码
-	</h2>
-	<div id="js-code" class="ss-aside-code">
-		<div class="button-group">
-			<button class="button">HTTPS</button>
-			<button class="button">SSH</button>
-		</div>
-		<div class="input-group">
-			<input class="input" value="https://github.com/SoftwareKing/sc-gateway" spellcheck="false" />
-			<span class="addon">
-				<svg class="icon copy" aria-hidden="true"><use xlink:href="#icon-copy"></use></svg>
-				<svg class="icon tick" aria-hidden="true"><use xlink:href="#icon-ictick"></use></svg>
-			</span>
-		</div>
-		<a class="button download"
-			href="https://github.com/SoftwareKing/sc-gateway/archive/master.zip"
-		>下载 ZIP</a>
-	</div>
-</div>
-		
-	<div class="ss-card">
-		<h2 class="card-title">
-			项目
-		</h2>
-		<div class="ss-aside-project">
-			
-				<a class="link" href="https://github.com/springcoud/moss">Moss</a>
-			
-		</div>
-	</div>
-
 		
 
 
@@ -538,17 +485,14 @@ public class ServiceController {
 <ul>
 <li>
 <ul>
-<li><a href="#1-权重路由">1.权重路由</a>
+<li><a href="#网关的线程模型">网关的线程模型</a>
 <ul>
-<li><a href="#1-1-权重路由使用场景">1.1 权重路由使用场景</a></li>
-<li><a href="#1-2-spring-cloud-gateway权重路由原理">1.2 Spring Cloud Gateway权重路由原理</a></li>
+<li><a href="#nio的核心实现">NIO的核心实现</a>
+<ul>
+<li><a href="#channel与流的区别">channel与流的区别</a></li>
+<li><a href="#buffer">buffer</a></li>
 </ul></li>
-<li><a href="#2-spring-cloud-gateway中的权重路由案例">2.Spring Cloud Gateway中的权重路由案例</a>
-<ul>
-<li><a href="#2-1-案例代码地址">2.1 案例代码地址</a></li>
-<li><a href="#2-2-spring-cloud-gateway-server说明">2.2 Spring Cloud Gateway Server说明</a></li>
-<li><a href="#2-3-源服务">2.3 源服务</a></li>
-<li><a href="#2-4-测试">2.4 测试</a></li>
+<li><a href="#netty的线程模型">Netty的线程模型</a></li>
 </ul></li>
 </ul></li>
 </ul>
@@ -556,6 +500,84 @@ public class ServiceController {
 </div>
 
 
+		<div class="ss-card -hidden-mobile">
+	<h2 class="card-title">
+		分类
+	</h2>
+	<ul class="ss-aside-related">
+		
+		<li><a href="/categories/eureka-server/">Eureka Server</a></li>
+		
+		<li><a href="/categories/halo-tools/">Halo Tools</a></li>
+		
+		<li><a href="/categories/muse/">Muse</a></li>
+		
+		<li><a href="/categories/mybatis/">Mybatis</a></li>
+		
+		<li><a href="/categories/nacos/">Nacos</a></li>
+		
+		<li><a href="/categories/spring-boot/">Spring Boot</a></li>
+		
+		<li><a href="/categories/spring-boot-admin/">Spring Boot Admin</a></li>
+		
+		<li><a href="/categories/spring-cloud/">Spring Cloud</a></li>
+		
+		<li><a href="/categories/spring-cloud-gateway/">Spring Cloud Gateway</a></li>
+		
+		<li><a href="/categories/%E4%B8%AD%E5%8F%B0/">中台</a></li>
+		
+		<li><a href="/categories/%E4%B8%AD%E9%97%B4%E4%BB%B6/">中间件</a></li>
+		
+		<li><a href="/categories/%E5%B9%B6%E5%8F%91%E7%BC%96%E7%A8%8B/">并发编程</a></li>
+		
+		<li><a href="/categories/%E7%A4%BE%E5%8C%BA%E6%B2%99%E9%BE%99/">社区沙龙</a></li>
+		
+	</ul>
+</div>
+		
+
+
+		<div class="ss-aside-tags ss-card">
+	<h2 class="card-title">
+		标签
+		<span class="card-extra"></span>
+	</h2>
+	<ul class="tag-list">
+		
+			<li class="tag"><a href="/tags/eureka-server/">Eureka Server</a></li>
+		
+			<li class="tag"><a href="/tags/halo-tools/">Halo Tools</a></li>
+		
+			<li class="tag"><a href="/tags/myabtis/">Myabtis</a></li>
+		
+			<li class="tag"><a href="/tags/nacos/">Nacos</a></li>
+		
+			<li class="tag"><a href="/tags/ngnix/">Ngnix</a></li>
+		
+			<li class="tag"><a href="/tags/spring-boot-admin/">Spring Boot Admin</a></li>
+		
+			<li class="tag"><a href="/tags/spring-cloud/">Spring Cloud</a></li>
+		
+			<li class="tag"><a href="/tags/spring-cloud-gateway/">Spring Cloud Gateway</a></li>
+		
+			<li class="tag"><a href="/tags/spring-cloud%E4%B8%AD%E5%9B%BD%E7%A4%BE%E5%8C%BA/">Spring Cloud中国社区</a></li>
+		
+			<li class="tag"><a href="/tags/switch/">Switch</a></li>
+		
+			<li class="tag"><a href="/tags/%E4%B8%9A%E5%8A%A1%E4%B8%AD%E5%8F%B0/">业务中台</a></li>
+		
+			<li class="tag"><a href="/tags/%E4%B8%AD%E9%97%B4%E4%BB%B6/">中间件</a></li>
+		
+			<li class="tag"><a href="/tags/%E5%A4%9A%E7%BA%BF%E7%A8%8B/">多线程</a></li>
+		
+			<li class="tag"><a href="/tags/%E5%B9%B6%E5%8F%91%E7%BC%96%E7%A8%8B/">并发编程</a></li>
+		
+			<li class="tag"><a href="/tags/%E7%A4%BE%E5%8C%BA%E6%B2%99%E9%BE%99/">社区沙龙</a></li>
+		
+			<li class="tag"><a href="/tags/%E9%A1%B9%E7%9B%AE%E7%BB%8F%E9%AA%8C/">项目经验</a></li>
+		
+	</ul>
+</div>
 	</aside>
 </div>
 

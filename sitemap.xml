@@ -24,6 +24,7 @@
   
   <url>
     <loc>/projects/unico/</loc>
+    <lastmod>2020-07-20T00:00:00+00:00</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url>
@@ -38,6 +39,13 @@
   <url>
     <loc>/projects/halo-boot/</loc>
     <lastmod>2019-09-12T00:00:00+00:00</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.5</priority>
+  </url>
+  
+  <url>
+    <loc>/projects/janus/</loc>
+    <lastmod>2018-07-12T00:00:00+00:00</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url>
@@ -70,13 +78,6 @@
   </url>
   
   <url>
-    <loc>/projects/janus/</loc>
-    <lastmod>2018-07-12T00:00:00+00:00</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.5</priority>
-  </url>
-  
-  <url>
     <loc>/projects/cap/</loc>
     <lastmod>2018-07-12T00:00:00+00:00</lastmod>
     <changefreq>monthly</changefreq>
@@ -91,14 +92,21 @@
   </url>
   
   <url>
-    <loc>/projects/halo-studio/overview/</loc>
-    <lastmod>2020-05-12T00:00:00+00:00</lastmod>
+    <loc>/projects/unico/overview/</loc>
+    <lastmod>2020-07-20T00:00:00+00:00</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url>
   
   <url>
     <loc>/</loc>
+    <lastmod>2020-07-20T00:00:00+00:00</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.5</priority>
+  </url>
+  
+  <url>
+    <loc>/projects/halo-studio/overview/</loc>
     <lastmod>2020-05-12T00:00:00+00:00</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
@@ -610,6 +618,11 @@
     <lastmod>2016-07-21T21:00:00+08:00</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
+  </url>
+  
+  <url>
+    <loc>/blog/mw/janus/1/</loc>
+    <priority>0</priority>
   </url>
   
   <url>

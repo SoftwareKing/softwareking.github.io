@@ -290,5 +290,23 @@
       <description>线程安全 线程安全概念 当多个线程访问访问某一个类(对象或方法)时，这个类或对象或方法始终能表现出正确的行为或我们想要的结果，那么这个类(对象或</description>
     </item>
     
+    <item>
+      <title></title>
+      <link>/blog/mw/janus/1/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>/blog/mw/janus/1/</guid>
+      <description>网关的线程模型 NIO的核心实现 NIO的核心API Buffer，channel，selecter。
+channel与流的区别    对比 channel 流     读写 同时进行读写 只能读或者写   异步 可以异步读写    异步 通道可以写缓冲区，也可以从缓冲区读     buffer 缓冲区本质上是一个可以写入数据的内存块，然后可以再次读取，该对象提供了一组方法，可以更轻松地使用内存块，使用缓冲区读取和写入数据通常遵循以下四个步骤：
+ 写数据到缓冲区；
+ 调用buffer.flip()方法；
+ 从缓冲区中读取数据；
+ 调用buffer.clear()或buffer.compat()方法；
+  当向buffer写入数据时，buffer会记录下写了多少数据，一旦要读取数据，需要通过flip()方法将Buffer从写模式切换到读模式，在读模式下可以读取之前写入到buffer的所有数据，一旦读完了所有的数据，就需要清空缓冲区，让它可以再次被写入。
+ 参考文章:https://www.jianshu.com/p/362b365e1bcc
+ Netty的线程模型 Netty的线程模型主要有单线程Reactor模型，多线程Reactor，主从多线程Reactor模型。
+ServerBootstrap bootstrap = new ServerBootstrap(); //绑定线程池 bootstrap.group(bossGroup, workGroup) .channel(NioServerSocketChannel.class) //指定使用的channel .option(ChannelOption.SO_REUSEADDR, serverConfig.isReUseAddr()) .option(ChannelOption.SO_BACKLOG, serverConfig.getBackLog()) .childOption(ChannelOption.SO_RCVBUF, serverConfig.getRevBuf()) .childOption(ChannelOption.SO_SNDBUF, serverConfig.getSndBuf()) .childOption(ChannelOption.TCP_NODELAY, serverConfig.isTcpNoDelay()) .</description>
+    </item>
+    
   </channel>
 </rss>

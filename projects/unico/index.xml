@@ -6,9 +6,19 @@
     <description>Recent content in Unico Framework on 玹霖志</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>zh-CN</language>
+    <lastBuildDate>Mon, 20 Jul 2020 00:00:00 +0000</lastBuildDate>
     
 	<atom:link href="/projects/unico/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>Unico介绍</title>
+      <link>/projects/unico/overview/</link>
+      <pubDate>Mon, 20 Jul 2020 00:00:00 +0000</pubDate>
+      
+      <guid>/projects/unico/overview/</guid>
+      <description>1.Unico Framework概述 Unico(独角兽),本人养了多年的独角兽。是一套融合了基础架构，应用架构，中台架构的生态体系。</description>
+    </item>
     
   </channel>
 </rss>
