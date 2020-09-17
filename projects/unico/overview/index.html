@@ -254,7 +254,7 @@ if (!doNotTrack) {
 			</svg>
 		</div>
 		<div class="drawer-body">
-			<div class="header" title="Unico(独角兽),本人养了多年的独角兽。是一套融合了基础架构，应用架构，中台架构的生态体系">Unico Framework
+			<div class="header" title="Unico(独角兽),本人养了多年的独角兽。是一套融合了基础架构，应用架构，中台架构的生态体系，其中Unico是业界最领先的平台服务化和中台设计框架">Unico Framework
 
 
 
@@ -551,7 +551,54 @@ if (!doNotTrack) {
 		<article class="typo">
 	<h2 id="1-unico-framework概述">1.Unico Framework概述</h2>
 
-<p>Unico(独角兽),本人养了多年的独角兽。是一套融合了基础架构，应用架构，中台架构的生态体系。
+<p>Unico(独角兽),本人养了多年的独角兽。是一套融合了基础架构，应用架构，中台架构的生态体系。</p>
+
+<h2 id="2-如何使用unico">2.如何使用Unico</h2>
+
+<ul>
+<li>1.引入Unico相关Starter</li>
+</ul>
+
+<pre><code class="language-xml"> &lt;dependency&gt;
+        &lt;groupId&gt;org.xujin.halo&lt;/groupId&gt;
+        &lt;artifactId&gt;halo-starter-unico&lt;/artifactId&gt;
+        &lt;version&gt;2.0.0-SNAPSHOT&lt;/version&gt;
+  &lt;/dependency&gt;
+
+</code></pre>
+
+<ul>
+<li>2. 在YMl文件中配置插件的扫描路径</li>
+</ul>
+
+<pre><code class="language-yml">halo:
+  unico:
+    scanPackages:
+      - org.xujin.unico.demo
+</code></pre>
+
+<ul>
+<li>3. 关键的xml文件配置</li>
+</ul>
+
+<p>关键属性解释：
+business-config： 指明市场线/行业线；
+extension-config：扩展点约束定义：
+template-config: 业务身份的某个维度对扩展点的实现，由于市场线/行业线可以与多个产品线重叠，而且市场线/行业线和产品线都是业务身份的一个维度，所以一business-config必然包含1个行业线template-config和N个产品线template-config。
+conflict-priorities：处理某个特定的拓展点在某个维度的业务身份实现</p>
+
+<ul>
+<li>4. 核心注解的设计</li>
+</ul>
+
+<pre><code class="language-java">@Product -产品
+@Domain - 领域
+@DomainService - 领域服务
+@Ability - 领域服务的能力
+@AbilityExtension - 能力扩展点
+@TemplateExt - 扩展点实现配置
+</code></pre>
+
 </article>
 
 <div id="gitalk-container"></div>
