@@ -255,7 +255,7 @@ if (!doNotTrack) {
 				
 			</span>
 		
-		<span class="post-word-count">· 字数:4806·阅读时间 10 分钟</span>
+		<span class="post-word-count">· 字数:4800·阅读时间 10 分钟</span>
 		
 		阅读量<span id="busuanzi_value_page_pv"></span>次
 		
@@ -275,7 +275,7 @@ if (!doNotTrack) {
 		<article class="typo">
 	<h2 id="1-nacos-升级背景">1. Nacos 升级背景</h2>
 
-<p>随着公司业务的快速发展，整个启蒙教育产品的服务化和平台化在高速建设和迭代之中 。而 Java 技术栈为主的技术体系，搭建平台化和服务化，需要注册中心，经过技术选型之后我们选择了 Nacos 作为注册中心。至于什么是 Nacos，本文不做更多阐述，有兴趣的小伙伴可以借助谷歌搜索引擎快速了解。</p>
+<p>随着公司业务的快速发展，产品的服务化和平台化在高速建设和迭代之中 。而 Java 技术栈为主的技术体系，搭建平台化和服务化，需要注册中心，经过技术选型之后我们选择了 Nacos 作为注册中心。至于什么是 Nacos，本文不做更多阐述，有兴趣的小伙伴可以借助谷歌搜索引擎快速了解。</p>
 
 <p>目前公司技术体系主要以 Python 和 Java 为主。但是 Python 服务会通过  Nacos  进行服务注册与发现调用Java服务。两套技术体系的存在，多多少少会存在一些问题。比如 Python 版的 Nacos 客户端服务注册时和Java版 Nacos 客户端(Spring Cloud Alibaba 中封装的 Nacos 客户端)服务注册就不太一样。 Nacos 升级的原因主要是Python服务注册时的元数据，被Java客户端用于服务发现，过滤的时候引起NPE异常，还有就是借此机会统一 Nacos 服务注册发现的客户端基线。</p>
 
