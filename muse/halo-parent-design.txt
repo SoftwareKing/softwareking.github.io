@@ -1,0 +1,70 @@
+## Halo Parent的设计
+
+## 什么是Parent
+
+### Spring Boot Parent
+
+Spring Boot有很多开箱即用的Starter。这些Starter也有对应的版本，Spring Boot升级只需要修改Spring Boot Parent的版本即可,这样就可以全局控制所有Spring Boot组件的版本.如下所示：
+
+```xml
+<parent>
+		<groupId>org.springframework.boot</groupId>
+		<artifactId>spring-boot-starter-parent</artifactId>
+		<version>2.1.14.RELEASE</version>
+</parent>
+```
+
+### Spring Cloud的Parent设计
+
+其实Spring Cloud也有自己的Parent,Spring Cloud是基于Spring Boot开发构建的.
+如下代码所示：
+
+https://github.com/spring-cloud/spring-cloud-release/blob/vGreenwich.SR6/spring-cloud-starter-parent/pom.xml
+
+```xml
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://maven.apache.org/POM/4.0.0"
+		 xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<parent>
+		<groupId>org.springframework.boot</groupId>
+		<artifactId>spring-boot-starter-parent</artifactId>
+		<version>2.1.14.RELEASE</version>
+	</parent>
+	<groupId>org.springframework.cloud</groupId>
+	<artifactId>spring-cloud-starter-parent</artifactId>
+	<version>Greenwich.SR6</version>
+	<name>spring-cloud-starter-parent</name>
+	<description>Spring Cloud Starter Parent</description>
+	<packaging>pom</packaging>
+	<url>https://projects.spring.io/spring-cloud</url>
+	<organization>
+		<name>Pivotal Software, Inc.</name>
+		<url>https://www.spring.io</url>
+	</organization>
+	<properties>
+		<main.basedir>${basedir}/../..</main.basedir>
+		<spring-cloud.version>Greenwich.SR6</spring-cloud.version>
+	</properties>
+	<dependencyManagement>
+		<dependencies>
+			<dependency>
+				<groupId>org.springframework.cloud</groupId>
+				<artifactId>spring-cloud-dependencies</artifactId>
+				<version>${spring-cloud.version}</version>
+				<type>pom</type>
+				<scope>import</scope>
+			</dependency>
+		</dependencies>
+	</dependencyManagement>
+</project>
+```
+
+## Halo Parent的设计
+
+
+
+## 参考
+
+[Spring Boot链接](https://docs.spring.io/spring-boot/docs/2.1.14.RELEASE/reference/html/using-boot-build-systems.html#using-boot-dependency-management)
+
