@@ -255,7 +255,7 @@ if (!doNotTrack) {
 				
 			</span>
 		
-		<span class="post-word-count">· 字数:4800·阅读时间 10 分钟</span>
+		<span class="post-word-count">· 字数:4799·阅读时间 10 分钟</span>
 		
 		阅读量<span id="busuanzi_value_page_pv"></span>次
 		
@@ -285,8 +285,9 @@ if (!doNotTrack) {
 
 <p>由于空指针异常是 2020 年 6 月 19 号之后被 Fix，考虑到 Nacos  2.0不是很稳定，因此将 Nacos 升级到 1.4.1 版本是当前最佳选择。</p>
 
-<p><img src="nacos-npe.png" alt="" />
-目前公司使用 Spring Cloud 构建微服务体系，Spring Cloud 版本主要是 H.SR4。此次升级需要把 Nacos  Server 升级到 1.4.1 版本。经查看源码，得知 Spring Cloud Alibaba 2.2.5.RELEASE 是基于Spring Cloud H.SR8版本和 Nacos  Client 1.4.1版本构建，经过统计分析，当前大多数业务应用是基于H.SR4版本构建，升级到H.SR8版本可以平滑过渡。</p>
+<p><img src="1.png" alt="" /></p>
+
+<p>目前公司使用 Spring Cloud 构建微服务体系，Spring Cloud 版本主要是 H.SR4。此次升级需要把 Nacos  Server 升级到 1.4.1 版本。经查看源码，得知 Spring Cloud Alibaba 2.2.5.RELEASE 是基于Spring Cloud H.SR8版本和 Nacos  Client 1.4.1版本构建，经过统计分析，当前大多数业务应用是基于H.SR4版本构建，升级到H.SR8版本可以平滑过渡。</p>
 
 <p>因此综合考虑，选择将 Spring Cloud 基线统一到 Spring Cloud H.SR8 版本，从而最终统一 Spring Boot 和 Spring Cloud 基线。</p>
 
@@ -297,16 +298,18 @@ if (!doNotTrack) {
 <h3 id="3-nacos-升级出错">3.  Nacos 升级出错</h3>
 
 <p>Nacos 升级过程全程按照升级方案快速升级，在开发环境，测试环境和预发环境都已顺利升级。
-但在升级线上环境时，升级之后发现 Nacos  Server 服务列表出现空白，空白列表页如下图所示，通过F12查看网络请求，显示当前Nacos集群不可用。
-<img src="kongbai.png" alt="" />
-通过查看可以看到，leader为null，如下图所示:
+但在升级线上环境时，升级之后发现 Nacos  Server 服务列表出现空白，空白列表页如下图所示，通过F12查看网络请求，显示当前Nacos集群不可用。</p>
+
+<p><img src="kongbai.png" alt="" /></p>
+
+<p>通过查看可以看到，leader为null，如下图所示:
 <img src="leader-null.png" alt="" /></p>
 
 <p>之后发现大量服务报错，选择回滚回 Nacos  1.1.4版本。回滚之后出现部分服务掉线，并且不会自动注册上来。
 最后通过重启掉线服务，重新把服务注册上来了。
 这里主要两个疑点：
 1. 为什么升级后服务列表会为空？
-2.  回滚后，为什么部分服务无法通过心跳机制自动注册上来，必须通过重启服务才能注册到 nacos 上？</p>
+2. 回滚后，为什么部分服务无法通过心跳机制自动注册上来，必须通过重启服务才能注册到 nacos 上？</p>
 
 <h2 id="4-nacos-升级失败排查">4.  Nacos 升级失败排查</h2>
 
@@ -470,8 +473,7 @@ Nacos 客户端的日志一般存在 ~/logs/nacos 目录下，如下截图所示
 
 <p><img src="pc-02.png" alt="" /></p>
 
-<pre><code>![](pc-03.png)
-</code></pre>
+<p><img src="pc-03.png" alt="" /></p>
 
 <ol>
 <li><p>客户端在收到 response 后，由于 1.1.4 的 server 并没有「轻量心跳」的支持，本来应该重置「轻量心跳」为关闭的。但由于收到报错后抛了异常，后面的重置「轻量心跳」为 false 的操作被跳过，导致「轻量心跳」一直处于开启的状态，也就一直没有带上 beat 参数，于是心跳时 server 持续报错，无法自动注册。</p></li>

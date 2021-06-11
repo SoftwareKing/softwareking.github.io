@@ -13,10 +13,10 @@
     
     <item>
       <title>《Nacos Server 升级至 1.4.1 版本踩坑分析》</title>
-      <link>/blog/nacos/nacos-upgrade-01/</link>
+      <link>/blog/nacos/nacos-upgrade/</link>
       <pubDate>Fri, 11 Jun 2021 14:00:00 +0800</pubDate>
       
-      <guid>/blog/nacos/nacos-upgrade-01/</guid>
+      <guid>/blog/nacos/nacos-upgrade/</guid>
       <description>1. Nacos 升级背景 随着公司业务的快速发展，产品的服务化和平台化在高速建设和迭代之中 。而 Java 技术栈为主的技术体系，搭建平台化和服务化，需要注册中心，经</description>
     </item>
     
