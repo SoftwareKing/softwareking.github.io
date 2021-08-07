@@ -6,10 +6,19 @@
     <description>Recent content on 玹霖志</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>zh-CN</language>
-    <lastBuildDate>Fri, 11 Jun 2021 14:00:00 +0800</lastBuildDate>
+    <lastBuildDate>Mon, 19 Jul 2021 00:00:00 +0000</lastBuildDate>
     
 	<atom:link href="/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>GodTest介绍</title>
+      <link>/projects/godtest/overview/</link>
+      <pubDate>Mon, 19 Jul 2021 00:00:00 +0000</pubDate>
+      
+      <guid>/projects/godtest/overview/</guid>
+      <description>1.GodTest概述 全链路压测平台，项目代号GodTest，简称GT，寓意为上帝的考验，中文简称天测或神测。 2.GodTest的架构设计</description>
+    </item>
     
     <item>
       <title>《Nacos Server 升级至 1.4.1 版本踩坑分析》</title>
