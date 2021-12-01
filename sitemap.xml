@@ -203,13 +203,13 @@
   </url>
   
   <url>
-    <loc>/tags/%E4%B8%AD%E9%97%B4%E4%BB%B6/</loc>
+    <loc>/categories/%E4%B8%AD%E9%97%B4%E4%BB%B6/</loc>
     <lastmod>2019-11-14T15:00:00+08:00</lastmod>
     <priority>0</priority>
   </url>
   
   <url>
-    <loc>/categories/%E4%B8%AD%E9%97%B4%E4%BB%B6/</loc>
+    <loc>/tags/%E4%B8%AD%E9%97%B4%E4%BB%B6/</loc>
     <lastmod>2019-11-14T15:00:00+08:00</lastmod>
     <priority>0</priority>
   </url>
@@ -268,13 +268,13 @@
   </url>
   
   <url>
-    <loc>/tags/halo-tools/</loc>
+    <loc>/categories/halo-tools/</loc>
     <lastmod>2019-10-18T17:00:00+08:00</lastmod>
     <priority>0</priority>
   </url>
   
   <url>
-    <loc>/categories/halo-tools/</loc>
+    <loc>/tags/halo-tools/</loc>
     <lastmod>2019-10-18T17:00:00+08:00</lastmod>
     <priority>0</priority>
   </url>
@@ -335,13 +335,13 @@
   </url>
   
   <url>
-    <loc>/tags/spring-boot-admin/</loc>
+    <loc>/categories/spring-boot-admin/</loc>
     <lastmod>2019-09-16T20:00:00+08:00</lastmod>
     <priority>0</priority>
   </url>
   
   <url>
-    <loc>/categories/spring-boot-admin/</loc>
+    <loc>/tags/spring-boot-admin/</loc>
     <lastmod>2019-09-16T20:00:00+08:00</lastmod>
     <priority>0</priority>
   </url>
@@ -354,25 +354,25 @@
   </url>
   
   <url>
-    <loc>/tags/spring-cloud/</loc>
-    <lastmod>2019-09-16T20:00:00+08:00</lastmod>
-    <priority>0</priority>
-  </url>
-  
-  <url>
     <loc>/categories/spring-cloud/</loc>
     <lastmod>2019-09-16T20:00:00+08:00</lastmod>
     <priority>0</priority>
   </url>
   
   <url>
-    <loc>/tags/spring-cloud-gateway/</loc>
+    <loc>/tags/spring-cloud/</loc>
     <lastmod>2019-09-16T20:00:00+08:00</lastmod>
     <priority>0</priority>
   </url>
   
   <url>
     <loc>/categories/spring-cloud-gateway/</loc>
+    <lastmod>2019-09-16T20:00:00+08:00</lastmod>
+    <priority>0</priority>
+  </url>
+  
+  <url>
+    <loc>/tags/spring-cloud-gateway/</loc>
     <lastmod>2019-09-16T20:00:00+08:00</lastmod>
     <priority>0</priority>
   </url>
@@ -453,13 +453,13 @@
   </url>
   
   <url>
-    <loc>/tags/%E7%A4%BE%E5%8C%BA%E6%B2%99%E9%BE%99/</loc>
+    <loc>/categories/%E7%A4%BE%E5%8C%BA%E6%B2%99%E9%BE%99/</loc>
     <lastmod>2018-10-17T10:20:00+00:00</lastmod>
     <priority>0</priority>
   </url>
   
   <url>
-    <loc>/categories/%E7%A4%BE%E5%8C%BA%E6%B2%99%E9%BE%99/</loc>
+    <loc>/tags/%E7%A4%BE%E5%8C%BA%E6%B2%99%E9%BE%99/</loc>
     <lastmod>2018-10-17T10:20:00+00:00</lastmod>
     <priority>0</priority>
   </url>
@@ -521,13 +521,13 @@
   </url>
   
   <url>
-    <loc>/tags/eureka-server/</loc>
+    <loc>/categories/eureka-server/</loc>
     <lastmod>2018-05-14T20:00:00+08:00</lastmod>
     <priority>0</priority>
   </url>
   
   <url>
-    <loc>/categories/eureka-server/</loc>
+    <loc>/tags/eureka-server/</loc>
     <lastmod>2018-05-14T20:00:00+08:00</lastmod>
     <priority>0</priority>
   </url>
@@ -574,13 +574,13 @@
   </url>
   
   <url>
-    <loc>/tags/%E5%B9%B6%E5%8F%91%E7%BC%96%E7%A8%8B/</loc>
+    <loc>/categories/%E5%B9%B6%E5%8F%91%E7%BC%96%E7%A8%8B/</loc>
     <lastmod>2017-10-03T21:00:00+08:00</lastmod>
     <priority>0</priority>
   </url>
   
   <url>
-    <loc>/categories/%E5%B9%B6%E5%8F%91%E7%BC%96%E7%A8%8B/</loc>
+    <loc>/tags/%E5%B9%B6%E5%8F%91%E7%BC%96%E7%A8%8B/</loc>
     <lastmod>2017-10-03T21:00:00+08:00</lastmod>
     <priority>0</priority>
   </url>
